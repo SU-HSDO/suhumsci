@@ -72,24 +72,24 @@ function hs_cmap_update_10002(&$sandbox) {
  * Grant permissions to roles.
  */
 function hs_cmap_update_10003() {
+  // Import the text format from config, otherwise its permissions won't be defined.
+  $config_name = 'filter.format.minimal_text_formatting';
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable($config_name);
+  if ($config->isNew()) {
+    $config_storage = \Drupal::service('config.storage.sync');
+    $format_config = $config_storage->read($config_name);
+    $config->setData($format_config)->save();
+  }
+
+  // Grant permissions.
   $roles = ['site_manager', 'preparer', 'contributor', 'authenticated', 'administrator'];
-  $permission = 'use text format minimal_text_formatting';
-
-  foreach ($roles as $role_id) {
-    $role = Role::load($role_id);
-
-    if (!$role) {
-      \Drupal::logger('hs_cmap')->warning('Role @role not found, skipping.', ['@role' => $role_id]);
-      continue;
-    }
-
-    if (!$role->hasPermission($permission)) {
-      $role->grantPermission($permission);
-      $role->save();
-    }
+  foreach ($roles as $role) {
+    user_role_grant_permissions($role, ['use text format minimal_text_formatting']);
   }
 
   return t('Assigned "use text format minimal_text_formatting" permissions to the following roles: %roles.', [
     '%roles' => implode(', ', $roles),
   ]);
 }
+

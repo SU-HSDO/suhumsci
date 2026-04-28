@@ -5,6 +5,8 @@
  * Update functions for hs_cmap module.
  */
 
+use Drupal\user\Entity\Role;
+
 /**
  * Grant permissions to site manager role.
  */
@@ -74,7 +76,7 @@ function hs_cmap_update_10003() {
   $permission = 'use text format minimal_text_formatting';
 
   foreach ($roles as $role_id) {
-    $role = \Drupal\user\Entity\Role::load($role_id);
+    $role = Role::load($role_id);
 
     if (!$role) {
       \Drupal::logger('hs_cmap')->warning('Role @role not found, skipping.', ['@role' => $role_id]);

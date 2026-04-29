@@ -501,7 +501,7 @@ class FlexiblePageCest {
     $I->click('Collection', '.paragraphs-ee-add-dialog');
     $I->waitForText('Items Per Row');
     $I->selectOption('Items Per Row', 2);
-    $I->canSeeOptionIsSelected('Background Color', '- None -');
+    $I->canSeeOptionIsSelected('Background Color', 'None');
     // Add a Text Area component to the Collection.
     $I->selectOption('Title Settings', 'I do not want a heading for this Collection');
     $I->cantSee('field_hs_page_components[1][subform][field_title][0][value]');

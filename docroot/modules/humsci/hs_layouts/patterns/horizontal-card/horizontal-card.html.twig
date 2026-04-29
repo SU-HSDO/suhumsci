@@ -1,72 +1,84 @@
 {%
   set classes = [
     'hb-card',
-    'hb-card--horizontal'
+    'hb-card--horizontal',
+    'hb-card--horizontal--' ~ variant|default('left'),
   ]
  %}
 
 {%- set attributes = attributes.addClass(classes) -%}
 
 <div{{ attributes }}>
+  <div class="hb-card__wrapper">
 
-  {% if image %}
-    <div class="hb-card__graphics">
-      <div class="hb-card__img">
-        {{ image }}
-      </div>
-    </div>
-  {% endif %}
-
-  <div class="hb-card__content">
-    {% if category %}
-      <div class="hb-card__category">{{ category }}</div>
-    {% endif %}
-
-    {% if title %}
-      <div class="hb-card__title">
-        {% if title|render matches '/<\\/h\\d>/' %}
-          {{ title }}
-        {% else %}
-          <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
-        {% endif %}
+    {% if image %}
+      <div class="hb-card__graphics">
+        <div class="hb-card__img">
+          {{ image }}
+        </div>
       </div>
     {% endif %}
 
-    {% if date or time or location %}
-      {% set general_variants = {'date': date, 'time': time, 'location': location} %}
+    <div class="hb-card__content">
+      {% if category %}
+        <div class="hb-card__category">{{ category }}</div>
+      {% endif %}
 
-      <div class="hb-card__subcontent">
-        {% for key, variant in general_variants %}
-          {% if variant %}
-            <div class="hb-card__subcontent-item">{{ variant }}</div>
+      {% if title %}
+        <div class="hb-card__title">
+          {% set title_content %}
+            {% if node_url %}
+              <a href="{{ node_url }}">{{ title }}</a>
+            {% elseif href %}
+              <a href="{{ href }}">{{ title }}</a>
+            {% else %}
+              {{ title }}
+            {% endif %}
+          {% endset %}
+          {% if title|render matches '/<\\/h\\d>/' %}
+            {{ title_content }}
+          {% else %}
+            <{{ heading_tag }}>{{ title_content }}</{{ heading_tag }}>
           {% endif %}
-        {% endfor %}
-      </div>
-    {% endif %}
+        </div>
+      {% endif %}
 
-    {% if speaker %}
-      <div class="hb-card__highlighted">
-        {{ speaker }}
-      </div>
-    {% endif %}
+      {% if date or time or location %}
+        {% set general_variants = {'date': date, 'time': time, 'location': location} %}
 
-    {% if description %}
-      <div class="hb-card__description">
-        {{ description }}
-      </div>
-    {% endif %}
+        <div class="hb-card__subcontent">
+          {% for key, variant in general_variants %}
+            {% if variant %}
+              <div class="hb-card__subcontent-item">{{ variant }}</div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
 
-    {% if button %}
-      {% set node_url = button['#row'] ? url('entity.node.canonical', { 'node': button['#row']._entity.id }) %}
-      <div class="hb-card__decorative-link">
-        {% if node_url %}
-          <a href="{{ node_url }}" tabindex="-1" aria-hidden="true">
-            {{ 'Read More'|t }}
-          </a>
-        {% else %}
-          {{ button }}
-        {% endif %}
-      </div>
-    {% endif %}
+      {% if speaker %}
+        <div class="hb-card__highlighted">
+          {{ speaker }}
+        </div>
+      {% endif %}
+
+      {% if description %}
+        <div class="hb-card__description">
+          {{ description }}
+        </div>
+      {% endif %}
+
+      {% if button and button['#row'] %}
+        {% set node_url = button['#row'] ? url('entity.node.canonical', { 'node': button['#row']._entity.id }) %}
+        <div class="hb-card__decorative-link">
+          {% if node_url %}
+            <a href="{{ node_url }}" tabindex="-1" aria-hidden="true">
+              {{ 'Read More'|t }}
+            </a>
+          {% else %}
+            {{ button }}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
   </div>
 </div>

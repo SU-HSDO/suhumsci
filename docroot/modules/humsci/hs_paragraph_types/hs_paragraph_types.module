@@ -188,11 +188,39 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
  * Implements hook_entity_view_mode_alter().
  */
 function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
-  if (!($entity instanceof ParagraphInterface)) {
+  if (!$entity instanceof ParagraphInterface) {
     return;
   }
 
   switch ($entity->bundle()) {
+    case 'hs_postcard':
+      if (
+        !$entity->hasField('field_hs_postcard_layout') ||
+        !$entity->hasField('field_hs_postcard_vertical_style')
+      ) {
+        break;
+      }
+
+      $layout = $entity->get('field_hs_postcard_layout')->value;
+      if ($layout == 'horizontal') {
+        $view_mode = 'preview';
+      }
+      elseif ($layout == 'vertical') {
+        $style = $entity->get('field_hs_postcard_vertical_style')->value;
+        switch ($style) {
+          case 'stacked':
+            $view_mode = 'vertical_button_card';
+            break;
+
+          case 'two_color':
+            $view_mode = 'token';
+            break;
+
+          default:
+            $view_mode = 'default';
+        }
+      }
+      break;
     case 'hs_spotlight':
       if (!$entity->hasField('field_hs_spotlight_image_height') || $entity->get('field_hs_spotlight_image_height')->isEmpty()) {
         break;

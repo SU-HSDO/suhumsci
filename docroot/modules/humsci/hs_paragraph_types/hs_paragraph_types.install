@@ -1368,7 +1368,7 @@ function hs_paragraph_types_update_10033() {
   foreach ($fields_to_create as $field_name) {
     $field_config = $config_storage->read($field_name);
     if (!empty($field_config)) {
-      // Build the correct entity ID from the config data itself
+      // Build the correct entity ID from the config data itself.
       $entity_id = $field_config['entity_type'] . '.' . $field_config['bundle'] . '.' . $field_config['field_name'];
       if (empty($field_config_storage->load($entity_id))) {
         $field_config_storage->create($field_config)->save();

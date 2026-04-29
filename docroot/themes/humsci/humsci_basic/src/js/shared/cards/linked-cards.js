@@ -22,9 +22,9 @@ import addImageLinkEvents from './image-link-handler';
           '.hb-card__img a, .hb-vertical-linked-card__img a',
         );
 
-        if (!cardImageLink) return;
-
-        addImageLinkEvents(cardImageLink, drupalSettings);
+        if (cardImageLink) {
+          addImageLinkEvents(cardImageLink, drupalSettings);
+        }
 
         // Find the main link within each card
         let mainLink = '';

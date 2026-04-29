@@ -191,15 +191,15 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
   $variables['attributes']->addClass('hb-spotlight--view-mode-' . $image_height);
 
   if ($paragraph->hasField('field_hs_spotlight_image')) {
-    if ($paragraph->get('field_hs_spotlight_image')->isEmpty()) {
+    if ($paragraph->get('field_hs_spotlight_image')->isEmpty() || !$paragraph->get('field_hs_spotlight_image')->entity) {
       $variables['attributes']->addClass('hb-spotlight--no-media');
     }
     else {
       $media = $paragraph->get('field_hs_spotlight_image')->entity;
-      if ($media->bundle() == 'video') {
+      if ($media->bundle() === 'video') {
         $spotlight_type = 'video';
       }
-      elseif ($media->bundle() == 'image' && $spotlight_type == 'framed') {
+      elseif ($media->bundle() === 'image' && $spotlight_type === 'framed') {
         $image_style = $image_height == 'tall' ? 'spotlight_framed_tall' : 'spotlight_framed_short';
         $variables['image']['field_hs_spotlight_image'][0]['#stanford_media_image_style'] = $image_style;
         $variables['image']['field_hs_spotlight_image'][0]['#cache']['keys'][] = 'image_style:' . $image_style;

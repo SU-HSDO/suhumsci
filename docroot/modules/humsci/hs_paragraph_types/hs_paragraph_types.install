@@ -1367,17 +1367,13 @@ function hs_paragraph_types_update_10033() {
 
   foreach ($fields_to_create as $field_name) {
     $field_config = $config_storage->read($field_name);
-    if (!empty($field_config)) {
-      // Build the correct entity ID from the config data itself.
-      $entity_id = $field_config['entity_type'] . '.' . $field_config['bundle'] . '.' . $field_config['field_name'];
-      if (empty($field_config_storage->load($entity_id))) {
-        $field_config_storage->create($field_config)->save();
-        \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
-          '%field_name' => $field_config['field_name'],
-          '%entity_type' => $field_config['entity_type'],
-          '%bundle' => $field_config['bundle'],
-        ]);
-      }
+    if (!empty($field_config) && !FieldConfig::loadByName($field_config['entity_type'], $field_config['bundle'], $field_config['field_name'])) {
+      $field_config_storage->create($field_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+        '%field_name' => $field_config['field_name'],
+        '%entity_type' => $field_config['entity_type'],
+        '%bundle' => $field_config['bundle'],
+      ]);
     }
   }
 }
@@ -1395,6 +1391,8 @@ function hs_paragraph_types_update_10034(&$sandbox) {
       ->condition('type', ['hs_collection', 'hs_priv_collection'], 'IN')
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+
   }
 
   // Map old width machine names (underscores) to new ones (hyphens).

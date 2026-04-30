@@ -94,6 +94,7 @@ sites.forEach((site) => {
         referenceUrl: `https://${process.env.BASIC_USERNAME}:${process.env.BASIC_PASSWORD}@${site}-stage.stanford.edu${url}`,
         readySelector: '.js',
         delay: 1500,
+        misMatchThreshold: 0.1,
         requireSameDimensions: true,
         onReadyScript: 'onReady.js',
       });

@@ -9,6 +9,8 @@ use Drupal\Core\Template\Attribute;
 use Drupal\node\Entity\Node;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\views\Views;
+
 
 /**
  * Implements hook_preprocess().
@@ -635,7 +637,7 @@ function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
       continue;
     }
 
-    $view = \Drupal\views\Views::getView($view_field->target_id);
+    $view = Views::getView($view_field->target_id);
 
     if (!$view || !$view->access($view_field->display_id)) {
       continue;

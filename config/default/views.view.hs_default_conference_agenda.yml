@@ -522,7 +522,12 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          plugin_id: text
       sorts:
         field_session_date_and_time_value:
           id: field_session_date_and_time_value
@@ -651,6 +656,20 @@ display:
     position: 1
     display_options:
       title: Agenda
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'No conference sessions found.  Try adjusting your filters and trying again.'
+            format: basic_html
+          tokenize: false
       style:
         type: default
         options:
@@ -720,6 +739,7 @@ display:
             timeline-item: closed
             timeline: expanded
       defaults:
+        empty: false
         title: false
         style: false
         row: false

@@ -72,7 +72,6 @@
 .field-hs-page-hero,
 .ptype-hs-timeline,
 .ptype-hs-view,
-.ptype-hs-collection,
 .ptype-hs-priv-collection,
 .ptype-hs-testimonial,
 .ptype-stanford-gallery {
@@ -84,6 +83,23 @@
     margin-top: hb-spacing-width() !important;
   }
 }
+
+// Hide empty collection wrappers.
+.ptype-hs-collection:not(:has(.paragraph--type--hs-collection)) {
+  display: none;
+}
+
+// Only apply spacing to collections that have rendered content.
+.ptype-hs-collection:has(.paragraph--type--hs-collection) {
+  width: 100%;
+  margin-bottom: hb-spacing-width() !important;
+
+  .hs-paragraph-style--well &,
+  .hs-paragraph-style--well-full-width & {
+    margin-top: hb-spacing-width() !important;
+  }
+}
+
 
 .views-row:not(:last-child) {
   margin-bottom: hb-spacing-width() !important;

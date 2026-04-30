@@ -613,3 +613,40 @@ function humsci_basic_preprocess_field(&$variables) {
 function humsci_basic_preprocess_node__hs_event(&$variables) {
   $variables['#attached']['library'][] = 'humsci_basic/addtocal';
 }
+
+/**
+ * Implements hook_preprocess_ENTITY__BUNDLE().
+ */
+function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
+  $paragraph = $variables['paragraph'];
+  $variables['has_content'] = FALSE;
+
+  foreach ($paragraph->field_hs_collection_items as $item) {
+    $entity = $item->entity;
+
+    if ($entity->bundle() !== 'hs_view') {
+      $variables['has_content'] = TRUE;
+      continue;
+    }
+
+    $view_field = $entity->field_hs_view->first();
+
+    if (!$view_field) {
+      continue;
+    }
+
+    $view = \Drupal\views\Views::getView($view_field->target_id);
+
+    if (!$view || !$view->access($view_field->display_id)) {
+      continue;
+    }
+
+    $view->setDisplay($view_field->display_id);
+    $view->preExecute();
+    $view->execute();
+
+    if (!empty($view->result) || $view_field->show_title) {
+      $variables['has_content'] = TRUE;
+    }
+  }
+}

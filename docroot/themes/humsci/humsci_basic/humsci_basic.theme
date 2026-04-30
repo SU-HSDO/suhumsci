@@ -646,7 +646,9 @@ function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
     $view->preExecute();
     $view->execute();
 
-    if (!empty($view->result) || $view_field->show_title) {
+    $has_empty_handlers = !empty($view->display_handler->getHandlers('empty'));
+
+    if (!empty($view->result) || $view_field->show_title || $has_empty_handlers) {
       $variables['has_content'] = TRUE;
     }
   }

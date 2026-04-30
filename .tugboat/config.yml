@@ -1,8 +1,6 @@
 services:
-
   # What to call the service hosting the site.
   suhumsci:
-
     # Use PHP 8 with Apache
     image: pookmish/drupal8ci:tugboat
 
@@ -23,7 +21,6 @@ services:
 
     # A set of commands to run while building this service
     commands:
-
       # Commands that set up the basic preview infrastructure
       init:
         # Install Node.js system-wide based on .nvmrc major version for consistent builds
@@ -100,35 +97,83 @@ services:
         - npm run theme-build
 
     # Collection of urls to compare visual results.
+    visual_regression_options:
+      threshold: 0.1
+      delay: 1500
     urls:
       hs-colorful:
         - /
+        - /mixed-pages/mixed-page
         - /mixed-pages/mixed-page-raised-cards
         - /mixed-page-wells-raised-cards-full-width
+        - /mixed-pages/mixed-page-wells
         - /mixed-pages/mixed-page-wells-raised-cards-full-width-sidebar
         - /default-views/news
         - /default-views/events
         - /default-views/people
+        - /default-views/publications
+        - /news/jackelyn-hwang-wins-jane-addams-award-best-article-community-and-urban-sociology-section
+        - /events/colloquium-series/sociology-department-colloquium-robert-braun
+        - /people/abhinanda-sarkar
+        - /publications/privilege-and-punishment-how-race-and-class-matter-criminal-court
+        - /collection-real-world-examples
+        - /collection-real-world-examples-w-well
+        - /collection-real-examples-uniform-and-stretch
+        - /componentshero-images-main-region/hero-gradient-slider
+        - /hero-images-main-region/hero-layered-slider
+        - /componentshero-images-main-region/hero-no-text
+        - /componentshero-images-main-region/hero-overlay
+        - /components/photo-album
+        - /components/text-area-typography
+        - /components/vertical-timeline-view-using-events-ct
         - /components/hero-images-main-region/banner-images-partial-overlay-and-text
         - /components/hero-images-main-region/banner-images-text-box
         - /components/hero-images-full-width-region-and-main-region/tall-spotlights-classic
-        - /components/text-area-typography
+        - /components/accordions
+        - /components/callout-box
+        - /components/color-bands
+        - /components/collections/collections-postcards
       hs-traditional:
         - /
+        - /mixed-pages/mixed-page
         - /mixed-pages/mixed-page-raised-cards
         - /mixed-page-wells-raised-cards-full-width
+        - /mixed-pages/mixed-page-wells
         - /mixed-pages/mixed-page-wells-raised-cards-full-width-sidebar
         - /default-views/news
         - /default-views/events
         - /default-views/people
+        - /default-views/publications
+        - /news/jackelyn-hwang-wins-jane-addams-award-best-article-community-and-urban-sociology-section
+        - /events/colloquium-series/sociology-department-colloquium-robert-braun
+        - /people/abhinanda-sarkar
+        - /publications/privilege-and-punishment-how-race-and-class-matter-criminal-court
+        - /collection-real-world-examples
+        - /collection-real-world-examples-w-well
+        - /collection-real-examples-uniform-and-stretch
+        - /componentshero-images-main-region/hero-gradient-slider
+        - /hero-images-main-region/hero-layered-slider
+        - /componentshero-images-main-region/hero-no-text
+        - /componentshero-images-main-region/hero-overlay
+        - /components/photo-album
+        - /components/text-area-typography
+        - /components/vertical-timeline-view-using-events-ct
         - /components/hero-images-main-region/banner-images-partial-overlay-and-text
         - /components/hero-images-main-region/banner-images-text-box
         - /components/hero-images-full-width-region-and-main-region/tall-spotlights-classic
-        - /components/text-area-typography
+        - /components/accordions
+        - /components/callout-box
+        - /components/color-bands
+        - /components/collections/collections-postcards
+      english:
+        - /
+      history:
+        - /
+      west:
+        - /
   # What to call the service hosting MySQL. This name also acts as the
   # hostname to access the service by from the php service.
   mysql:
-
     # Use the latest available 8.x version of MySQL
     image: tugboatqa/mysql:8
     commands:

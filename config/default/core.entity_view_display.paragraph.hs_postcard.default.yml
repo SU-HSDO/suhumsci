@@ -3,13 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.hs_postcard.field_hs_postcard_alignment
     - field.field.paragraph.hs_postcard.field_hs_postcard_body
+    - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
-    - field.field.paragraph.hs_postcard.field_hs_postcard_layout
     - field.field.paragraph.hs_postcard.field_hs_postcard_link
     - field.field.paragraph.hs_postcard.field_hs_postcard_title
-    - field.field.paragraph.hs_postcard.field_hs_postcard_vertical_style
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - ds
@@ -29,11 +27,7 @@ third_party_settings:
       settings:
         pattern:
           field_templates: default
-          variant: _field
-          variant_field: field_hs_postcard_vertical_style
-          variant_field_values:
-            plain: plain
-            accent: accent
+          variant_field: field_hs_postcard_body
     regions:
       title:
         - field_hs_postcard_title
@@ -100,7 +94,5 @@ content:
     weight: 0
     region: title
 hidden:
-  field_hs_postcard_alignment: true
-  field_hs_postcard_layout: true
-  field_hs_postcard_vertical_style: true
+  field_hs_postcard_display: true
   search_api_excerpt: true

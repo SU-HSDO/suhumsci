@@ -26,4 +26,4 @@ jobs:
           ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
         run: |
           composer install -n &&
-          drush sws:multisite:sync-stage -n
+          drush sws:multisite:sync-stage --app-key="$ACQUIA_KEY" --app-secret="$ACQUIA_SECRET" -n

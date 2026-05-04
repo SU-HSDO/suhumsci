@@ -121,12 +121,15 @@ function hs_layouts_preprocess(&$variables, $hook) {
     $style = NULL;
     switch ($col_count) {
       case 2:
-        $style = 'postcard_vertical_2_across';
+        $style = 'hp_2_across_landscape';
         break;
 
       case 3:
+        $style = 'hp_3_across_events';
+        break;
+
       case 4:
-        $style = 'postcard_vertical_3_across';
+        $style = 'hp_4_across';
         break;
     }
 
@@ -326,16 +329,5 @@ function hs_layouts_preprocess_pattern_date_stacked_vertical_card(&$variables) {
     _hs_layouts_make_title_the_link($variables);
     // Restore original title, because it was overriden above.
     $variables['title'] = $original_title;
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function hs_layouts_preprocess_pattern_horizontal_card(&$variables) {
-  $context = $variables['context'];
-  if ($context->isOfType('layout')) {
-    // Functionality for paragraphs.
-    _hs_layouts_make_title_the_link($variables);
   }
 }

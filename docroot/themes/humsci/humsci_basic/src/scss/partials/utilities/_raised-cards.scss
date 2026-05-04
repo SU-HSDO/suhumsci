@@ -4,9 +4,6 @@
 @use '../mixins/decorative' as *;
 @use '../mixins/icons' as *;
 
-$container-small: hb-calculate-rems(576px);
-$container-medium: hb-calculate-rems(768px);
-
 .hb-raised-cards {
   // The uniform-height modifier adds the ability for cards to be consistent height regardless of content.
   &--uniform-height .hs-paragraph-style .ptype-hs-postcard,
@@ -35,13 +32,6 @@ $container-medium: hb-calculate-rems(768px);
     height: 100%;
   }
 
-  &--uniform-height .hb-vertical-linked-card {
-    .hb-vertical-linked-card__description {
-      flex-grow: 1;
-    }
-  }
-
-
   // Raised cards uniform height styles for Testimonial & Timeline
   &--uniform-height .field-hs-collection-items .ptype-hs-testimonial,
   &--uniform-height .field-hs-collection-items .ptype-hs-timeline {
@@ -62,10 +52,11 @@ $container-medium: hb-calculate-rems(768px);
   }
 
   .hb-card {
-    flex-grow: 1;
     background-color: color('white', 'global');
+    flex-grow: 1;
 
     @include hb-traditional {
+      padding: hb-spacing-width('xs');
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px)
         hb-calculate-rems(17px) color('gray-medium', 'global');
     }
@@ -76,9 +67,7 @@ $container-medium: hb-calculate-rems(768px);
         color-mix(in srgb, color('black', 'global') 12%, transparent);
 
       @supports (object-fit: cover) {
-        .hb-card__wrapper {
-          align-items: stretch;
-        }
+        align-items: stretch;
 
         &__graphics {
           margin: 0;
@@ -104,6 +93,10 @@ $container-medium: hb-calculate-rems(768px);
         }
       }
 
+      &__content {
+        padding: hb-spacing-width('xs');
+      }
+
       &.hb-card--horizontal-date-stacked.hb-card--no-image {
         .hb-card__graphics--has-date {
           .hb-card__date-tile {
@@ -123,128 +116,9 @@ $container-medium: hb-calculate-rems(768px);
           left: hb-calculate-rems(-14px);
         }
       }
-    }
-  }
 
-  // Card content padding adjustments for raised cards.
-  .hb-vertical-card,
-  .hb-card--date-stacked {
-    .hb-card__content {
-      @include hb-themes(('colorful', 'airy')) {
-        padding-inline: hb-calculate-rems(16px);
-
-        @container card (width > #{$container-small}) {
-          padding-inline: hb-calculate-rems(32px);
-        }
-      }
-
-      @include hb-traditional {
-        padding-inline: hb-calculate-rems(14px);
-
-        @container card (width > #{$container-small}) {
-          padding-inline: hb-calculate-rems(24px);
-        }
-      }
-    }
-
-    &.hb-card--no-image {
-      .hb-card__content {
-        @include hb-themes(('colorful', 'airy')) {
-          padding-inline: hb-calculate-rems(20px);
-
-          @container card (width > #{$container-small}) {
-            padding-inline: hb-calculate-rems(32px);
-          }
-        }
-
-        @include hb-traditional {
-          padding-inline: hb-calculate-rems(24px);
-
-          @container card (width > #{$container-small}) {
-            padding-inline: hb-calculate-rems(32px);
-          }
-        }
-      }
-    }
-  }
-
-  .hb-card--horizontal {
-    .hb-card__content {
-      // Padding for horizontal cards without image.
-      @include hb-themes(('colorful', 'airy')) {
-        padding-inline: hb-calculate-rems(20px);
-
-        @container card (width > #{$container-small}) {
-          padding-inline: hb-calculate-rems(32px);
-        }
-      }
-
-      @include hb-traditional {
-        padding-inline: hb-calculate-rems(24px);
-
-        @container card (width > #{$container-small}) {
-          padding-inline: hb-calculate-rems(32px);
-        }
-      }
-    }
-
-    &:has(.hb-card__graphics) {
-      .hb-card__content {
-        @include hb-themes(('colorful', 'airy')) {
-          padding-inline: hb-calculate-rems(16px);
-        }
-
-        @include hb-traditional {
-          padding-inline: hb-calculate-rems(4px);
-        }
-      }
-
-      &.hb-card--horizontal--left {
-        .hb-card__content {
-          @include hb-themes(('colorful', 'airy')) {
-            @container card (width > #{$container-small}) {
-              padding-inline: hb-calculate-rems(12px) hb-calculate-rems(24px);
-            }
-
-            @container card (width > #{$container-medium}) {
-              padding-inline: hb-calculate-rems(20px) hb-calculate-rems(32px);
-            }
-          }
-
-          @include hb-traditional {
-            @container card (width > #{$container-small}) {
-              padding-inline: hb-calculate-rems(20px) 0;
-            }
-
-            @container card (width > #{$container-medium}) {
-              padding-inline: hb-calculate-rems(32px) 0;
-            }
-          }
-        }
-      }
-
-      &.hb-card--horizontal--right {
-        .hb-card__content {
-          @include hb-themes(('colorful', 'airy')) {
-            @container card (width > #{$container-small}) {
-              padding-inline: hb-calculate-rems(24px) hb-calculate-rems(12px);
-            }
-
-            @container card (width > #{$container-medium}) {
-              padding-inline: hb-calculate-rems(32px) hb-calculate-rems(20px);
-            }
-          }
-
-          @include hb-traditional {
-            @container card (width > #{$container-small}) {
-              padding-inline: 0 hb-calculate-rems(20px);
-            }
-
-            @container card (width > #{$container-medium}) {
-              padding-inline: 0 hb-calculate-rems(32px);
-            }
-          }
-        }
+      &__title:only-child {
+        margin: 0;
       }
     }
   }
@@ -273,17 +147,12 @@ $container-medium: hb-calculate-rems(768px);
       background-color: transparent;
     }
   }
-}
 
-// Colorful: all vertical cards in views with a `.hb-raised-cards` parent
-// container will have the bottom accent line.
-// .hb-raised-cards can be on the view or outside, so we add both cases.
-.hb-raised-cards .views-element-container,
-.views-element-container .hb-raised-cards {
   .hb-vertical-card,
   .hb-card--date-stacked {
-    @include hb-themes(('airy', 'colorful')) {
-      border-bottom: hb-calculate-rems(4px) solid color('secondary');
+    @include hb-colorful {
+      border-bottom: 3px solid;
+      border-color: color('secondary');
     }
   }
 }
@@ -371,5 +240,15 @@ $container-medium: hb-calculate-rems(768px);
         }
       }
     }
+  }
+}
+
+// Update padding when vertical card is in 4 columns.
+.hb-raised-cards
+  .field-hs-collection-items.item-per-row--4
+  .hb-vertical-card
+  .hb-card__content {
+  @include hb-colorful {
+    padding: hb-calculate-rems(18px);
   }
 }

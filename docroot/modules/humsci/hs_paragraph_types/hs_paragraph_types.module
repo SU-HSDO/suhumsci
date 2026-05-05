@@ -214,17 +214,17 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
   switch ($entity->bundle()) {
     case 'hs_postcard':
       if (
-        !$entity->hasField('field_hs_postcard_layout') ||
+        !$entity->hasField('field_hs_postcard_orientation') ||
         !$entity->hasField('field_hs_postcard_vertical_style')
       ) {
         break;
       }
 
-      $layout = $entity->get('field_hs_postcard_layout')->value;
-      if ($layout == 'horizontal') {
+      $orientation = $entity->get('field_hs_postcard_orientation')->value;
+      if ($orientation == 'horizontal') {
         $view_mode = 'preview';
       }
-      elseif ($layout == 'vertical') {
+      elseif ($orientation == 'vertical') {
         $style = $entity->get('field_hs_postcard_vertical_style')->value;
         switch ($style) {
           case 'stacked':

@@ -1344,6 +1344,8 @@ function hs_paragraph_types_update_10033() {
 
   $storages_to_create = [
     'field.storage.paragraph.field_hs_postcard_orientation',
+    'field.storage.paragraph.field_hs_postcard_style',
+    'field.storage.paragraph.field_hs_postcard_align',
   ];
 
   foreach ($storages_to_create as $storage_name) {
@@ -1359,6 +1361,8 @@ function hs_paragraph_types_update_10033() {
 
   $fields_to_create = [
     'field.field.paragraph.hs_postcard.field_hs_postcard_orientation',
+    'field.field.paragraph.hs_postcard.field_hs_postcard_style',
+    'field.field.paragraph.hs_postcard.field_hs_postcard_align',
   ];
 
   foreach ($fields_to_create as $field_name) {
@@ -1405,6 +1409,24 @@ function hs_paragraph_types_update_10034(&$sandbox) {
       }
     }
 
+    // Migrate field_hs_postcard_vertical_style -> field_hs_postcard_style.
+    if ($paragraph->hasField('field_hs_postcard_vertical_style') && $paragraph->hasField('field_hs_postcard_style')) {
+      $value = $paragraph->get('field_hs_postcard_vertical_style')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_postcard_style', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_postcard_alignment -> field_hs_postcard_align.
+    if ($paragraph->hasField('field_hs_postcard_alignment') && $paragraph->hasField('field_hs_postcard_align')) {
+      $value = $paragraph->get('field_hs_postcard_alignment')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_postcard_align', $value);
+        $save_needed = TRUE;
+      }
+    }
+
     if ($save_needed) {
       $paragraph->save();
       $sandbox['updated']++;
@@ -1446,6 +1468,8 @@ function hs_paragraph_types_update_10035() {
     ],
     'hs_postcard' => [
       'field_hs_postcard_layout',
+      'field_hs_postcard_vertical_style',
+      'field_hs_postcard_alignment',
     ],
   ];
 

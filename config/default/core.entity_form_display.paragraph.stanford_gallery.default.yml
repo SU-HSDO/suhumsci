@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.stanford_gallery.field_hs_gallery_style
     - field.field.paragraph.stanford_gallery.field_photoalbum_style
     - field.field.paragraph.stanford_gallery.su_gallery_button
     - field.field.paragraph.stanford_gallery.su_gallery_description
@@ -10,14 +11,33 @@ dependencies:
     - field.field.paragraph.stanford_gallery.su_gallery_images
     - paragraphs.paragraphs_type.stanford_gallery
   module:
+    - field_formatter_class
     - linkit
     - media_library
+    - style_selector
     - text
 id: paragraph.stanford_gallery.default
 targetEntityType: paragraph
 bundle: stanford_gallery
 mode: default
 content:
+  field_hs_gallery_style:
+    type: style_selector_tile_widget
+    weight: 5
+    region: content
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   field_photoalbum_style:
     type: options_select
     weight: 4
@@ -32,6 +52,7 @@ content:
       placeholder_url: ''
       placeholder_title: ''
       linkit_profile: default
+      linkit_auto_link_text: false
     third_party_settings: {  }
   su_gallery_description:
     type: text_textarea

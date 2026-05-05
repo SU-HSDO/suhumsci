@@ -268,5 +268,11 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
       }
       $view_mode = $entity->get('field_hs_clr_bnd_width')->value == 'full-width' ? 'default' : 'preview';
       break;
+
+    case 'stanford_gallery':
+      if ($entity->hasField('field_hs_gallery_style') && !$entity->get('field_hs_gallery_style')->isEmpty()) {
+        $view_mode = $entity->get('field_hs_gallery_style')->value == 'slideshow' ? 'hs_gallery_slideshow' : 'default';
+      }
+      break;
   }
 }

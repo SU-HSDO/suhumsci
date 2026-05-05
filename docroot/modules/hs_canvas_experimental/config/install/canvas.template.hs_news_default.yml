@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - hs_canvas_experimental
+id: hs_news_default
+label: 'HS News Default Template'
+content_entity_type_id: node
+content_entity_type_bundle: hs_news
+# MANDATORY: Currently Canvas has a hardcoded restriction to 'full'
+content_entity_type_view_mode : full
+component_tree:
+  - component: 'sdc:hs_canvas_experimental:hs_news_default'
+    version: '1.0.0'
+    uuid: 'uuid-news-header-001'
+    props:
+      title:
+        source: 'field'
+        value: 'title'
+      byline:
+        source: 'field'
+        value: 'field_news_byline'
+      date:
+        source: 'field'
+        value: 'field_hs_news_date'
+      image:
+        source: 'field'
+        value: 'field_hs_news_image'
+    slots:
+      main_content: []

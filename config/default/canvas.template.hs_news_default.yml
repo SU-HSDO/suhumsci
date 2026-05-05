@@ -1,0 +1,20 @@
+_core:
+  default_config_hash: P7xcbAP1sINZJgQbDQc4fUkcbAuHcEF4vQF13e8-2ME
+langcode: en
+status: true
+id: hs_news_default
+label: 'HS News Default Template'
+target_entity_type: node
+target_bundle: hs_news
+view_mode: full
+layout:
+  -
+    component: 'sdc:hs_canvas_experimental:hs_news_default'
+    uuid: news-hero-section
+    props:
+      title: '[node:title]'
+      byline: '[node:field_news_byline]'
+      date: '[node:field_hs_news_date]'
+      image: '[node:field_hs_news_image:entity:url]'
+    slots:
+      main_content: {  }

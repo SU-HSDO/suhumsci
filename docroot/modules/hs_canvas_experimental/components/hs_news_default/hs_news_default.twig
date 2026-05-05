@@ -1,0 +1,45 @@
+{# 
+  Variables:
+  - title (string)
+  - byline (string)
+  - date (string)
+  - image (string URL)
+  - categories (array of strings)
+  - attributes (standard Drupal attribute object)
+#}
+
+<article {{ attributes.addClass('hs-news-article') }}>
+  <header class="news-header">
+    {% if image %}
+      <div class="news-image">
+        <img src="{{ image }}" alt="{{ title }}" />
+      </div>
+    {% endif %}
+
+    <div class="news-meta">
+      <h1 class="news-title">{{ title }}</h1>
+      
+      {% if byline or date %}
+        <div class="news-by-line">
+          {% if byline %}<span class="author">By {{ byline }}</span>{% endif %}
+          {% if date %}<span class="date">on {{ date }}</span>{% endif %}
+        </div>
+      {% endif %}
+
+      {% if categories %}
+        <ul class="news-categories">
+          {% for cat in categories %}
+            <li>{{ cat }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="news-body">
+    {# This is the "Slot" where Canvas will inject your other components #}
+    {% block main_content %}
+      {{ main_content }}
+    {% endblock %}
+  </div>
+</article>

@@ -1,0 +1,11 @@
+<section {{ attributes.addClass('basic-text-block') }}>
+  {% if title %}
+    <h2 class="section-title">{{ title }}</h2>
+  {% endif %}
+  
+  {% if body %}
+    <div class="section-body">
+      {{ body|raw }} {# Using |raw because Canvas text fields often send HTML #}
+    </div>
+  {% endif %}
+</section>

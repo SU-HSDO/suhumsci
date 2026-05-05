@@ -1,0 +1,45 @@
+_core:
+  default_config_hash: MaD6t1wCnYbJDWx27yUaFBNGdnwzV0wIPvBfoEUoLCg
+label: 'HS News Default Template'
+description: 'Canvas template for hs_news content type with locked fields.'
+target:
+  type: node
+  bundle: hs_news
+layout:
+  -
+    type: field
+    field: title
+    label: Title
+    locked: true
+  -
+    type: field
+    field: field_news_byline
+    label: Byline
+    locked: true
+  -
+    type: field
+    field: field_hs_news_date
+    label: 'Publish date'
+    locked: true
+  -
+    type: field
+    field: field_hs_news_image
+    label: 'News Image'
+    locked: true
+  -
+    type: field
+    field: field_hs_news_categories
+    label: Categories
+    locked: true
+  -
+    type: field
+    field: field_hs_news_link
+    label: 'Link to External Article'
+    locked: true
+  -
+    type: slot
+    name: main_content
+    label: 'Main Content Slot'
+    allowed_components:
+      - BasicText
+      - BasicTextSDC

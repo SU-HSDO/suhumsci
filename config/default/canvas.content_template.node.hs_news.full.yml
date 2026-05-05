@@ -1,0 +1,31 @@
+uuid: 9f701726-ae73-49a6-9826-b57b7a367ab9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+id: node.hs_news.full
+content_entity_type_id: node
+content_entity_type_bundle: hs_news
+content_entity_type_view_mode: full
+component_tree:
+  -
+    uuid: uuid-news-header-001
+    component: 'sdc:hs_canvas_experimental:hs_news_default'
+    version: 1.0.0
+    props:
+      title:
+        source: field
+        value: title
+      byline:
+        source: field
+        value: field_news_byline
+      date:
+        source: field
+        value: field_hs_news_date
+      image:
+        source: field
+        value: field_hs_news_image
+    slots:
+      main_content: {  }
+exposed_slots: {  }

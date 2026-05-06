@@ -1331,9 +1331,86 @@ function hs_paragraph_types_update_10032(&$sandbox) {
 }
 
 /**
- * Removes legacy paragraph fields.
+ * Creates new fields for visual variants of the Gradient Hero paragraph.
  */
 function hs_paragraph_types_update_10033() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  $storage_config = $config_storage->read('field.storage.paragraph.field_hs_gradient_hero_alignment');
+  if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
+    $field_storage->createFromStorageRecord($storage_config)->save();
+    \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
+      '%field_name' => $storage_config['field_name'],
+      '%entity_type' => $storage_config['entity_type'],
+    ]);
+  }
+
+  $field_config = $config_storage->read('field.field.paragraph.hs_gradient_hero.field_hs_gradient_hero_alignment');
+  if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_gradient_hero.' . $field_config['field_name']))) {
+    $field_config_storage->create($field_config)->save();
+    \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+      '%field_name' => $field_config['field_name'],
+      '%entity_type' => $field_config['entity_type'],
+      '%bundle' => $field_config['bundle'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Gradient Hero paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10034(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_gradient_hero')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_gradient_hero_align -> field_hs_gradient_hero_alignment.
+    if ($paragraph->hasField('field_hs_gradient_hero_align') && $paragraph->hasField('field_hs_gradient_hero_alignment')) {
+      $value = $paragraph->get('field_hs_gradient_hero_align')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_gradient_hero_alignment', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_gradient_hero paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Removes legacy paragraph fields.
+ */
+function hs_paragraph_types_update_10035() {
   $fields_to_delete = [
     'hs_spotlight' => [
       'field_hs_spotlight_bg',
@@ -1350,6 +1427,9 @@ function hs_paragraph_types_update_10033() {
     'hs_callout_box' => [
       'field_hs_callout_box_align',
       'field_hs_callout_style',
+    ],
+    'hs_gradient_hero' => [
+      'field_hs_gradient_hero_align',
     ],
     'hs_clr_bnd' => [
       'field_hs_clr_bnd_bgc',

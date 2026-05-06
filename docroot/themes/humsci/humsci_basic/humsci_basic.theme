@@ -81,11 +81,22 @@ function humsci_basic_preprocess_html(&$vars) {
     $vars['html_attributes']->addClass('hb-use-megamenu');
   }
 
-  // Preload full width region banner images (LCP)
   $route_match = \Drupal::routeMatch();
 
   $node = $route_match->getParameter('node');
 
+  // Add body classes for full-width / main-region spacing gap detection.
+  // Only applies to page type that use the full-width + main region layout.
+  if ($node->bundle() == 'hs_basic_page') {
+    $is_hs_carousel_in_hs_page_hero = humsci_basic_is_hs_carousel_in_hs_page_hero($node);
+    $is_there_extra_gap_in_main_region = humsci_basic_is_there_extra_gap_in_main_region($node);
+
+    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region) {
+      $vars['attributes']['class'][] = 'there-is-extra-gap-between-hero-and-main-region';
+    }
+  }
+
+  // Preload full width region banner images (LCP)
   if (!$node || !$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {
     return;
   }
@@ -279,6 +290,91 @@ function humsci_basic_preload_full_width_image($image_referenced, $style_name, a
 }
 
 /**
+ * Check if there's a Banner image(s) with text box in Page hero.
+ */
+function humsci_basic_is_hs_carousel_in_hs_page_hero($node) {
+  if (!$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {
+    return FALSE;
+  }
+
+  $hero = $node->get('field_hs_page_hero')->entity;
+
+  return $hero->bundle() == 'hs_carousel';
+}
+
+/**
+ * Check if the following scenarios are being the first item in the main region:
+ * - A heading in Text Area.
+ * - A text with Splash font or Lead font style in Text Area.
+ * - A Spotlight.
+ * - An Accordion without "Expand Button".
+ */
+function humsci_basic_is_there_extra_gap_in_main_region($node) {
+  if (!$node->hasField('field_hs_page_components') || $node->get('field_hs_page_components')->isEmpty()) {
+    return;
+  }
+
+  $field = $node->get('field_hs_page_components');
+
+  // Get the referenced Paragraph entity.
+  $paragraph = $field->entity;
+
+  switch ($paragraph->bundle()) {
+    case 'hs_text_area':
+      if (
+        !$paragraph->hasField('field_hs_text_area') ||
+        $paragraph->get('field_hs_text_area')->isEmpty()
+      ) {
+        return;
+      }
+
+      $value = $paragraph->get('field_hs_text_area')->value;
+
+      if (empty($value)) return;
+
+      // Load HTML safely.
+      $dom = new \DOMDocument();
+
+      libxml_use_internal_errors(TRUE);
+      $dom->loadHTML('<?xml encoding="utf-8" ?>' . $value);
+      libxml_clear_errors();
+
+      $xpath = new \DOMXPath($dom);
+
+      // Get the FIRST element inside body.
+      $first_element = $xpath->query('/html/body/*[1]')->item(0);
+
+      if (!$first_element) return;
+
+      $tag = $first_element->nodeName;
+
+      // Case 1: It's a heading.
+      if (in_array($tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], TRUE)) {
+        return TRUE;
+      }
+
+      // Case 2: It's a paragraph with specific classes.
+      if ($tag === 'p') {
+        $class_attr = $first_element->attributes->getNamedItem('class');
+
+        if (!$class_attr) return;
+
+        $classes = explode(' ', $class_attr->nodeValue);
+
+        // Check if ANY of these classes exist
+        $target_classes = ['hs-font-splash', 'hs-font-lead'];
+
+        foreach ($target_classes as $target) {
+          if (in_array($target, $classes, TRUE)) {
+            return TRUE;
+          }
+        }
+      }
+      break;
+  }
+}
+
+/**
  * Implements hook_preprocess_page().
  */
 function humsci_basic_preprocess_page(&$vars) {
@@ -299,7 +395,9 @@ function humsci_basic_preprocess_page(&$vars) {
 
   // Node pages are configured with layout builder so we dont need to set these
   // classes.
-  $route = \Drupal::routeMatch()->getRouteName();
+  $route_match = \Drupal::routeMatch();
+  $route = $route_match->getRouteName();
+
   $layout_routes = [
     'layout_builder.overrides.node.view',
     'layout_builder.defaults.node.view',

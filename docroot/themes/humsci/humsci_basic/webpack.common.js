@@ -35,6 +35,7 @@ const shared = {
   'table-pattern': 'shared/tables/table-pattern.js',
   'table-wrap': 'shared/tables/wrap.js',
   timeline: 'shared/timeline/expand-collapse-timeline.js',
+  'views-exposed-form': 'shared/views/views-exposed-form.js',
 };
 
 // Colorful and traditional theme specific JS files.

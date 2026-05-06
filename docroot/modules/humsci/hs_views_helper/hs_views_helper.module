@@ -210,10 +210,15 @@ function hs_views_helper_views_pre_view(ViewExecutable $view, $display_id, array
   // Change the default cache mechanism to use custom tags that we generate
   // using the node type filters that exist on the view.
   // @see \Drupal\Core\Entity\EntityBase::getListCacheTagsToInvalidate().
-  if (!empty($filters['type']['entity_type']) && $filters['type']['entity_type'] == 'node') {
+  if (
+    !empty($filters['type']['entity_type']) &&
+    $filters['type']['entity_type'] == 'node'
+  ) {
     $tags = [];
-    foreach ($filters['type']['value'] as $node_type) {
-      $tags[] = 'node_list:' . $node_type;
+    if (!empty($filters['type']['value']) && is_array($filters['type']['value'])) {
+      foreach ($filters['type']['value'] as $node_type) {
+        $tags[] = 'node_list:' . $node_type;
+      }
     }
     // If no node type tags are available, fall back to the general `node_list`.
     $tags = empty($tags) ? ['node_list'] : $tags;

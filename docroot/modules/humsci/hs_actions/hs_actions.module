@@ -35,8 +35,8 @@ function hs_actions_help($route_name, RouteMatchInterface $route_match) {
 function hs_actions_views_pre_build(ViewExecutable $view) {
   $display = $view->getDisplay();
 
-  /** @var \Drupal\views_bulk_operations\Plugin\views\field\ViewsBulkOperationsBulkForm $vbo_handler */
   if ($vbo_handler = $display->getHandler('field', 'views_bulk_operations_bulk_form')) {
+    /** @var \Drupal\views_bulk_operations\Plugin\views\field\ViewsBulkOperationsBulkForm $vbo_handler */
     $current_user = \Drupal::currentUser();
     foreach ($vbo_handler->options['selected_actions'] as $key => $action) {
       if ($current_user->hasPermission('ignore content from importer')) {

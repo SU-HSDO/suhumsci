@@ -49,7 +49,7 @@ function hs_cmap_entity_base_field_info_alter(&$fields, EntityTypeInterface $ent
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function hs_cmap_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state): void {
+function hs_cmap_form_taxonomy_term_form_alter(mixed &$form, FormStateInterface $form_state): void {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $form_state->getFormObject()->getEntity();
   if ($term->bundle() !== 'hs_curriculum_requirement_type') {

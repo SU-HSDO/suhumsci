@@ -2,6 +2,8 @@ uuid: 7553780e-fde2-4ccf-956b-ab59abf9f942
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.hs_news
   module:
     - node
 _core:
@@ -9,12 +11,11 @@ _core:
 id: hs_news
 label: News
 type: 'canonical_entities:node'
-pattern: 'news/[node:title]'
+pattern: '/news/[node:title]'
 selection_criteria:
   c9410459-e8b0-4492-9919-9b2c3c9330aa:
     id: 'entity_bundle:node'
     negate: false
-    uuid: c9410459-e8b0-4492-9919-9b2c3c9330aa
     context_mapping:
       node: node
     bundles:

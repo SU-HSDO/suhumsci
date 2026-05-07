@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.hs_accordion.field_accordion_style
+    - field.field.paragraph.hs_accordion.field_hs_accordion_style
     - field.field.paragraph.hs_accordion.field_hs_accord_expcol
     - field.field.paragraph.hs_accordion.field_hs_accordion_description
     - field.field.paragraph.hs_accordion.field_hs_accordion_summary
@@ -11,6 +11,8 @@ dependencies:
     - field.field.paragraph.hs_accordion.field_summary_heading_level
     - paragraphs.paragraphs_type.hs_accordion
   module:
+    - field_formatter_class
+    - style_selector
     - text
     - viewfield
 id: paragraph.hs_accordion.default
@@ -18,12 +20,23 @@ targetEntityType: paragraph
 bundle: hs_accordion
 mode: default
 content:
-  field_accordion_style:
-    type: options_select
-    weight: 1
+  field_hs_accordion_style:
+    type: style_selector_tile_widget
+    weight: 2
     region: content
-    settings: {  }
-    third_party_settings: {  }
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   field_hs_accord_expcol:
     type: boolean_checkbox
     weight: 0
@@ -33,7 +46,7 @@ content:
     third_party_settings: {  }
   field_hs_accordion_description:
     type: text_textarea
-    weight: 4
+    weight: 5
     region: content
     settings:
       rows: 5
@@ -41,7 +54,7 @@ content:
     third_party_settings: {  }
   field_hs_accordion_summary:
     type: string_textfield
-    weight: 2
+    weight: 3
     region: content
     settings:
       size: 60
@@ -49,13 +62,13 @@ content:
     third_party_settings: {  }
   field_hs_accordion_views:
     type: viewfield_select
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_summary_heading_level:
     type: options_select
-    weight: 3
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }

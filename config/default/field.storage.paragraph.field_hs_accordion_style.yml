@@ -1,16 +1,19 @@
-uuid: 12ace6d2-c690-49dd-b4bf-ea2e93d97d3e
+uuid: 8c7c4284-d9fe-4804-a8e7-93ffccad1de5
 langcode: en
 status: true
 dependencies:
   module:
-    - options
     - paragraphs
-id: paragraph.field_accordion_style
-field_name: field_accordion_style
+    - style_selector
+id: paragraph.field_hs_accordion_style
+field_name: field_hs_accordion_style
 entity_type: paragraph
-type: list_string
+type: style_selector_css_class
 settings:
   allowed_values:
+    -
+      value: default
+      label: Default
     -
       value: secondary
       label: Secondary
@@ -18,7 +21,7 @@ settings:
       value: light
       label: Light
   allowed_values_function: ''
-module: options
+module: style_selector
 locked: false
 cardinality: 1
 translatable: true

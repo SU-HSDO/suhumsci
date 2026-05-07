@@ -9,7 +9,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\node\Entity\Node;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\paragraphs\ParagraphInterface;
-use \Drupal\node\NodeInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_preprocess().
@@ -91,8 +91,9 @@ function humsci_basic_preprocess_html(&$vars) {
   if ($node instanceof NodeInterface && $node->bundle() == 'hs_basic_page') {
     $is_hs_carousel_in_hs_page_hero = humsci_basic_is_hs_carousel_in_hs_page_hero($node);
     $is_there_extra_gap_in_main_region = humsci_basic_is_there_extra_gap_in_main_region($node);
+    $is_title_block_in_main_region = humsci_basic_is_title_block_in_main_region();
 
-    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region) {
+    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region && $is_title_block_in_main_region) {
       $vars['attributes']['class'][] = 'there-is-extra-gap-between-hero-and-main-region';
     }
   }
@@ -306,7 +307,7 @@ function humsci_basic_is_hs_carousel_in_hs_page_hero($node) {
 /**
  * Check if the following scenarios are being the first item in the main region:
  * - A heading in Text Area.
- * - A text with Splash font or Lead font style in Text Area.
+ * - A Splash font or Lead font style in Text Area.
  * - A Spotlight.
  * - An Accordion without "Expand Button".
  */
@@ -331,7 +332,9 @@ function humsci_basic_is_there_extra_gap_in_main_region($node) {
 
       $value = $paragraph->get('field_hs_text_area')->value;
 
-      if (empty($value)) return;
+      if (empty($value)) {
+        return;
+      }
 
       // Load HTML safely.
       $dom = new \DOMDocument();
@@ -345,7 +348,9 @@ function humsci_basic_is_there_extra_gap_in_main_region($node) {
       // Get the FIRST element inside body.
       $first_element = $xpath->query('/html/body/*[1]')->item(0);
 
-      if (!$first_element) return;
+      if (!$first_element) {
+        return;
+      }
 
       $tag = $first_element->nodeName;
 
@@ -358,11 +363,13 @@ function humsci_basic_is_there_extra_gap_in_main_region($node) {
       if ($tag === 'p') {
         $class_attr = $first_element->attributes->getNamedItem('class');
 
-        if (!$class_attr) return;
+        if (!$class_attr) {
+          return;
+        }
 
         $classes = explode(' ', $class_attr->nodeValue);
 
-        // Check if ANY of these classes exist
+        // Check if ANY of these classes exist.
         $target_classes = ['hs-font-splash', 'hs-font-lead'];
 
         foreach ($target_classes as $target) {
@@ -372,9 +379,11 @@ function humsci_basic_is_there_extra_gap_in_main_region($node) {
         }
       }
       break;
+
     case 'hs_sptlght_slder':
       return TRUE;
       break;
+
     case 'hs_accordion':
       if (
         $paragraph->get('field_hs_accord_expcol')->value
@@ -383,6 +392,7 @@ function humsci_basic_is_there_extra_gap_in_main_region($node) {
       }
       return TRUE;
       break;
+
   }
 }
 

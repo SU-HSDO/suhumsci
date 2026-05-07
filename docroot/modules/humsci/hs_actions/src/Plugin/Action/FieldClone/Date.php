@@ -83,7 +83,11 @@ class Date extends FieldCloneBase {
     // Loop through all field values and increment them, then set the new values
     // back to the cloned entity.
     for ($delta = 0; $delta < $values->count(); $delta++) {
-      $item_value = $values->get($delta)->getValue();
+      $item = $values->get($delta);
+      if ($item === null) {
+        continue;
+      }
+      $item_value = $item->getValue();
 
       foreach ($item_value as $column_name => $column_value) {
         if (!in_array($column_name, ['value', 'end_value'])) {

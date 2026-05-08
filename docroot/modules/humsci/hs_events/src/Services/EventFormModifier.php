@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_events\Services;
 
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 

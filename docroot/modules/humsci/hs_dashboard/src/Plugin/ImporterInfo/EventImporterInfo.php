@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
-use Drupal\config_pages\Entity\ConfigPages;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -49,7 +48,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   /**
    * Localist config pages entity.
    *
-    * @var \Drupal\config_pages\Entity\ConfigPages|null
+   * @var \Drupal\config_pages\Entity\ConfigPages|null
    */
   protected $localistConfigPages;
 

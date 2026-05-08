@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_migrate\Plugin\migrate\process;
 
+use Drupal\field\FieldConfigInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -58,7 +59,7 @@ class FieldDefaultValue extends ProcessPluginBase implements ContainerFactoryPlu
     $field = $this->entityTypeManager->getStorage('field_config')
       ->load("$entity_type.$bundle.$field_name");
 
-    if (!$field instanceof \Drupal\field\FieldConfigInterface) {
+    if (!$field instanceof FieldConfigInterface) {
       return NULL;
     }
 

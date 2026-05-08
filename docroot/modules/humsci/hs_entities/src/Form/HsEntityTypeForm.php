@@ -5,7 +5,6 @@ namespace Drupal\hs_entities\Form;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\hs_entities\Entity\HsEntityType;
 
 /**
  * Form handler for HumSci entity type forms.

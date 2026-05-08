@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_config_overrides\Overrides;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -245,7 +246,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $loaded_config_page = $this->entityTypeManager->getStorage('config_pages')
       ->load($config_page);
     $urls = [];
-    if ($loaded_config_page instanceof \Drupal\Core\Entity\FieldableEntityInterface && $loaded_config_page->hasField($field_name) && $loaded_config_page->get($field_name)->count()) {
+    if ($loaded_config_page instanceof FieldableEntityInterface && $loaded_config_page->hasField($field_name) && $loaded_config_page->get($field_name)->count()) {
       foreach ($loaded_config_page->get($field_name)->getValue() as $value) {
         $urls[] = $value['uri'];
       }

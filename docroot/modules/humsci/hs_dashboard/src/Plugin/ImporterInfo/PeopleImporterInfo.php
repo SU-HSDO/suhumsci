@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -30,7 +29,7 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   /**
    * Configuration Factory.
    *
-    * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\Config
    */
   protected $capxConfig;
 

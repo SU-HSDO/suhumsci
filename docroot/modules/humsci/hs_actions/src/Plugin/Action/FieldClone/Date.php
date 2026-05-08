@@ -84,7 +84,7 @@ class Date extends FieldCloneBase {
     // back to the cloned entity.
     for ($delta = 0; $delta < $values->count(); $delta++) {
       $item = $values->get($delta);
-      if ($item === null) {
+      if ($item === NULL) {
         continue;
       }
       $item_value = $item->getValue();

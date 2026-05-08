@@ -32,7 +32,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   /**
    * Array of available Capx Importers.
    *
-    * @var \Drupal\hs_capx\Entity\CapxImporterInterface[]
+   * @var \Drupal\hs_capx\Entity\CapxImporterInterface[]
    */
   protected $importers = [];
 

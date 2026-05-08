@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_migrate\Plugin\migrate\process;
 
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateExecutableInterface;

@@ -5,7 +5,6 @@ namespace Drupal\su_humsci_profile\Plugin\Validation\Constraint;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -18,7 +17,7 @@ class MenuLinkItemConstraintValidator extends ConstraintValidator implements Con
   /**
    * Current request.
    *
-    * @var \Symfony\Component\HttpFoundation\Request|null
+   * @var \Symfony\Component\HttpFoundation\Request|null
    */
   protected $request;
 

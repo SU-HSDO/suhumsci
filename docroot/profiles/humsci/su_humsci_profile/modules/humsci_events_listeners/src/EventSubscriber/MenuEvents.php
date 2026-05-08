@@ -32,8 +32,9 @@ class MenuEvents implements EventSubscriberInterface {
    *   Triggered Event.
    */
   public function entityPresave(EntityPresaveEvent $event): void {
-    if ($event->getEntity()->getEntityTypeId() == 'menu_link_content') {
-      self::preSaveMenuLinkContent($event->getEntity());
+    $entity = $event->getEntity();
+    if ($entity instanceof MenuLinkContentInterface) {
+      self::preSaveMenuLinkContent($entity);
     }
   }
 

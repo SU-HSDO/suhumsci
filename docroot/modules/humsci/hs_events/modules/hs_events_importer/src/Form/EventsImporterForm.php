@@ -307,7 +307,7 @@ class EventsImporterForm extends ConfigFormBase {
       return;
     }
 
-    $url_headers = get_headers($url, 1);
+    $url_headers = get_headers($url, TRUE);
     $content_type_header = $url_headers['Content-Type'] ?? [];
 
     $is_xml = is_string($content_type_header) ? strpos($content_type_header, 'text/xml') !== FALSE : FALSE;

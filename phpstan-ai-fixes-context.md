@@ -59,3 +59,10 @@
   - Test-only dead code and assertion cleanup in `hs_actions`, `hs_capx`, `hs_config_readonly`, and `hs_views_helper`.
 - Level 4 validation outcome:
   - Full scan of `docroot/modules/humsci` and `docroot/profiles/humsci` is fully clean.
+
+## Level 5
+
+- Batch 1 scope:
+  - Argument-type and callable-signature fixes in `hs_actions`, `hs_blocks`, `hs_dashboard`, `hs_events_importer`, `hs_migrate`, `hs_paragraphs_between`, and `su_humsci_profile` menu events.
+- Level 5 validation outcome:
+  - Full scan of `docroot/modules/humsci` and `docroot/profiles/humsci` is fully clean.

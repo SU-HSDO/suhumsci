@@ -159,7 +159,7 @@ class DateTest extends KernelTestBase {
 
     $this->assertEquals($this->currentDate->format('Y-m-d'), $cloned_field_value);
 
-    $test_field_base = new TestFieldCloneBase([], NULL, NULL);
+    $test_field_base = new TestFieldCloneBase([], '', []);
     $form = [];
     $form_state = new FormState();
     $this->assertNull($test_field_base->validateConfigurationForm($form, $form_state));

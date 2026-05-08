@@ -53,7 +53,7 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
 
     // The "Region" is the same as the machine name of the group. It's a
     // pseudo-region.
-    /** @var \Drupal\layout_builder\SectionComponent $group_block_name */
+    /** @var string $group_block_name */
     $group_block_name = $form_state->get('layout_builder__component')
       ->getRegion();
 

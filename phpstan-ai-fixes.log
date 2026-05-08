@@ -98,3 +98,18 @@
   - `vendor/bin/phpstan analyse --configuration=phpstan.neon --level=4 docroot/modules/humsci docroot/profiles/humsci`
 - Result:
   - No remaining PHPStan issues in the scanned custom code paths.
+
+## Level 5
+
+### Batch 1
+
+- Fixed remaining level 5 call-site argument mismatches and one comparator callback signature.
+- Narrowed views/event-subscriber entities to the required Drupal subtypes before calling node/menu-link specific APIs.
+- Corrected one test helper constructor call to pass valid non-null plugin id/definition placeholders.
+
+### Level 5 Result
+
+- Full validation command run:
+  - `vendor/bin/phpstan analyse --configuration=phpstan.neon --level=5 docroot/modules/humsci docroot/profiles/humsci`
+- Result:
+  - No remaining PHPStan issues in the scanned custom code paths.

@@ -247,9 +247,11 @@ class TestEntityFormWizardCallbackObject extends EntityFormWizardBase {
   }
 
   public function getMachineLabel() {
+    return 'Machine label';
   }
 
   public function getWizardLabel() {
+    return 'Wizard label';
   }
 
   public function getEntityType() {
@@ -257,9 +259,11 @@ class TestEntityFormWizardCallbackObject extends EntityFormWizardBase {
   }
 
   public function getOperations($cached_values) {
+    return [];
   }
 
   public function exists() {
+    return static fn () => FALSE;
   }
 
 }

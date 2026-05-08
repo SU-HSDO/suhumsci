@@ -223,6 +223,8 @@ class CapxImporterForm extends EntityForm {
     $form_state->setRedirectUrl($importer->toUrl('collection'));
 
     Cache::invalidateTags(['migration_plugins', 'hs_capx_config']);
+
+    return $status;
   }
 
   /**

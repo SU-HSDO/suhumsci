@@ -2,11 +2,11 @@
 
 namespace Drupal\hs_blocks\Plugin\Block;
 
-use Drupal\block_content\Access\RefinableDependentAccessInterface;
-use Drupal\block_content\Access\RefinableDependentAccessTrait;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\RefinableDependentAccessInterface;
+use Drupal\Core\Access\RefinableDependentAccessTrait;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

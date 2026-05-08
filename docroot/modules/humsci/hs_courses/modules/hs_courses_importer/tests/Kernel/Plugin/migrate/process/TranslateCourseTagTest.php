@@ -101,7 +101,7 @@ class MigrateExecutableTest implements MigrateExecutableInterface {
    * {@inheritdoc}
    */
   public function import() {
-
+    return MigrationInterface::RESULT_COMPLETED;
   }
 
   /**

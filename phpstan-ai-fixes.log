@@ -1,0 +1,15 @@
+# PHPStan AI Fixes Log
+
+## Level 1
+
+- Fixed missing `int` returns in entity form save handlers:
+  - `hs_capx` importer form now returns the entity save status.
+  - `hs_courses_importer` course tag form now returns the entity save status.
+  - `hs_entities` entity type form now returns the entity save status.
+- Fixed missing returns in test doubles:
+  - `TestEntityFormWizardCallbackObject` now returns placeholder values matching the CTools wizard interface contract.
+  - `MigrateExecutableTest::import()` now returns `MigrationInterface::RESULT_COMPLETED` to satisfy `MigrateExecutableInterface`.
+- Fixed Drupal core namespace drift:
+  - `GroupBlock` now imports `RefinableDependentAccessInterface` and `RefinableDependentAccessTrait` from `Drupal\Core\Access`, which matches this Drupal core version.
+- Documented but did not change:
+  - `phpstan.neon` contains an ignored error pattern for `missingType.iterableValue` that was not matched in this report. No config change was made per policy.

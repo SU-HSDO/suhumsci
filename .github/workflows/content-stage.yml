@@ -2,6 +2,7 @@ name: Content Staging
 on:
   schedule:
     - cron: '0 0 * * 3'
+  workflow_dispatch:
 jobs:
   Copy-Prod-Database-Down:
     runs-on: ubuntu-latest
@@ -25,4 +26,4 @@ jobs:
           ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
         run: |
           composer install -n &&
-          drush sws:drupal:sync-stage
+          drush sws:multisite:sync-stage --app-key="$ACQUIA_KEY" --app-secret="$ACQUIA_SECRET" -n

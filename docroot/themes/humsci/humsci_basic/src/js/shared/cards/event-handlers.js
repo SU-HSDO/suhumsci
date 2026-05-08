@@ -1,13 +1,6 @@
 const addCardEvents = (card, mainLink) => {
   let downTime = 0;
 
-  // Add class to apply card-wide hover styles.
-  if (card.classList.contains('hb-vertical-linked-card')) {
-    card.classList.add('hb-vertical-linked-card--linked');
-  } else {
-    card.classList.add('hb-card--linked');
-  }
-
   // Add a focus state class to card
   mainLink.addEventListener('focus', () => {
     card.classList.add('is-focused');

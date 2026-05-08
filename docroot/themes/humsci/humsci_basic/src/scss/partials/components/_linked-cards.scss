@@ -1,5 +1,4 @@
 @use '../variables/general' as *;
-@use '../functions/general' as *;
 @use '../functions/animation' as *;
 @use '../functions/color' as *;
 @use '../mixins/theme' as *;
@@ -11,6 +10,8 @@
   // Needed to make the styles work when the anchor is the wrapper.
   .hb-card__title a,
   .hb-card__title a > div > * {
+    @include hb-link;
+
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
       color: var(--link-base-current-color);
@@ -22,34 +23,59 @@
     display: inline;
   }
 
-  // Apply hover styles only to cards with a link.
-  &.hb-card--linked {
-    &:hover,
-    &:focus,
-    &.is-focused {
-      cursor: pointer;
+  &:hover,
+  &:focus {
+    cursor: pointer;
 
-      // Needed to make the styles work when the anchor is the wrapper.
-      .hb-card__title a,
-      .hb-card__title a > div > * {
-        text-decoration-color: color('link-base');
-      }
-
-      .hb-card__img img {
-        transform: scale($hb-image-hover-scale);
+    @include hb-colorful {
+      .hb-raised-cards & {
+        text-decoration-color: color('secondary-darken-12');
       }
     }
 
-    // Styles when there's a video on a card.
-    &:has(.hb-video-lazy:hover),
-    &:has(.hb-video-lazy:focus-within) {
-      .hb-card__title a,
-      .hb-card__title a > div > * {
-        color: var(--link-base-current-color);
+    // Needed to make the styles work when the anchor is the wrapper.
+    .hb-card__title a,
+    .hb-card__title a > div > * {
+      color: color('black', 'global');
+      text-decoration-color: color('primary');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: var(--link-base-hover-current-color);
+        text-decoration-color: var(--link-base-hover-current-color);
       }
     }
   }
 
+  // Styles when there's a video on a card.
+  &:has(.hb-video-lazy:hover),
+  &:has(.hb-video-lazy:focus-within) {
+    @include hb-colorful {
+      .hb-raised-cards & {
+        text-decoration-color: color('gray-medium', 'global');
+      }
+    }
+
+    .hb-card__title a,
+    .hb-card__title a > div > * {
+      color: color('black', 'global');
+      text-decoration-color: color('gray-medium', 'global');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: color('black', 'global');
+        text-decoration-color: color('gray-medium', 'global');
+      }
+    }
+  }
+
+  &:hover,
+  &:focus,
+  &.is-focused {
+    .hb-card__img img {
+      transform: scale($hb-image-hover-scale);
+    }
+  }
 
   .hb-card__img {
     overflow: hidden;

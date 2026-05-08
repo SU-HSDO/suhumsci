@@ -4,13 +4,11 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.paragraph.preview
-    - field.field.paragraph.hs_postcard.field_hs_postcard_alignment
     - field.field.paragraph.hs_postcard.field_hs_postcard_body
+    - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
-    - field.field.paragraph.hs_postcard.field_hs_postcard_layout
     - field.field.paragraph.hs_postcard.field_hs_postcard_link
     - field.field.paragraph.hs_postcard.field_hs_postcard_title
-    - field.field.paragraph.hs_postcard.field_hs_postcard_vertical_style
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - ds
@@ -30,11 +28,7 @@ third_party_settings:
       settings:
         pattern:
           field_templates: default
-          variant: _field
-          variant_field: field_hs_postcard_alignment
-          variant_field_values:
-            left: left
-            right: right
+          variant_field: field_hs_postcard_body
     regions:
       title:
         - field_hs_postcard_title
@@ -42,7 +36,7 @@ third_party_settings:
         - field_hs_postcard_image
       description:
         - field_hs_postcard_body
-      button:
+      time:
         - field_hs_postcard_link
 _core:
   default_config_hash: tYFdW9WYdB_HxOvHWw1Wh1OljOAiLUjjVF-jtAHekls
@@ -87,7 +81,7 @@ content:
       linkit_profile: default
     third_party_settings: {  }
     weight: 3
-    region: button
+    region: time
   field_hs_postcard_title:
     type: string
     label: hidden
@@ -97,7 +91,5 @@ content:
     weight: 0
     region: title
 hidden:
-  field_hs_postcard_alignment: true
-  field_hs_postcard_layout: true
-  field_hs_postcard_vertical_style: true
+  field_hs_postcard_display: true
   search_api_excerpt: true

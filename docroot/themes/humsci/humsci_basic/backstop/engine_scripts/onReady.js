@@ -15,17 +15,5 @@ module.exports = async (page, scenario) => {
     const html = document.querySelector('html');
     html.classList.remove('${classPrefix}-pairing-cardinal');
     html.classList.add('${classPrefix}-pairing-${pairing}');
-
-    // Disable animations and transitions.
-    const style = document.createElement('style');
-    style.innerHTML = '* { transition: none !important; animation: none !important; }';
-    document.head.appendChild(style);
   `);
-
-  // Trigger lazy loading by scrolling.
-  await page.evaluate(async () => {
-    window.scrollTo(0, document.body.scrollHeight);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    window.scrollTo(0, 0);
-  });
 };

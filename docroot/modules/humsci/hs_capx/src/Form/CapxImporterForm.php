@@ -137,12 +137,14 @@ class CapxImporterForm extends EntityForm {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function buildTaggingForm(array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
+    $importer = $this->entity;
     $form['tagging'] = [
       '#type' => 'details',
       '#title' => $this->t('Tagging'),
       '#description' => $this->t('Optionally, tag the content imported from CAP with the following terms on the given fields.'),
       '#tree' => TRUE,
-      '#open' => !empty($this->entity->getFieldTags()),
+      '#open' => !empty($importer->getFieldTags()),
     ];
     $fields = $this->entityFieldManager->getFieldDefinitions('node', 'hs_person');
     /** @var \Drupal\taxonomy\TermStorageInterface $taxonomy_storage */
@@ -168,7 +170,7 @@ class CapxImporterForm extends EntityForm {
         '#title' => $field->getLabel(),
         '#options' => $terms,
         '#multiple' => $field_storage->getCardinality() == -1,
-        '#default_value' => $this->entity->getFieldTags($field->getName()),
+        '#default_value' => $importer->getFieldTags($field->getName()),
         '#empty_option' => $this->t('- None -'),
       ];
     }
@@ -204,6 +206,7 @@ class CapxImporterForm extends EntityForm {
       $role->save();
     }
 
+    /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     $importer = $this->entity;
     $status = $importer->save();
 

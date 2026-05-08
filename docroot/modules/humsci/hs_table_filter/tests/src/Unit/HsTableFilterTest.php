@@ -106,6 +106,7 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-pattern"]');
     $this->assertEquals(2, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('grid', $node->getAttribute('role'));
       $this->assertEquals('true', $node->getAttribute('aria-readonly'));
     }
@@ -140,6 +141,7 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-header"]');
     $this->assertEquals(1, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('row', $node->getAttribute('role'));
     }
   }
@@ -153,6 +155,7 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-header-cell"]');
     $this->assertEquals(5, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('gridcell', $node->getAttribute('role'));
     }
   }
@@ -166,6 +169,7 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-row"]');
     $this->assertEquals(7, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('row', $node->getAttribute('role'));
     }
   }
@@ -179,6 +183,7 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-cell"]');
     $this->assertEquals(9, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('gridcell', $node->getAttribute('role'));
       $this->assertNotEmpty($node->getAttribute('aria-label'));
     }

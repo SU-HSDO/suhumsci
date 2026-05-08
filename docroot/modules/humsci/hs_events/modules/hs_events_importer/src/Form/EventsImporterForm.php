@@ -411,7 +411,7 @@ class EventsImporterForm extends ConfigFormBase {
     }
 
     $options = ['query' => [$query => '']];
-    $response = $this->guzzle->get(self::STANFORD_EVENTS_IMPORTER_XML, $options);
+    $response = $this->guzzle->request('GET', self::STANFORD_EVENTS_IMPORTER_XML, $options);
     $this->cache->set("hs_events_importer:$query", (string) $response->getBody());
 
     return (string) $response->getBody();

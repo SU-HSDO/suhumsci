@@ -48,9 +48,10 @@ function hs_cmap_update_10002(&$sandbox) {
   $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
     $field_items = $paragraph->get('field_hs_cmap_crs_course');
     foreach ($field_items as $item) {
-      $item->format = 'minimal_text_formatting';
+      $item->set('format', 'minimal_text_formatting');
     }
 
     $paragraph->setNewRevision(FALSE);

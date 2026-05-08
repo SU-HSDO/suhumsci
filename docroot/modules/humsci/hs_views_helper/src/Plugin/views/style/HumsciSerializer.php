@@ -3,6 +3,7 @@
 namespace Drupal\hs_views_helper\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\rest\Plugin\views\display\RestExport;
 use Drupal\rest\Plugin\views\style\Serializer;
 
 /**
@@ -65,7 +66,7 @@ class HumsciSerializer extends Serializer {
     // Get the content type configured in the display or fallback to the
     // default.
     if ((empty($this->view->live_preview))) {
-      $content_type = $this->displayHandler->getContentType();
+      $content_type = $this->displayHandler instanceof RestExport ? $this->displayHandler->getContentType() : 'json';
     }
     else {
       $preview = TRUE;

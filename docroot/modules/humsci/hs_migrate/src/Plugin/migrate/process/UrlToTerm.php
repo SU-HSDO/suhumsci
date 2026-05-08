@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_migrate\Plugin\migrate\process;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -56,6 +57,7 @@ class UrlToTerm extends ProcessPluginBase implements ContainerFactoryPluginInter
       ->execute();
 
     if ($entity_reference_ids) {
+      /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity_references */
       $entity_references = $importer_storage->load(reset($entity_reference_ids));
       return $entity_references->get('field_terms')->getValue();
     }

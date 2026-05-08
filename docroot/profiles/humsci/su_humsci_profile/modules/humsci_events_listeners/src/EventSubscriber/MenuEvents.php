@@ -57,26 +57,28 @@ class MenuEvents implements EventSubscriberInterface {
     $entity->set('expanded', $expanded);
 
     $entity_type_manager = \Drupal::entityTypeManager();
+    $current_entity = $entity;
 
     // When a menu item is added as a child of another menu item clear the
     // parent pages cache so that the block shows up as it doesn't get
     // invalidated just by the menu cache tags.
-    while ($entity && ($parent_id = $entity->getParentId())) {
+    while ($current_entity && ($parent_id = $current_entity->getParentId())) {
       [$entity_name, $uuid] = explode(':', $parent_id);
       if (!$entity_type_manager->hasDefinition($entity_name)) {
         break;
       }
 
-      $entity = $entity_type_manager->getStorage($entity_name)
+      $parent_entities = $entity_type_manager->getStorage($entity_name)
         ->loadByProperties(['uuid' => $uuid]);
 
-      if (!$entity) {
+      if (!$parent_entities) {
         break;
       }
 
-      $entity = array_pop($entity);
+      /** @var \Drupal\menu_link_content\MenuLinkContentInterface $current_entity */
+      $current_entity = array_pop($parent_entities);
       /** @var \Drupal\Core\Url $url */
-      $url = $entity->getUrlObject();
+      $url = $current_entity->getUrlObject();
       if (!$url->isExternal() && $url->isRouted()) {
         $params = $url->getRouteParameters();
         if (isset($params['node'])) {

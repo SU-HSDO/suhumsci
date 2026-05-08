@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_field_helpers\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\viewfield\Plugin\Field\FieldWidget\ViewfieldWidgetSelect;
@@ -25,7 +26,7 @@ class HsViewfieldWidgetSelect extends ViewfieldWidgetSelect {
 
     // Strip the view options as defined by the exclude views settings.
     // @see hs_field_helpers_form_field_config_edit_form_alter().
-    if ($excluded_views = $this->fieldDefinition->getThirdPartySetting('hs_field_helpers', 'excluded_views')) {
+    if ($this->fieldDefinition instanceof ThirdPartySettingsInterface && ($excluded_views = $this->fieldDefinition->getThirdPartySetting('hs_field_helpers', 'excluded_views'))) {
       $element['target_id']['#options'] = array_diff_key($element['target_id']['#options'], array_flip($excluded_views));
     }
     // Chosen & Material Admin conflicts with this select list during ajax.

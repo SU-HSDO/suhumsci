@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_events\Services;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
@@ -71,6 +72,7 @@ class EventFormModifier {
         return FALSE;
       }
 
+      /** @var \Drupal\Core\Entity\FieldableEntityInterface $site_options */
       $field_value = $site_options->get(self::SITE_AUTO_UNPUBLISH_FIELD);
       return $field_value && $field_value->value == '1';
     }

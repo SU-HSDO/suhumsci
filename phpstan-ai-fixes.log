@@ -13,3 +13,46 @@
   - `GroupBlock` now imports `RefinableDependentAccessInterface` and `RefinableDependentAccessTrait` from `Drupal\Core\Access`, which matches this Drupal core version.
 - Documented but did not change:
   - `phpstan.neon` contains an ignored error pattern for `missingType.iterableValue` that was not matched in this report. No config change was made per policy.
+
+## Level 2
+
+### Batch 1
+
+- Fixed `hs_capx` form typing so PHPStan understands the form entity is `CapxImporterInterface` when calling `getFieldTags()`.
+- Updated `hs_capx` unit test mock annotations from the removed legacy PHPUnit mock class to modern `MockObject` intersection types.
+- Fixed the `hs_capx` unit test to call `syncOrganizations()` with its actual zero-argument signature.
+- Fixed `hs_entities` form typing so the config entity is treated as `HsEntityType` when calling `set()`.
+
+### Batch 2
+
+- Fixed malformed fully qualified class names in `hs_dashboard` constructor and interface PHPDoc so they match the native types.
+- Corrected `hs_siteimprove` interface PHPDoc for `getCurrentSiteId()` to match its `?string` return type.
+- Fixed `su_humsci_profile` post-install content importer helper to explicitly return `NULL` when the service is unavailable.
+
+### Batch 3
+
+- Narrowed Drupal runtime types in `hs_cmap`, `hs_events`, `hs_migrate`, and `hs_hero_image` so valid field/entity methods are called on the correct subtype instead of generic `EntityInterface`.
+- Fixed menu link cache invalidation traversal in the profile event subscriber by separating the current menu-link variable from the loaded parent entities and keeping the type explicit.
+- Fixed the menu link constraint validator by correcting the request property type and narrowing the generic Symfony `Constraint` to the custom `MenuLinkItemConstraint` before reading `absoluteLink`.
+
+### Batch 4
+
+- Updated the events importer form to use Guzzle's `request()` API instead of an undefined `get()` call on `ClientInterface`.
+- Fixed multiple field/widget and layout helper issues by returning `NULL` explicitly, narrowing node/layout item types, avoiding direct magic-property access, and guarding third-party settings access behind the proper interface.
+- Narrowed the custom Views relationship query object to the SQL query plugin before calling `addRelationship()`.
+- Narrowed the serializer display handler to REST export before calling `getContentType()`.
+- Corrected `ui_patterns_field_variants` to use `getLabel()` on field definitions.
+
+### Batch 5
+
+- Fixed the remaining level 2 install-hook storage typings by using the correct config storage interface and matching PHPDoc variable names in `hs_paragraph_types` and `su_humsci_profile`.
+- Narrowed paragraph and parent entity types in update hooks so valid field, revision, and behavior methods are recognized.
+- Narrowed DOM nodes to `DOMElement` in `hs_table_filter` and its unit tests before accessing element-only properties and methods.
+
+### Level 2 Result
+
+- Full validation command run:
+  - `vendor/bin/phpstan analyse --configuration=phpstan.neon --level=2 docroot/modules/humsci docroot/profiles/humsci`
+- Result:
+  - No remaining code issues in the scanned custom code paths.
+  - One existing config-only notice remains: ignored error pattern `missingType.iterableValue` was not matched. Per policy, no config change was made.

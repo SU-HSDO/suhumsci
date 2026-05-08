@@ -33,6 +33,7 @@ function hs_paragraph_types_update_9401() {
     ->getStorage('paragraph')
     ->loadByProperties(['type' => 'stanford_gallery']);
   foreach ($paragraphs as $paragraph) {
+    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
     $paragraph->set('field_photoalbum_style', $paragraph->getBehaviorSetting('image_gallery', 'display_mode'));
     $paragraph->save();
   }
@@ -81,7 +82,7 @@ function hs_paragraph_types_update_10000() {
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
   $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $field_storage */
   $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
   // If storage does not yet exist, create it.
@@ -113,6 +114,7 @@ function hs_paragraph_types_update_10001(&$sandbox) {
   $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
     $paragraph->set('field_hs_collection_uh', TRUE);
     $paragraph->save();
   }
@@ -132,7 +134,7 @@ function hs_paragraph_types_update_10002(&$sandbox) {
     /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
     $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
 
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $field_storage */
     $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
     // If storage does not yet exist, create it.
@@ -175,7 +177,7 @@ function hs_paragraph_types_update_10003() {
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
   $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $field_storage */
   $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
   // If storage does not yet exist, create it.
@@ -253,10 +255,10 @@ function hs_paragraph_types_update_10006() {
 function hs_paragraph_types_update_10007() {
   $config_directory = new FileStorage(Settings::get('config_sync_directory'));
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $field_config */
   $field_config = \Drupal::service('entity_type.manager')->getStorage('field_config');
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $field_storage_config */
   $field_storage_config = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
   $storage_to_create = [
@@ -349,7 +351,7 @@ function hs_paragraph_types_update_10009() {
 
     // Check if the form display configuration already exists.
     $entity_type_manager = \Drupal::entityTypeManager();
-    /** @var ConfigEntityStorageInterface $config_storage */
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $config_storage */
     $config_storage = $entity_type_manager->getStorage('entity_form_display');
     $existing_config = $config_storage->load($config_data['id']);
 
@@ -409,10 +411,10 @@ function hs_paragraph_types_update_10011() {
 function hs_paragraph_types_update_10012() {
   $config_storage = \Drupal::service('config.storage.sync');
 
-  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $field_config_storage */
   $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
 
-  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $field_storage */
   $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
   // Create field_storage if it does not exist.
@@ -523,6 +525,7 @@ function hs_paragraph_types_update_10015(&$sandbox) {
   $paragraph_ids = array_slice($sandbox['ids'], $sandbox['current'], 25);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
     $save_needed = FALSE;
 
     // Update field_hs_spotlight_height if _none or empty.
@@ -668,7 +671,7 @@ function hs_paragraph_types_update_10017() {
 function hs_paragraph_types_update_10018() {
   $config_storage = \Drupal::service('config.storage.sync');
 
-  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $field_config_storage */
   $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
 
   // Reusing an existing field, no need to create field storage.

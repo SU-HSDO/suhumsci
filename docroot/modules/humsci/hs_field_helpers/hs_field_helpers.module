@@ -598,12 +598,18 @@ function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $ent
       }
     }
   }
+
+  return NULL;
 }
 
 /**
  * Implements hook_ENTITY_TYPE_presave().
  */
 function hs_field_helpers_node_presave(EntityInterface $entity) {
+  if (!$entity instanceof \Drupal\node\NodeInterface) {
+    return;
+  }
+
   $rabbit_hole = \Drupal::config('rabbit_hole.behavior_settings.node_type_' . $entity->bundle());
 
   if ($rabbit_hole->get('redirect') && $rabbit_hole->get('allow_override')) {

@@ -138,7 +138,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   Keyed array of config overrides.
    */
   protected function setStageFileProxy(array $names, array &$overrides) {
-    if (in_array('stage_file_proxy.settings', $names) && $this->state) {
+    if (in_array('stage_file_proxy.settings', $names)) {
       $site_dir = str_replace('sites/', '', $this->sitePath);
 
       if ($base_url = $this->state->get('xmlsitemap_base_url')) {
@@ -242,16 +242,11 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   List of values form the uri column.
    */
   protected function getUrlsFromLinkField(string $config_page, string $field_name): array {
-    /** @var \Drupal\config_pages\ConfigPagesInterface $config_page */
-    $config_page = $this->entityTypeManager->getStorage('config_pages')
+    $loaded_config_page = $this->entityTypeManager->getStorage('config_pages')
       ->load($config_page);
     $urls = [];
-    if (
-      $config_page &&
-      $config_page->hasField($field_name) &&
-      $config_page->get($field_name)->count()
-    ) {
-      foreach ($config_page->get($field_name)->getValue() as $value) {
+    if ($loaded_config_page instanceof \Drupal\Core\Entity\FieldableEntityInterface && $loaded_config_page->hasField($field_name) && $loaded_config_page->get($field_name)->count()) {
+      foreach ($loaded_config_page->get($field_name)->getValue() as $value) {
         $urls[] = $value['uri'];
       }
     }

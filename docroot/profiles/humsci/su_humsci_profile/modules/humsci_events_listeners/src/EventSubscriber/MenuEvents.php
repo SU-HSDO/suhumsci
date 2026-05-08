@@ -62,7 +62,7 @@ class MenuEvents implements EventSubscriberInterface {
     // When a menu item is added as a child of another menu item clear the
     // parent pages cache so that the block shows up as it doesn't get
     // invalidated just by the menu cache tags.
-    while ($current_entity && ($parent_id = $current_entity->getParentId())) {
+    while ($parent_id = $current_entity->getParentId()) {
       [$entity_name, $uuid] = explode(':', $parent_id);
       if (!$entity_type_manager->hasDefinition($entity_name)) {
         break;

@@ -82,14 +82,11 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
     switch ($arg) {
       case 'bypass_form_ids':
         return ['bypassed_form'];
-        break;
       case 'form_ids':
         return [];
-        break;
 
       case 'excluded_modules':
         return [];
-        break;
 
       case 'ignored_config_entities':
         return [
@@ -97,7 +94,6 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
           'ignore.wildcard.config.*',
           'ignore.part.config:test',
         ];
-        break;
     }
   }
 

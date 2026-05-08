@@ -431,7 +431,7 @@ function hs_field_helpers_node_validate_date(array &$element, FormStateInterface
 function hs_field_helpers_field_formatter_settings_summary_alter(&$summary, $context) {
   $inline = $context['formatter']->getThirdPartySetting('hs_field_helpers', 'inline_contents');
   if (!empty($inline)) {
-    $summary[] = t('Inline Contents: @inline', ['@inline' => $inline ? t('Yes') : t('No')]);
+    $summary[] = t('Inline Contents: @inline', ['@inline' => t('Yes')]);
   }
 }
 
@@ -621,7 +621,7 @@ function hs_field_helpers_node_presave(EntityInterface $entity) {
 
     // Check if the token that was provided is actually a url. If it is, then we
     // can set the rabbit hole action to redirect to that url.
-    if (is_string($target) && UrlHelper::isValid($target, TRUE)) {
+    if (UrlHelper::isValid($target, TRUE)) {
       $entity->set('rh_action', 'bundle_default');
     }
   }
@@ -702,7 +702,7 @@ function hs_field_helpers_field_widget_complete_link_default_form_alter(&$field_
   }
 
   // External link help text.
-  elseif (!$supports_internal && $supports_external) {
+  elseif (!$supports_internal) {
     $description = t('This must be an external URL such as %external_link. @appended', $placeholders);
   }
 

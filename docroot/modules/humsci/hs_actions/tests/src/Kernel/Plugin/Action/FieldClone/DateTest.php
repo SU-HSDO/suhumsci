@@ -122,7 +122,6 @@ class DateTest extends KernelTestBase {
     $field_manager = $this->container->get('plugin.manager.hs_actions_field_clone');
     /** @var \Drupal\hs_actions\Plugin\Action\FieldClone\Date $plugin */
     $plugin = $field_manager->createInstance('date');
-    $this->assertInstanceOf(Date::class, $plugin);
     $form = [];
     $form_state = new FormState();
     $form = $plugin->buildConfigurationForm($form, $form_state);

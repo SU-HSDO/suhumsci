@@ -33,9 +33,7 @@ class TwigFilters extends AbstractExtension {
   public static function removeHtmlComments($variable) {
     if (!is_string($variable)) {
       try {
-        if (is_array($variable)) {
-          $variable = \Drupal::service('renderer')->renderInIsolation($variable);
-        }
+        $variable = \Drupal::service('renderer')->renderInIsolation($variable);
       }
       catch (\Throwable) {
         return '';

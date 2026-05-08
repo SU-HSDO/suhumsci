@@ -55,11 +55,10 @@ class FieldDefaultValue extends ProcessPluginBase implements ContainerFactoryPlu
     $entity_type = $this->configuration['entity_type'];
     $bundle = $this->configuration['bundle'];
     $field_name = $this->configuration['field'];
-    /** @var \Drupal\field\FieldConfigInterface $field */
     $field = $this->entityTypeManager->getStorage('field_config')
       ->load("$entity_type.$bundle.$field_name");
 
-    if (!$field) {
+    if (!$field instanceof \Drupal\field\FieldConfigInterface) {
       return NULL;
     }
 

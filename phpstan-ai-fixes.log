@@ -77,3 +77,24 @@
 - Result:
   - No remaining code issues in the scanned custom code paths.
   - One existing config-only notice remains: ignored error pattern `missingType.iterableValue` was not matched. Per policy, no config change was made.
+
+## Level 4
+
+### Batch 1
+
+- Simplified redundant production-code conditions and nullability checks across block, importer, config override, dashboard, events, field helper, layout, migrate, and profile code.
+- Replaced truthiness checks that PHPStan could already prove with explicit or direct logic while preserving behavior.
+- Narrowed one loaded config-page entity before field access after the first focused validation surfaced the broader `EntityInterface` type.
+
+### Batch 2
+
+- Removed redundant type assertions in tests where the variable was already narrowed by local types.
+- Removed unreachable `break` statements after `return` in the config-readonly unit test callback.
+- Replaced brittle count assertions in the views helper SQL test with assertions about the actual transformed fields/order-by values.
+
+### Level 4 Result
+
+- Full validation command run:
+  - `vendor/bin/phpstan analyse --configuration=phpstan.neon --level=4 docroot/modules/humsci docroot/profiles/humsci`
+- Result:
+  - No remaining PHPStan issues in the scanned custom code paths.

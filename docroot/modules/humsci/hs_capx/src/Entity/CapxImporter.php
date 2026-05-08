@@ -158,7 +158,7 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
    * {@inheritdoc}
    */
   public function importWhat() {
-    return $this->importWhat ?? self::IMPORT_PROFILES;
+    return $this->importWhat;
   }
 
   /**

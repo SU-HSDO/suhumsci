@@ -50,3 +50,12 @@
 - Level 3 validation outcome:
   - Full scan of `docroot/modules/humsci` and `docroot/profiles/humsci` is code-clean after these batches.
   - The only remaining PHPStan output at level 3 is the existing unmatched ignore pattern for `missingType.iterableValue` in `phpstan.neon`.
+
+## Level 4
+
+- Batch 1 scope:
+  - Production-code always-true/always-false, nullability, and redundant condition findings across `hs_blocks`, `hs_capx`, `hs_config_overrides`, `hs_config_partial`, `hs_dashboard`, `hs_events`, `hs_field_helpers`, `hs_layouts`, `hs_migrate`, and `su_humsci_profile`.
+- Batch 2 scope:
+  - Test-only dead code and assertion cleanup in `hs_actions`, `hs_capx`, `hs_config_readonly`, and `hs_views_helper`.
+- Level 4 validation outcome:
+  - Full scan of `docroot/modules/humsci` and `docroot/profiles/humsci` is fully clean.

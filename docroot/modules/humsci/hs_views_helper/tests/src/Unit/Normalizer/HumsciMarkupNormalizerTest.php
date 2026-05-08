@@ -23,7 +23,6 @@ class HumsciMarkupNormalizerTest extends UnitTestCase {
     $logger_factory = $this->createMock(LoggerChannelFactoryInterface::class);
     $normalizer = new HumsciMarkupNormalizer($logger_factory);
 
-    $this->assertInstanceOf(HumsciMarkupNormalizer::class, $normalizer);
     $object = '
 <div data-attribute-tag="newTag">one</div>
 <div data-attribute-tag="newTag">two</div>

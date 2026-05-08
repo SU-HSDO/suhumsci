@@ -56,10 +56,7 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
    */
   public function onImportTransform(StorageTransformEvent $event) {
     // Only run if the feature flag is enabled.
-    $enabled = TRUE;
-    if ($this->configFactory) {
-      $enabled = (bool) $this->configFactory->get('hs_config_partial.settings')->get('enabled');
-    }
+    $enabled = (bool) $this->configFactory->get('hs_config_partial.settings')->get('enabled');
     if (!$enabled) {
       return;
     }

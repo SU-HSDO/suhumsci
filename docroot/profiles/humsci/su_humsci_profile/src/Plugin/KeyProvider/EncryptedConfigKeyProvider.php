@@ -99,12 +99,7 @@ class EncryptedConfigKeyProvider extends ConfigKeyProvider {
     $encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile']);
     $this->configuration['key_value'] = $this->encryption->encrypt($key_value, $encryption_profile);
 
-    if (isset($this->configuration['key_value'])) {
-      return TRUE;
-    }
-    else {
-      throw new KeyValueNotSetException();
-    }
+    return TRUE;
   }
 
   /**

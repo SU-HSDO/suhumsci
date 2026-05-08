@@ -42,7 +42,7 @@ class TranslateCourseTagTest extends EntityKernelTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+    * @var array<string>
    */
   protected static $modules = [
     'system',

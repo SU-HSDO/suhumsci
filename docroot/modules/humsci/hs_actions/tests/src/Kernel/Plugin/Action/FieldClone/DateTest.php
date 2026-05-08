@@ -48,7 +48,7 @@ class DateTest extends KernelTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+    * @var array<string>
    */
   protected static $modules = [
     'system',

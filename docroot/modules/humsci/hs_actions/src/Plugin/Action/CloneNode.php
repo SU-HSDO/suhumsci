@@ -292,6 +292,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
       return $field instanceof FieldConfig && in_array($field->getType(), $types) && in_array($target_entity_id, $clone_target_types);
     });
 
+    /** @var \Drupal\field\Entity\FieldConfig[] $reference_fields */
     return $reference_fields;
   }
 

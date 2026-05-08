@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\encrypt\Exception\EncryptException;
+use Drupal\hs_capx\Entity\CapxImporterInterface;
 use Drupal\key\Entity\Key;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -31,7 +32,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   /**
    * Array of available Capx Importers.
    *
-   * @var \Drupal\hs_capx\Entity\CapxImporter[]
+    * @var \Drupal\hs_capx\Entity\CapxImporterInterface[]
    */
   protected $importers = [];
 
@@ -50,8 +51,12 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $this->configFactory = $config_factory;
 
     if ($entity_type_manager->hasDefinition('capx_importer')) {
-      $this->importers = $entity_type_manager->getStorage('capx_importer')
-        ->loadMultiple();
+      $importers = array_filter(
+        $entity_type_manager->getStorage('capx_importer')->loadMultiple(),
+        static fn ($importer): bool => $importer instanceof CapxImporterInterface,
+      );
+      /** @var \Drupal\hs_capx\Entity\CapxImporterInterface[] $importers */
+      $this->importers = $importers;
     }
   }
 

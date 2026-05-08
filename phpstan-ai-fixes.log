@@ -56,3 +56,24 @@
 - Result:
   - No remaining code issues in the scanned custom code paths.
   - One existing config-only notice remains: ignored error pattern `missingType.iterableValue` was not matched. Per policy, no config change was made.
+
+## Level 3
+
+### Batch 1
+
+- Fixed runtime-code return and property types across `hs_actions`, `hs_capx`, `hs_dashboard`, `hs_field_helpers`, `hs_layouts`, and `hs_migrate`.
+- Narrowed entity/config assignments where Drupal APIs return broader interfaces than the consuming code expects.
+- Corrected mismatched return shapes so declared method contracts now match actual returned values.
+
+### Batch 2
+
+- Fixed test property typing by changing overridden `$modules` PHPDoc to `array<string>` in the affected kernel and functional tests.
+- Narrowed the `CourseTagListBuilderTest` list-builder assignment to the concrete `CourseTagListBuilder` type.
+
+### Level 3 Result
+
+- Full validation command run:
+  - `vendor/bin/phpstan analyse --configuration=phpstan.neon --level=3 docroot/modules/humsci docroot/profiles/humsci`
+- Result:
+  - No remaining code issues in the scanned custom code paths.
+  - One existing config-only notice remains: ignored error pattern `missingType.iterableValue` was not matched. Per policy, no config change was made.

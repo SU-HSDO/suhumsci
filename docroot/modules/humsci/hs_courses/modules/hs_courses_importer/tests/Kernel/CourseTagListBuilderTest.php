@@ -25,7 +25,7 @@ class CourseTagListBuilderTest extends EntityKernelTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+    * @var array<string>
    */
   protected static $modules = ['system', 'hs_courses_importer'];
 
@@ -34,7 +34,9 @@ class CourseTagListBuilderTest extends EntityKernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->listBuilder = $this->entityTypeManager->getListBuilder('hs_course_tag');
+    /** @var \Drupal\hs_courses_importer\CourseTagListBuilder $list_builder */
+    $list_builder = $this->entityTypeManager->getListBuilder('hs_course_tag');
+    $this->listBuilder = $list_builder;
   }
 
   /**

@@ -57,13 +57,13 @@ class EntityMigrationField extends FieldPluginBase {
     try {
       $migration = $this->stanfordMigrate->getNodesMigration($values->_entity);
       if ($migration) {
-        return ['#markup' => $migration->label()];
+        return $migration->label();
       }
     }
     catch (\Exception $e) {
       // Nothing to do.
     }
-    return NULL;
+    return '';
   }
 
 }

@@ -38,10 +38,10 @@ class TwigFilters extends AbstractExtension {
         }
       }
       catch (\Throwable) {
-        return $variable;
+        return '';
       }
     }
-    return preg_replace([
+    return (string) preg_replace([
       '/<!--(.|\s)*?-->\s*/',
       '/\t+/',
       '/\n+/',

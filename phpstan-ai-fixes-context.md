@@ -40,3 +40,13 @@
 - Level 2 validation outcome:
   - Full scan of `docroot/modules/humsci` and `docroot/profiles/humsci` is code-clean after these batches.
   - The only remaining PHPStan output at level 2 is the existing unmatched ignore pattern for `missingType.iterableValue` in `phpstan.neon`.
+
+## Level 3
+
+- Batch 1 scope:
+  - Runtime-code property and return type mismatches in `hs_actions`, `hs_capx`, `hs_dashboard`, `hs_field_helpers`, `hs_layouts`, and `hs_migrate`.
+- Batch 2 scope:
+  - Test-only property typing in kernel/functional tests, primarily `$modules` covariance and one list-builder assignment type.
+- Level 3 validation outcome:
+  - Full scan of `docroot/modules/humsci` and `docroot/profiles/humsci` is code-clean after these batches.
+  - The only remaining PHPStan output at level 3 is the existing unmatched ignore pattern for `missingType.iterableValue` in `phpstan.neon`.

@@ -105,8 +105,8 @@ class SqlTest extends UnitTestCase {
 
     $sql->alterQuery($view);
 
-  $this->assertArrayHasKey('max_date', $sql->fields);
-  $this->assertEquals(['field_first', 'field_second', 'field_third'], array_column($sql->orderby, 'field'));
+    $this->assertArrayHasKey('max_date', $sql->fields);
+    $this->assertEquals(['max_date', 'field_fourth', 'created'], array_column($sql->orderby, 'field'));
     $this->assertTrue(!empty($sql->fields['max_date']));
     $this->assertEquals('greatest', $sql->fields['max_date']['function']);
 

@@ -30,7 +30,7 @@ class CloneNodeTest extends KernelTestBase {
   /**
    * Modules to enable.
    *
-    * @var array<string>
+   * @var array<string>
    */
   protected static $modules = [
     'system',

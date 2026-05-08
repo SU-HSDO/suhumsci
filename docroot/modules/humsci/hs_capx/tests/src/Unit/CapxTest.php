@@ -32,7 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 class CapxTest extends UnitTestCase {
 
   /**
-    * @var \GuzzleHttp\Client&\PHPUnit\Framework\MockObject\MockObject
+   * @var \GuzzleHttp\Client&\PHPUnit\Framework\MockObject\MockObject
    */
   protected $guzzle;
 
@@ -42,7 +42,7 @@ class CapxTest extends UnitTestCase {
   protected $capx;
 
   /**
-    * @var \Drupal\Core\Cache\CacheBackendInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 

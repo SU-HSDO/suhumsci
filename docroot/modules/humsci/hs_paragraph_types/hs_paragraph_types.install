@@ -1546,13 +1546,7 @@ function hs_paragraph_types_update_10038(&$sandbox) {
     // Migrate field_photoalbum_style -> field_hs_gallery_style.
     if ($paragraph->hasField('field_photoalbum_style') && $paragraph->hasField('field_hs_gallery_style')) {
       $value = $paragraph->get('field_photoalbum_style')->value;
-      \Drupal::logger('hs_paragraph_types')->notice('Value: @value', [
-        '@value' => $value,
-      ]);
       if (!empty($value) && isset($style_map[$value])) {
-        \Drupal::logger('hs_paragraph_types')->notice('Mapped value: @value', [
-          '@value' => $style_map[$value],
-        ]);
         $paragraph->set('field_hs_gallery_style', $style_map[$value]);
         $save_needed = TRUE;
       }

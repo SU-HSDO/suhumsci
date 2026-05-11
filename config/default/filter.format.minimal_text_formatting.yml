@@ -1,0 +1,42 @@
+uuid: 9a47689b-3504-40cd-9306-1c1a3e2336d4
+langcode: en
+status: true
+dependencies:
+  module:
+    - linkit
+    - spamspan
+name: 'Minimal Text Formatting'
+format: minimal_text_formatting
+weight: 0
+filters:
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: -10
+    settings:
+      allowed_html: '<br> <p> <strong> <em> <a href> <ul> <ol reversed start> <li>'
+      filter_html_help: false
+      filter_html_nofollow: false
+  filter_spamspan:
+    id: filter_spamspan
+    provider: spamspan
+    status: true
+    weight: 0
+    settings:
+      spamspan_at: ' [at] '
+      spamspan_use_graphic: false
+      spamspan_dot_enable: false
+      spamspan_dot: ' [dot] '
+      spamspan_use_form: false
+      spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
+      spamspan_form_default_url: contact
+      spamspan_form_default_displaytext: 'contact form'
+  linkit:
+    id: linkit
+    provider: linkit
+    status: true
+    weight: 0
+    settings:
+      title: true
+      media_substitution: metadata

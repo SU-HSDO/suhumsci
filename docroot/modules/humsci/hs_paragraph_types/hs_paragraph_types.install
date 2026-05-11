@@ -713,133 +713,9 @@ function hs_paragraph_types_update_10019(&$sandbox) {
 }
 
 /**
- * Creates field configuration for new hs_postcard style fields.
- */
-function hs_paragraph_types_update_10020() {
-  $config_storage = \Drupal::service('config.storage.sync');
-  $entity_type_manager = \Drupal::entityTypeManager();
-
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
-  $field_storage = $entity_type_manager->getStorage('field_storage_config');
-
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
-  $field_config_storage = $entity_type_manager->getStorage('field_config');
-
-  $fields_to_create = [
-    'field_hs_postcard_layout',
-    'field_hs_postcard_alignment',
-    'field_hs_postcard_vertical_style',
-  ];
-
-  foreach ($fields_to_create as $field_name) {
-    $storage_config = $config_storage->read('field.storage.paragraph.' . $field_name);
-    if (
-      !empty($storage_config) &&
-      empty($field_storage->load('paragraph.' . $field_name))
-    ) {
-      $field_storage->createFromStorageRecord($storage_config)->save();
-    }
-
-    $instance_config = $config_storage->read('field.field.paragraph.hs_postcard.' . $field_name);
-    if (
-      !empty($instance_config) &&
-      empty($field_config_storage->load('paragraph.hs_postcard.' . $field_name))
-    ) {
-      $field_config_storage->create($instance_config)->save();
-    }
-  }
-}
-
-/**
- * Migrate hs_postcard display mode values to new postcard style fields.
- */
-function hs_paragraph_types_update_10021(&$sandbox) {
-  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
-  if (empty($sandbox['ids'])) {
-    $sandbox['ids'] = $paragraph_storage->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('type', 'hs_postcard')
-      ->execute();
-    $sandbox['total'] = count($sandbox['ids']);
-    $sandbox['updated'] = 0;
-    $sandbox['system_theme'] = \Drupal::config('system.theme')->get('default');
-  }
-
-  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
-
-  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
-    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
-    if (
-      !$paragraph->hasField('field_hs_postcard_display') ||
-      !$paragraph->hasField('field_hs_postcard_layout') ||
-      !$paragraph->hasField('field_hs_postcard_alignment') ||
-      !$paragraph->hasField('field_hs_postcard_vertical_style')
-    ) {
-      continue;
-    }
-
-    $display = $paragraph->get('field_hs_postcard_display')->value;
-
-    $layout = 'vertical';
-    $vertical_style = 'plain';
-
-    if ($display == 'default') {
-      if ($sandbox['system_theme'] == 'humsci_colorful') {
-        $parent = $paragraph->getParentEntity();
-        if (
-          $parent &&
-          in_array($parent->bundle(), ['hs_collection', 'hs_priv_collection']) &&
-          $parent->hasField('field_raised_cards') &&
-          $parent->get('field_raised_cards')->value
-        ) {
-          $vertical_style = 'accent';
-        }
-      }
-    }
-    elseif ($display == 'preview') {
-      $layout = 'horizontal';
-    }
-    elseif ($display == 'token') {
-      $vertical_style = 'two_color';
-    }
-    elseif ($display == 'vertical_button_card') {
-      $vertical_style = 'stacked';
-    }
-
-    $paragraph->set('field_hs_postcard_layout', $layout);
-    $paragraph->set('field_hs_postcard_vertical_style', $vertical_style);
-    $paragraph->set('field_hs_postcard_alignment', 'left');
-    $paragraph->save();
-    $sandbox['updated']++;
-  }
-
-  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
-
-  return t('Updated %updated of %total hs_postcard paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
-}
-
-/**
- * Removes legacy hs_postcard display field.
- */
-function hs_paragraph_types_update_10022() {
-  if ($display_field = FieldConfig::loadByName('paragraph', 'hs_postcard', 'field_hs_postcard_display')) {
-    $display_field->delete();
-    \Drupal::logger('hs_paragraph_types')->notice('Removed field instance field_hs_postcard_display from paragraph.hs_postcard.');
-  }
-  if ($display_storage = FieldStorageConfig::loadByName('paragraph', 'field_hs_postcard_display')) {
-    $display_storage->delete();
-    \Drupal::logger('hs_paragraph_types')->notice('Removed field storage field_hs_postcard_display from paragraph.');
-  }
-}
-
-/**
  * Creates new fields for visual variants of the Spotlight paragraph.
  */
-function hs_paragraph_types_update_10023() {
+function hs_paragraph_types_update_10020() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -889,7 +765,7 @@ function hs_paragraph_types_update_10023() {
 /**
  * Migrate Spotlight paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10024(&$sandbox) {
+function hs_paragraph_types_update_10021(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -971,7 +847,7 @@ function hs_paragraph_types_update_10024(&$sandbox) {
 /**
  * Creates new fields for visual variants of the Testimonial paragraph.
  */
-function hs_paragraph_types_update_10025() {
+function hs_paragraph_types_update_10022() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -1003,7 +879,7 @@ function hs_paragraph_types_update_10025() {
 /**
  * Migrate Testimonial paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10026(&$sandbox) {
+function hs_paragraph_types_update_10023(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -1048,7 +924,7 @@ function hs_paragraph_types_update_10026(&$sandbox) {
 /**
  * Creates new fields for visual variants of the Banner paragraph.
  */
-function hs_paragraph_types_update_10027() {
+function hs_paragraph_types_update_10024() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -1080,7 +956,7 @@ function hs_paragraph_types_update_10027() {
 /**
  * Migrate Banner paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10028(&$sandbox) {
+function hs_paragraph_types_update_10025(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -1123,7 +999,7 @@ function hs_paragraph_types_update_10028(&$sandbox) {
 /**
  * Creates new fields for visual variants of the Callout Box paragraph.
  */
-function hs_paragraph_types_update_10029() {
+function hs_paragraph_types_update_10026() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -1169,7 +1045,7 @@ function hs_paragraph_types_update_10029() {
 /**
  * Migrate Callout Box paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10030(&$sandbox) {
+function hs_paragraph_types_update_10027(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -1228,7 +1104,7 @@ function hs_paragraph_types_update_10030(&$sandbox) {
 /**
  * Creates new fields for Color Band paragraph visual variants.
  */
-function hs_paragraph_types_update_10031() {
+function hs_paragraph_types_update_10028() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -1274,7 +1150,7 @@ function hs_paragraph_types_update_10031() {
 /**
  * Migrate Color Band paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10032(&$sandbox) {
+function hs_paragraph_types_update_10029(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -1333,7 +1209,7 @@ function hs_paragraph_types_update_10032(&$sandbox) {
 /**
  * Creates new fields for visual variants of the Gradient Hero paragraph.
  */
-function hs_paragraph_types_update_10033() {
+function hs_paragraph_types_update_10030() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -1365,7 +1241,7 @@ function hs_paragraph_types_update_10033() {
 /**
  * Migrate Gradient Hero paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10034(&$sandbox) {
+function hs_paragraph_types_update_10031(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -1410,7 +1286,7 @@ function hs_paragraph_types_update_10034(&$sandbox) {
 /**
  * Creates new fields for Accordion paragraph visual variants.
  */
-function hs_paragraph_types_update_10035() {
+function hs_paragraph_types_update_10032() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -1442,7 +1318,7 @@ function hs_paragraph_types_update_10035() {
 /**
  * Migrate Accordion paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10036(&$sandbox) {
+function hs_paragraph_types_update_10033(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -1485,7 +1361,7 @@ function hs_paragraph_types_update_10036(&$sandbox) {
 /**
  * Creates new fields for paragraph visual variants of Collections.
  */
-function hs_paragraph_types_update_10037() {
+function hs_paragraph_types_update_10034() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -1533,7 +1409,7 @@ function hs_paragraph_types_update_10037() {
 /**
  * Migrate Collections paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10038(&$sandbox) {
+function hs_paragraph_types_update_10035(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -1604,7 +1480,7 @@ function hs_paragraph_types_update_10038(&$sandbox) {
 /**
  * Removes legacy paragraph fields.
  */
-function hs_paragraph_types_update_10039() {
+function hs_paragraph_types_update_10036() {
   $fields_to_delete = [
     'hs_spotlight' => [
       'field_hs_spotlight_bg',

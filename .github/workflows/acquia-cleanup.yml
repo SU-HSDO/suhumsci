@@ -39,5 +39,5 @@ jobs:
           git config --global user.name "Github Actions" &&
           ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
-          drush sws:acquia:clean-databases --minimum-age=10368000 &&
-          drush sws:acquia:clean-git
+          drush sws:acquia:clean-databases --minimum-age=10368000 --app-key="$ACQUIA_KEY" --app-secret="$ACQUIA_SECRET" &&
+          drush sws:acquia:clean-git --app-key="$ACQUIA_KEY" --app-secret="$ACQUIA_SECRET" 

@@ -1,39 +1,19 @@
 @use '../variables/general' as *;
-@use '../functions/general' as *;
 @use '../mixins/flex-grid' as *;
 @use '../mixins/breakpoints' as *;
-
-$container-small: hb-calculate-rems(576px);
 
 // Loops through the number of available columns (12). Classes determine the number
 // of columns that the image in cards will span.
 @mixin hb-image-sizes() {
   @for $i from 1 through 12 {
-    $areas: '';
-    $areas-right: '';
-
-    @for $j from 1 through $i {
-      $areas: $areas + 'a ';
-      $areas-right: 'a ' + $areas-right;
-    }
-
-    @if $i < 12 {
-      @for $j from 1 through (12 - $i) {
-        $areas: $areas + 'b ';
-        $areas-right: 'b ' + $areas-right;
-      }
-    }
-
     &-#{$i}-of-12 {
-      .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
-        @container card (width > #{$container-small}) {
-          grid-template-areas: '#{$areas}';
-        }
+      .hb-card__graphics {
+        @include flex-column($i);
       }
 
-      @if $i == 12 {
-        .hb-card--horizontal:has(.hb-card__graphics) .hb-card__content {
-          display: none;
+      @include grid-media-min($hb-horizontal-card-breakpoint) {
+        .hb-card--horizontal:not(.hb-card--no-image) .hb-card__content {
+          @include flex-column(12 - $i);
         }
       }
     }

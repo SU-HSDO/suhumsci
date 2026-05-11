@@ -1445,7 +1445,7 @@ function hs_paragraph_types_update_10035(&$sandbox) {
     $save_needed = FALSE;
 
     // Migrate field_bg_color -> field_hs_collection_background.
-    // Empty/null values become "none-background" in the new field.
+    // Empty/null values become "bg-none" in the new field.
     if ($paragraph->hasField('field_bg_color') && $paragraph->hasField('field_hs_collection_background')) {
       $value = $paragraph->get('field_bg_color')->value;
       $background = empty($value) ? 'bg-none' : $value;

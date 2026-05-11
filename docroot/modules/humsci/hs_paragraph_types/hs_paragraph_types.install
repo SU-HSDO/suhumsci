@@ -1558,13 +1558,21 @@ function hs_paragraph_types_update_10038(&$sandbox) {
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
     /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
 
+    // Some sites need a fresh entity reload before newly-created fields are
+    // visible during this batch update.
+    if (!$paragraph->hasField('field_hs_collection_background') || !$paragraph->hasField('field_hs_collection_bg_width')) {
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+      $paragraph_storage->resetCache([$paragraph->id()]);
+      $paragraph = $paragraph_storage->loadUnchanged($paragraph->id());
+    }
+
     $save_needed = FALSE;
 
     // Migrate field_bg_color -> field_hs_collection_background.
     // Empty/null values become "none-background" in the new field.
     if ($paragraph->hasField('field_bg_color') && $paragraph->hasField('field_hs_collection_background')) {
       $value = $paragraph->get('field_bg_color')->value;
-      $background = empty($value) ? 'none-background' : $value;
+      $background = empty($value) ? 'bg-none' : $value;
       $paragraph->set('field_hs_collection_background', $background);
       $save_needed = TRUE;
     }

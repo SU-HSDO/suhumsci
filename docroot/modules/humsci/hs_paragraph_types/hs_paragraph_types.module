@@ -28,15 +28,14 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
     }
 
     // Replace underscores with hyphens in the bg_color value.
-    $bg_color = Html::cleanCssIdentifier($paragraph->get('field_hs_collection_background')->getString());
+    $bg_color = $paragraph->get('field_hs_collection_background')->getString();
 
     // Append "-well" to the bg_color.
     $bg_width = $paragraph->get('field_hs_collection_bg_width')->getString();
-    if (!empty($bg_color) && $bg_color !== 'none-background') {
+    if (!empty($bg_color) && $bg_color !== 'bg-none') {
       $bg_width_class = $bg_width == 'full-width' ? 'well-full-width' : 'well';
-      $bg_color .= '-well';
       $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
-      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . Html::cleanCssIdentifier($bg_color) . '-well';
     }
   }
   elseif ($bundle == 'hs_sptlght_slder') {

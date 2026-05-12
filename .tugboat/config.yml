@@ -96,12 +96,13 @@ services:
         # Build frontend assets.
         - npm run theme-build
 
-    # Collection of urls to compare visual results.
     visual_regression_options:
       threshold: 0.1
       delay: 10000
+      timeout: 60
+      waitUntil: networkidle2
       hide:
-        - '.block-back-to-top'
+        - ".block-back-to-top"
     urls:
       hs-colorful:
         - /

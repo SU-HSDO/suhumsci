@@ -23,20 +23,19 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
     $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
     $variables['attributes']['class'][] = 'hs-paragraph-style';
 
-    if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
+    if (!$paragraph->hasField('field_hs_collection_background') || !$paragraph->hasField('field_hs_collection_bg_width')) {
       return;
     }
 
     // Replace underscores with hyphens in the bg_color value.
-    $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
+    $bg_color = $paragraph->get('field_hs_collection_background')->getString();
 
     // Append "-well" to the bg_color.
-    $bg_width = $paragraph->get('field_bg_color_width')->getString();
-    if (!empty($bg_color)) {
-      $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
-      $bg_color .= '-well';
+    $bg_width = $paragraph->get('field_hs_collection_bg_width')->getString();
+    if (!empty($bg_color) && $bg_color !== 'bg-none') {
+      $bg_width_class = $bg_width == 'full-width' ? 'well-full-width' : 'well';
       $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
-      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . Html::cleanCssIdentifier($bg_color) . '-well';
     }
   }
   elseif ($bundle == 'hs_sptlght_slder') {

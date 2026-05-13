@@ -334,3 +334,62 @@ function hs_admin_update_10005() {
     '@weighted' => count($shortcuts_weighted),
   ]);
 }
+
+/**
+ * Add Training shortcuts to their respective dropdown menus.
+ */
+function hs_admin_update_10007() {
+  $shortcut_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+
+  // Look up parent shortcut UUIDs by title (titles may vary by site).
+  $add_content_uuid = NULL;
+  $manage_content_uuid = NULL;
+  foreach ($shortcut_storage->loadByProperties(['shortcut_set' => 'default']) as $s) {
+    $title = $s->getTitle();
+    if (in_array($title, ['Add content', 'Add Content'])) {
+      $add_content_uuid = $s->uuid();
+    }
+    elseif (in_array($title, ['Manage content', 'Manage Content'])) {
+      $manage_content_uuid = $s->uuid();
+    }
+  }
+
+  $new_shortcuts = [
+    'Add Training' => [
+      'uri' => 'internal:/node/add/hs_training',
+      'weight' => 8,
+      'parent' => $add_content_uuid,
+    ],
+    'Manage Training' => [
+      'uri' => 'internal:/admin/content/manage/training',
+      'weight' => 21,
+      'parent' => $manage_content_uuid,
+    ],
+  ];
+
+  $created = [];
+  foreach ($new_shortcuts as $title => $config) {
+    $existing = $shortcut_storage->loadByProperties([
+      'shortcut_set' => 'default',
+      'title' => $title,
+    ]);
+    if (empty($existing)) {
+      $values = [
+        'shortcut_set' => 'default',
+        'title' => $title,
+        'link' => ['uri' => $config['uri']],
+        'weight' => $config['weight'],
+      ];
+      if ($config['parent']) {
+        $values['parent'] = $config['parent'];
+        $values['depth'] = 1;
+      }
+      $shortcut_storage->create($values)->save();
+      $created[] = $title;
+    }
+  }
+
+  return empty($created)
+    ? 'Training shortcuts already exist, no changes made.'
+    : 'Created shortcuts: ' . implode(', ', $created);
+}

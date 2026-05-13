@@ -1359,9 +1359,128 @@ function hs_paragraph_types_update_10033(&$sandbox) {
 }
 
 /**
- * Removes legacy paragraph fields.
+ * Creates new fields for paragraph visual variants of Collections.
  */
 function hs_paragraph_types_update_10034() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  $storages_to_create = [
+    'field.storage.paragraph.field_hs_collection_background',
+    'field.storage.paragraph.field_hs_collection_bg_width',
+  ];
+
+  foreach ($storages_to_create as $storage_name) {
+    $storage_config = $config_storage->read($storage_name);
+    if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
+      $field_storage->createFromStorageRecord($storage_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
+        '%field_name' => $storage_config['field_name'],
+        '%entity_type' => $storage_config['entity_type'],
+      ]);
+    }
+  }
+
+  $fields_to_create = [
+    'field.field.paragraph.hs_collection.field_hs_collection_background',
+    'field.field.paragraph.hs_collection.field_hs_collection_bg_width',
+    'field.field.paragraph.hs_priv_collection.field_hs_collection_background',
+    'field.field.paragraph.hs_priv_collection.field_hs_collection_bg_width',
+  ];
+
+  foreach ($fields_to_create as $field_name) {
+    $field_config = $config_storage->read($field_name);
+    if (!empty($field_config) && !FieldConfig::loadByName($field_config['entity_type'], $field_config['bundle'], $field_config['field_name'])) {
+      $field_config_storage->create($field_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+        '%field_name' => $field_config['field_name'],
+        '%entity_type' => $field_config['entity_type'],
+        '%bundle' => $field_config['bundle'],
+      ]);
+    }
+  }
+}
+
+/**
+ * Migrate Collections paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10035(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    // Get list of collection paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', ['hs_collection', 'hs_priv_collection'], 'IN')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+
+  }
+
+  // Map old width machine names (underscores) to new ones (hyphens).
+  $width_map = [
+    'limited_width' => 'limited-width',
+    'full_width'    => 'full-width',
+  ];
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    // Some sites need a fresh entity reload before newly-created fields are
+    // visible during this batch update.
+    if (!$paragraph->hasField('field_hs_collection_background') || !$paragraph->hasField('field_hs_collection_bg_width')) {
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+      $paragraph_storage->resetCache([$paragraph->id()]);
+      $paragraph = $paragraph_storage->loadUnchanged($paragraph->id());
+    }
+
+    $save_needed = FALSE;
+
+    // Migrate field_bg_color -> field_hs_collection_background.
+    // Empty/null values become "bg-none" in the new field.
+    if ($paragraph->hasField('field_bg_color') && $paragraph->hasField('field_hs_collection_background')) {
+      $value = $paragraph->get('field_bg_color')->value;
+      $background = empty($value) ? 'bg-none' : $value;
+      $paragraph->set('field_hs_collection_background', $background);
+      $save_needed = TRUE;
+    }
+
+    // Migrate field_bg_color_width -> field_hs_collection_bg_width.
+    // Only migrate if a value exists and a mapping is defined.
+    if ($paragraph->hasField('field_bg_color_width') && $paragraph->hasField('field_hs_collection_bg_width')) {
+      $value = $paragraph->get('field_bg_color_width')->value;
+      if (!empty($value) && isset($width_map[$value])) {
+        $paragraph->set('field_hs_collection_bg_width', $width_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_collections and hs_priv_collections paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Removes legacy paragraph fields.
+ */
+function hs_paragraph_types_update_10036() {
   $fields_to_delete = [
     'hs_spotlight' => [
       'field_hs_spotlight_bg',
@@ -1388,6 +1507,14 @@ function hs_paragraph_types_update_10034() {
     ],
     'hs_accordion' => [
       'field_accordion_style',
+    ],
+    'hs_collection' => [
+      'field_bg_color',
+      'field_bg_color_width',
+    ],
+    'hs_priv_collection' => [
+      'field_bg_color',
+      'field_bg_color_width',
     ],
   ];
 

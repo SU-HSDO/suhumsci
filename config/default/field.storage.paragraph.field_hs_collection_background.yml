@@ -1,16 +1,19 @@
-uuid: cc813eb4-7606-4f27-a606-5b0b66e8392d
+uuid: 7f323b65-4cf6-4856-9142-56179906d2e3
 langcode: en
 status: true
 dependencies:
   module:
-    - options
     - paragraphs
-id: paragraph.field_bg_color
-field_name: field_bg_color
+    - style_selector
+id: paragraph.field_hs_collection_background
+field_name: field_hs_collection_background
 entity_type: paragraph
-type: list_string
+type: style_selector_css_class
 settings:
   allowed_values:
+    -
+      value: bg-none
+      label: None
     -
       value: default
       label: Default
@@ -21,7 +24,7 @@ settings:
       value: light
       label: Vibrant
   allowed_values_function: ''
-module: options
+module: style_selector
 locked: false
 cardinality: 1
 translatable: true

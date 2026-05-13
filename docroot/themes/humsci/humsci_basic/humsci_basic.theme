@@ -313,84 +313,83 @@ function humsci_basic_is_hs_carousel_in_hs_page_hero($node) {
  */
 function humsci_basic_is_there_extra_gap_in_main_region($node) {
   if (!$node->hasField('field_hs_page_components') || $node->get('field_hs_page_components')->isEmpty()) {
-    return;
+    return FALSE;
   }
 
   $field = $node->get('field_hs_page_components');
 
   // Get the referenced Paragraph entity.
   $paragraph = $field->entity;
+  $bundle = $paragraph->bundle();
 
-  if (!in_array($paragraph->bundle(), ['hs_text_area', 'hs_sptlght_slder', 'hs_accordion'])) {
-    return;
-  }
+  if ($bundle == 'hs_text_area') {
+    if (
+      !$paragraph->hasField('field_hs_text_area') ||
+      $paragraph->get('field_hs_text_area')->isEmpty()
+    ) {
+      return FALSE;
+    }
 
-  switch ($paragraph->bundle()) {
-    case 'hs_text_area':
-      if (
-        !$paragraph->hasField('field_hs_text_area') ||
-        $paragraph->get('field_hs_text_area')->isEmpty()
-      ) {
-        return;
-      }
+    $value = $paragraph->get('field_hs_text_area')->value;
 
-      $value = $paragraph->get('field_hs_text_area')->value;
+    if (empty($value)) {
+      return FALSE;
+    }
 
-      if (empty($value)) {
-        return;
-      }
+    // Load HTML safely.
+    $dom = new \DOMDocument();
 
-      // Load HTML safely.
-      $dom = new \DOMDocument();
+    libxml_use_internal_errors(TRUE);
+    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $value);
+    libxml_clear_errors();
 
-      libxml_use_internal_errors(TRUE);
-      $dom->loadHTML('<?xml encoding="utf-8" ?>' . $value);
-      libxml_clear_errors();
+    $xpath = new \DOMXPath($dom);
 
-      $xpath = new \DOMXPath($dom);
+    // Get the FIRST element inside body.
+    $first_element = $xpath->query('/html/body/*[1]')->item(0);
 
-      // Get the FIRST element inside body.
-      $first_element = $xpath->query('/html/body/*[1]')->item(0);
+    if (!$first_element) {
+      return FALSE;
+    }
 
-      if (!$first_element) {
-        return;
-      }
+    $tag = $first_element->nodeName;
 
-      $tag = $first_element->nodeName;
-
-      // Case 1: It's a heading.
-      if (in_array($tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], TRUE)) {
-        return TRUE;
-      }
-
-      // Case 2: It's a paragraph with specific classes.
-      if ($tag === 'p') {
-        $class_attr = $first_element->attributes->getNamedItem('class');
-
-        if (!$class_attr) {
-          return;
-        }
-
-        $classes = explode(' ', $class_attr->nodeValue);
-
-        // Check if ANY of these classes exist.
-        $target_classes = ['hs-font-splash', 'hs-font-lead'];
-
-        foreach ($target_classes as $target) {
-          if (in_array($target, $classes, TRUE)) {
-            return TRUE;
-          }
-        }
-      }
-      break;
-
-    case 'hs_sptlght_slder':
+    // Case 1: It's a heading.
+    if (in_array($tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
       return TRUE;
+    }
 
-    case 'hs_accordion':
-      return $paragraph->get('field_hs_accord_expcol')->value ? FALSE : TRUE;
+    // Case 2: It's a paragraph with specific classes.
+    if ($tag === 'p') {
+      $class_attr = $first_element->attributes->getNamedItem('class');
 
+      if (!$class_attr) {
+        return FALSE;
+      }
+
+      $classes = explode(' ', $class_attr->nodeValue);
+
+      // Check if ANY of these classes exist.
+      $target_classes = ['hs-font-splash', 'hs-font-lead'];
+
+      foreach ($target_classes as $target) {
+        if (in_array($target, $classes)) {
+          return TRUE;
+        }
+      }
+    }
+
+    return FALSE;
   }
+  if ($bundle == 'hs_sptlght_slder') {
+    return TRUE;
+  }
+  if ($bundle == 'hs_accordion') {
+    return !$paragraph->get('field_hs_accord_expcol')->value;
+  }
+
+  // Return false if doesn't match any of the previous if.
+  return FALSE;
 }
 
 /**
@@ -414,8 +413,7 @@ function humsci_basic_preprocess_page(&$vars) {
 
   // Node pages are configured with layout builder so we dont need to set these
   // classes.
-  $route_match = \Drupal::routeMatch();
-  $route = $route_match->getRouteName();
+  $route = \Drupal::routeMatch()->getRouteName();
 
   $layout_routes = [
     'layout_builder.overrides.node.view',

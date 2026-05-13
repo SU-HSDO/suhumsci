@@ -169,6 +169,28 @@ function humsci_basic_preprocess_html(&$vars) {
       humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
     }
   }
+
+  // Stability for VRT in Tugboat.
+  if (getenv('TUGBOAT_PREVIEW_ID')) {
+    $vrt_styles = "
+      /* Hide problematic elements */
+      .block-back-to-top, #back-to-top { display: none !important; opacity: 0 !important; visibility: hidden !important; }
+      /* Disable animations to avoid differences due to motion */
+      *, *:before, *:after {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+        animation-delay: 0s !important;
+        transition-delay: 0s !important;
+      }
+    ";
+    $vars['#attached']['html_head'][] = [
+      [
+        '#tag' => 'style',
+        '#value' => $vrt_styles,
+      ],
+      'vrt_stability_overrides',
+    ];
+  }
 }
 
 /**
@@ -612,4 +634,14 @@ function humsci_basic_preprocess_field(&$variables) {
  */
 function humsci_basic_preprocess_node__hs_event(&$variables) {
   $variables['#attached']['library'][] = 'humsci_basic/addtocal';
+}
+
+/**
+ * Implements hook_preprocess_image().
+ */
+function humsci_basic_preprocess_image(&$variables) {
+  // In Tugboat, force all images to load immediately (no lazy load).
+  if (getenv('TUGBOAT_PREVIEW_ID')) {
+    $variables['attributes']['loading'] = 'eager';
+  }
 }

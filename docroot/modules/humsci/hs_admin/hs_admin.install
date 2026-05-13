@@ -393,3 +393,32 @@ function hs_admin_update_10007() {
     ? 'Training shortcuts already exist, no changes made.'
     : 'Created shortcuts: ' . implode(', ', $created);
 }
+
+/**
+ * Import hs_training display configs missing from active storage.
+ */
+function hs_admin_update_10008() {
+  $sync = \Drupal::service('config.storage.sync');
+  $active = \Drupal::service('config.storage');
+
+  $configs = [
+    'core.entity_form_display.node.hs_training.default',
+    'core.entity_view_display.node.hs_training.default',
+    'core.entity_view_display.node.hs_training.teaser',
+  ];
+
+  $imported = [];
+  foreach ($configs as $name) {
+    if (!$active->exists($name)) {
+      $data = $sync->read($name);
+      if ($data) {
+        $active->write($name, $data);
+        $imported[] = $name;
+      }
+    }
+  }
+
+  return empty($imported)
+    ? 'hs_training display configs already present, no changes made.'
+    : 'Imported configs: ' . implode(', ', $imported);
+}

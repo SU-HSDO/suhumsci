@@ -336,6 +336,40 @@ function hs_admin_update_10005() {
 }
 
 /**
+ * Remove role delegation permissions from the site manager role.
+ */
+function hs_admin_update_10006(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  /** @var \Drupal\user\Entity\Role $role */
+  $role = $role_storage->load('site_manager');
+  $removed_permissions = [];
+
+  // Permissions to remove.
+  $permissions = [
+    'assign contributor role',
+    'assign site_manager role',
+  ];
+
+  // Remove permissions from Site Manager.
+  $role_permissions = $role->getPermissions();
+  if (!empty($to_remove = array_intersect($permissions, $role_permissions))) {
+    foreach ($to_remove as $perm) {
+      $role->revokePermission($perm);
+      $removed_permissions[] = $perm;
+    }
+    $role->save();
+  }
+
+  if (empty($removed_permissions)) {
+    return t('No permissions were removed from the Site Manager role.');
+  }
+
+  return t('Removed permissions from Site Manager role: @removed_permissions.', [
+    '@removed_permissions' => implode(', ', $removed_permissions),
+  ]);
+}
+
+/**
  * Add Training shortcuts to their respective dropdown menus.
  */
 function hs_admin_update_10007() {

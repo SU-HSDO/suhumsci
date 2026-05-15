@@ -97,17 +97,29 @@ services:
         - npm run theme-build
 
         # Inject CSS to disable animations and force slider visibility for VRT.
-        - for theme in humsci_colorful humsci_traditional humsci_airy; do echo "* { transition-duration: 0s !important; transition-delay: 0s !important; animation-duration: 0s !important; animation-delay: 0s !important; }" >> ${TUGBOAT_ROOT}/docroot/themes/humsci/$theme/css/main.css; done
+        - 'for theme in humsci_colorful humsci_traditional humsci_airy; do echo "* { transition-duration: 0s !important; transition-delay: 0s !important; animation-duration: 0s !important; animation-delay: 0s !important; }" >> ${TUGBOAT_ROOT}/docroot/themes/humsci/$theme/css/main.css; done'
 
     # Options for taking screenshots of the current environment
     screenshot:
-      waitUntil: networkidle0
-      timeout: 60 # Maximum wait time in seconds
+      enabled: true
+
+      # The following options are used when taking a screenshot of
+      # the URL for _this_ preview
+      timeout: 30
+      waitUntil:
+        - load
+      fullPage: true
 
     # Options for comparison with the base environment
     visualdiff:
-      waitUntil: networkidle0
-      timeout: 60
+      enabled: true
+
+      # The following options are used when taking a screenshot of
+      # the URL for the _base_ preview
+      timeout: 30
+      waitUntil:
+        - load
+      fullPage: true
 
     urls:
       hs-colorful:

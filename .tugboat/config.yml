@@ -96,14 +96,6 @@ services:
         # Build frontend assets.
         - npm run theme-build
 
-        # Disable native lazy loading for images to ensure they are captured in VRT.
-        # This targets the most common paragraph image display settings.
-        - drush @hs_colorful.local eval '$ds=\Drupal::entityTypeManager()->getStorage("entity_view_display")->loadMultiple(); foreach($ds as $d){$c=$d->get("content"); $ch=FALSE; foreach($c as $f=>&$s){if(isset($s["settings"]["image_loading"]["attribute"])){$s["settings"]["image_loading"]["attribute"]="eager"; $ch=TRUE;}} if($ch){$d->set("content",$c)->save();}}'
-        - drush @hs_traditional.local eval '$ds=\Drupal::entityTypeManager()->getStorage("entity_view_display")->loadMultiple(); foreach($ds as $d){$c=$d->get("content"); $ch=FALSE; foreach($c as $f=>&$s){if(isset($s["settings"]["image_loading"]["attribute"])){$s["settings"]["image_loading"]["attribute"]="eager"; $ch=TRUE;}} if($ch){$d->set("content",$c)->save();}}'
-        - drush @english.local eval '$ds=\Drupal::entityTypeManager()->getStorage("entity_view_display")->loadMultiple(); foreach($ds as $d){$c=$d->get("content"); $ch=FALSE; foreach($c as $f=>&$s){if(isset($s["settings"]["image_loading"]["attribute"])){$s["settings"]["image_loading"]["attribute"]="eager"; $ch=TRUE;}} if($ch){$d->set("content",$c)->save();}}'
-        - drush @history.local eval '$ds=\Drupal::entityTypeManager()->getStorage("entity_view_display")->loadMultiple(); foreach($ds as $d){$c=$d->get("content"); $ch=FALSE; foreach($c as $f=>&$s){if(isset($s["settings"]["image_loading"]["attribute"])){$s["settings"]["image_loading"]["attribute"]="eager"; $ch=TRUE;}} if($ch){$d->set("content",$c)->save();}}'
-        - drush @west.local eval '$ds=\Drupal::entityTypeManager()->getStorage("entity_view_display")->loadMultiple(); foreach($ds as $d){$c=$d->get("content"); $ch=FALSE; foreach($c as $f=>&$s){if(isset($s["settings"]["image_loading"]["attribute"])){$s["settings"]["image_loading"]["attribute"]="eager"; $ch=TRUE;}} if($ch){$d->set("content",$c)->save();}}'
-
     # Options for taking screenshots of the current environment
     screenshot:
       waitUntil: networkidle0

@@ -96,6 +96,9 @@ services:
         # Build frontend assets.
         - npm run theme-build
 
+        # Inject CSS to disable animations and force slider visibility for VRT.
+        - for theme in humsci_colorful humsci_traditional humsci_airy; do echo "* { transition-duration: 0s !important; transition-delay: 0s !important; animation-duration: 0s !important; animation-delay: 0s !important; }" >> ${TUGBOAT_ROOT}/docroot/themes/humsci/$theme/css/main.css; done
+
     # Options for taking screenshots of the current environment
     screenshot:
       waitUntil: networkidle0
@@ -103,7 +106,6 @@ services:
 
     # Options for comparison with the base environment
     visualdiff:
-      threshold: 0.1
       waitUntil: networkidle0
       timeout: 60
 

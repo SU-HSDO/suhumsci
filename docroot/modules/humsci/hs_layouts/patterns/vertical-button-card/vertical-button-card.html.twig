@@ -25,8 +25,19 @@
         {% endif %}
 
         {% if button %}
-          {% set link = button.field_hs_postcard_link[0] %}
-          <a href="{{ link['#url'].toString() }}" class="hs-button">{{ link['#title'] }}</a>
+          {% if button.field_hs_postcard_link %}
+            {% set link = button.field_hs_postcard_link[0] %}
+            <a href="{{ link['#url'].toString() }}" class="hs-button">{{ link['#title'] }}</a>
+          {% else %}
+            {% set rendered = button|render %}
+
+            {% set url = rendered|striptags('<a>') %}
+            {% set href = rendered|split('href="')[1]|split('"')[0] %}
+
+            <a href="{{ href }}" class="hs-button">
+              {{ rendered|striptags }}
+            </a>
+          {% endif %}
         {% endif %}
       </div>
     {% endif %}

@@ -104,13 +104,17 @@ services:
         - drush @history.local eval '$ds=\Drupal::entityTypeManager()->getStorage("entity_view_display")->loadMultiple(); foreach($ds as $d){$c=$d->get("content"); $ch=FALSE; foreach($c as $f=>&$s){if(isset($s["settings"]["image_loading"]["attribute"])){$s["settings"]["image_loading"]["attribute"]="eager"; $ch=TRUE;}} if($ch){$d->set("content",$c)->save();}}'
         - drush @west.local eval '$ds=\Drupal::entityTypeManager()->getStorage("entity_view_display")->loadMultiple(); foreach($ds as $d){$c=$d->get("content"); $ch=FALSE; foreach($c as $f=>&$s){if(isset($s["settings"]["image_loading"]["attribute"])){$s["settings"]["image_loading"]["attribute"]="eager"; $ch=TRUE;}} if($ch){$d->set("content",$c)->save();}}'
 
-    visual_regression_options:
-      threshold: 0.1
-      delay: 30000
-      timeout: 210
+    # Options for taking screenshots of the current environment
+    screenshot:
       waitUntil: networkidle0
-      exclude:
-        - ".block-back-to-top"
+      timeout: 60 # Maximum wait time in seconds
+
+    # Options for comparison with the base environment
+    visualdiff:
+      threshold: 0.1
+      waitUntil: networkidle0
+      timeout: 60
+
     urls:
       hs-colorful:
         - /

@@ -229,6 +229,15 @@ button:not([class]) {
     animation-iteration-count: 1 !important;
     background-attachment: initial !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Ignore this override for swiper wrapper
+  * which causes the slides not to work
+  * when reduce motion is enabled.
+  */
+  *:not(.swiper-wrapper),
+  ::before,
+  ::after {
     transition-duration: 0s !important;
   }
 }

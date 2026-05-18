@@ -93,6 +93,14 @@ services:
         - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - drush @west.local deploy
 
+        # Disable lazy loading of images for all sites to ensure images are
+        # fully loaded during VRT screenshot capture.
+        - drush @hs_colorful.local config:set system.performance lazy_load 0 -y
+        - drush @hs_traditional.local config:set system.performance lazy_load 0 -y
+        - drush @english.local config:set system.performance lazy_load 0 -y
+        - drush @history.local config:set system.performance lazy_load 0 -y
+        - drush @west.local config:set system.performance lazy_load 0 -y
+
         # Build frontend assets.
         - npm run theme-build
 

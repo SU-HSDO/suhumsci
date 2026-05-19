@@ -44,7 +44,7 @@ function hs_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $q
 
     /** @var Drupal\hs_views_helper\Plugin\views\query\Sql $query */
     $query->addWhereExpression(
-      'AND',
+      '0',
       'node_field_data.title IN (' . $sub_query->__toString() . ')'
     );
   }

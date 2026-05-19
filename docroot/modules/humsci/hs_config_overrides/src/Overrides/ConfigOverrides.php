@@ -48,14 +48,14 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   /**
    * Drupal state service.
    *
-   * @var \Drupal\Core\State\StateInterface
+   * @var \Drupal\Core\State\StateInterface|null
    */
   protected $state;
 
   /**
    * Current multisite directory path.
    *
-   * @var string
+   * @var string|null
    */
   protected $sitePath;
 
@@ -139,15 +139,17 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   Keyed array of config overrides.
    */
   protected function setStageFileProxy(array $names, array &$overrides) {
-    if (in_array('stage_file_proxy.settings', $names)) {
-      $site_dir = str_replace('sites/', '', $this->sitePath);
+    if (!in_array('stage_file_proxy.settings', $names) || $this->state === NULL) {
+      return;
+    }
 
-      if ($base_url = $this->state->get('xmlsitemap_base_url')) {
-        $overrides['stage_file_proxy.settings'] = [
-          'origin' => $base_url,
-          'origin_dir' => "sites/$site_dir/files",
-        ];
-      }
+    $site_dir = str_replace('sites/', '', (string) $this->sitePath);
+
+    if ($base_url = $this->state->get('xmlsitemap_base_url')) {
+      $overrides['stage_file_proxy.settings'] = [
+        'origin' => $base_url,
+        'origin_dir' => "sites/$site_dir/files",
+      ];
     }
   }
 

@@ -102,7 +102,7 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
    *
    * @var int
    */
-  protected $importWhat;
+  protected $importWhat = self::IMPORT_PROFILES;
 
   /**
    * {@inheritdoc}

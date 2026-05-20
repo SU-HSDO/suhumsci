@@ -14,23 +14,16 @@
       const update = (element, speedSource) => {
         const { swiper } = element;
         if (!swiper) return;
-        swiper.params.speed = speedSource.matches ? 0 : swiper.originalSpeed;
+        swiper.params.speed = speedSource.matches ? 0 : swiper.originalParams.speed;
         swiper.update();
       };
 
-      // Initialize new Swipers (once per element).
       once('swiper-reduced-motion', '.swiper-container', context).forEach((element) => {
         setTimeout(() => {
-          if (element.swiper) {
-            element.swiper.originalSpeed = element.swiper.params.speed;
-          }
           update(element, prefersReducedMotion);
         }, 0);
-      });
 
-      // Attach change listener.
-      prefersReducedMotion.addEventListener('change', (event) => {
-        document.querySelectorAll('.swiper-container').forEach((element) => update(element, event));
+        prefersReducedMotion.addEventListener('change', (event) => update(element, event));
       });
     },
   };

@@ -11,16 +11,27 @@
     attach(context) {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-      if (prefersReducedMotion.matches) {
-        once('swiper-reduced-motion', '.swiper-container', context).forEach((swiper) => {
-          setTimeout(() => {
-            if (swiper) {
-              swiper.swiper.params.speed = 0;
-              swiper.swiper.update();
-            }
-          }, 0);
-        });
-      }
+      const update = (element, speedSource) => {
+        const { swiper } = element;
+        if (!swiper) return;
+        swiper.params.speed = speedSource.matches ? 0 : swiper.originalSpeed;
+        swiper.update();
+      };
+
+      // Initialize new Swipers (once per element).
+      once('swiper-reduced-motion', '.swiper-container', context).forEach((element) => {
+        setTimeout(() => {
+          if (element.swiper) {
+            element.swiper.originalSpeed = element.swiper.params.speed;
+          }
+          update(element, prefersReducedMotion);
+        }, 0);
+      });
+
+      // Attach change listener.
+      prefersReducedMotion.addEventListener('change', (event) => {
+        document.querySelectorAll('.swiper-container').forEach((element) => update(element, event));
+      });
     },
   };
 }(Drupal, once));

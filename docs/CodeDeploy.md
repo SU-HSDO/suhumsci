@@ -4,12 +4,16 @@ This document outlines the release and deployment workflow for the H&S applicati
 
 ## Overview
 - Releases follow [SEMVER](https://semver.org/) conventions: major, minor, patch.
-- All code changes for a release go through a PR into the release branch (`<version>-release`).
+- Day-to-day development work merges into the current `<major>.x` branch.
+- Staging should track the `<major>.x-build` artifact branch generated from the current `<major>.x` branch.
+- Production releases are created by merging a release pull request into `main`.
 - PRs must pass all required GitHub Actions checks.
 - PR labels (`major`, `minor`, `patch`) are required to trigger automation.
-- When a release branch is merged into `develop`, automation creates a deployment artifact/tag, a new GitHub release, and the next release branch/PR.
-- The deployment artifact is a tag named `YYYY-MM-DD_VERSION` (e.g., `2025-10-15_11.18.0`).
+- When a release pull request is merged into `main`, automation creates a deployment artifact/tag and a new GitHub release.
+- The deployment artifact is a tag named `YYYY-MM-DD_VERSION` (e.g., `2026-05-21_12.1.1`).
 - Manual database backups are required before production deployment.
+
+See also: [Branching Strategy](BranchingStrategy.md)
 
 ## Requirements
 *See [H&S Development Requirements](DevelopmentRequirements.md)*
@@ -30,25 +34,28 @@ Running the backup step now ensures the backups are completed by the time the re
 ## Create a New Release
 ### Prep the Code Locally
 ```bash
-git checkout develop && git fetch && git pull
-git checkout RELEASE_BRANCH && git fetch && git pull
+git checkout main && git fetch && git pull
+git checkout CURRENT_MAJOR_BRANCH && git fetch && git pull
+git checkout -b RELEASE_BRANCH
 composer install
 
 # Example:
-git checkout develop && git fetch && git pull
-git checkout 11.18.0-release && git fetch && git pull
+git checkout main && git fetch && git pull
+git checkout 12.x && git fetch && git pull
+git checkout -b 12.1.1-release
 composer install
 ```
 
 ### Prepare for Release
-- Ensure all code for the release is merged into the current release branch (`<version>-release`).
+- Ensure all code for the release is merged into the current major development branch before creating the release branch.
+- Create a short-lived release branch from the current major development branch.
 - Review code changes and determine the next version using SEMVER:
-	- **Major**: Incompatible API changes (e.g., `12.0.0`)
-	- **Minor**: New functionality, backward compatible (e.g., `11.18.0`)
-	- **Patch**: Bug fixes, backward compatible (e.g., `11.17.1`)
+	- **Major**: Incompatible API changes (e.g., `12.0.0`). Note that this should entail creating a new `<major>.x` development branch. This is typically reserved for Drupal core major version upgrades.
+	- **Minor**: New functionality, backward compatible (e.g., `12.1.0`)
+	- **Patch**: Bug fixes, backward compatible (e.g., `12.1.1`)
 - Use `git log` or the GitHub interface to review commits:
 	```bash
-	git log ^develop <version>-release --oneline
+	git log main..RELEASE_BRANCH --oneline
 	```
 
 ### Update Version Numbers
@@ -56,25 +63,35 @@ composer install
 	- `docroot/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml`
 - Commit and push changes.
 
+### Create the Release PR
+- Push the new release branch to GitHub.
+- Open a pull request from `RELEASE_BRANCH` into `main`.
+- Confirm the PR contains only the code intended for the release.
+- Use a PR title that matches the target version number (e.g., `12.1.1`).
+
 ### Update the Release PR
-- Set the PR title to the version (e.g., `11.18.0`).
+- Set the PR title to the version (e.g., `12.1.1`).
 - Apply the correct `major`, `minor`, or `patch` label. This triggers automation.
-- Double-check the base branch is `develop`.
+- Double-check the base branch is `main`.
 - Review changes and confirm SEMVER alignment.
 
 :warning: **Double check the PR label!** Make sure the PR label is correct based on the version (major, minor, or patch).
 
 ### Merge the Release PR
 - Once all tests pass, merge the PR using a **merge commit** (not squash merge).
-- Set the merge commit title/message to the version (e.g., `11.18.0`).
+- Set the merge commit title/message to the version (e.g., `12.1.1`).
 - Confirm the correct PR label is applied before merging.
+
+### Back to Dev
+- After the release PR is merged into `main`, keep the release branch long enough to open a second pull request back into the current `<major>.x` branch.
+- Use this back-to-dev pull request to return version increments and any other release-only changes to the development branch.
+- Merge the back-to-dev pull request before deleting the release branch.
+- If a production hotfix is ever made directly on `main`, sync that change back to the current `<major>.x` branch separately.
 
 ### Confirm Automation
 - After merging, GitHub Actions will:
 	- Create a new tag and release with the version number.
 	- Create a deployment artifact and push it to Acquia (tag: `YYYY-MM-DD_VERSION`).
-	- Create the next release branch and PR for the following version.
-    - If you are actively maintaining this repo, it's recommended to subscribe to this PR.
 - Confirm the new release in GitHub and artifact in Acquia Cloud UI.
 
 ### Composer Lock Diff for Release Notes
@@ -85,16 +102,16 @@ composer install
 	composer-lock-diff --md --from=PREVIOUS_VERSION --to=NEW_VERSION
 
 	# Example:
-	composer-lock-diff --md --from=11.17.0 --to=11.18.0
+	composer-lock-diff --md --from=12.1.0 --to=12.1.1
 	```
 - Add the output to the GitHub release notes.
 - Keep the "Full Changelog" link and paste the diff at the bottom.
 
 ### Notify Teams of upcoming deployment
 - Announce in client Slack channel:
-	> :launch1: A new 11.18.0 release has been created. The deployment to production will begin momentarily.
+	> :launch1: A new 12.1.1 release has been created. The deployment to production will begin momentarily.
 - Announce in any internal Slack channels for developers:
-	> :version: A new 11.18.0 release has been created for suhumsci. The next release branch is 11.18.1: <next_release_pr_link>
+	> :version: A new 12.1.1 release has been created for suhumsci and the production artifact is ready to deploy.
 
 :information_source: The release has been created and a deployment artifact has been pushed, but no deployment has been made at this point. The next step is to deploy to production, which is the true “point of no return”.
 
@@ -107,11 +124,12 @@ composer install
 ### Deploy the Artifact to Production
 - In Acquia Cloud UI:
 	1. Click the icon next to the "Code" tab for Prod.
-	2. Select the deployment artifact tag (e.g., `tags/2025-10-15_11.18.0`).
+	2. Select the deployment artifact tag (e.g., `tags/2026-02-21_12.1.1`).
 	3. Click "Continue" and then "Switch" to start deployment.
 
-### Deploy Next Release Branch to Staging
-- Manually deploy the newly created next release branch to the staging environment in Acquia Cloud UI (e.g., `11.18.1-release`)
+### Staging Deployment Note
+- Staging should continue to track the current `<major>.x-build` branch.
+- The production release workflow does not change the staging branch.
 
 ### Monitor Deployment
 - Monitor progress in Acquia Cloud UI and Slack alerts.

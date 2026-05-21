@@ -3,7 +3,6 @@
 namespace Drupal\Tests\hs_views_helper\Unit\Plugin\views\filter;
 
 use Drupal\Core\DependencyInjection\Container;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\Messenger;
@@ -18,13 +17,14 @@ use Drupal\views\Plugin\ViewsPluginManager;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewsData;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class SqlTest.
- *
- * @coversDefaultClass \Drupal\hs_views_helper\Plugin\views\query\Sql
- * @group hs_views_helper
  */
+#[CoversClass(Sql::class)]
+#[Group('hs_views_helper')]
 class SqlTest extends UnitTestCase {
 
   /**

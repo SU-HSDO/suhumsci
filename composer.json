@@ -23,6 +23,21 @@
                     "composer/installers": "^1.2.0"
                 }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "noli42/chosen",
+                "version": "3.0.0",
+                "type": "drupal-library",
+                "extra": {
+                    "installer-name": "chosen"
+                },
+                "dist": {
+                    "url": "https://github.com/noli42/chosen/releases/download/3.0.0/chosen-assets-v3.0.0.zip",
+                    "type": "zip"
+                }
+            }
         }
     ],
     "require": {
@@ -42,25 +57,25 @@
         "drupal/better_normalizers": "^2.0",
         "drupal/block_class": "^4.0",
         "drupal/cancel_button": "^1.1",
-        "drupal/chosen": "^4.0",
+        "drupal/chosen": "^5.0",
         "drupal/ckeditor5_plugin_pack": "^1.4",
-        "drupal/color": "^1.0",
+        "drupal/color": "^2.0",
         "drupal/color_field": "^3.0",
         "drupal/colorbox": "2.1.4",
         "drupal/components": "^3.0",
         "drupal/conditional_fields": "^4.0@alpha",
         "drupal/config_filter": "^1.0",
         "drupal/config_ignore": "^3.0",
-        "drupal/config_pages_overrides": "^2.0",
+        "drupal/config_pages_overrides": "^3.0",
         "drupal/config_readonly": "^1.0",
         "drupal/config_split": "^2.0",
         "drupal/config_update": "^2.0@alpha",
         "drupal/confirm_leave": "^1.0@beta",
         "drupal/content_access": "^2.0",
         "drupal/content_access_simple": "^1.0@beta",
-        "drupal/core": "~10.5.0",
-        "drupal/core-composer-scaffold": "~10.5.0",
-        "drupal/core-recommended": "~10.5.0",
+        "drupal/core": "~11.2.0",
+        "drupal/core-composer-scaffold": "~11.2.0",
+        "drupal/core-recommended": "~11.2.0",
         "drupal/cshs": "^4.0",
         "drupal/dashboard": "^2.0",
         "drupal/default_content": "^2.0",
@@ -79,7 +94,7 @@
         "drupal/entity_reference_revisions": "^1.3",
         "drupal/entityqueue": "^1.2",
         "drupal/environment_indicator": "^4.0",
-        "drupal/extlink": "^1.7",
+        "drupal/extlink": "^2.0",
         "drupal/fast_404": "^3.2",
         "drupal/fast_404_generator": "^1.0",
         "drupal/feeds": "^3.0",
@@ -87,7 +102,6 @@
         "drupal/field_formatter_class": "^1.4",
         "drupal/field_group": "^4.0",
         "drupal/field_permissions": "^1.1",
-        "drupal/field_validation": "^1.1",
         "drupal/fontawesome": "^3.0",
         "drupal/gin": "^4.0.2",
         "drupal/gin_toolbar": "^2.0",
@@ -155,7 +169,6 @@
         "drupal/tagify": "^1.2",
         "drupal/term_condition": "^2.0",
         "drupal/token_or": "^2.2",
-        "drupal/transliterate_filenames": "^2.0",
         "drupal/ui_patterns": "^1.10",
         "drupal/video_embed_field": "^3.0",
         "drupal/view_unpublished": "^1.0",
@@ -171,10 +184,10 @@
         "drupal/views_taxonomy_term_name_depth": "^7.0",
         "drupal/webp": "^1.0@RC",
         "drupal/xmlsitemap": "^2.0",
-        "drush/drush": "^12",
-        "harvesthq/chosen": "^1.8",
+        "drush/drush": "^13",
         "leongersen/nouislider": "15.5.1",
         "mnsami/composer-custom-directory-installer": "^2.0",
+        "noli42/chosen": "^3.0",
         "nolimits4web/swiper": "^12.0",
         "onlyextart/colorbox": "dev-master#e58476becbc89dc671093d1bcd9f99b2167fa8f7",
         "sainsburys/guzzle-oauth2-plugin": "^3.0",
@@ -186,10 +199,10 @@
         "su-sws/sws-drush-commands": "multisite-improvements-dev"
     },
     "require-dev": {
-        "drupal/core-dev": "~10.5.0",
+        "drupal/core-dev": "~11.2.0",
         "drupal/upgrade_status": "^4.0",
         "phpspec/prophecy-phpunit": "^2.0",
-        "su-sws/drupal-dev": "^10"
+        "su-sws/drupal-dev": "^11"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -225,15 +238,13 @@
             "drupal/core": {
                 "https://www.drupal.org/project/drupal/issues/2999491": "https://www.drupal.org/files/issues/2024-07-17/drupal-2999491-162.patch",
                 "https://www.drupal.org/project/drupal/issues/2981837": "https://www.drupal.org/files/issues/2019-05-22/findMigrationDependencies-null-process-value-2981837-5.patch",
-                "https://www.drupal.org/project/drupal/issues/3306916": "https://www.drupal.org/files/issues/2023-12-19/3306916-18.patch",
                 "CKEditor 5 headings plugin paragraph label change": "patches/ckeditor5-paragraph-rename.patch",
                 "Allow hs group blocks in layout_builder": "patches/layout_builder-allow-hs-blocks.patch",
-                "Allow media items to be edited in a modal when using the field widget https://www.drupal.org/project/drupal/issues/2985168": "https://www.drupal.org/files/issues/2023-12-18/2985168-172.patch",
+                "Allow media items to be edited in a modal when using the field widget https://www.drupal.org/project/drupal/issues/2985168": "patches/core/core-2985168-175-20260129.patch",
                 "Cannot read properties of undefined (reading 'settings') with dialog.position.js https://www.drupal.org/project/drupal/issues/3356667": "patches/core/core-mr-8892.patch",
-                "https://www.drupal.org/project/drupal/issues/3207813: ModuleHandler skips all hook implementations when invoked before the module files have been loaded": "patches/core/core-mr-6976.patch",
                 "https://www.drupal.org/project/drupal/issues/3202896: Do not display oEmbed resource error to anonymous users": "patches/core/core-3202896-mr-9357-20250410.patch",
                 "Fix oEmbed video thumbnail resolution https://www.drupal.org/project/drupal/issues/3447326": "patches/core/core-3447326-mr-9518-20251104.patch",
-                "Adds bulk operations action to media library that allows site admin to generate new thumbnails https://www.drupal.org/project/drupal/issues/2983456": "patches/core/core-2983456-168-20251104.patch"
+                "Adds bulk operations action to media library that allows site admin to generate new thumbnails https://www.drupal.org/project/drupal/issues/2983456": "patches/core/core-2983456-168-20260422.patch"
             },
             "drupal/entity_reference_exposed_filters": {
                 "https://www.drupal.org/project/entity_reference_exposed_filters/issues/3189025": "https://www.drupal.org/files/issues/2023-10-17/entity_reference_exposed_filters-empty_target-3189025-4.patch"
@@ -313,8 +324,7 @@
             ],
             "docroot/libraries/{$name}": [
                 "type:drupal-library",
-                "enyo/dropzone",
-                "harvesthq/chosen"
+                "enyo/dropzone"
             ],
             "docroot/modules/contrib/{$name}": [
                 "type:drupal-module"

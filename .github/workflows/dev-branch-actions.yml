@@ -1,0 +1,23 @@
+# .github/workflows/dev-branch-actions.yml
+# Actions triggered on merge to current dev branch (e.g., 1.x, 2.x, etc.,).
+# - Runs the tests workflow and deploys an artifact when tests pass.
+name: Dev branch actions
+
+on:
+  push:
+    branches: ['*.x']
+
+jobs:
+  # Run tests on current PR branch.
+  tests:
+    uses: ./.github/workflows/tests.yml
+    # Allow secrets to be used in the called workflow.
+    secrets: inherit
+  # Deploy branch after tests pass by calling deploy workflow.
+  deploy:
+    uses: ./.github/workflows/deploy-branch.yml
+    with:
+      branch: ${{ github.ref_name }}
+    # Allow secrets to be used in the called workflow.
+    secrets: inherit
+    needs: [tests]

@@ -1,10 +1,16 @@
+# .github/workflows/tests.yml
+# Runs tests on current branch or tag.
 name: Unit, Acceptance and Functional Tests
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+
+# Allow this workflow to be called from other workflows.
+on: [workflow_call]
+
+# Cancel previous runs of this workflow in the same branch if they're still in
+# progress.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 env:
   themePath: docroot/themes/humsci/humsci_basic
 jobs:
@@ -24,9 +30,9 @@ jobs:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
@@ -41,7 +47,7 @@ jobs:
           mkdir -p docroot/sites/simpletest &&
           drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage
       - name: Save Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: unit-tests-results
@@ -51,7 +57,7 @@ jobs:
     container:
       image: pookmish/drupal8ci:php8.3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Node.js from .nvmrc
         uses: actions/setup-node@v6
         with:
@@ -89,7 +95,7 @@ jobs:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Node.js from .nvmrc
         uses: actions/setup-node@v6
         with:
@@ -97,7 +103,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
@@ -114,7 +120,7 @@ jobs:
           composer install -n &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          drush sws:multisite:install -n -n
+          drush sws:multisite:install -n
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -123,9 +129,9 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          drush sws:codeception --suite=functional --group=install --site-domain=localhost
+          drush sws:codeception --suite=functional --group=install
       - name: Save Functional Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: codeception--functional
@@ -157,7 +163,7 @@ jobs:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Node.js from .nvmrc
         uses: actions/setup-node@v6
         with:
@@ -165,7 +171,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
@@ -182,7 +188,7 @@ jobs:
           composer install -n &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          drush sws:multisite:install -n -n
+          drush sws:multisite:install -n
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -191,56 +197,10 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          drush sws:codeception --suite=acceptance --group=install --site-domain=localhost
+          drush sws:codeception --suite=acceptance --group=install
       - name: Save Acceptance Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: codeception--acceptance
           path: /var/www/html/artifacts
-  deploy_branch:
-    needs:
-      - test_phpunit
-      - lint_theme
-      - test_functional
-      - test_acceptance
-    runs-on: ubuntu-latest
-    container:
-      image: pookmish/drupal8ci:php8.3
-      options: '--network-alias drupal8ci'
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Set up Node.js from .nvmrc
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .nvmrc
-          cache: 'npm'
-          cache-dependency-path: ${{ env.themePath }}/package-lock.json
-      - name: Restore Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            vendor
-            docroot/core
-            docroot/libraries
-            docroot/modules/contrib
-          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          name: id_rsa
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-          if_key_exists: fail
-      - run: git config --system --add safe.directory '*'
-      - name: Install theme dependencies
-        run: npm ci --prefix $themePath
-      - name: Deploy Branch
-        run: |
-          git config --global user.email "sws-developers@lists.stanford.edu" &&
-          git config --global user.name "Github Actions" &&
-          ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
-          composer install -n &&
-          drush sws:artifact:deploy -v -n

@@ -8,13 +8,14 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\migrate\process\SubProcess as OrigSubProcess;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class SubProcessTest.
- *
- * @group hs_migrate
- * @coversDefaultClass \Drupal\hs_migrate\Plugin\migrate\process\SubProcess
  */
+#[CoversClass(HsSubProcess::class)]
+#[Group('hs_migrate')]
 class SubProcessTest extends UnitTestCase {
 
   public function testTranform() {

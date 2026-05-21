@@ -41,20 +41,21 @@ index 1945ef5001f..cf919f396c4 100644
    route_name: entity.media.delete_form
    group: media
 diff --git a/core/modules/media/media.post_update.php b/core/modules/media/media.post_update.php
-index 3ae18b31501..ff5947788af 100644
+index 1c56319bfe8..973772656df 100644
 --- a/core/modules/media/media.post_update.php
 +++ b/core/modules/media/media.post_update.php
-@@ -9,6 +9,7 @@
- use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
- use Drupal\media\MediaConfigUpdater;
- use Drupal\media\MediaTypeInterface;
-+use Drupal\system\Entity\Action;
+@@ -5,6 +5,8 @@
+  * Post update functions for Media.
+  */
  
++use Drupal\system\Entity\Action;
++
  /**
   * Implements hook_removed_post_updates().
-@@ -74,3 +75,18 @@ function media_post_update_remove_mappings_targeting_source_field(?array &$sandb
-       return FALSE;
-     });
+  */
+@@ -27,3 +29,18 @@ function media_removed_post_updates(): array {
+ function media_post_update_media_author_views_filter_update(): void {
+   // Empty update function to clear the Views data cache.
  }
 +
 +/**
@@ -72,7 +73,7 @@ index 3ae18b31501..ff5947788af 100644
 +  }
 +}
 diff --git a/core/modules/media/media.routing.yml b/core/modules/media/media.routing.yml
-index eaf908fb340..ab056211f49 100644
+index 6a04b5446b3..d489392ebac 100644
 --- a/core/modules/media/media.routing.yml
 +++ b/core/modules/media/media.routing.yml
 @@ -1,3 +1,11 @@
@@ -140,10 +141,10 @@ index 00000000000..d04ec11c9a6
 +
 +}
 diff --git a/core/modules/media/src/Entity/Media.php b/core/modules/media/src/Entity/Media.php
-index 7fcf32b94cd..69b8b2d850a 100644
+index 4c612cdca17..b3c1757d3f3 100644
 --- a/core/modules/media/src/Entity/Media.php
 +++ b/core/modules/media/src/Entity/Media.php
-@@ -94,6 +94,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
+@@ -107,6 +107,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    use EntityOwnerTrait;
    use StringTranslationTrait;
  
@@ -157,7 +158,7 @@ index 7fcf32b94cd..69b8b2d850a 100644
    /**
     * {@inheritdoc}
     */
-@@ -159,10 +166,14 @@ public function getSource() {
+@@ -172,10 +179,14 @@ public function getSource() {
     *   https://www.drupal.org/node/2878119
     */
    protected function updateThumbnail($from_queue = FALSE) {
@@ -173,7 +174,7 @@ index 7fcf32b94cd..69b8b2d850a 100644
      // Set the thumbnail alt.
      $media_source = $this->getSource();
      $plugin_definition = $media_source->getPluginDefinition();
-@@ -258,7 +269,7 @@ protected function getThumbnailUri($from_queue) {
+@@ -271,7 +282,7 @@ protected function getThumbnailUri($from_queue) {
      if ($thumbnails_queued && $this->isNew()) {
        return $this->getDefaultThumbnailUri();
      }
@@ -182,7 +183,7 @@ index 7fcf32b94cd..69b8b2d850a 100644
        return $this->get('thumbnail')->entity->getFileUri();
      }
  
-@@ -345,8 +356,8 @@ protected function hasSourceFieldChanged() {
+@@ -358,8 +369,8 @@ protected function hasSourceFieldChanged() {
     */
    protected function shouldUpdateThumbnail($is_new = FALSE) {
      // Update thumbnail if we don't have a thumbnail yet or when the source
@@ -193,8 +194,8 @@ index 7fcf32b94cd..69b8b2d850a 100644
    }
  
    /**
-@@ -425,29 +436,64 @@ public function prepareSave() {
-         ->loadUnchanged($id);
+@@ -439,29 +450,64 @@ public function prepareSave() {
+       );
      }
  
 +    foreach (array_keys($this->getTranslationLanguages()) as $langcode) {
@@ -421,7 +422,7 @@ index 00000000000..d2381f0288c
 +
 +}
 diff --git a/core/modules/media/src/Plugin/media/Source/OEmbed.php b/core/modules/media/src/Plugin/media/Source/OEmbed.php
-index 882667748f0..71e6eeb800c 100644
+index 9cb2d7974f3..abcc18ddd12 100644
 --- a/core/modules/media/src/Plugin/media/Source/OEmbed.php
 +++ b/core/modules/media/src/Plugin/media/Source/OEmbed.php
 @@ -258,7 +258,7 @@ public function getMetadata(MediaInterface $media, $name) {
@@ -435,7 +436,7 @@ index 882667748f0..71e6eeb800c 100644
          return $resource->getType();
 @@ -390,6 +390,8 @@ public function defaultConfiguration() {
     *   The oEmbed resource.
-    * @param \Drupal\media\MediaInterface|null $media
+    * @param \Drupal\media\MediaInterface $media
     *   The media entity that contains the resource.
 +   * @param bool $forceUpdate
 +   *   TRUE if the thumbnail should be updated even if it already exists.
@@ -446,12 +447,12 @@ index 882667748f0..71e6eeb800c 100644
     * toggle-able. See https://www.drupal.org/project/drupal/issues/2962751 for
     * more information.
     */
--  protected function getLocalThumbnailUri(Resource $resource, ?MediaInterface $media = NULL) {
-+  protected function getLocalThumbnailUri(Resource $resource, ?MediaInterface $media = NULL, $forceUpdate = FALSE) {
-     if (is_null($media)) {
-       @trigger_error('Calling ' . __METHOD__ . '() without the $media argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3432920', E_USER_DEPRECATED);
-       $token_data = [];
-@@ -442,9 +444,12 @@ protected function getLocalThumbnailUri(Resource $resource, ?MediaInterface $med
+-  protected function getLocalThumbnailUri(Resource $resource, MediaInterface $media) {
++  protected function getLocalThumbnailUri(Resource $resource, MediaInterface $media, $forceUpdate = FALSE) {
+     $token_data = ['date' => $media->getCreatedTime()];
+ 
+     // If there is no remote thumbnail, there's nothing for us to fetch here.
+@@ -436,9 +438,12 @@ protected function getLocalThumbnailUri(Resource $resource, MediaInterface $medi
      // regardless of its extension, return its URI.
      $remote_thumbnail_url = $remote_thumbnail_url->toString();
      $hash = Crypt::hashBase64($remote_thumbnail_url);
@@ -468,7 +469,7 @@ index 882667748f0..71e6eeb800c 100644
  
      // The local thumbnail doesn't exist yet, so we need to download it.
 diff --git a/core/modules/media/tests/src/Functional/MediaBulkFormTest.php b/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
-index 85c1d59eb15..8fdaa2f58fe 100644
+index f73160dfd2c..8743adc0170 100644
 --- a/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
 +++ b/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
 @@ -74,12 +74,14 @@ public function testBulkForm(): void {
@@ -488,7 +489,7 @@ index 85c1d59eb15..8fdaa2f58fe 100644
      foreach ($available_actions as $action_name) {
        $assert_session->optionExists('action', $action_name);
 diff --git a/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php b/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
-index b756204bda3..20b243cfd20 100644
+index 285bb8f4abf..ba12c951919 100644
 --- a/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
 +++ b/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
 @@ -155,6 +155,9 @@ public function testMediaOverviewPage(): void {

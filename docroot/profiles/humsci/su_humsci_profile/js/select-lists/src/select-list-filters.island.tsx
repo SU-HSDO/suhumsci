@@ -7,6 +7,7 @@ const FilterIsland = ({}) => {
   const [originalSelect, setOriginalSelect] = useState(null);
   const [label, setLabel] = useState('');
   const [selectedValues, setSelectedValues] = useState([]);
+  const [applied, setApplied] = useState(false);
 
   useEffect(() => {
     setOriginalSelect(ref.current.parentNode.querySelector('select'));
@@ -30,16 +31,9 @@ const FilterIsland = ({}) => {
     origLabel.style.position = 'absolute';
 
     if (origSelect?.getAttribute('multiple')) {
-      const allValues = Array.from(origSelect.children).map((option) =>
-        option.getAttribute('value'),
-      );
       const selectedOptions = Array.from(origSelect.children)
         .filter((option) => option.getAttribute('selected') === 'selected')
         .map((option) => option.getAttribute('value'));
-
-      if (selectedOptions.length === allValues.length) {
-        selectedOptions.push('All');
-      }
 
       setSelectedValues(selectedOptions);
     }
@@ -57,13 +51,15 @@ const FilterIsland = ({}) => {
     }
   }, [selectedValues]);
 
+  useEffect(() => {
+  const applyBtn = ref.current.closest('form')?.querySelector('[data-drupal-selector^="edit-submit"]');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', () => setApplied(true));
+  }
+}, []);
+
   const getSelectOptions = (selectElement) => {
     const options = [];
-
-    if (selectElement?.getAttribute('multiple')) {
-      // Add "All" as the first option
-      options.push({ value: 'All', label: 'All', disabled: false });
-    }
 
     const optionElements = selectElement.children;
 
@@ -97,6 +93,7 @@ const FilterIsland = ({}) => {
   const selectOptions = originalSelect && getSelectOptions(originalSelect);
 
   const onSelectChange = (e, value) => {
+    setApplied(false);
     if (!originalSelect.getAttribute('multiple')) {
       originalSelect.value = value;
       return;
@@ -106,22 +103,10 @@ const FilterIsland = ({}) => {
       option.getAttribute('value'),
     );
 
-    // Handle "All" selection logic
-    if (value.includes('All')) {
-      if (selectedValues.includes('All')) {
-        const valueWithoutAll = value.filter((v) => v !== 'All');
-        setSelectedValues(valueWithoutAll);
-      } else {
-        setSelectedValues([...allValues, 'All']);
-      }
+    if (value.length === allValues.length) {
+      setSelectedValues([allValues]);
     } else {
-      if (selectedValues.includes('All') && value.length === allValues.length) {
-        setSelectedValues([]);
-      } else if (value.length === allValues.length) {
-        setSelectedValues([...allValues, 'All']);
-      } else {
-        setSelectedValues(value);
-      }
+      setSelectedValues(value);
     }
   };
 
@@ -145,7 +130,7 @@ const FilterIsland = ({}) => {
               ? selectedValues
               : undefined
           }
-          emptyLabel={selectOptions.find((item) => item.value === 'All')?.label}
+          applied={applied}
         />
       )}
     </div>

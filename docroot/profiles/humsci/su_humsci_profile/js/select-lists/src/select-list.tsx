@@ -194,8 +194,8 @@ interface Props {
   value?: SelectValue<string, boolean>;
   required?: boolean;
   emptyValue?: string;
-  emptyLabel?: string;
   name: string;
+  applied?: boolean;
 }
 
 const SelectList = ({
@@ -207,7 +207,7 @@ const SelectList = ({
   defaultValue,
   name,
   emptyValue,
-  emptyLabel = '- None -',
+  applied,
   ...props
 }: Props) => {
   const labelId = name;
@@ -239,7 +239,21 @@ const SelectList = ({
     }
   }, [listboxVisible, value]);
 
+  const [listboxMaxHeight, setListboxMaxHeight] = useState<string>('auto');
+
   useLayoutEffect(() => {
+    // Measure actual height of first 6 items
+    if (listboxRef.current) {
+      const items = Array.from(listboxRef.current.children) as HTMLElement[];
+      if (items.length <= 6) {
+        setListboxMaxHeight('fit-content');
+      } else {
+        const maxHeight = items.slice(0, 6).reduce((sum, el) => sum + el.offsetHeight, 0);
+        setListboxMaxHeight(`${maxHeight}px`);
+      }
+    }
+
+    // Existing scroll-into-view logic
     const parentContainer =
       listboxRef.current?.parentElement?.getBoundingClientRect();
     if (
@@ -309,14 +323,22 @@ const SelectList = ({
                 : renderSelectedValue(value, options)}
             </span>
           )}
-          {!optionChosen && !multiple && (
-            <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
-              {emptyLabel}
-            </span>
-          )}
-          {!optionChosen && multiple && (
-            <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
-              Choose one or more options
+          {optionChosen && (
+            <span
+              style={{
+                overflow: 'hidden',
+                maxWidth: 'calc(100% - 30px)',
+                padding: '8px 5px 8px 0',
+              }}
+            >
+              {multiple
+                ? applied
+                  ? `✓ ${value?.filter(v => v !== 'All').length} filter${value?.filter(v => v !== 'All').length !== 1 ? 's' : ''} applied`
+                  : `${value?.length} selected`
+                : applied
+                  ? `✓ ${renderSelectedValue(value, options)}`
+                  : '1 filter selected...'
+              }
             </span>
           )}
 
@@ -336,8 +358,8 @@ const SelectList = ({
           position: 'absolute',
           zIndex: '10',
           background: '#fff',
-          maxHeight: '125px',
-          overflowY: 'scroll',
+          maxHeight: listboxMaxHeight,
+          overflowY: options.length > 6 ? 'scroll' : 'auto',
           width: '100%',
           border: '1px solid #D5D5D4',
           boxShadow:
@@ -356,16 +378,6 @@ const SelectList = ({
           }}
         >
           <SelectProvider value={contextValue}>
-            {!required && !multiple && (
-              <CustomOption
-                value={emptyValue ?? ''}
-                rootRef={listboxRef}
-                id={`${name}-empty`}
-              >
-                {emptyLabel}
-              </CustomOption>
-            )}
-
             {options.map((option) => {
               return (
                 <CustomOption

@@ -71,15 +71,21 @@
       }
     }
 
-    .hs-button a {
-      @include hb-secondary-button;
+    .hs-button {
 
       position: relative;
-      border-width: 0;
-      border-top-width: 2px;
+      display: block;
       margin-top: auto;
       margin-left: hb-calculate-rems(-24px);
       margin-right: hb-calculate-rems(-24px);
+
+      a {
+        @include hb-secondary-button;
+
+        border-width: 0;
+        border-top-width: 2px;
+        width: 100%;
+      }
     }
 
     &:has(.hb-card__graphics) {

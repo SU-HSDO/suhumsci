@@ -14,6 +14,3 @@ This repo folows [Drupal Coding Standards](https://www.drupal.org/docs/develop/s
 ## Automation and Tools
 - The PHPCS scanner for Drupal is included and can be ran with `vendor/bin/phpcs`. There is also a PHPCS CI runner on every pull request.
 - The PHPStan package is included and configured for Drupal code. There is currently no CI runner.
-
-## Pull Requests
-- Pull requests should be scoped to the problem they are solving. Multiple smaller Pull Requests are generally preferred.

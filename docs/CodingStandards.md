@@ -11,9 +11,6 @@ This repo folows [Drupal Coding Standards](https://www.drupal.org/docs/develop/s
 - User input should be [properly sanitized when rendered](https://www.drupal.org/docs/8/security/drupal-8-sanitizing-output).
 - Code should follow [Drupal Security Best Practices](https://www.drupal.org/docs/8/security).
 
-## Pull Requests
-- Pull requests should be scoped to the problem they are solving. Multiple smaller Pull Requests are generally preferred.
-
 ## Automation and Tools
 - This repo includes both PHPCS and PHPStan configured for Drupal code, with CI runners for each on pull requests.
 

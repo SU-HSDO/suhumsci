@@ -5,10 +5,10 @@ This codebase runs the Humanities and Sciences Drupal (or Digital) Platform a.k.
 ## Overview
 
 Note the following properties of this project:
-* Stable branch: `develop`
-* Release branch naming convention: `[VERSION]-release` e.g. `11.2.3-release`
+* Default development branch: the current major version branch, e.g. `12.x`
+* Production release branch: `main`
 * Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-[SPRINT_NUMBER]`
-* Development branching convention: branch off the current release branch
+* Development branching convention: branch off the current major development branch
 * Local environment: DDEV, Lando or bare metal LAMP
 * Local drush alias: @[SITE_ALIAS].local
 * Local site URL: http://[SITE_ALIAS].suhumsci.loc
@@ -20,6 +20,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 
 - [Patching and patch management instructions](patches/README.md)
 - [Codeception Tests](docs/Codeception.md)
+- [Branching Strategy](docs/BranchingStrategy.md)
 - [Development Requirements](docs/DevelopmentRequirements.md)
 - [Release and Code Deployment Process](docs/CodeDeploy.md)
 - [Conding Standards](docs/CodingStandards.md)
@@ -46,7 +47,7 @@ You can either run the site on DDEV, Lando or bare metal.
 * [Follow the Lando legacy instructions](lando/README.md).
 
 #### Or setup on bare metal
-1. Clone the repository and check out the develop branch.
+1. Clone the repository and check out the current major development branch, for example `12.x`.
 1. Run `composer install`
 1. Run `drush sws:multisite:settings`
 1. Run `drush sws:keys`
@@ -86,13 +87,11 @@ The build process will automatically choose whether to run in/out of ddev/lando 
 ## Testing
 
 ### Codeception
-Acceptance testing and user testing id done use a testing framework [Codeception](https://codeception.com/). There is
-very good documentation on codeception testing steps and how that is structured.
+Acceptance testing and user testing id done use a testing framework [Codeception](https://codeception.com/). There is very good documentation on codeception testing steps and how that is structured.
 
 #### Codeception on bare metal
 - `drush sws:codeception` will run all acceptance tests.
-- `drush sws:codeception --group=[group-name]` will run tests that are annotated with the specified group. This is the most
-  effective method to run a single test.
+- `drush sws:codeception --group=[group-name]` will run tests that are annotated with the specified group. This is the most effective method to run a single test.
 - [List of current tests](/docs/Codeception.md)
 
 ### SASS

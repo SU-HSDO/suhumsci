@@ -129,6 +129,7 @@ composer install
 
 ### Staging Deployment Note
 - Staging should continue to track the current `<major>.x-build` branch.
+- The artifact deploy command appends `-build` to a branch name when no explicit artifact branch name is provided.
 - The production release workflow does not change the staging branch.
 
 ### Monitor Deployment

@@ -13,7 +13,7 @@ This document describes the active branching model for the H&S application.
 
 - Branch feature and maintenance work from the current `<major>.x` branch.
 - Open pull requests back into `<major>.x`.
-- After a pull request is merged into `<major>.x`, automation updates the `<major>.x-build` artifact branch.
+- After updates are pushed to `<major>.x`, automation updates the `<major>.x-build` artifact branch.
 - Staging should track `<major>.x-build` so merged development work is available for review quickly.
 
 ## Pull Requests
@@ -39,3 +39,4 @@ This document describes the active branching model for the H&S application.
 
 - GitHub rulesets and branch protections should apply to `main` and `<major>.x` branches.
 - Tugboat base previews should track the current `<major>.x` branch rather than `main`.
+- The artifact deploy command appends `-build` to a branch name when no explicit artifact branch name is provided.

@@ -10,13 +10,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class AcademicDateFilterTest.
- *
- * @coversDefaultClass \Drupal\hs_views_helper\Plugin\views\filter\AcademicDateFilter
- * @group hs_views_helper
  */
+#[CoversClass(AcademicDateFilter::class)]
+#[Group('hs_views_helper')]
 class AcademicDateFilterTest extends KernelTestBase {
 
   /**
@@ -105,10 +106,6 @@ class AcademicDateFilterTest extends KernelTestBase {
 
   /**
    * Coverage tests for Exception filter.
-   *
-   * @covers ::hasExtraOptions
-   * @covers ::buildExtraOptionsForm
-   * @covers ::adminSummary
    */
   public function testAcademicFilter() {
     /** @var \Drupal\views\Plugin\ViewsHandlerManager $filter_manager */
@@ -166,10 +163,6 @@ class AcademicDateFilterTest extends KernelTestBase {
 
   /**
    * Test the filter gives correct results.
-   *
-   * @covers ::opSimple
-   * @covers ::opBetween
-   * @covers ::inException
    */
   public function testOperations() {
     $field_name = $this->field->getName();

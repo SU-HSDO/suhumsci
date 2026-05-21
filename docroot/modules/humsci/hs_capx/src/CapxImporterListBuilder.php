@@ -24,6 +24,7 @@ class CapxImporterListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $entity */
     $row['label'] = $entity->label();
     $row['organization'] = $entity->getOrganizations(TRUE);
     $row['workgroups'] = $entity->getWorkgroups(TRUE);

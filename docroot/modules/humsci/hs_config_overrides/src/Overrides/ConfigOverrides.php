@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\su_humsci_profile\Overrides;
+namespace Drupal\hs_config_overrides\Overrides;
 
 use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -10,7 +10,6 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\encrypt\EncryptService;
 
 /**
  * Humsci config overrides on the whole platform.
@@ -30,13 +29,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
-
-  /**
-   * Encryption Service.
-   *
-   * @var \Drupal\encrypt\EncryptService
-   */
-  protected $encryption;
 
   /**
    * Entity Type manager service.
@@ -73,8 +65,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   Module Handler Service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config Factory Service.
-   * @param \Drupal\encrypt\EncryptService $encrypt_service
-   *   Encryption Service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity Type manager service.
    * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages
@@ -84,10 +74,9 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * @param string|null $site_path
    *   Current multisite directory path.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service, EntityTypeManagerInterface $entity_type_manager, ConfigPagesLoaderServiceInterface $config_pages, ?StateInterface $state = NULL, $site_path = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, ConfigPagesLoaderServiceInterface $config_pages, ?StateInterface $state = NULL, $site_path = NULL) {
     $this->moduleHandler = $module_handler;
     $this->configFactory = $config_factory;
-    $this->encryption = $encrypt_service;
     $this->entityTypeManager = $entity_type_manager;
     $this->configPages = $config_pages;
     $this->state = $state;

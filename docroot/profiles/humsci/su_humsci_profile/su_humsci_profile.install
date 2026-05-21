@@ -1207,3 +1207,15 @@ function su_humsci_profile_update_9760() {
   \Drupal::service('module_installer')->uninstall(['field_validation']);
   return t('Uninstalled the field_validation module.');
 }
+
+/**
+ * Uninstall the config_filter module.
+ */
+function su_humsci_profile_update_9761(): string {
+  $module = 'config_filter';
+  if (\Drupal::moduleHandler()->moduleExists($module)) {
+    \Drupal::service('module_installer')->uninstall([$module]);
+    return t('Uninstalled the config_filter module.');
+  }
+  return t('config_filter module was already uninstalled.');
+}

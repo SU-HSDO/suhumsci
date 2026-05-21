@@ -53,7 +53,7 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
 
     // The "Region" is the same as the machine name of the group. It's a
     // pseudo-region.
-    /** @var \Drupal\layout_builder\SectionComponent $group_block */
+    /** @var \Drupal\layout_builder\SectionComponent $group_block_name */
     $group_block_name = $form_state->get('layout_builder__component')
       ->getRegion();
 
@@ -61,7 +61,9 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
     $component = $section->getComponent($group_block_name);
     $component_config = $component->get('configuration');
 
-    $configuration['context_mapping'] = $this->block->getContextMapping();
+    if ($this->block instanceof ContextAwarePluginInterface) {
+      $configuration['context_mapping'] = $this->block->getContextMapping();
+    }
     $component_config['children'][$this->uuid] = $configuration;
     $component_config['children'] = array_filter($component_config['children']);
 

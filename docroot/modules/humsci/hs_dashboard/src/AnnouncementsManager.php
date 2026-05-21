@@ -41,14 +41,14 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   /**
    * The logger channel service.
    *
-   * @var Drupal\Core\Logger\LoggerChannel
+   * @var \Drupal\Core\Logger\LoggerChannel
    */
   protected $logger;
 
   /**
    * The file system interface.
    *
-   * @var Drupal\Core\File\FileSystemInterface
+   * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;
 
@@ -68,7 +68,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   The logger interface.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The logger interface.
-   * @param Drupal\Core\Cache\CacheBackendInterface $cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory interface.

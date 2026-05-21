@@ -22,6 +22,7 @@ We need a simpler model that keeps active development on the current major versi
 ## Consequences
 - Day-to-day development is consolidated on the current `<major>.x` branch.
 - Staging can track the current `<major>.x-build` branch and stay aligned with recently merged development work.
+- The artifact deploy process derives the staging artifact branch name by appending `-build` to the source branch when no explicit branch name is provided.
 - Production releases remain intentionally controlled through `main` rather than by every merge into the development branch.
 - Tugboat base previews should follow the current `<major>.x` branch instead of `develop`.
 - Release preparation now includes creating a short-lived release branch and a release pull request into `main`.

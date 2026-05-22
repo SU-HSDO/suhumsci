@@ -317,28 +317,8 @@ const SelectList = ({
               }}
             >
               {multiple
-                ? value?.length == options.length
-                  ? 'All selected'
-                  : `${value?.length} selected`
+                ? `${value?.length} filters selected`
                 : renderSelectedValue(value, options)}
-            </span>
-          )}
-          {optionChosen && (
-            <span
-              style={{
-                overflow: 'hidden',
-                maxWidth: 'calc(100% - 30px)',
-                padding: '8px 5px 8px 0',
-              }}
-            >
-              {multiple
-                ? applied
-                  ? `✓ ${value?.filter(v => v !== 'All').length} filter${value?.filter(v => v !== 'All').length !== 1 ? 's' : ''} applied`
-                  : `${value?.length} selected`
-                : applied
-                  ? `✓ ${renderSelectedValue(value, options)}`
-                  : '1 filter selected...'
-              }
             </span>
           )}
 

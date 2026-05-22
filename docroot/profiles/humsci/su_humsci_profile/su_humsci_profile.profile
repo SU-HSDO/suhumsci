@@ -1048,3 +1048,13 @@ function _su_humsci_profile_process_per_role_field(&$element, FormStateInterface
   // phpcs:enable
   return $element;
 }
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function su_humsci_profile_preprocess_html(&$variables) {
+  // Add classes to the <body> to identify SWS and H&S applications. Primarily
+  // for SiteImprove targeting.
+  $variables['attributes']['class'][] = 'sws-acquia';
+  $variables['attributes']['class'][] = 'sws-hsdp';
+}

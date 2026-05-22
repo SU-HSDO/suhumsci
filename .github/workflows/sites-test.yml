@@ -24,9 +24,9 @@ jobs:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
@@ -41,7 +41,7 @@ jobs:
           mkdir -p docroot/sites/simpletest &&
           drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage
       - name: Save Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: unit-tests-results
@@ -51,7 +51,7 @@ jobs:
     container:
       image: pookmish/drupal8ci:php8.3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Node.js from .nvmrc
         uses: actions/setup-node@v6
         with:
@@ -89,7 +89,7 @@ jobs:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Node.js from .nvmrc
         uses: actions/setup-node@v6
         with:
@@ -97,7 +97,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
@@ -125,7 +125,7 @@ jobs:
           apachectl start
           drush sws:codeception --suite=functional --group=install --site-domain=localhost
       - name: Save Functional Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: codeception--functional
@@ -157,7 +157,7 @@ jobs:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Node.js from .nvmrc
         uses: actions/setup-node@v6
         with:
@@ -165,7 +165,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
@@ -193,7 +193,7 @@ jobs:
           apachectl start
           drush sws:codeception --suite=acceptance --group=install --site-domain=localhost
       - name: Save Acceptance Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: codeception--acceptance
@@ -209,7 +209,7 @@ jobs:
       image: pookmish/drupal8ci:php8.3
       options: '--network-alias drupal8ci'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.head_ref }}
       - name: Set up Node.js from .nvmrc
@@ -219,7 +219,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor

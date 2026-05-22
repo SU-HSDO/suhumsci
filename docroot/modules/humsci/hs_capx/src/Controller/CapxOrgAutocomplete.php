@@ -49,7 +49,6 @@ class CapxOrgAutocomplete extends ControllerBase {
    */
   public function autocomplete(Request $request) {
     $string = Xss::filter(Html::escape(mb_strtolower($request->query->get('q'))));
-    /** @var \Drupal\Core\Database\Statement $aresults */
     $query_results = $this->database->select('hs_capx_organizations', 'c')
       ->fields('c', [
         'alias',

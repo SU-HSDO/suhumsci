@@ -60,6 +60,8 @@ class PostInstall implements PostInstallInterface {
     if (\Drupal::hasService('default_content.importer')) {
       return \Drupal::service('default_content.importer');
     }
+
+    return NULL;
   }
 
 }

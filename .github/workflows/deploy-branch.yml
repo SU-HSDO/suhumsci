@@ -1,0 +1,54 @@
+# .github/workflows/deploy-branch.yml
+# Deploys the provided branch to the ACE application.
+name: Deploy current branch
+
+# Allow this workflow to be called from other workflows.
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy Artifact
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:php8.3
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.branch || '' }}
+      - name: Set up Node.js from .nvmrc
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: docroot/themes/humsci/humsci_basic/package-lock.json
+      - name: Restore Cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          if_key_exists: fail
+      - run: git config --system --add safe.directory '*'
+      - name: Install theme dependencies
+        run: npm ci --prefix docroot/themes/humsci/humsci_basic
+      - name: Deploy Artifact
+        run: |
+          git config --global user.email "sws-developers@lists.stanford.edu" &&
+          git config --global user.name "Github Actions" &&
+          ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
+          composer install -n &&
+          drush sws:artifact:deploy -v -n

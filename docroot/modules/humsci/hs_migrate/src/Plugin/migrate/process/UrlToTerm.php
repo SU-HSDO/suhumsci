@@ -56,6 +56,7 @@ class UrlToTerm extends ProcessPluginBase implements ContainerFactoryPluginInter
       ->execute();
 
     if ($entity_reference_ids) {
+      /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity_references */
       $entity_references = $importer_storage->load(reset($entity_reference_ids));
       return $entity_references->get('field_terms')->getValue();
     }

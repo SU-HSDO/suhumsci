@@ -6,10 +6,8 @@
  */
 
 /**
- * Delete unwanted fields.
+ * Implements hook_update_last_removed().
  */
-function hs_news_update_8001() {
-  /** @var \Drupal\su_humsci_profile\HumsciCleanup $cleanup */
-  $cleanup = \Drupal::service('su_humsci_profile.cleanup');
-  $cleanup->deleteField('node', 'field_hs_news_byline');
+function hs_news_update_last_removed() {
+  return 8001;
 }

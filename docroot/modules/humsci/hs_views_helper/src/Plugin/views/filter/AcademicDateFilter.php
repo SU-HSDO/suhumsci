@@ -5,6 +5,7 @@ namespace Drupal\hs_views_helper\Plugin\views\filter;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\views\filter\Date;
+use Drupal\views\Attribute\ViewsFilter;
 
 /**
  * Class AcademicDateFilter.
@@ -15,9 +16,10 @@ use Drupal\datetime\Plugin\views\filter\Date;
  * filter criteria can be changed.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("academic_datetime")
  */
+#[ViewsFilter(
+  id: "academic_datetime",
+)]
 class AcademicDateFilter extends Date {
 
   /**

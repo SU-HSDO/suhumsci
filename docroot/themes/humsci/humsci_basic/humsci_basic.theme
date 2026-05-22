@@ -293,12 +293,16 @@ function humsci_basic_preload_full_width_image($image_referenced, $style_name, a
 /**
  * Check if there's a Banner image(s) with text box in Page hero.
  */
-function humsci_basic_is_hs_carousel_in_hs_page_hero($node) {
+function humsci_basic_is_hs_carousel_in_hs_page_hero(NodeInterface $node): bool {
   if (!$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {
     return FALSE;
   }
 
-  $hero = $node->get('field_hs_page_hero')->entity;
+  $hero = $node->get('field_hs_page_hero')->first()?->entity;
+
+  if (!$hero instanceof ParagraphInterface) {
+    return FALSE;
+  }
 
   return $hero->bundle() == 'hs_carousel';
 }
@@ -311,18 +315,20 @@ function humsci_basic_is_hs_carousel_in_hs_page_hero($node) {
  * - A Spotlight.
  * - An Accordion without "Expand Button".
  */
-function humsci_basic_is_there_extra_gap_in_main_region($node) {
+function humsci_basic_is_there_extra_gap_in_main_region(NodeInterface $node): bool {
   if (!$node->hasField('field_hs_page_components') || $node->get('field_hs_page_components')->isEmpty()) {
     return FALSE;
   }
 
-  $field = $node->get('field_hs_page_components');
+  $paragraph = $node->get('field_hs_page_components')->first()?->entity;
 
-  // Get the referenced Paragraph entity.
-  $paragraph = $field->entity;
+  if (!$paragraph instanceof ParagraphInterface) {
+    return FALSE;
+  }
+
   $bundle = $paragraph->bundle();
 
-  if ($bundle == 'hs_text_area') {
+  if ($bundle === 'hs_text_area') {
     if (
       !$paragraph->hasField('field_hs_text_area') ||
       $paragraph->get('field_hs_text_area')->isEmpty()
@@ -367,25 +373,18 @@ function humsci_basic_is_there_extra_gap_in_main_region($node) {
         return FALSE;
       }
 
-      $classes = explode(' ', $class_attr->nodeValue);
+      $classes = preg_split('/\s+/', trim($class_attr->nodeValue)) ?: [];
 
-      // Check if ANY of these classes exist.
-      $target_classes = ['hs-font-splash', 'hs-font-lead'];
-
-      foreach ($target_classes as $target) {
-        if (in_array($target, $classes)) {
-          return TRUE;
-        }
-      }
+      return in_array('hs-font-splash', $classes, TRUE) || in_array('hs-font-lead', $classes, TRUE);
     }
 
     return FALSE;
   }
-  if ($bundle == 'hs_sptlght_slder') {
+  if ($bundle === 'hs_sptlght_slder') {
     return TRUE;
   }
-  if ($bundle == 'hs_accordion') {
-    return !$paragraph->get('field_hs_accord_expcol')->value;
+  if ($bundle === 'hs_accordion') {
+   return $paragraph->hasField('field_hs_accord_expcol') && empty($paragraph->get('field_hs_accord_expcol')->value);
   }
 
   // Return false if doesn't match any of the previous if.

@@ -63,7 +63,7 @@ Remove any custom domain forwarding from `docroot/sites/sites.php` (if present).
 ### Remove Domains from NetDB
 
 Remove `-dev`, `-stage`, `-prod`, and live domains from NetDB:
-- Check both the [humscigryphon](https://netdb.stanford.edu/node_info?name=humscigryphon.stanford.edu) and [WAF](https://netdb.stanford.edu/node_info?name=stanfordedu.edgesuite.net) NetDB nodes.
+- Check both the [humscigryphon](https://netdb.stanford.edu/node_info?name=humscigryphon.stanford.edu) and [Akamai WAF/CDN](https://netdb.stanford.edu/node_info?name=stanfordedu.edgesuite.net) NetDB nodes.
 - The live domain may differ from the site alias and other domains.
 
 
@@ -80,20 +80,19 @@ Remove `-dev`, `-stage`, `-prod`, and live domains from Acquia environments:
 💻 Alternatively, use ACLI if installed:
 
 ```bash
-# HumSci Gryphon APP ID
-export APP_ID=60ee2ebb-94f3-415d-a289-c23889ecec18
-# List environment IDs
-acli api:applications:environment-list $APP_ID
+# Find the app-id in drush/drush.yml under command.sws.options.app-id.
+# Use that app-id to list environment IDs.
+acli api:applications:environment-list APP_ID
 # Remove domains
-acli api:environments:domain-delete ENV_ID SITE-prod.stanford.edu
-acli api:environments:domain-delete ENV_ID SITE-stage.stanford.edu
-acli api:environments:domain-delete ENV_ID SITE-dev.stanford.edu
+acli api:environments:domain-delete PROD_ENV_ID SITE-prod.stanford.edu
+acli api:environments:domain-delete STAGE_ENV_ID SITE-stage.stanford.edu
+acli api:environments:domain-delete DEV_ENV_ID SITE-dev.stanford.edu
 ```
 
 
-### 4️⃣ Remove Domains from WAF
+### 4️⃣ Remove Domains from Akamai WAF/CDN
 
-Remove `-dev`, `-stage`, `-prod`, and live domains from the WAF. Alternatively, make a note that these domains can be removed from the WAF and do it a later time in bulk with other WAF configuration changes (recommended).
+Remove relevant `-dev`, `-stage`, `-prod`, and live domains from the Akamai WAF/CDN. Alternatively, make a note that these domains can be removed during a later Akamai configuration update done in bulk.
 
 
 ## 🗑️ Deletion Steps

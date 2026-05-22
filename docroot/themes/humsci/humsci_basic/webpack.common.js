@@ -31,6 +31,7 @@ const shared = {
   'secondary-toggler': 'shared/navigation/secondary-toggler.js',
   colorbox: 'shared/photo-album/colorbox.js',
   search: 'shared/search/search-expand.js',
+  'swiper-reduced-motion': 'shared/carousel-slides/swiper-reduced-motion.js',
   'table-scope': 'shared/tables/scope.js',
   'table-pattern': 'shared/tables/table-pattern.js',
   'table-wrap': 'shared/tables/wrap.js',

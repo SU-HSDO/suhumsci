@@ -10,13 +10,14 @@ use Drupal\hs_capx\Plugin\migrate\process\CapxTagging;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class CapxTaggingTest.
- *
- * @group hs_capx
- * @coversDefaultClass \Drupal\hs_capx\Plugin\migrate\process\CapxTagging
  */
+#[CoversClass(CapxTagging::class)]
+#[Group('hs_capx')]
 class CapxTaggingTest extends UnitTestCase {
 
   protected $matchingUrls = FALSE;
@@ -73,7 +74,7 @@ class CapxTaggingTest extends UnitTestCase {
     if ($this->matchingUrls) {
       return [self::$url];
     }
-    $this->matchingUrls = !$this->matchingUrls;
+    $this->matchingUrls = TRUE;
     return [$this->getRandomGenerator()->string()];
   }
 

@@ -232,3 +232,22 @@ button:not([class]) {
     transition-duration: 0s !important;
   }
 }
+
+@media print {
+  // Hide menu, footer and sidebar
+  header,
+  footer,
+  .hb-three-column__sidebar-1 {
+    display: none;
+  }
+
+  // Force desktop layout width
+  body {
+    min-width: hb-calculate-rems(1200px);
+  }
+
+  // Kill Swiper JS inline styles
+  .swiper-wrapper {
+    height: auto !important;
+  }
+}

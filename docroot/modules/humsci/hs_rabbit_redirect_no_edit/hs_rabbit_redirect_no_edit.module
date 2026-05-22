@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * @file
+ * Module hooks for hs_rabbit_redirect_no_edit.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_form_alter().
+ *
+ * The rabbit_hole form mangler renders a redirect settings fieldset
+ * per-behavior plugin into the same form key. Whichever plugin's settingsForm()
+ * runs last wins, and its #states are bound only to its own plugin id. We
+ * adjust the rendered fieldset so it is visible whenever either
+ * "page_redirect" or "page_redirect_no_edit" is selected and remove our
+ * plugin id from the fallback-action options to prevent infinite redirect
+ * loops.
+ */
+function hs_rabbit_redirect_no_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
+  $redirect = &_hs_rabbit_redirect_no_edit_find_redirect_fieldset($form);
+  if ($redirect === NULL) {
+    return;
+  }
+
+  $shared_visible = [
+    [':input[name="rh_action"]' => ['value' => 'page_redirect']],
+    'or',
+    [':input[name="rh_action"]' => ['value' => 'page_redirect_no_edit']],
+  ];
+
+  $redirect['#states']['visible'] = $shared_visible;
+
+  if (isset($redirect['rh_redirect'])) {
+    $redirect['rh_redirect']['#states']['required'] = $shared_visible;
+  }
+
+  if (isset($redirect['rh_redirect_fallback_action']['#options']['page_redirect_no_edit'])) {
+    unset($redirect['rh_redirect_fallback_action']['#options']['page_redirect_no_edit']);
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Run this module's form_alter after rabbit_hole's, so the redirect fieldset
+ * exists when we adjust it.
+ */
+function hs_rabbit_redirect_no_edit_module_implements_alter(array &$implementations, $hook): void {
+  if ($hook === 'form_alter' && isset($implementations['hs_rabbit_redirect_no_edit'])) {
+    $group = $implementations['hs_rabbit_redirect_no_edit'];
+    unset($implementations['hs_rabbit_redirect_no_edit']);
+    $implementations['hs_rabbit_redirect_no_edit'] = $group;
+  }
+}
+
+/**
+ * Implements hook_entity_view().
+ *
+ * The plugin's performAction() only runs when rabbit_hole's behavior invoker
+ * actually invokes the plugin, which it does NOT do for users that have the
+ * "rabbit hole bypass" permission for the entity type. For those users we
+ * still want to display the editor notice. This hook fires on every entity
+ * view, regardless of bypass status, so we use it to surface the message.
+ */
+function hs_rabbit_redirect_no_edit_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
+  // Only show the message on the canonical full view of the entity.
+  if ($view_mode !== 'full') {
+    return;
+  }
+  if (!method_exists($entity, 'hasField') || !$entity->hasField('rh_action')) {
+    return;
+  }
+
+  // Ensure the request matches the entity's canonical route so we don't show
+  // the message on referenced renders (search results, blocks, etc.).
+  $request = \Drupal::request();
+  $route = $request->attributes->get('_route') ?? '';
+  $canonical_route = 'entity.' . $entity->getEntityTypeId() . '.canonical';
+  if ($route !== $canonical_route) {
+    return;
+  }
+
+  // Vary the rendered entity by the current user's permissions, since the
+  // message depends on edit access (and on the rabbit hole bypass permission).
+  $build['#cache']['contexts'][] = 'user.permissions';
+
+  // Resolve effective action: entity override or bundle default.
+  $action = $entity->get('rh_action')->value;
+  if (empty($action) || $action === 'bundle_default') {
+    $bundle_entity_type = $entity->getEntityType()->getBundleEntityType();
+    $bundle_settings = \Drupal::service('rabbit_hole.behavior_settings_manager')
+      ->loadBehaviorSettingsAsConfig(
+        $bundle_entity_type ?: $entity->getEntityType()->id(),
+        $bundle_entity_type ? $entity->bundle() : NULL
+      );
+    $action = $bundle_settings->get('action');
+    $build['#cache']['tags'] = array_merge(
+      $build['#cache']['tags'] ?? [],
+      $bundle_settings->getCacheTags()
+    );
+  }
+
+  if ($action === 'page_redirect_no_edit') {
+    return;
+  }
+
+  if (!$entity->access('update', \Drupal::currentUser())) {
+    return;
+  }
+
+  /** @var \Drupal\hs_rabbit_redirect_no_edit\Plugin\RabbitHoleBehaviorPlugin\PageRedirectNoEdit $plugin */
+  $plugin = \Drupal::service('plugin.manager.rabbit_hole_behavior_plugin')
+    ->createInstance('page_redirect_no_edit');
+  $target = $plugin->getActionTarget($entity);
+  if (empty($target)) {
+    return;
+  }
+
+  \Drupal::messenger()->addWarning(t(
+    'You are seeing this page because you are logged in with appropriate permissions. For anonymous users, this page will redirect to <a href=":url">:url</a>.',
+    [':url' => $target]
+  ));
+}
+
+/**
+ * Walks a form looking for the rabbit_hole redirect fieldset.
+ *
+ * The rabbit_hole form mangler can nest the fieldset at different depths
+ * depending on the host form. The fieldset is identified by the presence of
+ * the rh_redirect element.
+ *
+ * @param array $element
+ *   The form element to search.
+ *
+ * @return array|null
+ *   Reference to the redirect fieldset, or NULL if not found.
+ */
+function &_hs_rabbit_redirect_no_edit_find_redirect_fieldset(array &$element): ?array {
+  $null = NULL;
+  if (isset($element['redirect']['rh_redirect'])) {
+    return $element['redirect'];
+  }
+  foreach (Element::children($element) as $key) {
+    if (!is_array($element[$key])) {
+      continue;
+    }
+    $found = &_hs_rabbit_redirect_no_edit_find_redirect_fieldset($element[$key]);
+    if ($found !== NULL) {
+      return $found;
+    }
+    unset($found);
+  }
+  return $null;
+}

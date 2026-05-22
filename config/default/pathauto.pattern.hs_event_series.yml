@@ -2,6 +2,8 @@ uuid: 7e15639c-031d-42da-9f21-08cdf6f67ee6
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.hs_event_series
   module:
     - node
 _core:
@@ -9,12 +11,11 @@ _core:
 id: hs_event_series
 label: 'Event Series'
 type: 'canonical_entities:node'
-pattern: 'events/[node:title]'
+pattern: '/events/[node:title]'
 selection_criteria:
   afcadba3-a2bb-47d7-9aae-99f203595ee8:
     id: 'entity_bundle:node'
     negate: false
-    uuid: afcadba3-a2bb-47d7-9aae-99f203595ee8
     context_mapping:
       node: node
     bundles:

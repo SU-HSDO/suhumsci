@@ -4,6 +4,7 @@ namespace Drupal\hs_courses_importer\Plugin\migrate\process;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
@@ -11,10 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'TanslateCourseTag' migrate process plugin.
- *
- * @MigrateProcessPlugin(
- *  id = "translate_course_tag"
- * )
  *
  * Example usage:
  *
@@ -26,6 +23,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     ignore_empty: true
  * @endcode
  */
+#[MigrateProcess(
+  id: "translate_course_tag",
+)]
 class TranslateCourseTag extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

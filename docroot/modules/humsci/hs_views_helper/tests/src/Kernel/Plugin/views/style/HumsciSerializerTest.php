@@ -1,18 +1,20 @@
 <?php
 
-namespace Drupal\Tests\hs_views_helper\Kernel\Plugin\views\filter;
+namespace Drupal\Tests\hs_views_helper\Kernel\Plugin\views\style;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\hs_views_helper\Plugin\views\style\HumsciSerializer;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class HumsciSerializerTest.
- *
- * @group hs_views_helper
- * @coversDefaultClass \Drupal\hs_views_helper\Plugin\views\style\HumsciSerializer
  */
+#[CoversClass(HumsciSerializer::class)]
+#[Group('hs_views_helper')]
 class HumsciSerializerTest extends KernelTestBase {
 
   /**

@@ -1,0 +1,15 @@
+diff --git a/src/ShieldMiddleware.php b/src/ShieldMiddleware.php
+index 3b0f3bf5617143bfa0a95ed6a2808f53188e7d9a..afe6c55fae02643b87f9699aec2dc97c63bbcbb4 100644
+--- a/src/ShieldMiddleware.php
++++ b/src/ShieldMiddleware.php
+@@ -174,6 +174,10 @@ class ShieldMiddleware implements HttpKernelInterface {
+       }
+     }
+ 
++    // @see https://www.drupal.org/project/shield/issues/3277210
++    // Prevent corrupting the module_implements cache.
++    $this->moduleHandler->loadAll();
++
+     // Check if user has provided credentials.
+     $user = NULL;
+     switch ($config->get('credential_provider')) {

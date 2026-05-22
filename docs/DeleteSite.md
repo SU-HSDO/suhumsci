@@ -120,6 +120,7 @@ rm -rf docroot/sites/SITE
 3. Click on the Databases tab in the left-side navigation.
 4. Find the database for the site.
 5. **Download the latest database backup first.**
+   - Rename the backup to a clear, dated format such as `SITE-prod-db-YYYY-MM-DD.sql.gz`.
    - Upload it to a secure internal storage location as directed by your team. Refer to internal documentation for the correct URL.
 6. Delete the database.
 
@@ -130,34 +131,28 @@ Replace `SITE` with the alias of the site you are backing up.
 #### 📁 Create a Local Directory
 
 ```bash
-mkdir ~/site-backups/SITE-files-backup_YYYY-MM-DD
+mkdir ~/site-backups/SITE-prod-files-YYYY-MM-DD
 ```
 
 #### 🔄 Download Files via rsync
 
-**With drush rsync (requires active URLs):**
+If the site has already been decommissioned and the current branch no longer has the site Drush alias, check out an older commit or branch where the alias still exists, then run `drush rsync` from there.
 
-This likely won't work since the URL's have been decommissioned (use vanilla steps below).
-
-```bash
-drush rsync @SITE.prod:%files/ ~/site-backups/SITE-files-backup_YYYY-MM-DD/files
-drush rsync @SITE.prod:%private/ ~/site-backups/SITE-files-backup_YYYY-MM-DD/files-private
-```
-
-**With vanilla rsync:**
-
-Replace the server URL with the correct URL/host for the production server. This should be available in the codebase in Drush configuration or can be retrieved through ACLI or the Acquia UI.
+**With drush rsync from an older checkout if needed:**
 
 ```bash
-rsync -av humscigryphon.prod@web-XXXX.prod.hosting.acquia.com:/mnt/gfs/humscigryphon/sites/SITE/files ~/site-backups/SITE-files-backup_YYYY-MM-DD
-rsync -av humscigryphon.prod@web-XXXX.prod.hosting.acquia.com:/mnt/gfs/humscigryphon/sites/SITE/files-private ~/site-backups/SITE-files-backup_YYYY-MM-DD
+git checkout <commit-or-branch-with-site-alias>
+drush rsync @SITE.prod:%files/ ~/site-backups/SITE-prod-files-YYYY-MM-DD/files
+drush rsync @SITE.prod:%private/ ~/site-backups/SITE-prod-files-YYYY-MM-DD/files-private
 ```
+
+Return to your working branch after the backup is complete.
 
 
 #### 🗄️ Archive the Backup
 
 ```bash
-tar -czvf ~/site-backups/SITE-files-backup_YYYY-MM-DD.tar.gz ~/site-backups/SITE-files-backup_YYYY-MM-DD
+tar -czvf ~/site-backups/SITE-prod-files-YYYY-MM-DD.tar.gz ~/site-backups/SITE-prod-files-YYYY-MM-DD
 ```
 
 #### ☁️ Upload and Clean Up

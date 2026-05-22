@@ -2,16 +2,19 @@
 
 namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
+use Drupal\Component\Uuid\Php;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\hs_courses_importer\Form\CourseTagForm;
 use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class HsCoursesImporterFormTest.
- *
- * @covers \Drupal\hs_courses_importer\Form\CourseTagForm
- * @group hs_courses_importer
  */
+#[CoversClass(CourseTagForm::class)]
+#[Group('hs_courses_importer')]
 class CourseTagFormTest extends HsCoursesImporterTestBase {
 
   /**
@@ -33,7 +36,9 @@ class CourseTagFormTest extends HsCoursesImporterTestBase {
     $this->assertArrayHasKey('id', $form);
     $this->assertArrayHasKey('tag', $form);
 
+    $uuid = new Php();
     $form_state->setValues([
+      'uuid' => $uuid->generate(),
       'label' => $name,
       'id' => $name,
       'tag' => $tag_value,

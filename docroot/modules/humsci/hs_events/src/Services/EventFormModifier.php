@@ -71,8 +71,9 @@ class EventFormModifier {
         return FALSE;
       }
 
+      /** @var \Drupal\Core\Entity\FieldableEntityInterface $site_options */
       $field_value = $site_options->get(self::SITE_AUTO_UNPUBLISH_FIELD);
-      return $field_value && $field_value->value == '1';
+      return $field_value->value == '1';
     }
     catch (\Exception $e) {
       // Log the error but don't break the form.

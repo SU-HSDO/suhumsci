@@ -4,12 +4,14 @@ namespace Drupal\Tests\hs_table_filter\Unit;
 
 use Drupal\hs_table_filter\Plugin\Filter\HsTableFilter;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\hs_table_filter\Plugin\Filter\HsTableFilter
- *
- * @group hs_table_filter
+ * Table Filter test.
  */
+#[CoversClass(HsTableFilter::class)]
+#[Group('hs_table_filter')]
 class HsTableFilterTest extends UnitTestCase {
 
   /**
@@ -75,7 +77,7 @@ class HsTableFilterTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::process
+   * Test table filter.
    */
   public function testTableFilter() {
     $converted_text = (string) $this->filter->process($this->testHtml, 'en');
@@ -96,9 +98,7 @@ class HsTableFilterTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addDivAttributes
-   * @covers ::setAttributesForTable
-   * @covers ::addClassToNode
+   * Test table attributes.
    */
   public function testTableAttributes() {
     $this->setTestDom();
@@ -106,15 +106,14 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-pattern"]');
     $this->assertEquals(2, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('grid', $node->getAttribute('role'));
       $this->assertEquals('true', $node->getAttribute('aria-readonly'));
     }
   }
 
   /**
-   * @covers ::addDivAttributes
-   * @covers ::setAttributesForCaption
-   * @covers ::addClassToNode
+   * Test caption attributes.
    */
   public function testCaptionAttributes() {
     $this->setTestDom();
@@ -124,9 +123,7 @@ class HsTableFilterTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addDivAttributes
-   * @covers ::setAttributesForTbody
-   * @covers ::addClassToNode
+   * Test tbody attributes.
    */
   public function testTbodyAttributes() {
     $this->setTestDom();
@@ -136,9 +133,7 @@ class HsTableFilterTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addDivAttributes
-   * @covers ::setAttributesForThead
-   * @covers ::addClassToNode
+   * Test thead attributes.
    */
   public function testTheadAttributes() {
     $this->setTestDom();
@@ -146,14 +141,13 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-header"]');
     $this->assertEquals(1, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('row', $node->getAttribute('role'));
     }
   }
 
   /**
-   * @covers ::addDivAttributes
-   * @covers ::setAttributesForTh
-   * @covers ::addClassToNode
+   * Test th attributes.
    */
   public function testThAttributes() {
     $this->setTestDom();
@@ -161,14 +155,13 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-header-cell"]');
     $this->assertEquals(5, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('gridcell', $node->getAttribute('role'));
     }
   }
 
   /**
-   * @covers ::addDivAttributes
-   * @covers ::setAttributesForTr
-   * @covers ::addClassToNode
+   * Test tr attributes.
    */
   public function testTrAttributes() {
     $this->setTestDom();
@@ -176,17 +169,13 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-row"]');
     $this->assertEquals(7, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('row', $node->getAttribute('role'));
     }
   }
 
   /**
-   * @covers ::addDivAttributes
-   * @covers ::setAttributesForTd
-   * @covers ::addClassToNode
-   * @covers ::findCellLabel
-   * @covers ::findCellPositionInRow
-   * @covers ::findCellFirstSibling
+   * Test td attributes.
    */
   public function testTdAttributes() {
     $this->setTestDom();
@@ -194,13 +183,14 @@ class HsTableFilterTest extends UnitTestCase {
     $node_list = $this->xpath->query('//div[@class="table-cell"]');
     $this->assertEquals(9, $node_list->length);
     foreach ($node_list as $node) {
+      /** @var \DOMElement $node */
       $this->assertEquals('gridcell', $node->getAttribute('role'));
       $this->assertNotEmpty($node->getAttribute('aria-label'));
     }
   }
 
   /**
-   * @covers ::process
+   * Test empty text.
    */
   public function testEmptyText() {
     $this->assertEquals('', $this->filter->process('', '')->getProcessedText());

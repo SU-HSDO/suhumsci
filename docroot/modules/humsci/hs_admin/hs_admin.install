@@ -456,3 +456,34 @@ function hs_admin_update_10008() {
     ? 'hs_training display configs already present, no changes made.'
     : 'Imported configs: ' . implode(', ', $imported);
 }
+
+/**
+ * Add training display to hs_manage_content view if missing from active storage.
+ */
+function hs_admin_update_10009(): string {
+  $sync = \Drupal::service('config.storage.sync');
+  $active = \Drupal::service('config.storage');
+
+  $active_config = $active->read('views.view.hs_manage_content');
+  if (empty($active_config)) {
+    return 'hs_manage_content view not found in active storage.';
+  }
+
+  if (isset($active_config['display']['training'])) {
+    return 'Training display already present in hs_manage_content view.';
+  }
+
+  $sync_config = $sync->read('views.view.hs_manage_content');
+  if (empty($sync_config) || !isset($sync_config['display']['training'])) {
+    return 'Training display not found in sync config.';
+  }
+
+  $active_config['display']['training'] = $sync_config['display']['training'];
+
+  if (!in_array('node.type.hs_training', $active_config['dependencies']['config'] ?? [])) {
+    $active_config['dependencies']['config'][] = 'node.type.hs_training';
+  }
+
+  $active->write('views.view.hs_manage_content', $active_config);
+  return 'Added training display to hs_manage_content view.';
+}

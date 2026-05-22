@@ -4,21 +4,18 @@ namespace Drupal\hs_actions\Plugin\Action\FieldClone;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\hs_actions\Attribute\FieldClone;
 
 /**
  * Class Date to increment date fields.
- *
- * @FieldClone(
- *   id = "date",
- *   label = @Translation("Date"),
- *   description = @Translation("Incrementally increase the date on the field for every cloned item."),
- *   fieldTypes = {
- *     "datetime",
- *     "datetime_range",
- *     "daterange"
- *   }
- * )
  */
+#[FieldClone(
+  id: "date",
+  label: new TranslatableMarkup("Date"),
+  description: new TranslatableMarkup("Incrementally increase the date on the field for every cloned item."),
+  fieldTypes: ["datetime", "datetime_range", "daterange"]
+)]
 class Date extends FieldCloneBase {
 
   /**
@@ -86,7 +83,11 @@ class Date extends FieldCloneBase {
     // Loop through all field values and increment them, then set the new values
     // back to the cloned entity.
     for ($delta = 0; $delta < $values->count(); $delta++) {
-      $item_value = $values->get($delta)->getValue();
+      $item = $values->get($delta);
+      if ($item === NULL) {
+        continue;
+      }
+      $item_value = $item->getValue();
 
       foreach ($item_value as $column_name => $column_value) {
         if (!in_array($column_name, ['value', 'end_value'])) {

@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\Group;
 class CapxTest extends UnitTestCase {
 
   /**
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \GuzzleHttp\Client&\PHPUnit\Framework\MockObject\MockObject
    */
   protected $guzzle;
 
@@ -41,7 +41,7 @@ class CapxTest extends UnitTestCase {
   protected $capx;
 
   /**
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 
@@ -51,10 +51,13 @@ class CapxTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->guzzle = $this->createMock(Client::class);
+    /** @var \GuzzleHttp\Client&\PHPUnit\Framework\MockObject\MockObject $guzzle */
+    $guzzle = $this->createMock(Client::class);
+    $this->guzzle = $guzzle;
 
-
-    $this->cache = $this->createMock(CacheBackendInterface::class);
+    /** @var \Drupal\Core\Cache\CacheBackendInterface&\PHPUnit\Framework\MockObject\MockObject $cache */
+    $cache = $this->createMock(CacheBackendInterface::class);
+    $this->cache = $cache;
     $database = $this->createMock(DatabaseConnection::class);
     $merge = $this->createMock(Merge::class);
     $merge->method('fields')->willReturn($merge);
@@ -153,7 +156,7 @@ class CapxTest extends UnitTestCase {
       ->withAnyParameters()
       ->willReturnCallback([$this, 'cacheGetCallback']);
 
-    $this->assertNull($this->capx->syncOrganizations($this->capx->getOrgData()));
+    $this->assertNull($this->capx->syncOrganizations());
   }
 
   /**

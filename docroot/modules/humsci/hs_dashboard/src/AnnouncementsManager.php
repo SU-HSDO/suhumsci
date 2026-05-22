@@ -41,7 +41,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   /**
    * The logger channel service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannel
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
   protected $logger;
 
@@ -183,13 +183,8 @@ class AnnouncementsManager implements ContainerInjectionInterface {
             continue;
           }
 
-          if (isset($data[1])) {
-            $data[1] = $this->convertDateToTimestamp(trim($data[1]));
-          }
-
-          if (isset($data[3])) {
-            $data[3] = $this->convertMarkdownLinks(trim($data[3]));
-          }
+          $data[1] = $this->convertDateToTimestamp(trim((string) $data[1]));
+          $data[3] = $this->convertMarkdownLinks(trim((string) $data[3]));
 
           $rows[] = $data;
         }

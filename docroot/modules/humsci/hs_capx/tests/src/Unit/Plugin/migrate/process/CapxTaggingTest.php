@@ -74,7 +74,7 @@ class CapxTaggingTest extends UnitTestCase {
     if ($this->matchingUrls) {
       return [self::$url];
     }
-    $this->matchingUrls = !$this->matchingUrls;
+    $this->matchingUrls = TRUE;
     return [$this->getRandomGenerator()->string()];
   }
 

@@ -1,5 +1,7 @@
+includes:
+  - phpstan-baseline.neon
 parameters:
-  level: 1
+  level: 5
   paths:
     - docroot/modules/humsci
     - docroot/profiles/humsci
@@ -10,4 +12,3 @@ parameters:
     # See: docroot/core/phpstan.neon.dist
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
     - "#^Class .* extends @internal class#"
-    - identifier: missingType.iterableValue

@@ -90,7 +90,7 @@ class HsTableFilter extends FilterBase {
     $position = $this->findCellPositionInRow($cell);
     /** @var \DOMElement $table */
     $table = $cell->parentNode;
-    while ($table->tagName != 'table') {
+    while ($table instanceof \DOMElement && $table->tagName != 'table') {
       $table = $table->parentNode;
     }
 
@@ -105,7 +105,7 @@ class HsTableFilter extends FilterBase {
 
     $first_row_cell = $this->findCellFirstSibling($cell);
     // Table with headers in the first column.
-    if ($first_row_cell && $first_row_cell->tagName == 'th') {
+    if ($first_row_cell instanceof \DOMElement && $first_row_cell->tagName == 'th') {
       // When a table has both top and side headers, we want to label the cell
       // with both values.
       $label[] = $first_row_cell->nodeValue;
@@ -127,7 +127,7 @@ class HsTableFilter extends FilterBase {
     $position = 0;
     $sibling = $cell->previousSibling;
     while ($sibling) {
-      if (isset($sibling->tagName)) {
+      if ($sibling instanceof \DOMElement) {
         $position++;
       }
       $sibling = $sibling->previousSibling;

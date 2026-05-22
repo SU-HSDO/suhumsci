@@ -49,7 +49,6 @@ class SqlTest extends UnitTestCase {
    */
   public function testAggregationInfo() {
     $sql = $this->getSqlObject();
-    $this->assertInstanceOf(Sql::class, $sql);
     $this->assertCount(10, $sql->getAggregationInfo());
   }
 
@@ -106,8 +105,8 @@ class SqlTest extends UnitTestCase {
 
     $sql->alterQuery($view);
 
-    $this->assertCount(5, $sql->fields);
-    $this->assertCount(3, $sql->orderby);
+    $this->assertArrayHasKey('max_date', $sql->fields);
+    $this->assertEquals(['max_date', 'field_fourth', 'created'], array_column($sql->orderby, 'field'));
     $this->assertTrue(!empty($sql->fields['max_date']));
     $this->assertEquals('greatest', $sql->fields['max_date']['function']);
 

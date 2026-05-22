@@ -307,7 +307,7 @@ class EventsImporterForm extends ConfigFormBase {
       return;
     }
 
-    $url_headers = get_headers($url, 1);
+    $url_headers = get_headers($url, TRUE);
     $content_type_header = $url_headers['Content-Type'] ?? [];
 
     $is_xml = is_string($content_type_header) ? strpos($content_type_header, 'text/xml') !== FALSE : FALSE;
@@ -411,7 +411,7 @@ class EventsImporterForm extends ConfigFormBase {
     }
 
     $options = ['query' => [$query => '']];
-    $response = $this->guzzle->get(self::STANFORD_EVENTS_IMPORTER_XML, $options);
+    $response = $this->guzzle->request('GET', self::STANFORD_EVENTS_IMPORTER_XML, $options);
     $this->cache->set("hs_events_importer:$query", (string) $response->getBody());
 
     return (string) $response->getBody();

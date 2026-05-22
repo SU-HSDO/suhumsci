@@ -89,6 +89,7 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
   protected function getConfigPageValue($page_id, $field_name) {
     $config_page_storage = $this->entityTypeManager->getStorage('config_pages');
     if ($page = $config_page_storage->load($page_id)) {
+      /** @var \Drupal\Core\Entity\FieldableEntityInterface $page */
       $value = $page->get($field_name)->getValue();
       $page->delete();
       return $value;

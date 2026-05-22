@@ -48,7 +48,7 @@ class DateTest extends KernelTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+   * @var array<string>
    */
   protected static $modules = [
     'system',
@@ -122,7 +122,6 @@ class DateTest extends KernelTestBase {
     $field_manager = $this->container->get('plugin.manager.hs_actions_field_clone');
     /** @var \Drupal\hs_actions\Plugin\Action\FieldClone\Date $plugin */
     $plugin = $field_manager->createInstance('date');
-    $this->assertInstanceOf(Date::class, $plugin);
     $form = [];
     $form_state = new FormState();
     $form = $plugin->buildConfigurationForm($form, $form_state);
@@ -160,7 +159,7 @@ class DateTest extends KernelTestBase {
 
     $this->assertEquals($this->currentDate->format('Y-m-d'), $cloned_field_value);
 
-    $test_field_base = new TestFieldCloneBase([], NULL, NULL);
+    $test_field_base = new TestFieldCloneBase([], '', []);
     $form = [];
     $form_state = new FormState();
     $this->assertNull($test_field_base->validateConfigurationForm($form, $form_state));

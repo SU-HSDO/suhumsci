@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_config_overrides\Overrides;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -47,14 +48,14 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   /**
    * Drupal state service.
    *
-   * @var \Drupal\Core\State\StateInterface
+   * @var \Drupal\Core\State\StateInterface|null
    */
   protected $state;
 
   /**
    * Current multisite directory path.
    *
-   * @var string
+   * @var string|null
    */
   protected $sitePath;
 
@@ -138,15 +139,17 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   Keyed array of config overrides.
    */
   protected function setStageFileProxy(array $names, array &$overrides) {
-    if (in_array('stage_file_proxy.settings', $names) && $this->state) {
-      $site_dir = str_replace('sites/', '', $this->sitePath);
+    if (!in_array('stage_file_proxy.settings', $names) || $this->state === NULL) {
+      return;
+    }
 
-      if ($base_url = $this->state->get('xmlsitemap_base_url')) {
-        $overrides['stage_file_proxy.settings'] = [
-          'origin' => $base_url,
-          'origin_dir' => "sites/$site_dir/files",
-        ];
-      }
+    $site_dir = str_replace('sites/', '', (string) $this->sitePath);
+
+    if ($base_url = $this->state->get('xmlsitemap_base_url')) {
+      $overrides['stage_file_proxy.settings'] = [
+        'origin' => $base_url,
+        'origin_dir' => "sites/$site_dir/files",
+      ];
     }
   }
 
@@ -242,16 +245,11 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   List of values form the uri column.
    */
   protected function getUrlsFromLinkField(string $config_page, string $field_name): array {
-    /** @var \Drupal\config_pages\ConfigPagesInterface $config_page */
-    $config_page = $this->entityTypeManager->getStorage('config_pages')
+    $loaded_config_page = $this->entityTypeManager->getStorage('config_pages')
       ->load($config_page);
     $urls = [];
-    if (
-      $config_page &&
-      $config_page->hasField($field_name) &&
-      $config_page->get($field_name)->count()
-    ) {
-      foreach ($config_page->get($field_name)->getValue() as $value) {
+    if ($loaded_config_page instanceof FieldableEntityInterface && $loaded_config_page->hasField($field_name) && $loaded_config_page->get($field_name)->count()) {
+      foreach ($loaded_config_page->get($field_name)->getValue() as $value) {
         $urls[] = $value['uri'];
       }
     }

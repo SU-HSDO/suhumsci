@@ -126,7 +126,7 @@ function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface
     $manual_label = \Drupal::state()->get('stanford_ssp.manual_label', FALSE);
     $form['manual']['#open'] = TRUE;
     if ($manual_label) {
-      $form['manual']['#title'] = $manual_label ?: t('Local Login');
+      $form['manual']['#title'] = $manual_label;
     }
   }
 

@@ -298,7 +298,7 @@ function humsci_basic_is_hs_carousel_in_hs_page_hero(NodeInterface $node): bool 
     return FALSE;
   }
 
-  $hero = $node->get('field_hs_page_hero')->first()?->entity;
+  $hero = $node->get('field_hs_page_hero')->first()->entity ?? '';
 
   if (!$hero instanceof ParagraphInterface) {
     return FALSE;
@@ -320,7 +320,7 @@ function humsci_basic_is_there_extra_gap_in_main_region(NodeInterface $node): bo
     return FALSE;
   }
 
-  $paragraph = $node->get('field_hs_page_components')->first()?->entity;
+  $paragraph = $node->get('field_hs_page_components')->first()->entity ?? '';
 
   if (!$paragraph instanceof ParagraphInterface) {
     return FALSE;

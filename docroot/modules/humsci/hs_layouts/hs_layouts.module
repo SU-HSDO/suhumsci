@@ -223,7 +223,7 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
 
   if (
     $paragraph->hasField('field_hs_accord_expcol') &&
-    !$paragraph->field_hs_accord_expcol->isEmpty() &&
+    !$paragraph->get('field_hs_accord_expcol')->isEmpty() &&
     $paragraph->get('field_hs_accord_expcol')->getString()
   ) {
     $variables['attributes']->addClass('hb-accordion_toggle-all');
@@ -288,8 +288,9 @@ function _hs_layouts_make_title_the_link(&$variables) {
   }
 
   if (!empty($variables['title'])) {
-    $title = is_array($variables['title']) ? $renderer->renderInIsolation($variables['title']) : $variables['title'];
-    $variables['title'] = $title ? ['#markup' => trim(strip_tags($title))] : NULL;
+    $title = is_array($variables['title']) ? $renderer->renderInIsolation($variables['title']) : (string) $variables['title'];
+    $title_markup = trim(strip_tags($title));
+    $variables['title'] = $title_markup !== '' ? ['#markup' => $title_markup] : NULL;
   }
 }
 

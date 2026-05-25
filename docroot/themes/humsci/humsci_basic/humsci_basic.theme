@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Template\Attribute;
+use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\paragraphs\ParagraphInterface;
@@ -260,7 +261,7 @@ function humsci_basic_preload_full_width_image($image_referenced, $style_name, a
 
   $file = $image_referenced->get('field_media_image')->entity;
 
-  if (!$file) {
+  if (!$file instanceof FileInterface) {
     return;
   }
 

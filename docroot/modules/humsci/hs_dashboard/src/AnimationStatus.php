@@ -30,6 +30,7 @@ enum AnimationStatus: string {
       NULL => self::NotSet,
       TRUE, 1 => self::Enabled,
       FALSE, 0 => self::Disabled,
+      default => self::NotSet,
     };
   }
 

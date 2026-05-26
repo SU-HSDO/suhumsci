@@ -35,60 +35,42 @@ $container-small: 576px;
     box-sizing: border-box;
   }
 
-  @include hb-hero-full-width;
-
+  // Styles for the slide element.
   .hb-hero-overlay {
-    display: block;
-
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
-      padding: hb-spacing-width() 0 hb-spacing-width() 8%;
+      
+      background-color: color('gray-light', 'global');
+      padding-inline: hb-calculate-rems(6px);
+      padding-bottom: hb-calculate-rems(8px);
       min-height: auto;
+      height: auto;
 
-      @include grid-media-min('md') {
-        padding: 0;
-        display: grid;
-        grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
-        grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
-        min-height: 60vh;
+      @container carousel (width > #{$container-small}) {
+        padding-inline: hb-calculate-rems(10px);
+        padding-bottom: hb-calculate-rems(10px);
       }
 
-      @include grid-media-min('xl') {
-        grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: hb-calculate-rems(32px) hb-calculate-rems(48px);
+        padding-bottom: 0;
       }
 
-      // Offset background color pseudo element
+      @container carousel (width > #{$container-xlarge}) {
+        padding-inline: 0;
+      }
+  
       &::before {
-        background-color: color('gray-light', 'global');
-        z-index: $hb-z-index-hero1-background;
-
-        @include grid-media-min('md') {
-          position: unset;
-          padding: hb-spacing-width() 0 hb-spacing-width() 10%;
-          grid-column: 1 / 5;
-          grid-row: 1 / 6;
-        }
-      }
-
-      // Secondary color block pseudo element that shows up in the grid
-      &::after {
-        content: '';
-        display: block;
-        height: 100%;
-        z-index: $hb-z-index-hero1-overlay;
-        background-color: color('secondary');
-
-        @include grid-media-min('md') {
-          grid-column: 1 / 2;
-          grid-row: 3 / 4;
-        }
+       display: none;
       }
     }
 
     @include hb-traditional {
-      // hb-hero-overlay
-      display: flex;
-      min-height: hb-calculate-rems(320px);
+      min-height: hb-calculate-rems(350px);
+
+      @container carousel (width > #{$container-medium}) {
+        min-height: hb-calculate-rems(495px);
+      }
 
       &::before {
         animation: traditionalHeroOverlay;

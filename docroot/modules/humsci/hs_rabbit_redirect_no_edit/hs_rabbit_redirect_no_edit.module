@@ -75,6 +75,7 @@ function hs_rabbit_redirect_no_edit_entity_view(array &$build, EntityInterface $
   if (!method_exists($entity, 'hasField') || !$entity->hasField('rh_action')) {
     return;
   }
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
 
   // Ensure the request matches the entity's canonical route so we don't show
   // the message on referenced renders (search results, blocks, etc.).

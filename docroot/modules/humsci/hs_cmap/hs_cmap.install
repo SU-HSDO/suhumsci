@@ -6,26 +6,10 @@
  */
 
 /**
- * Grant permissions to site manager role.
+ * Implements hook_update_last_removed().
  */
-function hs_cmap_update_10001() {
-  user_role_grant_permissions('site_manager', [
-    'create terms in hs_curriculum_requirement_type',
-    'delete terms in hs_curriculum_requirement_type',
-    'edit terms in hs_curriculum_requirement_type',
-    'delete term revisions in hs_curriculum_requirement_type',
-    'revert term revisions in hs_curriculum_requirement_type',
-    'view term revisions in hs_curriculum_requirement_type',
-    'use text format bold_italics_links',
-  ]);
-
-  user_role_grant_permissions('preparer', [
-    'use text format bold_italics_links',
-  ]);
-
-  user_role_grant_permissions('contributor', [
-    'use text format bold_italics_links',
-  ]);
+function hs_cmap_update_last_removed() {
+  return 10001;
 }
 
 /**
@@ -48,9 +32,10 @@ function hs_cmap_update_10002(&$sandbox) {
   $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
     $field_items = $paragraph->get('field_hs_cmap_crs_course');
     foreach ($field_items as $item) {
-      $item->format = 'minimal_text_formatting';
+      $item->set('format', 'minimal_text_formatting');
     }
 
     $paragraph->setNewRevision(FALSE);

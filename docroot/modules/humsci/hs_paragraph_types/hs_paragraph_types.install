@@ -21,10 +21,10 @@ function hs_paragraph_types_update_last_removed() {
 function hs_paragraph_types_update_10020() {
   $config_storage = \Drupal::service('config.storage.sync');
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  /** @var \Drupal\field\FieldConfigStorage $field_config_storage */
   $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  /** @var \Drupal\field\FieldStorageConfigStorage $field_storage */
   $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
   $storages_to_create = [

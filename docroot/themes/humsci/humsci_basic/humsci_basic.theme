@@ -165,12 +165,9 @@ function humsci_basic_preprocess_html(&$vars) {
     }
   }
   elseif ($bundle === 'hs_banner') {
-    $image_referenced = $entity;
-    if ($image_referenced) {
-      $banner_height = $paragraph->get('field_hs_banner_image_height')->value;
-      $style_name = $banner_height == 'tall' ? 'hero_no_text_tall_2400px' : 'hero_no_text_3000px_';
-      humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
-    }
+  $banner_height = $paragraph->get('field_hs_banner_image_height')->value;
+  $style_name = $banner_height == 'tall' ? 'hero_no_text_tall_2400px' : 'hero_no_text_3000px_';
+  humsci_basic_preload_full_width_image($entity, $style_name, $vars);
   }
   else {
     $image_referenced = $image_field ? ($entity->get($image_field)->entity ?? '') : $entity;

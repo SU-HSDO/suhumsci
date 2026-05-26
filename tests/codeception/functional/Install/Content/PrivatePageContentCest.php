@@ -22,7 +22,7 @@ class PrivatePageContentCest {
       'disable_component' => FALSE,
     ],
     'Accordion' => [
-      'component_text' => 'Summary',
+      'component_text' => 'Title',
       'component_button_name' => 'Accordion',
       'admin_name' => '[name="settings[handler_settings][target_bundles_drag_drop][hs_accordion][enabled]"]',
       'disable_component' => FALSE,

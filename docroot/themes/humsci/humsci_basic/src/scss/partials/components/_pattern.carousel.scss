@@ -89,74 +89,102 @@ $container-small: 576px;
       &::before {
         animation: traditionalHeroOverlay;
       }
+    }
+  }
 
-      @include grid-media-min('md') {
-        min-height: hb-calculate-rems(420px);
+  // Styles for the wrapper.
+  .hb-hero-overlay__inner {
+    width: 100%;
+    margin: auto;
+    max-width: $container-xlarge;
+
+    @include hb-themes(('colorful', 'airy')) {
+      position: relative;
+    }
+
+    @include hb-traditional {
+      padding-inline: hb-calculate-rems(32px);
+      padding-block: hb-calculate-rems(16px);
+
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: hb-calculate-rems(48px);
+        padding-block: 0;
+      }
+    }
+  }
+
+  // Styles for the image container.
+  .hb-hero-overlay__image-wrapper {
+    @include hb-themes(('colorful', 'airy')) {
+      padding-inline: hb-calculate-rems(4px);
+      padding-block: hb-calculate-rems(10px);
+      position: relative;
+      height: auto;
+      top: 0;
+
+      @container carousel (width > #{$container-small}) {
+        padding-inline: hb-calculate-rems(10px);
+        padding-block: hb-calculate-rems(16px);
+      }
+
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: hb-calculate-rems(72px) 0;
+        padding-block: 0;
+        margin-left: auto;
+      }
+
+      @container carousel (width > #{$container-large}) {
+        padding-inline: hb-calculate-rems(268px) 0;
+      }
+
+      @container carousel (width > #{$container-xlarge}) {
+        padding-inline: hb-calculate-rems(308px) 0;
+      }
+
+      img {
+        object-fit: cover;
+        height: auto;
+
+        &.animate {
+          /* stylelint-disable max-nesting-depth */
+          .hb-has-animation-enhancements & {
+            animation-name: colorfulHeroImage;
+          }
+          /* stylelint-enable max-nesting-depth */
+        }
+
+        @include hb-themes(('colorful', 'airy')) {
+          max-height: hb-calculate-rems(490px);
+          aspect-ratio: 1.82;
+
+          @container carousel (width > #{$container-small}) {
+            aspect-ratio: 1.80;
+          }
+
+          @container carousel (width > #{$container-medium}) {
+            aspect-ratio: 1.82;
+          }
+        }
+      }
+
+      .hb-media-image .field-media-image-caption.collapsible-caption.is-open {
+        .toggle-caption__content {
+          @include hb-themes(('colorful', 'airy')) {
+            @include grid-media-min('md') {
+              max-width: 25%;
+            }
+
+            @include grid-media-min('lg') {
+              max-width: 30%;
+            }
+          }
+        }
       }
     }
 
-    &__image-wrapper {
-      @include hb-themes(('colorful', 'airy')) {
-        position: relative;
-
-        @include grid-media-min('md') {
-          // This will make sure that the image fills the entire area
-          display: flex;
-          margin-top: 0;
-          grid-column: 3 / 6;
-          grid-row: 2 / 5;
-          padding-top: 0;
-        }
-
-        // On mobile, make the secondary color box out of pseudo element,
-        // then on 'md' breakpoint, it becomes part of the grid
-        &::before {
-          @include pseudo-background-box('secondary', 50%, 8.75%);
-
-          display: block;
-          bottom: 0;
-          left: -8.75%;
-          top: initial;
-          opacity: 1;
-
-          @include grid-media-min('md') {
-            display: none;
-          }
-        }
-
-        img {
-          min-height: 35vh;
-          max-height: 35vh;
-          object-fit: cover;
-
-          @include grid-media-min('md') {
-            max-height: 55vh;
-            min-height: 55vh;
-          }
-
-          &.animate {
-            /* stylelint-disable max-nesting-depth */
-            .hb-has-animation-enhancements & {
-              animation-name: colorfulHeroImage;
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-        }
-
-        .hb-media-image .field-media-image-caption.collapsible-caption.is-open {
-          .toggle-caption__content {
-            @include hb-themes(('colorful', 'airy')) {
-              @include grid-media-min('md') {
-                max-width: 25%;
-              }
-
-              @include grid-media-min('lg') {
-                max-width: 30%;
-              }
-            }
-          }
-        }
-      }
+    @include hb-traditional {
+      left: 0;
+      top: 0;
     }
   }
 

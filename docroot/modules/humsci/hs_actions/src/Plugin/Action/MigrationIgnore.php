@@ -3,9 +3,11 @@
 namespace Drupal\hs_actions\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\node\NodeInterface;
@@ -14,13 +16,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Clones a node.
- *
- * @Action(
- *   id = "migration_ignore",
- *   label = @Translation("Ignore from importing"),
- *   type = "node"
- * )
  */
+#[Action(
+  id: 'migration_ignore',
+  action_label: new TranslatableMarkup('Ignore from importing'),
+  type: 'node',
+)]
 class MigrationIgnore extends ViewsBulkOperationsActionBase implements ContainerFactoryPluginInterface {
 
   /**

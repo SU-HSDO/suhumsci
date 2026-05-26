@@ -182,15 +182,15 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
   $variables['attributes']->addClass('hb-spotlight--view-mode-' . $image_style);
 
   if ($paragraph->hasField('field_hs_spotlight_image')) {
-    if ($paragraph->get('field_hs_spotlight_image')->isEmpty()) {
+    if ($paragraph->get('field_hs_spotlight_image')->isEmpty() || !$paragraph->get('field_hs_spotlight_image')->entity) {
       $variables['attributes']->addClass('hb-spotlight--no-media');
     }
     else {
       $media = $paragraph->get('field_hs_spotlight_image')->entity;
-      if ($media->bundle() == 'video') {
+      if ($media->bundle() === 'video') {
         $spotlight_type = 'video';
       }
-      elseif ($media->bundle() == 'image' && $spotlight_type == 'classic') {
+      elseif ($media->bundle() === 'image' && $spotlight_type === 'classic') {
         $view_mode = $context->getProperty('view_mode');
         $image_style = $view_mode == 'default' ? 'spotlight_framed_tall' : 'spotlight_framed_short';
         $variables['image']['field_hs_spotlight_image'][0]['#stanford_media_image_style'] = $image_style;
@@ -198,7 +198,7 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
       }
     }
   }
-  $variables['attributes']->addClass(Html::cleanCssIdentifier('hb-spotlight--' . $spotlight_type ?? 'classic'));
+  $variables['attributes']->addClass(Html::cleanCssIdentifier('hb-spotlight--' . $spotlight_type));
 }
 
 /**
@@ -212,7 +212,7 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
 
   if (
     $paragraph->hasField('field_hs_accord_expcol') &&
-    !$paragraph->field_hs_accord_expcol->isEmpty() &&
+    !$paragraph->get('field_hs_accord_expcol')->isEmpty() &&
     $paragraph->get('field_hs_accord_expcol')->getString()
   ) {
     $variables['attributes']->addClass('hb-accordion_toggle-all');
@@ -277,8 +277,9 @@ function _hs_layouts_make_title_the_link(&$variables) {
   }
 
   if (!empty($variables['title'])) {
-    $title = is_array($variables['title']) ? $renderer->renderInIsolation($variables['title']) : $variables['title'];
-    $variables['title'] = $title ? ['#markup' => trim(strip_tags($title))] : NULL;
+    $title = is_array($variables['title']) ? $renderer->renderInIsolation($variables['title']) : (string) $variables['title'];
+    $title_markup = trim(strip_tags($title));
+    $variables['title'] = $title_markup !== '' ? ['#markup' => $title_markup] : NULL;
   }
 }
 

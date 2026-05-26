@@ -10,13 +10,14 @@ use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\hs_capx\CapxImporterListBuilder;
 use Drupal\hs_capx\Entity\CapxImporter;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class CapxTest.
- *
- * @covers \Drupal\hs_capx\CapxImporterListBuilder
- * @group hs_capx
  */
+#[CoversClass(CapxImporterListBuilder::class)]
+#[Group('hs_capx')]
 class CapxImporterListBuilderTest extends UnitTestCase {
 
   protected function setUp(): void {

@@ -2,149 +2,14 @@
 
 /**
  * @file
- * Update functions for hs_admin module.
+ * hs_admin.install
  */
-
-use Drupal\shortcut\Entity\Shortcut;
 
 /**
- * Create the dashboard shortcut.
+ * Implements hook_update_last_removed().
  */
-function hs_admin_update_10000() {
-  $dashboard_shorcut = Shortcut::create([
-    'shortcut_set' => 'default',
-    'title' => 'Dashboard',
-    'link' => [
-      'uri' => 'internal:/admin/dashboard',
-    ],
-    'weight' => -5,
-  ]);
-  $dashboard_shorcut->save();
-
-  // Set the weight of the 'home' shortcut to -10.
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $home_shortcut = $entity_type_manager->getStorage('shortcut')->loadByProperties(['title' => 'Home']);
-  if (!empty($home_shortcut)) {
-    $home_shortcut = reset($home_shortcut);
-    $home_shortcut->setWeight(-10);
-    $home_shortcut->save();
-  }
-}
-
-/**
- * Grant permissions to site manager and contributor roles.
- */
-function hs_admin_update_10001() {
-  // Grant permissions to site manager role.
-  user_role_grant_permissions('site_manager', [
-    'access user profiles',
-    'manage editoria11y results',
-  ]);
-
-  // Grant permissions to contributor role.
-  user_role_grant_permissions('contributor', [
-    'access user profiles',
-    'manage editoria11y results',
-    'view editoria11y checker',
-    'view user list',
-  ]);
-}
-
-/**
- * Delete the "Page Not Found Report" shortcut.
- */
-function hs_admin_update_10002() {
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $shortcut_storage = $entity_type_manager->getStorage('shortcut');
-  $shortcuts = $shortcut_storage->loadByProperties(['uuid' => 'c517453f-bbfb-472e-943e-6a2c49f43631']);
-  if (!empty($shortcuts)) {
-    $shortcut = reset($shortcuts);
-    $shortcut->delete();
-  }
-
-  // Target title too for extra robustness.
-  $shortcuts = $shortcut_storage->loadByProperties(['title' => 'Page Not Found Report']);
-  if (!empty($shortcuts)) {
-    $shortcut = reset($shortcuts);
-    $shortcut->delete();
-  }
-}
-
-/**
- * Re-create the dashboard shortcut and re-order shortcut links.
- */
-function hs_admin_update_10003() {
-  // Delete any existing dashboard shortcut.
-  $shortcut_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
-  $shortcuts = $shortcut_storage->loadByProperties(['title' => 'Dashboard']);
-  if (!empty($shortcuts)) {
-    $shortcut = reset($shortcuts);
-    $shortcut->delete();
-  }
-
-  // Re-create the dashboard shortcut.
-  $dashboard_shorcut = $shortcut_storage->create([
-    'uuid' => 'fc2ac091-4a82-4876-83b1-09831225658f',
-    'shortcut_set' => 'default',
-    'title' => 'Dashboard',
-    'link' => [
-      'uri' => 'internal:/admin/dashboard',
-    ],
-    'weight' => 1,
-  ]);
-  $dashboard_shorcut->save();
-
-  // Set the new weights for all shortcut links.
-  $weights = [
-    '2286e2c1-9278-4fe0-970d-d8e87e0b6f08' => 4,
-    '2502bdcb-e704-4660-86f3-bdff9b178907' => 15,
-    '3c769f63-f502-4f76-b4dd-85b7a584cd5b' => 2,
-    '4a1ba363-4bfb-48df-98ab-722d70d045b3' => 14,
-    '4af76520-ff7e-4e4d-a3ef-756fa1a008d1' => 17,
-    '4f2cd363-97fd-4ace-bf32-0f5fbea7aa74' => 33,
-    '5744f2de-74a1-448f-aac1-61983a136cdb' => 13,
-    '719dfe9d-e632-4bf2-81ec-8265f8725985' => 3,
-    '757a3343-882e-4e11-9cda-cf72eff99d69' => 20,
-    '7b1603af-d8a0-494f-91a3-4a1a5657e335' => 9,
-    '7b558737-510d-4d83-84e2-de2d6c11d22a' => 34,
-    'b54b0f26-8bd0-4d03-a050-d3359ce191e0' => 31,
-    'b92bcaef-ea5c-430b-87a4-551d6363615f' => 10,
-    'be2afd3b-708e-41da-bbe8-08b37b8f8457' => 18,
-    'd1564f80-be18-4146-b2cf-ff625d0e0b79' => 11,
-    'd1f61cec-c768-47e0-87f7-b0d8e8a97999' => 22,
-    'd2225dc7-548e-4148-9844-48ad32e23358' => 6,
-    'e5b464ba-c45c-4012-b6a9-32d1e1f0376d' => 12,
-    'e8723330-0baa-458c-bda6-a30eaaf0cd37' => 23,
-    'fc2ac091-4a82-4876-83b1-09831225658f' => 1,
-    '24b62400-fbd3-4a7b-808a-b22a3d09a276' => 0,
-  ];
-  foreach ($weights as $uuid => $weight) {
-    $shortcuts = $shortcut_storage->loadByProperties(['uuid' => $uuid]);
-    if (!empty($shortcuts)) {
-      $shortcut = reset($shortcuts);
-      $shortcut->setWeight($weight);
-      $shortcut->save();
-    }
-  }
-}
-
-/**
- * Give Authors new permissions.
- */
-function hs_admin_update_10004() {
-  // The author role should be able to edit their own content in all content
-  // types and access the toolbar.
-  $types = \Drupal::entityTypeManager()
-    ->getStorage('node_type')
-    ->loadMultiple();
-  $types = array_keys($types);
-  $permissions = array_map(static function ($type) {
-    return "edit own $type content";
-  }, $types);
-  user_role_grant_permissions('author', $permissions);
-  user_role_grant_permissions('author', ['access toolbar']);
-
-  return 'Gave authors permission to access the toolbar and edit their own content in ' . implode(', ', $types);
+function hs_admin_update_last_removed() {
+  return 10004;
 }
 
 /**
@@ -332,5 +197,39 @@ function hs_admin_update_10005() {
     '@renamed' => count($shortcuts_renamed),
     '@moved' => count($shortcuts_moved),
     '@weighted' => count($shortcuts_weighted),
+  ]);
+}
+
+/**
+ * Remove role delegation permissions from the site manager role.
+ */
+function hs_admin_update_10006(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  /** @var \Drupal\user\Entity\Role $role */
+  $role = $role_storage->load('site_manager');
+  $removed_permissions = [];
+
+  // Permissions to remove.
+  $permissions = [
+    'assign contributor role',
+    'assign site_manager role',
+  ];
+
+  // Remove permissions from Site Manager.
+  $role_permissions = $role->getPermissions();
+  if (!empty($to_remove = array_intersect($permissions, $role_permissions))) {
+    foreach ($to_remove as $perm) {
+      $role->revokePermission($perm);
+      $removed_permissions[] = $perm;
+    }
+    $role->save();
+  }
+
+  if (empty($removed_permissions)) {
+    return t('No permissions were removed from the Site Manager role.');
+  }
+
+  return t('Removed permissions from Site Manager role: @removed_permissions.', [
+    '@removed_permissions' => implode(', ', $removed_permissions),
   ]);
 }

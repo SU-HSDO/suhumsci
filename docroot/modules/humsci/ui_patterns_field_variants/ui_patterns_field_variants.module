@@ -46,7 +46,7 @@ function ui_patterns_field_variants_ui_patterns_layouts_display_settings_form_al
 
   // Walk through the array of fields to get just the label of the object.
   array_walk($fields, function (&$field_definition) {
-    $field_definition = $field_definition->label();
+    $field_definition = $field_definition->getLabel();
   });
 
   $form['variant']['#options']['_field'] = t('- Use Field Value -');

@@ -92,6 +92,8 @@ class CourseTagForm extends EntityForm {
         ]));
     }
     $form_state->setRedirectUrl($hs_course_tag->toUrl('collection'));
+
+    return $status;
   }
 
   /**

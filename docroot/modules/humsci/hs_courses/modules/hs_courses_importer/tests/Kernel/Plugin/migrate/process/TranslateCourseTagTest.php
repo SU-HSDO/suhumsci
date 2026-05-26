@@ -1,18 +1,21 @@
 <?php
 
-namespace Drupal\Tests\hs_courses_importer\Kernel\Plugin\migrare\process;
+namespace Drupal\Tests\hs_courses_importer\Kernel\Plugin\migrate\process;
 
+use Drupal\Component\Uuid\Php;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\hs_courses_importer\Plugin\migrate\process\TranslateCourseTag;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class TranslateCourseTagTest.
- *
- * @covers \Drupal\hs_courses_importer\Plugin\migrate\process\TranslateCourseTag
- * @group hs_courses_importer
  */
+#[CoversClass(TranslateCourseTag::class)]
+#[Group('hs_courses_importer')]
 class TranslateCourseTagTest extends EntityKernelTestBase {
 
   /**
@@ -39,7 +42,7 @@ class TranslateCourseTagTest extends EntityKernelTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+   * @var array<string>
    */
   protected static $modules = [
     'system',
@@ -55,7 +58,9 @@ class TranslateCourseTagTest extends EntityKernelTestBase {
     $this->processManager = $this->container->get('plugin.manager.migrate.process');
 
     $name = $this->randomMachineName();
+    $uuid = new Php();
     $this->courseTag = $this->entityTypeManager->createInstance('hs_course_tag', [
+      'uuid' => $uuid->generate(),
       'id' => strtolower($name),
       'label' => $name,
       'tag' => $this->randomString(),
@@ -96,7 +101,7 @@ class MigrateExecutableTest implements MigrateExecutableInterface {
    * {@inheritdoc}
    */
   public function import() {
-
+    return MigrationInterface::RESULT_COMPLETED;
   }
 
   /**

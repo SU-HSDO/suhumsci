@@ -29,7 +29,7 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   /**
    * Configuration Factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Config\Config
    */
   protected $capxConfig;
 

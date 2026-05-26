@@ -126,7 +126,7 @@ function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface
     $manual_label = \Drupal::state()->get('stanford_ssp.manual_label', FALSE);
     $form['manual']['#open'] = TRUE;
     if ($manual_label) {
-      $form['manual']['#title'] = $manual_label ?: t('Local Login');
+      $form['manual']['#title'] = $manual_label;
     }
   }
 
@@ -409,7 +409,7 @@ function su_humsci_profile_node_insert(NodeInterface $node) {
  */
 function su_humsci_profile_node_update(NodeInterface $node) {
   /** @var \Drupal\node\NodeInterface $original_node */
-  $original_node = $node->original;
+  $original_node = $node->getOriginal();
   // Compare the original menu link with the new menu link data. If any
   // important parts changed, clear the menu links cache.
   if (
@@ -858,13 +858,14 @@ function su_humsci_profile_menu_link_content_delete(MenuLinkContentInterface $en
  * Implements hook_ENTITY_TYPE_update().
  */
 function su_humsci_profile_menu_link_content_update(MenuLinkContentInterface $entity) {
+  $original_entity = $entity->getOriginal();
   $original = [
-    $entity->original->get('title')->getValue(),
-    $entity->original->get('description')->getValue(),
-    $entity->original->get('link')->getValue(),
-    $entity->original->get('parent')->getValue(),
-    $entity->original->get('weight')->getValue(),
-    $entity->original->get('expanded')->getValue(),
+    $original_entity->get('title')->getValue(),
+    $original_entity->get('description')->getValue(),
+    $original_entity->get('link')->getValue(),
+    $original_entity->get('parent')->getValue(),
+    $original_entity->get('weight')->getValue(),
+    $original_entity->get('expanded')->getValue(),
   ];
   $updated = [
     $entity->get('title')->getValue(),
@@ -1043,4 +1044,14 @@ function _su_humsci_profile_process_per_role_field(&$element, FormStateInterface
   // }
   // phpcs:enable
   return $element;
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function su_humsci_profile_preprocess_html(&$variables) {
+  // Add classes to the <body> to identify SWS and H&S applications. Primarily
+  // for SiteImprove targeting.
+  $variables['attributes']['class'][] = 'sws-acquia';
+  $variables['attributes']['class'][] = 'sws-hsdp';
 }

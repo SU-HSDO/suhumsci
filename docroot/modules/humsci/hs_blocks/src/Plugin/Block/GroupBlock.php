@@ -2,11 +2,11 @@
 
 namespace Drupal\hs_blocks\Plugin\Block;
 
-use Drupal\block_content\Access\RefinableDependentAccessInterface;
-use Drupal\block_content\Access\RefinableDependentAccessTrait;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\RefinableDependentAccessInterface;
+use Drupal\Core\Access\RefinableDependentAccessTrait;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -93,7 +93,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   Context repository service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
    *   Uuid Service.
-   * @param Drupal\Core\PrivateKey $private_key
+   * @param \Drupal\Core\PrivateKey $private_key
    *   Private Key manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   Rendering service.
@@ -141,7 +141,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
 
     $components = $this->getComponents();
     // This prevents the block label from displaying if there are no contents.
-    if (empty($this->renderer->renderInIsolation($components))) {
+    if (trim((string) $this->renderer->renderInIsolation($components)) === '') {
       return AccessResult::forbidden();
     }
     return parent::blockAccess($account);

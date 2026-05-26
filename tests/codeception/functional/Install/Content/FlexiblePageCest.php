@@ -394,7 +394,7 @@ class FlexiblePageCest {
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'accordion');
     $I->click('Accordion', '.paragraphs-ee-add-dialog');
     $I->waitForText('Add Expand/Collapse All');
-    $I->fillField('Title', 'Sed augue ipsum egestas nec');
+    $I->fillField('field_hs_page_components[1][subform][field_hs_accordion_summary][0][value]', 'Sed augue ipsum egestas nec');
     $I->fillField('.ck-editor__editable_inline', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
     $I->click('Save');
     $I->waitForText('Demo Basic Page');

@@ -6,11 +6,8 @@
  */
 
 /**
- * Remove "my_latest_edits" view.
+ * Implements hook_update_last_removed().
  */
-function hs_dashboard_update_10000() {
-  $view = \Drupal::entityTypeManager()->getStorage('view')->load('my_latest_edits');
-  if ($view) {
-    $view->delete();
-  }
+function hs_dashboard_update_last_removed() {
+  return 10000;
 }

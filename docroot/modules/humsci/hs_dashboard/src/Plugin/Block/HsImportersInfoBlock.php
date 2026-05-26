@@ -36,7 +36,7 @@ class HsImportersInfoBlock extends BlockBase implements ContainerFactoryPluginIn
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param Drupal\hs_dashboard\Plugin\ImporterInfoManager $importer_info_manager
+   * @param \Drupal\hs_dashboard\Plugin\ImporterInfoManager $importer_info_manager
    *   The imports info manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ImporterInfoManager $importer_info_manager) {

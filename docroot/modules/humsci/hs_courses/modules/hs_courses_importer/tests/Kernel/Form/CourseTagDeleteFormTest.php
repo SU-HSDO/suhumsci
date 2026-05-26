@@ -4,14 +4,16 @@ namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
 use Drupal\Core\Form\FormState;
 use Drupal\hs_courses_importer\Entity\CourseTag;
+use Drupal\hs_courses_importer\Form\CourseTagDeleteForm;
 use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class HsCoursesImporterFormTest.
- *
- * @covers \Drupal\hs_courses_importer\Form\CourseTagDeleteForm
- * @group hs_courses_importer
  */
+#[CoversClass(CourseTagDeleteForm::class)]
+#[Group('hs_courses_importer')]
 class CourseTagDeleteFormTest extends HsCoursesImporterTestBase {
 
   /**

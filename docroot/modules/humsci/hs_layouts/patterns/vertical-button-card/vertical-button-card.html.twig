@@ -25,14 +25,14 @@
         {% endif %}
 
         {% if button %}
-          <span class="hs-button">
+          <div class="hs-button">
             {% if button.field_hs_postcard_link %}
               {% set link = button.field_hs_postcard_link[0] %}
               <a href="{{ link['#url'].toString() }}" class="hb-card__link">{{ link['#title'] }}</a>
             {% else %}
               {{ button }}
             {% endif %}
-          </span>
+          </div>
         {% endif %}
       </div>
     {% endif %}

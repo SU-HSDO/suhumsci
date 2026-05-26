@@ -11,14 +11,18 @@
 @use '../mixins/buttons' as *;
 @use '../mixins/heros' as *;
 @use '../mixins/generate-css-vars' as *;
+@use '../mixins/swiper' as *;
 
 $container-xlarge: 1200px;
 $container-large: 992px;
-$container-sidebar: 880px;
 $container-medium: 769px;
 $container-small: 576px;
 
 .paragraph--type--hs-carousel {
+  @include swiper-container;
+  @include swiper-pagination;
+  @include swiper-arrows;
+
   container-name: carousel;
   container-type: inline-size;
 
@@ -330,522 +334,62 @@ $container-small: 576px;
         }
       }
     }
+  }
 
-    @include hb-themes(('colorful', 'airy')) {
-      // background-color: color('primary-hero-overlay');
-      // padding: calc(#{hb-calculate-rems(64px)} / 2)
-      //   calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
-      position: relative;
-      width: auto !important;
-      margin: 0 !important;
-      transform: none;
-      top: 0;
-      left: 0;
-
-      @include grid-media-min('md') {
-        grid-column: 2 / 4;
-        grid-row: 4 / 7;
-        // padding: hb-calculate-rems(64px) hb-spacing-width() hb-spacing-width();
-        width: auto !important;
-      }
-
-      @include grid-media-min('lg') {
-        width: auto !important;
-      }
-
-      &.animate {
-        .hb-has-animation-enhancements.js & {
-          opacity: 1;
-          animation-duration: 2000ms;
-          animation-name: colorfulHeroText;
-        }
+  // Styles for swiper slider pagination.
+  .swiper-pagination {
+    .hs-full-width & {
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: hb-calculate-rems(16px);
       }
     }
 
-    @include hb-traditional {
-      // background-color: color('primary-hero-overlay');
+    :not(.hs-full-width).hb-three-column--no-sidebar &,
+    .hb-three-column--one-sidebar &,
+    .hb-three-column--two-sidebar & {
+      bottom: hb-calculate-rems(-8px);
       position: relative;
-      margin: hb-spacing-width() 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-      align-self: stretch;
-      text-align: left;
-      left: hb-spacing-width('md');
-      transform: translateX(0) translateY(0);
+    }
 
-      @include grid-media-min('sm') {
-        bottom: 25%;
-      }
+    // Update size of the buttons to respect the minimum size required for accessibility (24px).
+    .swiper-pagination-bullet {
+      width: hb-calculate-rems(24px);
+      height: hb-calculate-rems(24px);
+      padding: 0;
+      background-color: transparent;
 
-      @include grid-media-min('md') {
-        // padding: hb-calculate-rems(50px) 0;
-        left: hb-spacing-width();
-        width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-      }
+      &::before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: hb-calculate-rems(4px);
+        background-color: transparent;
+        outline: 1px solid color('secondary');
+        margin-top: hb-calculate-rems(10px);
 
-      @include grid-media-min('lg') {
-        width: 43% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-
-        .hb-three-column--two-sidebar & {
-          width: calc(
-            100% -
-              (2 * #{hb-calculate-rems(hb-spacing-width('default', false))})
-          ) !important;
+        @include hb-themes(('colorful', 'airy')) {
+          border-radius: hb-calculate-rems(5px);
         }
       }
 
-      @include grid-media-min('xl') {
-        width: 48% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-        margin: hb-calculate-rems(52px) 0 !important;
+      &:hover,
+      &:focus {
+        background-color: transparent;
+        transform: none;
+
+        &::before {
+          transform: scale(0.9);
+          background-color: color('secondary');
+        }
       }
 
-      @include grid-media-min('2xl') {
-        width: hb-calculate-rems(
-          650px
-        ) !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-      }
+      &.swiper-pagination-bullet-active {
+        background-color: transparent;
 
-      &.animate {
-        .hb-has-animation-enhancements.js & {
-          opacity: 1;
-          animation-duration: 1700ms;
-          animation-name: traditionalHeroText;
+        &::before {
+          background-color: color('secondary');
         }
       }
     }
   }
-
-  // Styles for swiper slider.
-  // .swiper-container {
-  //   margin: 0;
-
-  //   .hb-hero-overlay__text {
-  //     @include hb-themes(('colorful', 'airy')) {
-  //       padding-bottom: hb-calculate-rems(60px);
-
-  //       @include grid-media-min('md') {
-  //         padding-bottom: hb-calculate-rems(65px);
-  //       }
-  //     }
-
-  //     @include hb-traditional {
-  //       padding-bottom: hb-calculate-rems(75px);
-
-  //       @include grid-media-min('md') {
-  //         padding-bottom: hb-calculate-rems(80px);
-  //       }
-  //     }
-  //   }
-
-  //   .swiper-pagination {
-  //     @include visually-hidden;
-
-  //     @include hb-themes(('airy', 'colorful')) {
-  //       @include grid-media-min('md') {
-  //         inset: auto
-  //           calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)})
-  //           hb-spacing-width() auto;
-  //         margin: 0 0 hb-calculate-rems(10px);
-
-  //         .hb-three-column--one-sidebar &,
-  //         .hb-three-column--two-sidebar & {
-  //           bottom: 0;
-  //         }
-  //       }
-
-  //       // swiper pagination do not display until this breakpoint
-  //       @media (min-width: 890px) {
-  //         display: flex;
-  //         clip-path: inherit;
-  //         height: auto;
-  //         width: auto;
-  //         position: absolute;
-  //         overflow: visible;
-  //       }
-
-  //       @include grid-media-min('lg') {
-  //         .hb-three-column--two-sidebar & {
-  //           @include visually-hidden;
-  //         }
-  //       }
-
-  //       @include grid-media-min('xl') {
-  //         right: calc(
-  //           50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
-  //         ); // move it past the swiper arrows and their padding
-  //       }
-  //     }
-
-  //     @include hb-traditional {
-  //       // swiper pagination do not display until the medium breakpoint
-  //       // default positioning styles are applied to the full width hero
-  //       // main content styles are applied by targeting the sidebar classes
-  //       // even though the sidebars do not display until the next breakpoint,
-  //       // the classes exist for styling
-  //       @include grid-media-min('md') {
-  //         clip-path: inherit;
-  //         height: auto;
-  //         width: auto;
-  //         position: absolute;
-  //         overflow: visible;
-  //         inset: auto calc(50% + #{hb-calculate-rems(77px)})
-  //           hb-calculate-rems(61px) auto;
-
-  //         .hb-three-column--one-sidebar &,
-  //         .hb-three-column--two-sidebar & {
-  //           bottom: hb-calculate-rems(31px);
-  //         }
-  //       }
-
-  //       // the sidebar(s) appear at this breakpoint
-  //       @include grid-media-min('lg') {
-  //         right: calc(
-  //           57% + #{hb-calculate-rems(80px)}
-  //         ); // move it past the swiper arrows
-
-  //         .hb-three-column--one-sidebar & {
-  //           right: calc(57% + #{hb-calculate-rems(84px)});
-  //         }
-
-  //         .hb-three-column--two-sidebar & {
-  //           right: hb-calculate-rems(130px); // move it past the swiper arrows
-  //         }
-  //       }
-
-  //       @include grid-media-min('xl') {
-  //         right: calc(63% - #{hb-calculate-rems(60px)});
-  //         bottom: hb-calculate-rems(85px);
-
-  //         .hb-three-column--one-sidebar & {
-  //           right: calc(57% + #{hb-calculate-rems(36px)});
-  //           bottom: hb-calculate-rems(53px);
-  //         }
-
-  //         .hb-three-column--two-sidebar & {
-  //           right: hb-calculate-rems(130px);
-  //           bottom: hb-calculate-rems(53px);
-  //         }
-  //       }
-
-  //       @include grid-media-min('2xl') {
-  //         right: calc(
-  //           (100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)}
-  //         );
-
-  //         .hb-three-column--one-sidebar & {
-  //           right: calc(
-  //             (100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)}
-  //           );
-  //           bottom: hb-calculate-rems(53px);
-  //         }
-  //       }
-  //     }
-
-  //     .swiper-pagination-bullet {
-  //       font-size: 0;
-  //       padding-top: hb-calculate-rems(5px);
-  //       background: unset;
-  //       position: relative;
-  //       width: hb-calculate-rems(31px);
-  //       height: hb-calculate-rems(45.7px);
-  //       margin: 0;
-  //       opacity: 1;
-
-  //       &::before {
-  //         color: color('white', 'global');
-  //         content: '';
-
-  //         @include hb-icon-type($type: 'ellipse-border', $color: 'gray-light');
-  //         height: hb-calculate-rems(11px);
-  //         width: hb-calculate-rems(11px);
-  //         display: block;
-  //         margin: 0 hb-calculate-rems(10px);
-  //         border-radius: 50%;
-
-  //         // Use box shadow property to improve visual accessibiity of swiper pagination.
-  //         @include hb-themes(('airy', 'colorful')) {
-  //           $light-shadow: color('gray-light', 'global');
-  //           $dark-shadow: color('black', 'global');
-
-  //           // For modern browsers
-  //           $accent-shadow: color('secondary');
-
-  //           box-shadow:
-  //             inset hb-calculate-rems(-2px) 0 $light-shadow,
-  //             0 hb-calculate-rems(-2px) 0 $accent-shadow,
-  //             0 0 0 hb-calculate-rems(2px) $dark-shadow;
-  //         }
-
-  //         @include hb-traditional {
-  //           $light-shadow: color('gray-light', 'global');
-  //           $dark-shadow: color('black', 'global');
-
-  //           // For modern browsers
-  //           $accent-shadow: color('secondary');
-
-  //           box-shadow:
-  //             inset hb-calculate-rems(-2px) 0 $light-shadow,
-  //             0 hb-calculate-rems(-2px) 0 $accent-shadow,
-  //             0 0 0 hb-calculate-rems(2px) $dark-shadow;
-  //         }
-  //       }
-
-  //       &:hover::before,
-  //       &:focus::before,
-  //       &.swiper-pagination-bullet-active::before {
-  //         @include hb-icon-type($type: 'ellipse', $color: 'gray-light');
-  //       }
-  //     }
-  //   }
-
-  //   .swiper-button-prev,
-  //   .swiper-button-next {
-  //     position: absolute;
-  //     width: hb-calculate-rems(25px);
-  //     height: hb-calculate-rems(40px);
-
-  //     svg {
-  //       display: none;
-  //     }
-
-  //     &:not(.swiper-button-lock) {
-  //       display: block;
-  //     }
-
-  //     @include hb-themes(('airy')) {
-  //       bottom: calc(#{hb-spacing-width()} * 2);
-
-  //       .hb-three-column--one-sidebar &,
-  //       .hb-three-column--two-sidebar & {
-  //         bottom: hb-calculate-rems(48px);
-  //       }
-
-  //       @include grid-media-min('md') {
-  //         bottom: hb-spacing-width();
-
-  //         /* stylelint-disable max-nesting-depth */
-  //         .hb-three-column--one-sidebar &,
-  //         .hb-three-column--two-sidebar & {
-  //           bottom: 0;
-  //         }
-  //         /* stylelint-enable max-nesting-depth */
-  //       }
-  //     }
-
-  //     @include hb-colorful {
-  //       bottom: hb-calculate-rems(60px);
-
-  //       .hb-three-column--one-sidebar &,
-  //       .hb-three-column--two-sidebar & {
-  //         bottom: hb-calculate-rems(48px);
-  //       }
-
-  //       @include grid-media-min('md') {
-  //         bottom: hb-calculate-rems(47px);
-
-  //         /* stylelint-disable max-nesting-depth */
-  //         .hb-three-column--one-sidebar &,
-  //         .hb-three-column--two-sidebar & {
-  //           bottom: 0;
-  //         }
-  //         /* stylelint-enable max-nesting-depth */
-  //       }
-
-  //       .hs-full-width & {
-  //         bottom: hb-calculate-rems(110px);
-
-  //         @include grid-media-min('md') {
-  //           bottom: hb-calculate-rems(47px);
-  //         }
-  //       }
-  //     }
-
-  //     @include hb-traditional {
-  //       bottom: hb-calculate-rems(30px);
-
-  //       @include grid-media-min('md') {
-  //         margin: hb-calculate-rems(18px) 0;
-  //         bottom: hb-calculate-rems(25px);
-  //       }
-
-  //       @include grid-media-min('xl') {
-  //         bottom: hb-calculate-rems(46px);
-  //       }
-
-  //       .hs-full-width & {
-  //         bottom: hb-calculate-rems(78px);
-
-  //         @include grid-media-min('md') {
-  //           bottom: hb-calculate-rems(54px);
-  //         }
-
-  //         @include grid-media-min('xl') {
-  //           bottom: hb-calculate-rems(78px);
-  //         }
-  //       }
-  //     }
-
-  //     &::before {
-  //       content: '';
-  //       display: inline-block;
-  //       background-repeat: no-repeat;
-  //       background-position: left;
-  //       background-size: 85%;
-  //       height: hb-calculate-rems(25px);
-  //       width: hb-calculate-rems(25px);
-  //       transition: hb-transition(transform);
-
-  //       @include hb-themes(('airy', 'colorful')) {
-  //         @include hb-icon-background('arrow-right-box-shadow', 'gray-light');
-  //         filter: drop-shadow(
-  //           hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
-  //             color('black', 'global')
-  //         );
-  //       }
-
-  //       @include hb-traditional {
-  //         mask-repeat: no-repeat;
-
-  //         @include hb-icon-background(
-  //           'arrow-right-long-box-shadow',
-  //           'gray-light',
-  //           true
-  //         );
-  //         filter: drop-shadow(
-  //           hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
-  //             color('black', 'global')
-  //         );
-  //       }
-  //     }
-
-  //     &:hover,
-  //     &:focus {
-  //       cursor: pointer;
-  //     }
-  //   }
-
-  //   .swiper-button-prev {
-  //     transform: rotate(180deg);
-  //     transform: scaleX(-1);
-  //     left: auto;
-  //     top: auto;
-
-  //     @include hb-themes(('airy', 'colorful')) {
-  //       margin-block: 0 hb-calculate-rems(15px);
-  //       right: calc(
-  //         #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-  //       ); // move it past the swiper next arrow
-
-  //       @include grid-media-min('md') {
-  //         right: calc(
-  //           40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-  //         ); // move it past the swiper next arrow
-  //       }
-
-  //       @include grid-media-min('xl') {
-  //         right: calc(
-  //           50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-  //         ); // move it past the swiper next arrow
-  //       }
-  //     }
-
-  //     @include hb-traditional {
-  //       right: calc(
-  //         #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
-  //       ); // move it past the swiper next arrow
-
-  //       @include grid-media-min('md') {
-  //         right: auto;
-  //         left: calc(
-  //           53% - #{hb-calculate-rems(85px)}
-  //         ); // move it past the swiper next arrow
-  //       }
-
-  //       @include grid-media-min('lg') {
-  //         left: calc(
-  //           45% - #{hb-calculate-rems(85px)}
-  //         ); // move it past the swiper arrows
-
-  //         /* stylelint-disable max-nesting-depth */
-  //         .hb-three-column--two-sidebar & {
-  //           left: inherit;
-  //           right: calc(
-  //             #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
-  //           ); // move it past the swiper arrows
-  //         }
-  //         /* stylelint-enable max-nesting-depth */
-  //       }
-
-  //       @include grid-media-min('xl') {
-  //         left: calc(
-  //           50% - #{hb-calculate-rems(85px)}
-  //         ); // move it past the swiper arrows
-  //       }
-
-  //       @include grid-media-min('2xl') {
-  //         left: calc(
-  //           #{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}
-  //         ); // move it past the swiper arrows
-
-  //         .field-hs-collection-items.item-per-row--2 & {
-  //           left: calc(100% - #{hb-calculate-rems(88px)});
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   .swiper-button-next {
-  //     left: auto;
-  //     top: auto;
-
-  //     @include hb-themes(('airy', 'colorful')) {
-  //       margin-block: 0 hb-calculate-rems(15.5px);
-  //       right: 25px;
-
-  //       @include grid-media-min('md') {
-  //         right: calc(40% + #{hb-calculate-rems(25px)});
-  //       }
-
-  //       @include grid-media-min('xl') {
-  //         right: calc(50% + 25px);
-  //       }
-  //     }
-
-  //     @include hb-traditional {
-  //       right: hb-calculate-rems(40px);
-
-  //       @include grid-media-min('md') {
-  //         right: auto;
-  //         left: calc(53% - #{hb-calculate-rems(40px)});
-  //       }
-
-  //       @include grid-media-min('lg') {
-  //         left: calc(
-  //           45% - #{hb-calculate-rems(40px)}
-  //         ); // move it past the swiper arrows
-
-  //         /* stylelint-disable max-nesting-depth */
-  //         .hb-three-column--two-sidebar & {
-  //           left: inherit;
-  //           right: hb-calculate-rems(50px); // move it past the swiper arrows
-  //         }
-  //         /* stylelint-enable max-nesting-depth */
-  //       }
-
-  //       @include grid-media-min('xl') {
-  //         left: calc(
-  //           50% - #{hb-calculate-rems(40px)}
-  //         ); // move it past the swiper arrows
-  //       }
-
-  //       @include grid-media-min('2xl') {
-  //         left: calc(
-  //           #{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}
-  //         ); // move it past the swiper arrows
-
-  //         .field-hs-collection-items.item-per-row--2 & {
-  //           left: calc(100% - #{hb-calculate-rems(43px)});
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 }

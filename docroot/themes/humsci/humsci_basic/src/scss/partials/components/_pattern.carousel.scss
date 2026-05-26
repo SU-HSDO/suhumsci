@@ -160,29 +160,72 @@ $container-small: 576px;
     }
   }
 
-  // Text Box.
+  // Styles for the text container.
   .hb-hero-overlay__text {
     padding: hb-calculate-rems(16px) hb-calculate-rems(10px);
+    // Override hb-page-width width.
+    min-height: auto !important;
+
+    @include hb-themes(('colorful', 'airy')) {
+      background-color: color-mix(in srgb, color('black', 'global') 75%, transparent);
+      // Override hb-page-width width.
+      max-width: hb-calculate-rems(450px) !important;
+      margin-block: -25% 0 !important;
+      margin-inline: 0 !important;
+      transform: none;
+      left: hb-calculate-rems(16px);
+
+      @container carousel (width > #{$container-medium}) {
+        // Override hb-page-width width.
+        max-width: hb-calculate-rems(515px) !important;
+        margin-block: auto !important;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        top: 0;
+      }
+
+      &.animate {
+        .hb-has-animation-enhancements.js & {
+          opacity: 1;
+          animation-duration: 2000ms;
+          animation-name: colorfulHeroText;
+        }
+      }
+    }
+
+    @include hb-traditional {
+      background-color: color-mix(in srgb, color('black', 'global') 70%, transparent);
+      // Override hb-page-width width.
+      max-width: hb-calculate-rems(450px) !important;
+      // Override hb-page-width margin.
+      margin: auto 0 !important;
+      text-align: left;
+
+      @container carousel (width > #{$container-medium}) {
+        // Override hb-page-width width.
+        max-width: hb-calculate-rems(520px) !important;
+      }
+
+      &.animate {
+        .hb-has-animation-enhancements.js & {
+          opacity: 1;
+          animation-duration: 1700ms;
+          animation-name: traditionalHeroText;
+        }
+      }
+    }
 
     @container carousel (width > #{$container-medium}) {
       padding-inline: hb-calculate-rems(24px);
     }
 
-    @include hb-themes(('colorful', 'airy')) {
-      background-color: color-mix(in srgb, color('black', 'global') 75%, transparent);
-    }
-
-    @include hb-traditional {
-      background-color: color-mix(in srgb, color('black', 'global') 70%, transparent);
-    }
-
-    // Verified.
     h2 {
       @include hb-heading-2;
+
       margin: 0 0 hb-calculate-rems(2px);
     }
 
-    // Verified.
     h2,
     .field-hs-hero-body {
       width: auto;
@@ -200,8 +243,8 @@ $container-small: 576px;
       }
     }
 
-    p:last-child, // Override margin set in the wysiwyg styles.
-    p {
+    p,
+    p:last-child {
       @include hb-themes(('colorful', 'airy')) {
         margin-block: hb-calculate-rems(2px);
       }
@@ -215,9 +258,10 @@ $container-small: 576px;
       }
     }
 
-    // Verified.
+    // Styles for the body.
     .field-hs-hero-body {
       display: inline-block;
+      margin: 0;
 
       @include hb-themes(('colorful', 'airy')) {
         @container carousel (width > #{$container-small}) {
@@ -234,7 +278,7 @@ $container-small: 576px;
       }
     }
 
-    // Verified.
+    // Styles for the link.
     .field-hs-hero-link {
       a {
         padding: hb-calculate-rems(4px) hb-calculate-rems(24px) hb-calculate-rems(6px);

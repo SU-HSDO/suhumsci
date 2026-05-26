@@ -14,13 +14,6 @@ $container-small: hb-calculate-rems(576px);
     hyphens: auto;
     word-break: normal;
     overflow-wrap: anywhere;
-
-    &:hover,
-    &:focus,
-    &.is-focused {
-      background-color: color('primary-dark');
-      border-color: color('primary-dark');
-    }
   }
 
   @include hb-traditional {
@@ -81,8 +74,7 @@ $container-small: hb-calculate-rems(576px);
       }
     }
 
-    .hs-button,
-   a.hs-button {
+    a.hs-button {
       @include hb-secondary-button;
 
       position: relative;
@@ -154,13 +146,20 @@ $container-small: hb-calculate-rems(576px);
     }
 
     .hb-card__description {
-      margin-block: hb-calculate-rems(8px);
+      margin-block: hb-calculate-rems(8px) auto;
     }
 
-    .hs-button {
+    a.hs-button {
       border-color: color('primary');
       background-color: color('primary');
-      margin-block: hb-calculate-rems(16px) hb-calculate-rems(2px);
+      margin-block: hb-calculate-rems(24px) hb-calculate-rems(2px);
+
+      &:hover,
+      &:focus,
+      &.is-focused {
+        background-color: color('primary-dark');
+        border-color: color('primary-dark');
+      }
 
       @container card (width > #{$container-small}) {
         margin-block: hb-calculate-rems(20px) hb-calculate-rems(4px);

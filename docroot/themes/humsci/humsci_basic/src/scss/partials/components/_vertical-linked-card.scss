@@ -128,6 +128,16 @@ $container-small: hb-calculate-rems(576px);
 
 .hb-vertical-linked-card__title__link {
   color: var(--link-base-current-color);
+  text-decoration-thickness: 5%;
+  text-underline-offset: 10%;
+
+  &:hover, &:focus {
+    text-decoration-thickness: 9%;
+  }
+
+  &:focus-visible {
+    outline-color: color('white', 'global');
+  }
 }
 
 
@@ -185,8 +195,6 @@ $container-small: hb-calculate-rems(576px);
     cursor: pointer;
 
     .hb-vertical-linked-card__title {
-      text-decoration: underline;
-
       @include hb-themes(('colorful', 'airy')) {
         background-color: color('secondary-darken-12');
       }
@@ -194,10 +202,10 @@ $container-small: hb-calculate-rems(576px);
       @include hb-traditional {
         background-color: color('primary-dark');
       }
+    }
 
-      a::after {
-        transform: translateX(#{hb-calculate-rems(2.5px)});
-      }
+    .hb-vertical-linked-card__title__link {
+      text-decoration-thickness: 9%;
     }
 
     .hb-vertical-linked-card__img {

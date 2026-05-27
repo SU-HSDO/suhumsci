@@ -5,9 +5,6 @@
  * Update functions for hs_paragraph_types module.
  */
 
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-
 /**
  * Implements hook_update_last_removed().
  */
@@ -168,12 +165,22 @@ function hs_paragraph_types_update_10021(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_spotlight paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_spotlight paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_spotlight paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
@@ -216,6 +223,12 @@ function hs_paragraph_types_update_10022(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_testimonial paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
     return t('Updated %updated of %total hs_testimonial paragraphs.', [
       '%updated' => $sandbox['updated'],
       '%total' => $sandbox['total'],
@@ -263,6 +276,12 @@ function hs_paragraph_types_update_10023(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_banner paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
     return t('Updated %updated of %total hs_banner paragraphs.', [
       '%updated' => $sandbox['updated'],
       '%total' => $sandbox['total'],
@@ -326,6 +345,12 @@ function hs_paragraph_types_update_10024(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_callout_box paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
     return t('Updated %updated of %total hs_callout_box paragraphs.', [
       '%updated' => $sandbox['updated'],
       '%total' => $sandbox['total'],
@@ -389,6 +414,12 @@ function hs_paragraph_types_update_10025(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_clr_bnd paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
     return t('Updated %updated of %total hs_clr_bnd paragraphs.', [
       '%updated' => $sandbox['updated'],
       '%total' => $sandbox['total'],
@@ -438,6 +469,12 @@ function hs_paragraph_types_update_10026(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_gradient_hero paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
     return t('Updated %updated of %total hs_gradient_hero paragraphs.', [
       '%updated' => $sandbox['updated'],
       '%total' => $sandbox['total'],
@@ -485,6 +522,12 @@ function hs_paragraph_types_update_10027(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_accordion paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
     return t('Updated %updated of %total hs_accordion paragraphs.', [
       '%updated' => $sandbox['updated'],
       '%total' => $sandbox['total'],
@@ -552,6 +595,12 @@ function hs_paragraph_types_update_10028(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_collections and hs_priv_collections paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
     return t('Updated %updated of %total hs_collections and hs_priv_collections paragraphs.', [
       '%updated' => $sandbox['updated'],
       '%total' => $sandbox['total'],
@@ -606,6 +655,12 @@ function hs_paragraph_types_update_10029(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count stanford_gallery paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
     return t('Updated %updated of %total stanford_gallery paragraphs.', [
       '%updated' => $sandbox['updated'],
       '%total' => $sandbox['total'],

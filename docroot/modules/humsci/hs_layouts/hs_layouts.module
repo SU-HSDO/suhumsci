@@ -158,7 +158,7 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
   $paragraph = $context->getProperty('entity');
 
   if ($context->isOfType('views_row')) {
-    $variables['attributes']->addClass('hb-spotlight--classic');
+    $variables['attributes']->addClass('hb-spotlight--framed');
   }
 
   if (!($paragraph instanceof ParagraphInterface)) {
@@ -166,20 +166,29 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
   }
 
   if (
-    $paragraph->hasField('field_hs_spotlight_bg') &&
-    $paragraph->get('field_hs_spotlight_bg')->count()
+    $paragraph->hasField('field_hs_spotlight_background') &&
+    $paragraph->get('field_hs_spotlight_background')->count()
   ) {
-    $bgValue = $paragraph->get('field_hs_spotlight_bg')->getString();
+    $bgValue = $paragraph->get('field_hs_spotlight_background')->getString();
     $variables['attributes']->addClass(Html::cleanCssIdentifier($bgValue));
   }
 
-  $spotlight_type = 'classic';
-  if ($paragraph->hasField('field_spotlight_style') && !$paragraph->get('field_spotlight_style')->isEmpty()) {
-    $spotlight_type = $paragraph->get('field_spotlight_style')->getString();
+  $spotlight_type = 'framed';
+  if (
+    $paragraph->hasField('field_hs_spotlight_style') &&
+    !$paragraph->get('field_hs_spotlight_style')->isEmpty()
+  ) {
+    $spotlight_type = $paragraph->get('field_hs_spotlight_style')->value;
   }
 
-  $image_style = $context->getProperty('view_mode') == 'default' ? 'tall' : 'short';
-  $variables['attributes']->addClass('hb-spotlight--view-mode-' . $image_style);
+  $image_height = 'tall';
+  if (
+    $paragraph->hasField('field_hs_spotlight_image_height') &&
+    !$paragraph->get('field_hs_spotlight_image_height')->isEmpty()
+  ) {
+    $image_height = $paragraph->get('field_hs_spotlight_image_height')->value;
+  }
+  $variables['attributes']->addClass('hb-spotlight--view-mode-' . $image_height);
 
   if ($paragraph->hasField('field_hs_spotlight_image')) {
     if ($paragraph->get('field_hs_spotlight_image')->isEmpty() || !$paragraph->get('field_hs_spotlight_image')->entity) {
@@ -190,9 +199,8 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
       if ($media->bundle() === 'video') {
         $spotlight_type = 'video';
       }
-      elseif ($media->bundle() === 'image' && $spotlight_type === 'classic') {
-        $view_mode = $context->getProperty('view_mode');
-        $image_style = $view_mode == 'default' ? 'spotlight_framed_tall' : 'spotlight_framed_short';
+      elseif ($media->bundle() === 'image' && $spotlight_type === 'framed') {
+        $image_style = $image_height == 'tall' ? 'spotlight_framed_tall' : 'spotlight_framed_short';
         $variables['image']['field_hs_spotlight_image'][0]['#stanford_media_image_style'] = $image_style;
         $variables['image']['field_hs_spotlight_image'][0]['#cache']['keys'][] = 'image_style:' . $image_style;
       }
@@ -219,9 +227,9 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
   }
 
   if (
-    $paragraph->hasField('field_accordion_style')
+    $paragraph->hasField('field_hs_accordion_style')
   ) {
-    switch ($paragraph->get('field_accordion_style')->getString()) {
+    switch ($paragraph->get('field_hs_accordion_style')->getString()) {
       case 'secondary':
         $variables['attributes']->addClass('hb-accordion-secondary');
         break;

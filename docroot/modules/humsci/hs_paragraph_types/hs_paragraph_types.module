@@ -9,7 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -23,20 +23,19 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
     $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
     $variables['attributes']['class'][] = 'hs-paragraph-style';
 
-    if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
+    if (!$paragraph->hasField('field_hs_collection_background') || !$paragraph->hasField('field_hs_collection_bg_width')) {
       return;
     }
 
     // Replace underscores with hyphens in the bg_color value.
-    $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
+    $bg_color = $paragraph->get('field_hs_collection_background')->getString();
 
     // Append "-well" to the bg_color.
-    $bg_width = $paragraph->get('field_bg_color_width')->getString();
-    if (!empty($bg_color)) {
-      $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
-      $bg_color .= '-well';
+    $bg_width = $paragraph->get('field_hs_collection_bg_width')->getString();
+    if (!empty($bg_color) && $bg_color !== 'bg-none') {
+      $bg_width_class = $bg_width == 'full-width' ? 'well-full-width' : 'well';
       $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
-      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . Html::cleanCssIdentifier($bg_color) . '-well';
     }
   }
   elseif ($bundle == 'hs_sptlght_slder') {
@@ -48,7 +47,6 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
     if ($bg_width == 'full_width') {
       $variables['attributes']['class'][] = 'paragraph--style--full-width';
     }
-
   }
 }
 
@@ -186,59 +184,84 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
 }
 
 /**
- * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ * Implements hook_entity_view_mode_alter().
  */
-function hs_paragraph_types_field_widget_complete_options_select_form_alter(array &$field_widget_form, FormStateInterface &$form_state, array $context) {
-  // Change the default "None" label for certain select fields.
-  if (!isset($context['items'])) {
+function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  if (!$entity instanceof ParagraphInterface) {
     return;
   }
 
-  $none_labels = [
-    'field_accordion_style' => t('Default'),
-    'field_hs_banner_height' => t('Short'),
-  ];
-  $field_name = $context['items']->getName();
+  switch ($entity->bundle()) {
+    case 'hs_spotlight':
+      if (!$entity->hasField('field_hs_spotlight_image_height') || $entity->get('field_hs_spotlight_image_height')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_spotlight_image_height')->value == 'tall' ? 'default' : 'preview';
+      break;
 
-  if (array_key_exists($field_name, $none_labels)) {
-    $field_widget_form['widget']['#options']['_none'] = $none_labels[$field_name];
+    case 'hs_banner':
+      if (!$entity->hasField('field_hs_banner_image_height') || $entity->get('field_hs_banner_image_height')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_banner_image_height')->value == 'tall' ? 'preview' : 'default';
+      break;
+
+    case 'hs_callout_box':
+      if (!$entity->hasField('field_hs_callout_background') || $entity->get('field_hs_callout_background')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_callout_background')->value == 'light' ? 'hs_well' : 'default';
+      break;
+
+    case 'hs_clr_bnd':
+      if (!$entity->hasField('field_hs_clr_bnd_width') || $entity->get('field_hs_clr_bnd_width')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_clr_bnd_width')->value == 'full-width' ? 'default' : 'preview';
+      break;
+
+    case 'stanford_gallery':
+      if ($entity->hasField('field_hs_gallery_style') && !$entity->get('field_hs_gallery_style')->isEmpty()) {
+        $view_mode = $entity->get('field_hs_gallery_style')->value == 'slideshow' ? 'hs_gallery_slideshow' : 'default';
+      }
+      break;
+
+    case 'hs_postcard':
+      if (
+        !$entity->hasField('field_hs_postcard_layout') ||
+        !$entity->hasField('field_hs_postcard_vertical_style')
+      ) {
+        break;
+      }
+
+      $layout = $entity->get('field_hs_postcard_layout')->value;
+      $style = $entity->get('field_hs_postcard_vertical_style')->value;
+
+      $view_mode = $layout === 'horizontal' ? 'preview' : 'default';
+
+      // Base vertical cards view mode is 'default', but there are other
+      // possible options, based on $style value.
+      $alt_vertical_viewmodes = [
+        'stacked' => 'vertical_button_card',
+        'two_color' => 'token',
+      ];
+
+      if ($layout === 'vertical' && in_array($style, $alt_vertical_viewmodes)) {
+        $view_mode = $alt_vertical_viewmodes[$style];
+      }
+      break;
   }
 }
 
 /**
- * Implements hook_entity_view_mode_alter().
+ * Implements hook_module_implements_alter().
  */
-function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
-  if (!$entity instanceof Paragraph) {
-    return;
-  }
-  if ($entity->bundle() !== 'hs_postcard') {
-    return;
-  }
-  if (
-    !$entity->hasField('field_hs_postcard_layout') ||
-    !$entity->hasField('field_hs_postcard_vertical_style')
-  ) {
-    return;
-  }
-
-  $layout = $entity->get('field_hs_postcard_layout')->value;
-  if ($layout == 'horizontal') {
-    $view_mode = 'preview';
-  }
-  elseif ($layout == 'vertical') {
-    $style = $entity->get('field_hs_postcard_vertical_style')->value;
-    switch ($style) {
-      case 'stacked':
-        $view_mode = 'vertical_button_card';
-        break;
-
-      case 'two_color':
-        $view_mode = 'token';
-        break;
-
-      default:
-        $view_mode = 'default';
-    }
+function hs_paragraph_types_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'paragraph_view_mode_alter') {
+    // Ensure that the view mode selection logic defined in this module is
+    // executed at the end, to override legacy "Display Mode Select" fields.
+    $group = $implementations['hs_paragraph_types'];
+    unset($implementations['hs_paragraph_types']);
+    $implementations['hs_paragraph_types'] = $group;
   }
 }

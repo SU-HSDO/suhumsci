@@ -8,7 +8,7 @@ $container-small: hb-calculate-rems(576px);
 .hb-vertical-button-card {
   position: relative;
 
-  a.hs-button {
+  .hs-button a {
     width: 100%;
     font-size: hb-calculate-rems(18px);
     hyphens: auto;
@@ -74,21 +74,24 @@ $container-small: hb-calculate-rems(576px);
       }
     }
 
-    a.hs-button {
-      @include hb-secondary-button;
+    .hs-button {
 
       position: relative;
-      border-width: 0;
-      border-top-width: 2px;
       margin-top: auto;
       margin-inline: hb-calculate-rems(-20px);
+
+      a {
+        @include hb-secondary-button;
+
+        border-width: 0;
+        border-top-width: 2px;
+        width: 100%;
+      }
 
       @container card (width > #{$container-small}) {
         margin-inline: hb-calculate-rems(-32px);
       }
     }
-
-
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -149,7 +152,7 @@ $container-small: hb-calculate-rems(576px);
       margin-block: hb-calculate-rems(8px) auto;
     }
 
-    a.hs-button {
+    .hs-button a {
       border-color: color('primary');
       background-color: color('primary');
       margin-block: hb-calculate-rems(24px) hb-calculate-rems(2px);

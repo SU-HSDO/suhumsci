@@ -92,6 +92,7 @@ class Capx {
     if ($username = $capx_settings->get('username')) {
       $this->setUsername($username);
       try {
+        /** @var \Drupal\key\Entity\Key $key */
         $key = $entity_type_manager->getStorage('key')
           ->load($capx_settings->get('password'));
         $password = $key->getKeyValue();

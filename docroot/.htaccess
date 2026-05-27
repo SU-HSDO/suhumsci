@@ -29,12 +29,12 @@ Options -Indexes
 # Set the default handler.
 DirectoryIndex index.php index.html index.htm
 
-# Add webp MIME type so that Apache knows how to handle WebP images
-AddType image/webp .webp
-
 # Add correct encoding for SVGZ.
 AddType image/svg+xml svg svgz
 AddEncoding gzip svgz
+
+# Add correct encoding for webp.
+AddType image/webp .webp
 
 # Most of the following PHP settings cannot be changed at runtime. See
 # sites/default/default.settings.php and
@@ -202,12 +202,6 @@ AddEncoding gzip svgz
   RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
   # Allow access to test-specific PHP files:
   RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?\.php
-  # Allow access to simplesaml paths.
-  RewriteCond %{REQUEST_URI} !^/simplesaml
-  # Allow access to Statistics module's custom front controller.
-  # Copy and adapt this rule to directly execute PHP files in contributed or
-  # custom modules or to run another PHP application in the same directory.
-  RewriteCond %{REQUEST_URI} !/core/modules/statistics/statistics\.php$
   # Deny access to any other PHP files that do not match the rules above.
   # Specifically, disallow autoload.php from being served directly.
   RewriteRule "^(.+/.*|autoload)\.php($|/)" - [F]

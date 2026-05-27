@@ -2,6 +2,8 @@
 
 namespace Drupal\hs_migrate\Plugin\migrate\process;
 
+use Drupal\field\FieldConfigInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -54,11 +56,10 @@ class FieldDefaultValue extends ProcessPluginBase implements ContainerFactoryPlu
     $entity_type = $this->configuration['entity_type'];
     $bundle = $this->configuration['bundle'];
     $field_name = $this->configuration['field'];
-    /** @var \Drupal\field\FieldConfigInterface $field */
     $field = $this->entityTypeManager->getStorage('field_config')
       ->load("$entity_type.$bundle.$field_name");
 
-    if (!$field) {
+    if (!$field instanceof FieldConfigInterface) {
       return NULL;
     }
 
@@ -94,8 +95,14 @@ class FieldDefaultValue extends ProcessPluginBase implements ContainerFactoryPlu
   protected function getEmptyEntity($entity_type, $bundle) {
     $bundle_key = $this->entityTypeManager->getDefinition($entity_type)
       ->getKey('bundle');
-    return $this->entityTypeManager->getStorage($entity_type)
+    $entity = $this->entityTypeManager->getStorage($entity_type)
       ->create([$bundle_key => $bundle]);
+
+    if (!$entity instanceof ContentEntityInterface) {
+      throw new \UnexpectedValueException(sprintf('Expected content entity for %s.', $entity_type));
+    }
+
+    return $entity;
   }
 
 }

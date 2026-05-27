@@ -1,16 +1,19 @@
+# .github/workflows/content-stage.yml
+# Copies the databases from production sites to staging sites.
 name: Content Staging
 on:
   schedule:
     - cron: '0 0 * * 3'
+  workflow_dispatch:
 jobs:
   Copy-Prod-Database-Down:
     runs-on: ubuntu-latest
     container:
       image: pookmish/drupal8ci:php8.3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
@@ -25,4 +28,4 @@ jobs:
           ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
         run: |
           composer install -n &&
-          drush sws:drupal:sync-stage
+          drush sws:multisite:sync-stage --app-key="$ACQUIA_KEY" --app-secret="$ACQUIA_SECRET" -n

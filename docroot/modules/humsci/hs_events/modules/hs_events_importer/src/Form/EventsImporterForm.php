@@ -6,6 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -49,6 +50,7 @@ class EventsImporterForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('entity_type.manager'),
       $container->get('http_client'),
       $container->get('cache.default')
@@ -58,8 +60,8 @@ class EventsImporterForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, ClientInterface $client, CacheBackendInterface $cache) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, EntityTypeManagerInterface $entity_type_manager, ClientInterface $client, CacheBackendInterface $cache) {
+    parent::__construct($config_factory, $typedConfigManager);
     $this->entityTypeManager = $entity_type_manager;
     $this->guzzle = $client;
     $this->cache = $cache;
@@ -305,7 +307,7 @@ class EventsImporterForm extends ConfigFormBase {
       return;
     }
 
-    $url_headers = get_headers($url, 1);
+    $url_headers = get_headers($url, TRUE);
     $content_type_header = $url_headers['Content-Type'] ?? [];
 
     $is_xml = is_string($content_type_header) ? strpos($content_type_header, 'text/xml') !== FALSE : FALSE;
@@ -409,7 +411,7 @@ class EventsImporterForm extends ConfigFormBase {
     }
 
     $options = ['query' => [$query => '']];
-    $response = $this->guzzle->get(self::STANFORD_EVENTS_IMPORTER_XML, $options);
+    $response = $this->guzzle->request('GET', self::STANFORD_EVENTS_IMPORTER_XML, $options);
     $this->cache->set("hs_events_importer:$query", (string) $response->getBody());
 
     return (string) $response->getBody();

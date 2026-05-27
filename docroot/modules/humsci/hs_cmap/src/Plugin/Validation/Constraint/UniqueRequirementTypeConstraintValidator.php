@@ -44,7 +44,8 @@ class UniqueRequirementTypeConstraintValidator extends ConstraintValidator imple
   /**
    * {@inheritdoc}
    */
-  public function validate($item, Constraint $constraint): void {
+  public function validate(mixed $item, Constraint $constraint): void {
+    /** @var \Drupal\hs_cmap\Plugin\Validation\Constraint\UniqueRequirementTypeConstraint $constraint */
     /** @var \Drupal\taxonomy\TermInterface $term */
     $term = $item->getEntity();
 

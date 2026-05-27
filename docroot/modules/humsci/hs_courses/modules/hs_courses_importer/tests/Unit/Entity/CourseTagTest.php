@@ -4,13 +4,14 @@ namespace Drupal\Test\hs_courses_importer\Unit\Entity;
 
 use Drupal\hs_courses_importer\Entity\CourseTag;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class CoursesControllerTest.
- *
- * @covers \Drupal\hs_courses_importer\Entity\CourseTag
- * @group hs_courses_importer
  */
+#[CoversClass(CourseTag::class)]
+#[Group('hs_courses_importer')]
 class CourseTagTest extends UnitTestCase {
 
   /**

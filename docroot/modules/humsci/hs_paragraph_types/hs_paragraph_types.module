@@ -153,6 +153,24 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         ) {
           continue;
         }
+
+        // Fix "Undefined array key #parents" warnings when field_hs_collection_items
+        // is required but empty.
+        if (!empty($element['subform']['field_hs_collection_items']['widget'])) {
+          $items_widget = &$field_widget_form['widget'][$key]['subform']['field_hs_collection_items']['widget'];
+          if (!isset($items_widget['#parents'])) {
+            $items_widget['#parents'] = $element['subform']['field_hs_collection_items']['#array_parents'] ?? [];
+          }
+          foreach (Element::children($items_widget) as $item_key) {
+            if (!isset($items_widget[$item_key]['#parents'])) {
+              $items_widget[$item_key]['#parents'] = array_merge(
+                $items_widget['#parents'],
+                [$item_key]
+              );
+            }
+          }
+        }
+
         // Build title settings name for this component.
         $title_settings_name = '';
         foreach ($element['subform']['field_title_settings']['widget']['#field_parents'] as $delta) {

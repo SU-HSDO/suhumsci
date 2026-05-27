@@ -5,6 +5,9 @@
  * Update functions for hs_paragraph_types module.
  */
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+
 /**
  * Implements hook_update_last_removed().
  */
@@ -657,11 +660,12 @@ function hs_paragraph_types_update_10030() {
   $config_storage = \Drupal::service('config.storage.sync');
   $entity_type_manager = \Drupal::entityTypeManager();
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
-  $field_storage = $entity_type_manager->getStorage('field_storage_config');
 
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  /** @var \Drupal\field\FieldConfigStorage $field_config_storage */
   $field_config_storage = $entity_type_manager->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldStorageConfigStorage $field_storage */
+  $field_storage = $entity_type_manager->getStorage('field_storage_config');
 
   $fields_to_create = [
     'field_hs_postcard_layout',
@@ -773,4 +777,3 @@ function hs_paragraph_types_update_10032() {
     \Drupal::logger('hs_paragraph_types')->notice('Removed field storage field_hs_postcard_display from paragraph.');
   }
 }
-

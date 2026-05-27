@@ -10,6 +10,10 @@
   {% endset %}
 {% endif %}
 
+{% if text_content is empty %}
+  {% set attributes = attributes.addClass('hb-hero-overlay--no-text') -%}
+{% endif %}
+
 {% apply spaceless %}
   <div{{ attributes }}>
     <div class="hb-hero-overlay__inner">
@@ -17,9 +21,11 @@
         {{ image }}
       </div>
 
-      <div class="hb-hero-overlay__text">
-        {{ text_content }}
-      </div>
+      {% if text_content is not empty %}
+        <div class="hb-hero-overlay__text">
+          {{ text_content }}
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endapply %}

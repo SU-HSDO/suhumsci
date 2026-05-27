@@ -23,6 +23,7 @@ $container-small: 576px;
   @include swiper-pagination;
   @include swiper-arrows;
 
+  position: relative;
   container-name: carousel;
   container-type: inline-size;
 
@@ -171,6 +172,24 @@ $container-small: 576px;
     @include hb-traditional {
       left: 0;
       top: 0;
+    }
+  }
+
+  // When the hero has no text overlay, center the image by reducing the
+  // asymmetric padding to symmetric padding on both sides.
+  .hb-hero-overlay--no-text .hb-hero-overlay__image-wrapper {
+    @include hb-themes(('colorful', 'airy')) {
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: calc(hb-calculate-rems(72px) / 2);
+      }
+
+      @container carousel (width > #{$container-large}) {
+        padding-inline: calc(hb-calculate-rems(268px) / 2);
+      }
+
+      @container carousel (width > #{$container-xlarge}) {
+        padding-inline: calc(hb-calculate-rems(308px) / 2);
+      }
     }
   }
 
@@ -375,6 +394,26 @@ $container-small: 576px;
         &::before {
           background-color: color('secondary');
         }
+      }
+    }
+  }
+
+  .swiper-button-prev {
+    @include hb-themes(('colorful', 'airy')) {
+      top: hb-calculate-rems(24px);
+
+      @container carousel (width > #{$container-medium}) {
+        top: unset;
+      }
+    }
+  }
+
+  .swiper-button-next {
+    @include hb-themes(('colorful', 'airy')) {
+      top: hb-calculate-rems(116px);
+
+      @container carousel (width > #{$container-medium}) {
+        top: unset;
       }
     }
   }

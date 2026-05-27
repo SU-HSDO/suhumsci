@@ -10,7 +10,7 @@ class PrivatePageContentCest {
 
   private $fieldsToCheck = [
     'Private Collection' => [
-      'component_text' => 'Items Per Row',
+      'component_text' => 'Maximum items per row',
       'component_button_name' => 'Private Collection',
       'admin_name' => '[name="settings[handler_settings][target_bundles_drag_drop][hs_priv_collection][enabled]"]',
       'disable_component' => FALSE,

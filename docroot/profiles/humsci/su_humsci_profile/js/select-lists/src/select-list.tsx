@@ -46,7 +46,27 @@ const renderSelectedValue = (
     ));
   }
   const selectedOption = options.find((option) => option.value === value);
-  return selectedOption ? selectedOption.label : null;
+  return selectedOption ? selectedOption.label : '';
+};
+
+const getDisplayText = (
+  multiple: boolean,
+  defaultValue: SelectValue<string, boolean>,
+  value: SelectValue<string, boolean>,
+  options: SelectOptionDefinition<string>[]
+) => {
+  if (multiple) {
+    const current = (value as string[]) ?? [];
+    const defaultArray = (defaultValue as string[]) ?? [];
+    const count = current.length;
+
+    const isSame = current.length === defaultArray.length &&
+      [...current].sort().every((val, idx) => val === [...defaultArray].sort()[idx]);
+
+    return `${count} filter${count === 1 ? '' : 's'} ${isSame ? 'applied' : 'selected'}`;
+  } else {
+    return value === defaultValue ? renderSelectedValue(value, options) : '1 filter selected';
+  }
 };
 
 const StyledOption = styled.li<{
@@ -57,17 +77,19 @@ const StyledOption = styled.li<{
   cursor: pointer;
   overflow: hidden;
   margin: 0 !important;
-  padding: 5px 10px !important;
+  padding: 8px 16px !important;
+  fontSize: 16px;
+  fontWeight: 400;
+  lineHeight: 140%;
   background: ${(props) =>
     props.disabled
       ? '#f1f0ee'
       : props.selected
-      ? '#b6b1a9'
+      ? '#d9d7d2'
       : props.highlighted
       ? '#d9d7d2'
       : ''};
   color: ${(props) => (props.disabled ? '#b6b1a9' : '#000')};
-  text-decoration: ${(props) => (props.highlighted ? 'underline' : 'none')};
 
   &:hover {
     background: ${(props) =>
@@ -75,10 +97,13 @@ const StyledOption = styled.li<{
         ? '#f1f0ee'
         : props.selected || props.highlighted
         ? ''
-        : '#dbdcde'};
+        : '#f1f0ee'};
     color: ${(props) =>
       props.disabled ? '#b6b1a9' : props.selected ? '' : '#000'};
-    text-decoration: ${(props) => !props.disabled && 'underline'};
+
+    input[type='checkbox']::before {
+      border-color: #b6b1a9;
+    }
   }
 
   &:before {
@@ -87,31 +112,34 @@ const StyledOption = styled.li<{
 
   input[type='checkbox'] {
     margin-right: 8px;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     appearance: none;
     background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 2px;
+    border: 1px solid #000000;
+    border-radius: 0;
     position: relative;
     cursor: pointer;
   }
 
-  input[type='checkbox']:checked {
-    background-color: #413e39;
-    border-color: #413e39;
-  }
-
-  input[type='checkbox']:checked::before {
+  input[type='checkbox']::before {
     content: '';
     position: absolute;
     top: 1px;
     left: 4px;
-    width: 6px;
-    height: 10px;
-    border: solid #fff;
-    border-width: 0 2px 2px 0;
+    width: 4px;
+    height: 8px;
+    border: solid transparent;
+    border-width: 0 1px 1px 0;
     transform: rotate(45deg);
+  }
+
+  input[type='checkbox']:checked {
+    background-color: transparent;
+  }
+
+  input[type='checkbox']:checked::before {
+    border-color: #000000;
   }
 
   /* Adjusting for disabled state */
@@ -193,9 +221,7 @@ interface Props {
   disabled?: boolean;
   value?: SelectValue<string, boolean>;
   required?: boolean;
-  emptyValue?: string;
   name: string;
-  applied?: boolean;
 }
 
 const SelectList = ({
@@ -206,8 +232,6 @@ const SelectList = ({
   required,
   defaultValue,
   name,
-  emptyValue,
-  applied,
   ...props
 }: Props) => {
   const labelId = name;
@@ -316,9 +340,12 @@ const SelectList = ({
                 padding: '8px 5px 8px 0',
               }}
             >
-              {multiple
-                ? `${value?.length} filters selected`
-                : renderSelectedValue(value, options)}
+              { getDisplayText(multiple, defaultValue, value, options) }
+            </span>
+          )}
+          {!optionChosen && !multiple && (
+            <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
+              Any
             </span>
           )}
 
@@ -358,6 +385,16 @@ const SelectList = ({
           }}
         >
           <SelectProvider value={contextValue}>
+            {!required && !multiple && (
+              <CustomOption
+                value=''
+                rootRef={listboxRef}
+                id={`${name}-empty`}
+              >
+                Any
+              </CustomOption>
+            )}
+
             {options.map((option) => {
               return (
                 <CustomOption

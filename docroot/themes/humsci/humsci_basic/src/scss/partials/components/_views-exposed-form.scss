@@ -1,5 +1,6 @@
 @use '../functions/general' as *;
 @use '../functions/color' as *;
+@use '../functions/animation' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 
@@ -61,13 +62,24 @@
 
 .views-exposed-form .select-preact {
   button {
-    border-color: color('gray', 'global') !important;
+    border-color: color('gray-400', 'global') !important;
+    padding-inline: hb-calculate-rems(16px);
+
+    svg {
+      transition: hb-transition(transform);
+    }
 
     @include hb-traditional {
       border-radius: 0 !important;
     }
 
     &[aria-expanded='true'] {
+      background-color: color('gray-100', 'global') !important;
+
+      svg {
+        transform: rotate(180deg);
+      }
+
       @include hb-colorful {
         border-bottom-left-radius: 0 !important;
         border-bottom-right-radius: 0 !important;

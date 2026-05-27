@@ -7,7 +7,6 @@ const FilterIsland = ({}) => {
   const [originalSelect, setOriginalSelect] = useState(null);
   const [label, setLabel] = useState('');
   const [selectedValues, setSelectedValues] = useState([]);
-  const [applied, setApplied] = useState(false);
 
   useEffect(() => {
     setOriginalSelect(ref.current.parentNode.querySelector('select'));
@@ -51,13 +50,6 @@ const FilterIsland = ({}) => {
     }
   }, [selectedValues]);
 
-  useEffect(() => {
-    const applyBtn = ref.current.closest('form')?.querySelector('[data-drupal-selector^="edit-submit"]');
-    if (applyBtn) {
-      applyBtn.addEventListener('click', () => setApplied(true));
-    }
-  }, []);
-
   const getSelectOptions = (selectElement) => {
     const options = [];
 
@@ -93,10 +85,6 @@ const FilterIsland = ({}) => {
   const selectOptions = originalSelect && getSelectOptions(originalSelect);
 
   const onSelectChange = (e, value) => {
-    // Reset applied whenever user changes selection (both single and multiple)
-    setApplied(false);
-    console.log('HERE', value);
-
     if (!originalSelect.getAttribute('multiple')) {
       originalSelect.value = value;
       return;
@@ -107,13 +95,11 @@ const FilterIsland = ({}) => {
     );
 
     if (value.length === allValues.length) {
-      setSelectedValues([allValues]);
+      setSelectedValues(allValues);
     } else {
       setSelectedValues(value);
     }
   };
-
-  console.log(applied);
 
   return (
     <div ref={ref}>
@@ -134,7 +120,6 @@ const FilterIsland = ({}) => {
               ? selectedValues
               : undefined
           }
-          applied={applied}
         />
       )}
     </div>

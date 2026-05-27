@@ -227,3 +227,16 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
       break;
   }
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function hs_paragraph_types_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'paragraph_view_mode_alter') {
+    // Ensure that the view mode selection logic defined in this module is
+    // executed at the end, to override legacy "Display Mode Select" fields.
+    $group = $implementations['hs_paragraph_types'];
+    unset($implementations['hs_paragraph_types']);
+    $implementations['hs_paragraph_types'] = $group;
+  }
+}

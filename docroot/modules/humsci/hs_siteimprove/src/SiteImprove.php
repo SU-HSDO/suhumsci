@@ -151,6 +151,7 @@ class SiteImprove implements SiteImproveInterface {
    * {@inheritdoc}
    */
   public function getCurrentSite(): ?object {
+    $production_url = '';
     try {
       $site_improve_sites = $this->getSites();
       if (empty($site_improve_sites)) {
@@ -168,6 +169,7 @@ class SiteImprove implements SiteImproveInterface {
     catch (SiteImproveException $e) {
       $this->logger->error('Failed to get current site: @message', ['@message' => $e->getMessage()]);
     }
+    $this->logger->error('Could not find a SiteImprove site for the site: @production_url', ['@production_url' => $production_url]);
 
     return NULL;
   }
@@ -202,7 +204,7 @@ class SiteImprove implements SiteImproveInterface {
 
     try {
       $response = $this->http_client->request($method, $this->baseUrl . $endpoint, $options);
-      $response_body = json_decode($response->getBody());
+      $response_body = json_decode($response->getBody(), FALSE, 16, JSON_THROW_ON_ERROR);
 
       if ($response->getStatusCode() === 200) {
         unset($response_body->ErrorCode, $response_body->ErrorMessage);

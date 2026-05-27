@@ -54,7 +54,7 @@ const getDisplayText = (
   defaultValue: SelectValue<string, boolean>,
   value: SelectValue<string, boolean>,
   options: SelectOptionDefinition<string>[]
-) => {
+): { text: string; isApplied: boolean } => {
   if (multiple) {
     const current = (value as string[]) ?? [];
     const defaultArray = (defaultValue as string[]) ?? [];
@@ -63,9 +63,16 @@ const getDisplayText = (
     const isSame = current.length === defaultArray.length &&
       [...current].sort().every((val, idx) => val === [...defaultArray].sort()[idx]);
 
-    return `${count} filter${count === 1 ? '' : 's'} ${isSame ? 'applied' : 'selected'}`;
+    return {
+      text: `${count} filter${count === 1 ? '' : 's'} ${isSame ? 'applied' : 'selected'}`,
+      isApplied: isSame,
+    };
   } else {
-    return value === defaultValue ? renderSelectedValue(value, options) : '1 filter selected';
+    const isSame = value === defaultValue;
+    return {
+      text: isSame ? renderSelectedValue(value, options) as string : '1 filter selected',
+      isApplied: isSame,
+    };
   }
 };
 
@@ -332,17 +339,17 @@ const SelectList = ({
             flexWrap: 'wrap',
           }}
         >
-          {optionChosen && (
-            <span
-              style={{
-                overflow: 'hidden',
-                maxWidth: 'calc(100% - 30px)',
-                padding: '8px 5px 8px 0',
-              }}
-            >
-              { getDisplayText(multiple, defaultValue, value, options) }
-            </span>
-          )}
+          {optionChosen && (() => {
+            const { text, isApplied } = getDisplayText(multiple, defaultValue, value, options);
+            return (
+              <span style={{ overflow: 'hidden', maxWidth: 'calc(100% - 30px)', padding: '8px 5px 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {isApplied && (
+                  <span class="select-preact__checkmark"></span>
+                )}
+                {text}
+              </span>
+            );
+          })()}
           {!optionChosen && !multiple && (
             <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
               Any
@@ -368,9 +375,7 @@ const SelectList = ({
           maxHeight: listboxMaxHeight,
           overflowY: options.length > 6 ? 'scroll' : 'auto',
           width: '100%',
-          border: '1px solid #D5D5D4',
-          boxShadow:
-            'rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px',
+          border: '1px solid #ababa9',
           display: listboxVisible ? 'block' : 'none',
         }}
       >

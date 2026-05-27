@@ -65,7 +65,7 @@ class SiteImprove implements SiteImproveInterface {
     protected CacheBackendInterface $cache,
   ) {
     $this->config = $config_factory->get('hs_siteimprove.settings');
-    $this->baseUrl = $this->config->get('base_url') ?: 'https://api.siteimprove.com/v2';
+    $this->baseUrl = $this->config->get('base_url') ?: 'https://api.us.siteimprove.com/v2';
     $this->cache = $cache;
   }
 

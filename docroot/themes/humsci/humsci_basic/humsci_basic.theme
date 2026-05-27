@@ -147,7 +147,11 @@ function humsci_basic_preprocess_html(&$vars) {
   // based on height (tall or short) and style (classic/framed or expanded)).
   if ($bundle === 'hs_sptlght_slder') {
     $image_referenced = $entity->get($image_field)->entity ?? '';
-    if ($image_referenced) {
+    if (
+      $image_referenced &&
+      $entity->hasField('field_hs_spotlight_style') &&
+      $entity->hasField('field_hs_spotlight_image_height')
+    ) {
       $spotlight_style = $entity->get('field_hs_spotlight_style')->value;
       $spotlight_height = $entity->get('field_hs_spotlight_image_height')->value;
       $spotlight_image_styles = [
@@ -164,7 +168,10 @@ function humsci_basic_preprocess_html(&$vars) {
       humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
     }
   }
-  elseif ($bundle === 'hs_banner') {
+  elseif (
+    $bundle === 'hs_banner' &&
+    $paragraph->hasField('field_hs_banner_image_height')
+  ) {
     $banner_height = $paragraph->get('field_hs_banner_image_height')->value;
     $style_name = $banner_height == 'tall' ? 'hero_no_text_tall_2400px' : 'hero_no_text_3000px_';
     humsci_basic_preload_full_width_image($entity, $style_name, $vars);

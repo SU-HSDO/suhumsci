@@ -78,7 +78,10 @@ function hs_paragraph_types_update_10020() {
 
   foreach ($fields_to_create as $field_name) {
     $field_config = $config_storage->read($field_name);
-    if (!empty($field_config) && empty($field_config_storage->load('paragraph.' . $field_config['bundle'] . $field_config['field_name']))) {
+    if (
+      !empty($field_config) &&
+      empty($field_config_storage->load('paragraph.' . $field_config['bundle'] . '.' . $field_config['field_name']))
+    ) {
       $field_config_storage->create($field_config)->save();
       \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
         '%field_name' => $field_config['field_name'],
@@ -87,6 +90,8 @@ function hs_paragraph_types_update_10020() {
       ]);
     }
   }
+
+  return;
 }
 
 /**
@@ -208,12 +213,16 @@ function hs_paragraph_types_update_10022(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_testimonial paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    return t('Updated %updated of %total hs_testimonial paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
@@ -251,12 +260,16 @@ function hs_paragraph_types_update_10023(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_banner paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    return t('Updated %updated of %total hs_banner paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
@@ -310,12 +323,16 @@ function hs_paragraph_types_update_10024(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_callout_box paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    return t('Updated %updated of %total hs_callout_box paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
@@ -369,12 +386,16 @@ function hs_paragraph_types_update_10025(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_clr_bnd paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    return t('Updated %updated of %total hs_clr_bnd paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
@@ -414,12 +435,16 @@ function hs_paragraph_types_update_10026(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_gradient_hero paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    return t('Updated %updated of %total hs_gradient_hero paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
@@ -457,12 +482,16 @@ function hs_paragraph_types_update_10027(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_accordion paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    return t('Updated %updated of %total hs_accordion paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
@@ -520,12 +549,16 @@ function hs_paragraph_types_update_10028(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_collections and hs_priv_collections paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    return t('Updated %updated of %total hs_collections and hs_priv_collections paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
@@ -570,18 +603,24 @@ function hs_paragraph_types_update_10029(&$sandbox) {
     }
   }
 
-  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total stanford_gallery paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
-
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    return t('Updated %updated of %total stanford_gallery paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+
+  return;
 }
 
 /**
  * Removes legacy paragraph fields.
  */
 function hs_paragraph_types_update_10030() {
+  $field_config_storage = \Drupal::entityTypeManager()->getStorage('field_config');
+
   $fields_to_delete = [
     'hs_spotlight' => [
       'field_hs_spotlight_bg',
@@ -631,7 +670,13 @@ function hs_paragraph_types_update_10030() {
           '%bundle' => $bundle,
         ]);
       }
-      if ($field_storage = FieldStorageConfig::loadByName('paragraph', $field)) {
+
+      $remaining_field_configs = $field_config_storage->loadByProperties([
+        'entity_type' => 'paragraph',
+        'field_name' => $field,
+      ]);
+
+      if (empty($remaining_field_configs) && $field_storage = FieldStorageConfig::loadByName('paragraph', $field)) {
         $field_storage->delete();
         \Drupal::logger('hs_paragraph_types')->notice('Removed field storage %field_name from paragraph.', [
           '%field_name' => $field,
@@ -639,4 +684,6 @@ function hs_paragraph_types_update_10030() {
       }
     }
   }
+
+  return;
 }

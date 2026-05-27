@@ -77,23 +77,18 @@ services:
         - composer install --no-ansi
 
         - drush @hs_colorful.local cr
-        - drush @hs_colorful.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - drush @hs_colorful.local deploy
 
         - drush @hs_traditional.local cr
-        - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - drush @hs_traditional.local deploy
 
         - drush @english.local cr
-        - drush @english.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - drush @english.local deploy
 
         - drush @history.local cr
-        - drush @history.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - drush @history.local deploy
 
         - drush @west.local cr
-        - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - drush @west.local deploy
 
         # Build frontend assets.

@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_actions\Plugin\Action;
 
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -11,6 +12,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\hs_actions\Plugin\FieldCloneManagerInterface;
 use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionBase;
@@ -18,13 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Clones a node.
- *
- * @Action(
- *   id = "node_clone_action",
- *   label = @Translation("Clone selected content"),
- *   type = "node"
- * )
  */
+#[Action(
+  id: 'node_clone_action',
+  action_label: new TranslatableMarkup('Publish'),
+  type: 'node',
+)]
 class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInterface, ContainerFactoryPluginInterface {
 
   /**
@@ -291,6 +292,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
       return $field instanceof FieldConfig && in_array($field->getType(), $types) && in_array($target_entity_id, $clone_target_types);
     });
 
+    /** @var \Drupal\field\Entity\FieldConfig[] $reference_fields */
     return $reference_fields;
   }
 

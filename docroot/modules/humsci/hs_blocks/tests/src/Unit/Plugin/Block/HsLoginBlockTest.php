@@ -11,13 +11,14 @@ use Drupal\hs_blocks\Plugin\Block\HsLoginBlock;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class HsLoginBlockTest.
- *
- * @covers \Drupal\hs_blocks\Plugin\Block\HsLoginBlock
- * @group hs_blocks
  */
+#[CoversClass(HsLoginBlock::class)]
+#[Group('hs_blocks')]
 class HsLoginBlockTest extends UnitTestCase {
 
   /**

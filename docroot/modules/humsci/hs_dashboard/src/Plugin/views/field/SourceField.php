@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_dashboard\Plugin\views\field;
 
+use Drupal\node\NodeInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -22,6 +23,10 @@ class SourceField extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     $node = $values->_entity;
+    if (!$node instanceof NodeInterface) {
+      return $this->t('Local');
+    }
+
     $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);
     return ($migration) ? $this->t('Imported') : $this->t('Local');
   }

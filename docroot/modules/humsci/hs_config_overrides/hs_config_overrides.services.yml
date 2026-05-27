@@ -1,0 +1,6 @@
+services:
+  hs_config_overrides.config_overrides:
+    class: Drupal\hs_config_overrides\Overrides\ConfigOverrides
+    arguments: ['@module_handler', '@config.factory', '@entity_type.manager', '@config_pages.loader', '@state', '%site.path%']
+    tags:
+      - {name: config.factory.override, priority: 5}

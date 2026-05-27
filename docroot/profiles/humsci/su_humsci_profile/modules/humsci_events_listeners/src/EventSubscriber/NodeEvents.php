@@ -151,11 +151,9 @@ class NodeEvents implements EventSubscriberInterface {
    *   Redirect behavior plugin if applicable.
    */
   protected function getRabbitHolePlugin(NodeInterface $entity): ?RabbitHoleBehaviorPluginInterface {
-    if (isset($this->rabbitHoleBehavior)) {
-      $values = $this->rabbitHoleBehavior->getRabbitHoleValuesForEntity($entity);
-      if (isset($values['rh_action']) && $values['rh_action'] == 'page_redirect') {
-        return $this->rabbitHolePluginManager->createInstance($values['rh_action'], $values);
-      }
+    $values = $this->rabbitHoleBehavior->getRabbitHoleValuesForEntity($entity);
+    if (isset($values['rh_action']) && $values['rh_action'] == 'page_redirect') {
+      return $this->rabbitHolePluginManager->createInstance($values['rh_action'], $values);
     }
     return NULL;
   }

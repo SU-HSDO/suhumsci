@@ -3,11 +3,11 @@
 namespace Drupal\hs_siteimprove;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\State\StateInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
 
@@ -19,12 +19,12 @@ class SiteImprove implements SiteImproveInterface {
   /**
    * API request timeout in seconds.
    */
-  const REQUEST_TIMEOUT = 30;
+  const int REQUEST_TIMEOUT = 30;
 
   /**
    * API connection timeout in seconds.
    */
-  const CONNECT_TIMEOUT = 10;
+  const int CONNECT_TIMEOUT = 10;
 
   /**
    * The base API URL.
@@ -38,7 +38,7 @@ class SiteImprove implements SiteImproveInterface {
    *
    * @var \Drupal\Core\Config\Config
    */
-  protected $config;
+  protected Config $config;
 
   /**
    * Constructor for SiteImprove.
@@ -65,23 +65,28 @@ class SiteImprove implements SiteImproveInterface {
     protected CacheBackendInterface $cache,
   ) {
     $this->config = $config_factory->get('hs_siteimprove.settings');
-    $this->baseUrl = $this->config->get('base_url') ?: 'https://api.siteimprove.com/v2';
+    $this->baseUrl = $this->config->get('base_url') ?: 'https://api.us.siteimprove.com/v2';
     $this->cache = $cache;
   }
 
   /**
-   * {@inheritdoc}
+   * Is there enough config info to make API calls?
    */
-  public function hasSiteConfig(): bool {
+  protected function hasSiteConfig(): bool {
     return !empty($this->getApiKey()) && !empty($this->getUsername());
   }
 
   /**
-   * {@inheritdoc}
+   * Get a list of all sites.
+   *
+   * @param bool $refresh
+   *   Force the list to be refetched from the API.
+   *
+   * @return array
    */
-  public function getSites(): array {
+  public function getSites(bool $refresh = FALSE): array {
     $cid = 'hs_siteimprove:sites';
-    if ($cache = $this->cache->get($cid)) {
+    if (!$refresh && $cache = $this->cache->get($cid)) {
       return $cache->data;
     }
 
@@ -109,13 +114,13 @@ class SiteImprove implements SiteImproveInterface {
     }
 
     try {
-      $site = $this->getCurrentSite();
+      $site = $this->getCurrentSite($refresh);
       if ($site?->id) {
         $this->state->set('hs_siteimprove.site_id', $site->id);
         return $site->id;
       }
     }
-    catch (SiteImproveException $e) {
+    catch (\Exception $e) {
       $this->logger->error('Failed to get current site ID: @message', ['@message' => $e->getMessage()]);
     }
 
@@ -136,7 +141,7 @@ class SiteImprove implements SiteImproveInterface {
     }
 
     try {
-      $pages = $this->call('GET', "/sites/{$site_id}/quality_assurance/links/pages_with_broken_links", ['page_size' => 5]);
+      $pages = $this->call('GET', "/sites/$site_id/quality_assurance/links/pages_with_broken_links", ['page_size' => 5]);
       // Cache for 5 minutes.
       $this->cache->set('hs_siteimprove_broken_links', $pages->items, time() + 900);
       return $pages->items;
@@ -150,9 +155,10 @@ class SiteImprove implements SiteImproveInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCurrentSite(): ?object {
+  public function getCurrentSite(bool $refresh = FALSE): ?object {
+    $production_url = '';
     try {
-      $site_improve_sites = $this->getSites();
+      $site_improve_sites = $this->getSites($refresh);
       if (empty($site_improve_sites)) {
         return NULL;
       }
@@ -165,9 +171,10 @@ class SiteImprove implements SiteImproveInterface {
         }
       }
     }
-    catch (SiteImproveException $e) {
+    catch (\Exception $e) {
       $this->logger->error('Failed to get current site: @message', ['@message' => $e->getMessage()]);
     }
+    $this->logger->error('Could not find a SiteImprove site for the site: @production_url', ['@production_url' => $production_url]);
 
     return NULL;
   }
@@ -202,7 +209,7 @@ class SiteImprove implements SiteImproveInterface {
 
     try {
       $response = $this->http_client->request($method, $this->baseUrl . $endpoint, $options);
-      $response_body = json_decode($response->getBody());
+      $response_body = json_decode($response->getBody(), FALSE, 16, JSON_THROW_ON_ERROR);
 
       if ($response->getStatusCode() === 200) {
         unset($response_body->ErrorCode, $response_body->ErrorMessage);
@@ -211,7 +218,7 @@ class SiteImprove implements SiteImproveInterface {
 
       throw new SiteImproveException('API request failed with status code: ' . $response->getStatusCode());
     }
-    catch (GuzzleException $e) {
+    catch (\Exception $e) {
       throw new SiteImproveException('API request failed: ' . $e->getMessage(), 0, $e);
     }
   }
@@ -231,7 +238,7 @@ class SiteImprove implements SiteImproveInterface {
   }
 
   /**
-   * Gets the API key from configuration.
+   * Gets the API key from the configuration.
    *
    * @return string
    *   The API key.

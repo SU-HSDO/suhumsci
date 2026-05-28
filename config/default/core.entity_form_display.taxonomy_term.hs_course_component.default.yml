@@ -1,0 +1,53 @@
+uuid: 6c33d3ea-47e1-4a7c-a12b-301e98d8f0c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.hs_course_component.rabbit_hole__settings
+    - taxonomy.vocabulary.hs_course_component
+  module:
+    - path
+    - rabbit_hole
+    - text
+id: taxonomy_term.hs_course_component.default
+targetEntityType: taxonomy_term
+bundle: hs_course_component
+mode: default
+content:
+  description:
+    type: text_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden: {  }

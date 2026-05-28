@@ -93,8 +93,6 @@ const StyledOption = styled.li<{
       ? '#f1f0ee'
       : props.selected
       ? '#d9d7d2'
-      : props.highlighted
-      ? '#d9d7d2'
       : ''};
   color: ${(props) => (props.disabled ? '#b6b1a9' : '#000')};
 
@@ -147,6 +145,35 @@ const StyledOption = styled.li<{
 
   input[type='checkbox']:checked::before {
     border-color: #000000;
+  }
+
+  /* Hide checkmark */
+  &:hover input[type='checkbox']:checked::before {
+    border-color: transparent;
+  }
+
+  /* Show × on hover when already selected */
+  &:hover input[type='checkbox']:checked {
+    &::before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    &::before,
+    &::after {
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 1px;
+      border: none;
+      background: #000;
+    }
+
   }
 
   /* Adjusting for disabled state */

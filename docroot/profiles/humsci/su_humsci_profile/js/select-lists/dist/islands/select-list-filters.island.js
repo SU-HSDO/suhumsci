@@ -12,7 +12,7 @@
   fontSize: 16px;
   fontWeight: 400;
   lineHeight: 140%;
-  background: ${e=>e.disabled?"#f1f0ee":e.selected||e.highlighted?"#d9d7d2":""};
+  background: ${e=>e.disabled?"#f1f0ee":e.selected?"#d9d7d2":""};
   color: ${e=>e.disabled?"#b6b1a9":"#000"};
 
   &:hover {
@@ -58,6 +58,35 @@
 
   input[type='checkbox']:checked::before {
     border-color: #000000;
+  }
+
+  /* Hide checkmark */
+  &:hover input[type='checkbox']:checked::before {
+    border-color: transparent;
+  }
+
+  /* Show × on hover when already selected */
+  &:hover input[type='checkbox']:checked {
+    &::before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    &::before,
+    &::after {
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 1px;
+      border: none;
+      background: #000;
+    }
+
   }
 
   /* Adjusting for disabled state */

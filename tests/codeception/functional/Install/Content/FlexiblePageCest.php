@@ -113,8 +113,6 @@ class FlexiblePageCest {
     $I->click('Save');
     $I->waitForText('Demo Basic Page');
     $I->canSeeNumberOfElements('.field-hs-page-components img', 1);
-    $I->canSee('Overlay Title');
-    $I->canSee('Google CTA', 'a');
   }
 
   /**

@@ -166,7 +166,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   protected function setNewsOverrides(array $names, array &$overrides) {
     // @todo: Why is this code here?  What is it trying to do?  Possibly remove???
-
     if (in_array('field.field.node.hs_news.field_hs_news_image', $names)) {
       $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_news.field_hs_news_image', 'field_news_image');
     }
@@ -193,7 +192,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   protected function setCoursesOverrides(array $names, array &$overrides) {
     // @todo: Why is this code here?  What is it trying to do?  Possibly remove???
-
     if (in_array('rabbit_hole.behavior_settings.node_type_hs_course', $names)) {
       $disabled = $this->configPages->getValue('hs_site_options', 'field_site_courses_rabbit');
       if (!empty($disabled[0]['value'])) {

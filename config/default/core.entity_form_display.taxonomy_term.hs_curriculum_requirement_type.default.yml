@@ -4,9 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.hs_curriculum_requirement_type.field_hs_curriculum_course_color
+    - field.field.taxonomy_term.hs_curriculum_requirement_type.rabbit_hole__settings
     - taxonomy.vocabulary.hs_curriculum_requirement_type
   module:
     - field_formatter_class
+    - rabbit_hole
     - style_selector
 id: taxonomy_term.hs_curriculum_requirement_type.default
 targetEntityType: taxonomy_term
@@ -38,6 +40,13 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
     third_party_settings: {  }
 hidden:
   description: true

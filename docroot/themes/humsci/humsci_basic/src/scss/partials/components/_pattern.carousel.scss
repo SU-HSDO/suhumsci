@@ -40,7 +40,7 @@ $container-small: 576px;
   .hb-hero-overlay {
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
-      
+
       background-color: color('gray-light', 'global');
       padding-inline: hb-calculate-rems(6px);
       padding-bottom: hb-calculate-rems(8px);
@@ -60,9 +60,9 @@ $container-small: 576px;
       @container carousel (width > #{$container-xlarge}) {
         padding-inline: 0;
       }
-  
+
       &::before {
-       display: none;
+        display: none;
       }
     }
 
@@ -133,10 +133,12 @@ $container-small: 576px;
         height: auto;
 
         &.animate {
+
           /* stylelint-disable max-nesting-depth */
           .hb-has-animation-enhancements & {
             animation-name: colorfulHeroImage;
           }
+
           /* stylelint-enable max-nesting-depth */
         }
 
@@ -150,20 +152,6 @@ $container-small: 576px;
 
           @container carousel (width > #{$container-medium}) {
             aspect-ratio: 1.82;
-          }
-        }
-      }
-
-      .hb-media-image .field-media-image-caption.collapsible-caption.is-open {
-        .toggle-caption__content {
-          @include hb-themes(('colorful', 'airy')) {
-            @include grid-media-min('md') {
-              max-width: 25%;
-            }
-
-            @include grid-media-min('lg') {
-              max-width: 30%;
-            }
           }
         }
       }
@@ -205,15 +193,20 @@ $container-small: 576px;
 
       // Override hb-page-width width.
       max-width: hb-calculate-rems(450px) !important;
-      margin-block: -25% 0 !important;
-      margin-inline: 0 !important;
+      width: calc(100% - 2 * 2rem) !important;
+      margin: -25% 0 0 0 !important;
+      left: hb-calculate-rems(10px);
       transform: none;
-      left: hb-calculate-rems(16px);
+
+      @container carousel (width > #{$container-small}) {
+        left: hb-calculate-rems(16px);
+      }
 
       @container carousel (width > #{$container-medium}) {
         // Override hb-page-width width.
         max-width: hb-calculate-rems(515px) !important;
         margin-block: auto !important;
+        width: 100% !important;
         position: absolute;
         bottom: 0;
         left: 0;
@@ -402,7 +395,7 @@ $container-small: 576px;
     @include hb-themes(('colorful', 'airy')) {
       top: hb-calculate-rems(24px);
 
-      @container carousel (width > #{$container-medium}) {
+      @include grid-media-min('md') {
         top: unset;
       }
     }
@@ -412,8 +405,32 @@ $container-small: 576px;
     @include hb-themes(('colorful', 'airy')) {
       top: hb-calculate-rems(116px);
 
-      @container carousel (width > #{$container-medium}) {
+      @include grid-media-min('md') {
         top: unset;
+      }
+    }
+  }
+
+  // Styles for the collapsible caption.
+  .hb-media-image .field-media-image-caption.collapsible-caption {
+    @include hb-themes(('colorful', 'airy')) {
+      padding-inline: hb-calculate-rems(40px) max(50px, calc(100% - hb-calculate-rems(456px)));
+      padding-block: 5% calc(25% + hb-calculate-rems(4px));
+
+      @container carousel (width > #{$container-medium}) {
+        padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
+      }
+
+      .toggle-caption__content {
+        @include hb-themes(('colorful', 'airy')) {
+          @container carousel (width > #{$container-medium}) {
+            max-width: 25%;
+          }
+
+          @container carousel (width > #{$container-large}) {
+            max-width: 30%;
+          }
+        }
       }
     }
   }

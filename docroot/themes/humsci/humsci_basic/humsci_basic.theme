@@ -120,7 +120,7 @@ function humsci_basic_preprocess_html(&$vars) {
     'hs_banner' => [
       'field' => 'field_hs_banner_image',
       'image_field' => '',
-      'style' => 'hero_no_text_3000px_',
+      'style' => '',
     ],
     'hs_hero_image' => [
       'field' => 'field_hs_hero_image',
@@ -160,22 +160,34 @@ function humsci_basic_preprocess_html(&$vars) {
   // based on height (tall or short) and style (classic/framed or expanded)).
   if ($bundle === 'hs_sptlght_slder') {
     $image_referenced = $entity->get($image_field)->entity ?? '';
-    if ($image_referenced) {
-      $spotlight_style = $entity->get('field_spotlight_style')->value;
-      $spotlight_height = $entity->get('field_hs_spotlight_height')->value;
+    if (
+      $image_referenced &&
+      $entity->hasField('field_hs_spotlight_style') &&
+      $entity->hasField('field_hs_spotlight_image_height')
+    ) {
+      $spotlight_style = $entity->get('field_hs_spotlight_style')->value;
+      $spotlight_height = $entity->get('field_hs_spotlight_image_height')->value;
       $spotlight_image_styles = [
-        'classic' => [
-          'default' => 'spotlight_framed_tall_xs_2x',
-          'preview' => 'spotlight_framed_short_xs_2x',
+        'framed' => [
+          'tall' => 'spotlight_framed_tall_xs_2x',
+          'short' => 'spotlight_framed_short_xs_2x',
         ],
         'expanded' => [
-          'default' => 'spotlight_md_2x_892px',
-          'preview' => 'spotlight_short_md_2x_892px',
+          'tall' => 'spotlight_md_2x_892px',
+          'short' => 'spotlight_short_md_2x_892px',
         ],
       ];
       $style_name = $spotlight_image_styles[$spotlight_style][$spotlight_height];
       humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
     }
+  }
+  elseif (
+    $bundle === 'hs_banner' &&
+    $paragraph->hasField('field_hs_banner_image_height')
+  ) {
+    $banner_height = $paragraph->get('field_hs_banner_image_height')->value;
+    $style_name = $banner_height == 'tall' ? 'hero_no_text_tall_2400px' : 'hero_no_text_3000px_';
+    humsci_basic_preload_full_width_image($entity, $style_name, $vars);
   }
   else {
     $image_referenced = $image_field ? ($entity->get($image_field)->entity ?? '') : $entity;

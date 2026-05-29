@@ -5,9 +5,6 @@
  * Update functions for hs_paragraph_types module.
  */
 
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-
 /**
  * Implements hook_update_last_removed().
  */
@@ -660,7 +657,6 @@ function hs_paragraph_types_update_10030() {
   $config_storage = \Drupal::service('config.storage.sync');
   $entity_type_manager = \Drupal::entityTypeManager();
 
-
   /** @var \Drupal\field\FieldConfigStorage $field_config_storage */
   $field_config_storage = $entity_type_manager->getStorage('field_config');
 
@@ -757,23 +753,16 @@ function hs_paragraph_types_update_10031(&$sandbox) {
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
-  return t('Updated %updated of %total hs_postcard paragraphs.', [
-    '%updated' => $sandbox['updated'],
-    '%total' => $sandbox['total'],
-  ]);
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_postcard paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
 
-}
-
-/**
- * Removes legacy hs_postcard display field.
- */
-function hs_paragraph_types_update_10032() {
-  if ($display_field = FieldConfig::loadByName('paragraph', 'hs_postcard', 'field_hs_postcard_display')) {
-    $display_field->delete();
-    \Drupal::logger('hs_paragraph_types')->notice('Removed field instance field_hs_postcard_display from paragraph.hs_postcard.');
-  }
-  if ($display_storage = FieldStorageConfig::loadByName('paragraph', 'field_hs_postcard_display')) {
-    $display_storage->delete();
-    \Drupal::logger('hs_paragraph_types')->notice('Removed field storage field_hs_postcard_display from paragraph.');
+    return t('Updated %updated of %total hs_postcard paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
   }
 }

@@ -246,7 +246,7 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
         'two_color' => 'token',
       ];
 
-      if ($layout === 'vertical' && in_array($style, $alt_vertical_viewmodes)) {
+      if ($layout === 'vertical' && array_key_exists($style, $alt_vertical_viewmodes)) {
         $view_mode = $alt_vertical_viewmodes[$style];
       }
       break;

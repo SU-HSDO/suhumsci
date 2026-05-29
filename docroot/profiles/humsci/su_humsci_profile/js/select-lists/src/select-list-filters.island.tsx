@@ -87,6 +87,11 @@ const FilterIsland = ({}) => {
   const onSelectChange = (e, value) => {
     if (!originalSelect.getAttribute('multiple')) {
       originalSelect.value = value;
+
+      originalSelect.dispatchEvent(
+        new Event('change', { bubbles: true })
+      );
+
       return;
     }
 

@@ -51,28 +51,16 @@ const renderSelectedValue = (
 
 const getDisplayText = (
   multiple: boolean,
-  defaultValue: SelectValue<string, boolean>,
   value: SelectValue<string, boolean>,
   options: SelectOptionDefinition<string>[]
 ): { text: string; isApplied: boolean } => {
   if (multiple) {
     const current = (value as string[]) ?? [];
-    const defaultArray = (defaultValue as string[]) ?? [];
     const count = current.length;
 
-    const isSame = current.length === defaultArray.length &&
-      [...current].sort().every((val, idx) => val === [...defaultArray].sort()[idx]);
-
-    return {
-      text: `${count} filter${count === 1 ? '' : 's'} ${isSame ? 'applied' : 'selected'}`,
-      isApplied: isSame,
-    };
+    return `${count} filter${count === 1 ? '' : 's'} applied`;
   } else {
-    const isSame = value === defaultValue;
-    return {
-      text: isSame ? renderSelectedValue(value, options) as string : '1 filter selected',
-      isApplied: isSame,
-    };
+    return value === 'All' ? 'Any' : renderSelectedValue(value, options) as string;
   }
 };
 
@@ -328,6 +316,8 @@ const SelectList = ({
 
   const optionChosen = multiple && value ? value.length > 0 : !!value;
 
+  console.log(value, optionChosen);
+
   return (
     <div
       {...containerProps}
@@ -367,22 +357,13 @@ const SelectList = ({
           }}
         >
           {optionChosen && (() => {
-            const { text, isApplied } = getDisplayText(multiple, defaultValue, value, options);
             return (
               <span style={{ overflow: 'hidden', maxWidth: 'calc(100% - 30px)', padding: '8px 5px 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                {isApplied && (
-                  <span class="select-preact__checkmark"></span>
-                )}
-                {text}
+                <span class="select-preact__checkmark"></span>
+                {getDisplayText(multiple, value, options)}
               </span>
             );
           })()}
-          {!optionChosen && !multiple && (
-            <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
-              Any
-            </span>
-          )}
-
           <ChevronDownIcon
             width={20}
             style={{
@@ -419,7 +400,7 @@ const SelectList = ({
           <SelectProvider value={contextValue}>
             {!required && !multiple && (
               <CustomOption
-                value=''
+                value='All'
                 rootRef={listboxRef}
                 id={`${name}-empty`}
               >

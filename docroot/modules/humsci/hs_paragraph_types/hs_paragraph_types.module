@@ -143,6 +143,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
           continue;
         }
         $element = $field_widget_form['widget'][$key];
+
         if (
           empty($element['#paragraph_type']) ||
           !in_array($element['#paragraph_type'], ['hs_collection', 'hs_priv_collection']) ||
@@ -151,6 +152,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         ) {
           continue;
         }
+
         // Build title settings name for this component.
         $title_settings_name = '';
         foreach ($element['subform']['field_title_settings']['widget']['#field_parents'] as $delta) {
@@ -173,13 +175,50 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
           ],
         ];
 
+
         $element['subform']['field_title']['widget'][0]['value']['#states'] = [
           'required' => [$header_conditions],
           'visible' => [$header_conditions],
         ];
+
+        // Keep server-side validation by adding an element_validate callback
+        // instead of relying solely on #states for the required check.
+        $element['subform']['field_title']['widget'][0]['value']['#element_validate'][] = 'hs_paragraph_types_validate_collection_title';
+
         $field_widget_form['widget'][$key] = $element;
       }
       break;
+  }
+}
+
+/**
+ * Validation callback for collection title field.
+ */
+function hs_paragraph_types_validate_collection_title(&$element, FormStateInterface $form_state, &$form) {
+  $parents = $element['#parents'];
+
+  // Find 'field_title' in the parents array to locate the subform boundary,
+  // rather than relying on a magic slice offset that breaks if nesting changes.
+  $field_title_pos = array_search('field_title', $parents);
+
+  if ($field_title_pos === FALSE || $field_title_pos < 1) {
+    // Can't determine the subform path; skip validation.
+    return;
+  }
+
+  // Everything up to (but not including) 'field_title' is the subform path.
+  $subform_parents = array_slice($parents, 0, $field_title_pos);
+  $settings_parents = array_merge($subform_parents, ['field_title_settings', 0, 'value']);
+
+  $title_settings_value = $form_state->getValue($settings_parents);
+
+  $requires_title = in_array($title_settings_value ?? '', [
+    'collection_title_visible',
+    'collection_title_sr_only',
+  ]);
+
+  if ($requires_title && empty($element['#value'])) {
+    $form_state->setError($element, t('Title field is required.'));
   }
 }
 

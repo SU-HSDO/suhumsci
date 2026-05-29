@@ -225,6 +225,31 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
         $view_mode = $entity->get('field_hs_gallery_style')->value == 'slideshow' ? 'hs_gallery_slideshow' : 'default';
       }
       break;
+
+    case 'hs_postcard':
+      if (
+        !$entity->hasField('field_hs_postcard_layout') ||
+        !$entity->hasField('field_hs_postcard_vertical_style')
+      ) {
+        break;
+      }
+
+      $layout = $entity->get('field_hs_postcard_layout')->value;
+      $style = $entity->get('field_hs_postcard_vertical_style')->value;
+
+      $view_mode = $layout === 'horizontal' ? 'preview' : 'default';
+
+      // Base vertical cards view mode is 'default', but there are other
+      // possible options, based on $style value.
+      $alt_vertical_viewmodes = [
+        'stacked' => 'vertical_button_card',
+        'two_color' => 'token',
+      ];
+
+      if ($layout === 'vertical' && array_key_exists($style, $alt_vertical_viewmodes)) {
+        $view_mode = $alt_vertical_viewmodes[$style];
+      }
+      break;
   }
 }
 

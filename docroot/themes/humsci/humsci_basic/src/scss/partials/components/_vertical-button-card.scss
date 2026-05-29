@@ -3,22 +3,10 @@
 @use '../mixins/theme' as *;
 @use '../mixins/buttons' as *;
 
+$container-small: hb-calculate-rems(576px);
+
 .hb-vertical-button-card {
   position: relative;
-
-  .hb-card__graphics {
-    img {
-      width: 100%;
-    }
-  }
-
-  .hb-card__title:only-child {
-    margin-bottom: 0;
-  }
-
-  .field-hs-postcard-body {
-    margin-bottom: 0;
-  }
 
   .hs-button a {
     width: 100%;
@@ -26,47 +14,62 @@
     hyphens: auto;
     word-break: normal;
     overflow-wrap: anywhere;
-
-    &:hover,
-    &:focus,
-    &.is-focused {
-      background-color: color('primary-dark');
-      border-color: color('primary-dark');
-    }
   }
 
   @include hb-traditional {
     border: 2px solid color('secondary');
-    background-color: color('white', 'global');
 
-    .hb-card__content-wrapper {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
+    .hb-card__title,
+    .hb-card__description {
+      margin-block-end: hb-calculate-rems(20px);
 
-    .hb-card__title {
-      margin-bottom: hb-calculate-rems(16px);
+      @container card (width > #{$container-small}) {
+        margin-block-end: hb-calculate-rems(24px);
+      }
     }
 
     .hb-card__graphics {
-      padding: hb-calculate-rems(24px) hb-spacing-width('sm') 0;
+      padding: hb-calculate-rems(10px) hb-calculate-rems(10px) 0;
 
-      &,
-      .hb-raised-cards & {
-        margin-bottom: hb-calculate-rems(32px);
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(16px) hb-calculate-rems(16px) 0;
       }
     }
 
     .hb-card__content {
-      padding: hb-calculate-rems(32px) hb-spacing-width('sm');
+      padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
       flex-grow: 1;
 
-      &:has(.hs-button) {
-        padding-bottom: 0;
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(24px) hb-calculate-rems(32px) 0;
+      }
 
-        .hb-card__description {
-          margin-bottom: hb-calculate-rems(16px);
+      &:has(.hb-card__description) {
+        .hb-card__title {
+          margin-block-end: hb-calculate-rems(6px);
+
+          @container card (width > #{$container-small}) {
+            margin-block-end: hb-calculate-rems(6px);
+          }
+        }
+      }
+    }
+
+    &:has(.hb-card__graphics) {
+      .hb-card__content {
+        padding-block-start: hb-calculate-rems(16px);
+
+        @container card (width > #{$container-small}) {
+          padding-block-start: hb-calculate-rems(24px);
+        }
+      }
+
+      .hb-card__title,
+      .hb-card__description {
+        margin-block-end: hb-calculate-rems(16px);
+
+        @container card (width > #{$container-small}) {
+          margin-block-end: hb-calculate-rems(24px);
         }
       }
     }
@@ -75,8 +78,7 @@
 
       position: relative;
       margin-top: auto;
-      margin-left: hb-calculate-rems(-24px);
-      margin-right: hb-calculate-rems(-24px);
+      margin-inline: hb-calculate-rems(-20px);
 
       a {
         @include hb-secondary-button;
@@ -85,35 +87,52 @@
         border-top-width: 2px;
         width: 100%;
       }
-    }
 
-    &:has(.hb-card__graphics) {
-      .hb-card__content {
-        padding-top: 0;
+      @container card (width > #{$container-small}) {
+        margin-inline: hb-calculate-rems(-32px);
       }
     }
   }
 
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
+    background-color: transparent;
+
     .hb-card__graphics {
       &,
       .hb-raised-cards & {
-        padding: 0 hb-calculate-rems(36px);
-        margin-bottom: hb-calculate-rems(-40px);
+        padding: 0 hb-calculate-rems(20px);
+        margin-block-end: hb-calculate-rems(-48px);
+
+        @container card (width > #{$container-small}) {
+          padding-inline: hb-calculate-rems(32px);
+        }
       }
     }
 
     .hb-card__title {
-      color: color('secondary');
+      margin-block: hb-calculate-rems(2px) 0;
+
+      @container card (width > #{$container-small}) {
+        margin-block-start: hb-calculate-rems(6px);
+      }
     }
 
     .hb-card__content {
-      padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
-      border: 2px solid color('tertiary-highlight');
+      padding: hb-calculate-rems(24px);
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px)
         hb-calculate-rems(35px)
         color-mix(in srgb, color('black', 'global') 10%, transparent);
       background-color: color('white', 'global');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        background-color: color('primary-dark');
+      }
+
+
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(24px) hb-calculate-rems(32px) hb-calculate-rems(32px);
+      }
 
       .hb-raised-cards--uniform-height & {
         height: 100%;
@@ -121,64 +140,33 @@
         flex-direction: column;
         justify-content: flex-start;
       }
-
-      .hb-raised-cards & {
-        padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
-      }
-
-      // Update padding when card is in 4 columns.
-      .field-hs-collection-items.item-per-row--4 & {
-        padding: hb-calculate-rems(18px);
-      }
     }
 
     &:has(.hb-card__graphics) {
       .hb-card__content {
-        padding-top: hb-calculate-rems(62px);
-
-        .hb-raised-cards &,
-        .field-hs-collection-items.item-per-row--4 & {
-          padding-top: hb-calculate-rems(62px);
-        }
+        padding-top: hb-calculate-rems(64px);
       }
     }
 
-    .hb-card__content-wrapper {
-      .hb-raised-cards--uniform-height & {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-      }
-    }
-
-    &:has(.hb-card__description) {
-      .hb-card__title {
-        &,
-        .hb-raised-cards & {
-          margin-bottom: hb-calculate-rems(16px);
-        }
-      }
-    }
-
-    &:has(.hs-button) {
-      .hb-card__title {
-        &,
-        .hb-raised-cards,
-        &:only-child {
-          margin-bottom: hb-calculate-rems(24px);
-        }
-      }
-
-      .hb-card__description {
-        margin-bottom: hb-calculate-rems(24px);
-      }
+    .hb-card__description {
+      margin-block: hb-calculate-rems(8px) auto;
     }
 
     .hs-button a {
-      padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
-        hb-calculate-rems(6px);
-      background-color: color('primary');
       border-color: color('primary');
+      background-color: color('primary');
+      margin-block: hb-calculate-rems(24px) hb-calculate-rems(2px);
+
+      &:hover,
+      &:focus,
+      &.is-focused {
+        background-color: color('primary-dark');
+        border-color: color('primary-dark');
+      }
+
+      @container card (width > #{$container-small}) {
+        margin-block: hb-calculate-rems(20px) hb-calculate-rems(4px);
+      }
     }
   }
 }

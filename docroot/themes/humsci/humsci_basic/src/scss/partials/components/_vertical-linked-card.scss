@@ -6,11 +6,20 @@
 @use '../mixins/breakpoints' as *;
 @use '../mixins/icons' as *;
 @use '../mixins/text' as *;
+@use '../mixins/links' as *;
+
+$container-small: hb-calculate-rems(576px);
 
 .hb-vertical-linked-card {
+  container-type: inline-size;
+  container-name: card;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+
   @include hb-traditional {
-    --link-base-current-color: color('black', 'global');
-    --link-base-hover-current-color: color('gray-dark', 'global');
+    --link-base-current-color: #{color('black', 'global')};
+    --link-base-hover-current-color: #{color('gray-dark', 'global')};
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -27,197 +36,142 @@
   position: relative;
   background-color: transparent;
 
-  &:hover,
-  &:focus {
-    cursor: pointer;
+  @include hb-themes(('colorful', 'airy')) {
+    color: color('white', 'global');
   }
+}
+
+.hb-vertical-linked-card__img {
+  overflow: hidden;
 
   @include hb-themes(('colorful', 'airy')) {
-    // The margin-top matches the margin-top on both the title and image to prevent
-    // overlap issues.
-    // The margin-left matches the negative margin-left on the title to prevent
-    // overlap issues.
-    &:has(.hb-vertical-linked-card__img):has(.hb-vertical-linked-card__title),
-    &:has(.hb-vertical-linked-card__title) {
-      margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
+    margin-inline-start: hb-calculate-rems(12px);
+
+    @container card (width > #{$container-small}) {
+      margin-inline-start: hb-calculate-rems(40px);
     }
 
-    padding-bottom: hb-calculate-rems(28px);
-    color: color('white', 'global');
-
-    background-image: linear-gradient(
-      to bottom,
-      transparent,
-      transparent hb-calculate-rems(20px),
-      color('primary-dark') hb-calculate-rems(20px)
-    );
+    &:has(+ .hb-vertical-linked-card__title) {
+      margin-block-end: hb-calculate-rems(-28px);
+    }
   }
 
-  &__img {
-    overflow: hidden;
+  @include hb-traditional {
+    margin-inline: hb-calculate-rems(24px);
+  }
 
-    img {
-      width: 100%;
-      transition: hb-transition(transform);
-
-      .hb-vertical-linked-card:hover &,
-      .hb-vertical-linked-card:focus &,
-      .hb-vertical-linked-card.is-focused & {
-        transform: scale($hb-image-hover-scale);
-      }
-    }
+  img {
+    width: 100%;
+    transition: hb-transition(transform);
   }
 
   .hb-media-image {
     margin: 0;
   }
+}
 
-  &__title {
-    // Without this the negative margins on the title cause it to lay under the
-    // image. Adding position relative makes sure everything is layered correctly.
-    position: relative;
-    hyphens: auto;
-    word-break: normal;
-    overflow-wrap: anywhere;
-    transition: hb-transition(background-color);
+.hb-vertical-linked-card__title {
+  --link-base-current-color: #{color('white', 'global')};
+  --link-base-hover-current-color: #{color('white', 'global')};
 
-    @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px);
-      margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
-      background-color: color('secondary');
+  position: relative;
+  hyphens: auto;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  transition: hb-transition(background-color);
 
-      // Update padding when card is in 4 columns.
-      .field-hs-collection-items.item-per-row--4 & {
-        padding: hb-calculate-rems(18px);
-      }
+  @include hb-themes(('colorful', 'airy')) {
+    padding: hb-calculate-rems(16px);
+    margin-block: 0;
+    margin-inline-end: hb-calculate-rems(10px);
+    background-color: color('secondary');
 
-      @include grid-media-min('sm') {
-        margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0
-          hb-calculate-rems(-31px);
-      }
-    }
-
-    @include hb-traditional {
-      padding: hb-calculate-rems(16px);
-      color: color('white', 'global');
-      background-color: color('primary');
-      margin: 0;
-    }
-
-    .hb-vertical-linked-card:hover &,
-    .hb-vertical-linked-card:focus &,
-    .hb-vertical-linked-card.is-focused & {
-      @include hb-themes(('colorful', 'airy')) {
-        background-color: color('secondary-darken-12');
-      }
-
-      @include hb-traditional {
-        background-color: color('primary-dark');
-        text-decoration: underline;
-      }
-    }
-  }
-
-  &__title__link {
     &::after {
       content: '';
-      display: inline-block;
-      position: relative;
-      height: hb-calculate-rems(14px);
+      display: block;
+      position: absolute;
+      height: calc(100% - #{hb-calculate-rems(28px)});
+      width: calc(100% - #{hb-calculate-rems(2px)});
+      top: hb-calculate-rems(28px);
+      right: hb-calculate-rems(-10px);
+      z-index: -1;
+      background-color: color('primary-dark');
 
-      @include hb-icon-link-arrow('white');
-
-      @include hb-themes(('airy', 'colorful')) {
-        width: hb-calculate-rems(27.5px);
-        mask-size: 60%;
-      }
-
-      @include hb-traditional {
-        width: hb-calculate-rems(33px);
-        mask-size: auto;
-      }
-
-      mask-position: 6px;
-      transition: hb-transition(mask-position);
-    }
-
-    .hb-vertical-linked-card:hover &::after,
-    .hb-vertical-linked-card:focus &::after,
-    .hb-vertical-linked-card.is-focused &::after {
-      mask-position: 12px;
-    }
-  }
-
-  // Styles when there's a video on a card.
-  &:has(.hb-video-lazy:hover),
-  &:has(.hb-video-lazy:focus-within) {
-    .hb-vertical-linked-card__title {
-      @include hb-themes(('colorful', 'airy')) {
-        background-color: color('secondary');
-      }
-
-      @include hb-traditional {
-        background-color: color('primary');
-        text-decoration: none;
+      @container card (width > #{$container-small}) {
+        width: calc(100% - #{hb-calculate-rems(16px)});
+        right: hb-calculate-rems(-24px);
       }
     }
 
-    .hb-vertical-linked-card__title__link::after {
-      mask-position: 6px;
+    &:not(:has(+ .hb-vertical-linked-card__description))::after {
+      height: calc(100% - #{hb-calculate-rems(8px)});
+    }
+
+    @container card (width > #{$container-small}) {
+      padding: hb-calculate-rems(16px) hb-calculate-rems(20px)
+        hb-calculate-rems(16px) hb-calculate-rems(24px);
+      margin-inline-end: hb-calculate-rems(24px);
     }
   }
 
-  &__title__link,
-  &__title__link.ext {
+  @include hb-traditional {
+    padding: hb-calculate-rems(12px) hb-calculate-rems(16px);
     color: color('white', 'global');
-    text-decoration: none;
+    background-color: color('primary');
+    margin: 0;
 
-    &:hover,
-    &:focus {
-      color: color('white', 'global');
-      background-image: none;
+    @container card (width > #{$container-small}) {
+      padding: hb-calculate-rems(16px) hb-calculate-rems(20px);
+    }
+  }
+}
+
+.hb-vertical-linked-card__title__link {
+  color: var(--link-base-current-color);
+  text-decoration-thickness: 5%;
+  text-underline-offset: 10%;
+
+  &:hover, &:focus {
+    text-decoration-thickness: 9%;
+  }
+
+  &:focus-visible {
+    outline-color: color('white', 'global');
+  }
+}
+
+
+.hb-vertical-linked-card__description {
+  @include hb-description;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  background-color: color('primary-dark');
+
+  @include hb-themes(('airy', 'colorful')) {
+    padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
+      hb-calculate-rems(24px);
+    margin-inline-start: hb-calculate-rems(12px);
+
+    @container card (width > #{$container-small}) {
+      padding: hb-calculate-rems(16px) hb-calculate-rems(32px)
+        hb-calculate-rems(32px);
+      margin-inline-start: hb-calculate-rems(40px);
+    }
+
+    // For those scenarios that a breakout box or hs-well style is being used in a WYSIWYG.
+    .hs-well,
+    .hs-breakout-box {
+      color: color('black', 'global');
     }
   }
 
-  &__description {
-    @include hb-description;
-    word-break: normal;
-    overflow-wrap: anywhere;
-    flex: 1 1 auto;
+  @include hb-traditional {
+    margin-inline: hb-calculate-rems(10px);
+    padding: hb-calculate-rems(12px) hb-calculate-rems(20px);
+    background-color: color('tertiary-reversed');
 
-    @include hb-themes(('airy', 'colorful')) {
-      padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
-
-      // Update padding when card is in 4 columns.
-      .field-hs-collection-items.item-per-row--4 & {
-        padding: hb-calculate-rems(18px) hb-calculate-rems(18px) 0;
-      }
-
-      // For those scenarios that a breakout box or hs-well style is being used in a WYSIWYG.
-      .hs-well,
-      .hs-breakout-box {
-        color: color('black', 'global');
-      }
-    }
-
-    @include hb-traditional {
-      background-color: color('tertiary-reversed');
-      padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
-        hb-calculate-rems(28px);
-    }
-
-    @include grid-media-min('sm') {
-      font-size: hb-calculate-rems(18px);
-    }
-
-    .field-hs-postcard-body {
-      margin-bottom: 0;
-    }
-
-    a {
-      @include hb-themes(('colorful', 'airy')) {
-        background-image: none;
-      }
+    @container card (width > #{$container-small}) {
+      padding: hb-calculate-rems(16px) hb-calculate-rems(32px);
     }
   }
 }
@@ -225,17 +179,57 @@
 // .hb-stretch-vertical-linked-cards helper class.
 .hb-stretch-vertical-linked-cards {
   .hb-vertical-linked-card {
-    display: flex;
-    flex-flow: column nowrap;
+    height: 100%;
   }
 
-  .hb-grid__item {
-    display: flex;
-    align-items: flex-start;
+  .hb-vertical-linked-card__description {
+    flex-grow: 1;
+  }
+}
 
-    .hb-vertical-linked-card {
-      align-self: stretch;
-      width: 100%;
+// Hover styles for vertical linked card.
+.hb-vertical-linked-card--linked {
+  &:hover,
+  &:focus,
+  &.is-focused {
+    cursor: pointer;
+
+    .hb-vertical-linked-card__title {
+      @include hb-themes(('colorful', 'airy')) {
+        background-color: color('secondary-darken-12');
+      }
+
+      @include hb-traditional {
+        background-color: color('primary-dark');
+      }
+    }
+
+    .hb-vertical-linked-card__title__link {
+      text-decoration-thickness: 9%;
+    }
+
+    .hb-vertical-linked-card__img {
+      img {
+        transform: scale($hb-image-hover-scale);
+      }
+    }
+
+    // Styles when there's a video on a card.
+    &:has(.hb-video-lazy:hover),
+    &:has(.hb-video-lazy:focus-within) {
+      .hb-vertical-linked-card__title {
+        @include hb-themes(('colorful', 'airy')) {
+          background-color: color('secondary');
+        }
+
+        @include hb-traditional {
+          background-color: color('primary');
+        }
+      }
+
+      .hb-vertical-linked-card__title__link::after {
+        transform: translateX(0);
+      }
     }
   }
 }

@@ -372,15 +372,6 @@ $container-small: 576px;
       @container spotlight (width > #{$container-sidebar}) {
         height: 100%;
       }
-
-      &.hb-spotlight--image-default {
-        @include hb-themes(('colorful', 'airy')) {
-          @container spotlight (width > #{$container-sidebar}) {
-            width: 102%;
-            margin-inline: -2% 0;
-          }
-        }
-      }
     }
 
     img {
@@ -389,6 +380,18 @@ $container-small: 576px;
 
       @container spotlight (width > #{$container-sidebar}) {
         height: 100%;
+      }
+    }
+  }
+
+  // Expanded variant - Image default.
+  .hb-spotlight--expanded.hb-spotlight--image-default & {
+    article.hb-media-image {
+      @include hb-themes(('colorful', 'airy')) {
+        @container spotlight (width > #{$container-sidebar}) {
+          width: 102%;
+          margin-inline: -2% 0;
+        }
       }
     }
   }

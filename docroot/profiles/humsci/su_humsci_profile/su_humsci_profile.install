@@ -75,3 +75,16 @@ function su_humsci_profile_update_9761(): string {
   }
   return t('config_filter module was already uninstalled.');
 }
+
+/**
+ * Uninstall the hs_page_reports module.
+ */
+function su_humsci_profile_update_9762(): string {
+  $module = 'hs_page_reports';
+  if (\Drupal::moduleHandler()->moduleExists($module)) {
+    \Drupal::service('module_installer')->uninstall([$module]);
+    return t('Uninstalled the hs_page_reports module.');
+  }
+  return t('hs_page_reports module was already uninstalled.');
+}
+

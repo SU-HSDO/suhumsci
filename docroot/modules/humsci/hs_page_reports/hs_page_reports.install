@@ -45,3 +45,29 @@ function hs_page_reports_schema() {
 
   return $schema;
 }
+
+/**
+ * Implements hook_uninstall().
+ */
+function hs_page_reports_uninstall() {
+  $permissions = [
+    'view 404 reports',
+    'view 403 reports',
+    'rebuild cache access',
+  ];
+
+  $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+  /** @var \Drupal\user\Entity\Role $role */
+  foreach ($roles as $role) {
+    $changed = FALSE;
+    foreach ($permissions as $permission) {
+      if ($role->hasPermission($permission)) {
+        $role->revokePermission($permission);
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $role->save();
+    }
+  }
+}

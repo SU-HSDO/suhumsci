@@ -3,17 +3,21 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_postcard.field_hs_postcard_alignment
     - field.field.paragraph.hs_postcard.field_hs_postcard_body
     - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
+    - field.field.paragraph.hs_postcard.field_hs_postcard_layout
     - field.field.paragraph.hs_postcard.field_hs_postcard_link
     - field.field.paragraph.hs_postcard.field_hs_postcard_title
+    - field.field.paragraph.hs_postcard.field_hs_postcard_vertical_style
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - allowed_formats
     - linkit
     - maxlength
     - media_library
+    - style_selector
     - text
 _core:
   default_config_hash: UysLzDvqJYQV5qn6Jc5j3y3Mqf9g8r0XAlQJ4o0SV2U
@@ -22,6 +26,23 @@ targetEntityType: paragraph
 bundle: hs_postcard
 mode: default
 content:
+  field_hs_postcard_alignment:
+    type: style_selector_compact_widget
+    weight: 6
+    region: content
+    settings:
+      type: round
+      size: default
+      advanced:
+        color_prop: background-color
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: true
+          check_icon: true
+          empty_icon: true
+          text_icon: false
+    third_party_settings: {  }
   field_hs_postcard_body:
     type: text_textarea
     weight: 2
@@ -45,6 +66,23 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
+  field_hs_postcard_layout:
+    type: style_selector_compact_widget
+    weight: 4
+    region: content
+    settings:
+      type: round
+      size: default
+      advanced:
+        color_prop: background-color
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: true
+          check_icon: true
+          empty_icon: true
+          text_icon: false
+    third_party_settings: {  }
   field_hs_postcard_link:
     type: linkit
     weight: 3
@@ -65,6 +103,23 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_hs_postcard_vertical_style:
+    type: style_selector_compact_widget
+    weight: 5
+    region: content
+    settings:
+      type: round
+      size: default
+      advanced:
+        color_prop: background-color
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: true
+          check_icon: true
+          empty_icon: true
+          text_icon: false
     third_party_settings: {  }
 hidden:
   created: true

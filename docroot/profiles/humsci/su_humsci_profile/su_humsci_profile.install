@@ -10,7 +10,7 @@ use Drupal\Core\DrupalKernel;
 /**
  * Implements hook_requirements().
  */
-function su_humsci_profile_requirements($phase) {
+function su_humsci_profile_requirements(mixed $phase) : array {
   $requirements = [];
   if ($phase == 'runtime') {
     $site_path = DrupalKernel::findSitePath(\Drupal::request());
@@ -29,28 +29,28 @@ function su_humsci_profile_requirements($phase) {
 /**
  * Implements hook_install_tasks().
  */
-function su_humsci_profile_install_tasks(&$install_state) {
+function su_humsci_profile_install_tasks(mixed &$install_state) : array {
   return ['su_humsci_profile_final_task' => []];
 }
 
 /**
  * Final profile installation task.
  */
-function su_humsci_profile_final_task() {
+function su_humsci_profile_final_task() : void {
   \Drupal::service('su_humsci_profile.post_install')->runTasks();
 }
 
 /**
  * Implements hook_update_last_removed().
  */
-function su_humsci_profile_update_last_removed() {
+function su_humsci_profile_update_last_removed() : int {
   return 9758;
 }
 
 /**
  * Delete field_validation ruleset.
  */
-function su_humsci_profile_update_9759() {
+function su_humsci_profile_update_9759() : string {
   $field_validation_rule = \Drupal::configFactory()->getEditable('field_validation.rule_set.config_pages_localist_events');
   $field_validation_rule->delete();
   return t('Deleted field_validation ruleset.');
@@ -59,7 +59,7 @@ function su_humsci_profile_update_9759() {
 /**
  * Uninstall the field_validation module.
  */
-function su_humsci_profile_update_9760() {
+function su_humsci_profile_update_9760() : string {
   \Drupal::service('module_installer')->uninstall(['field_validation']);
   return t('Uninstalled the field_validation module.');
 }
@@ -77,9 +77,38 @@ function su_humsci_profile_update_9761(): string {
 }
 
 /**
+ * Remove permissions related to hs_page_reports module.
+ */
+function su_humsci_profile_update_11000(): string {
+  $permissions = [
+    'view 404 reports',
+    'view 403 reports',
+    'rebuild cache access',
+  ];
+
+  $roles_changed = 0;
+  $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+  /** @var \Drupal\user\Entity\Role $role */
+  foreach ($roles as $role) {
+    $changed = FALSE;
+    foreach ($permissions as $permission) {
+      if ($role->hasPermission($permission)) {
+        $role->revokePermission($permission);
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $roles_changed++;
+      $role->save();
+    }
+  }
+  return t('Revoked hs_page_reports permissions from @roles_changed roles.', ['@roles_changed' => $roles_changed]);
+}
+
+/**
  * Uninstall the hs_page_reports module.
  */
-function su_humsci_profile_update_9762(): string {
+function su_humsci_profile_update_11001(): string {
   $module = 'hs_page_reports';
   if (\Drupal::moduleHandler()->moduleExists($module)) {
     \Drupal::service('module_installer')->uninstall([$module]);
@@ -87,4 +116,3 @@ function su_humsci_profile_update_9762(): string {
   }
   return t('hs_page_reports module was already uninstalled.');
 }
-

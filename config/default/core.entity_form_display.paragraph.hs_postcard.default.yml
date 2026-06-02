@@ -14,6 +14,7 @@ dependencies:
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - allowed_formats
+    - conditional_fields
     - linkit
     - maxlength
     - media_library
@@ -42,7 +43,26 @@ content:
           check_icon: true
           empty_icon: true
           text_icon: false
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        1307736b-c392-43c5-9179-493ce35be541:
+          entity_type: paragraph
+          bundle: hs_postcard
+          dependee: field_hs_postcard_layout
+          settings:
+            state: visible
+            reset: false
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: horizontal
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_hs_postcard_body:
     type: text_textarea
     weight: 2
@@ -120,7 +140,26 @@ content:
           check_icon: true
           empty_icon: true
           text_icon: false
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        e5808d1c-a34b-4af1-aab5-a2f2177ff549:
+          entity_type: paragraph
+          bundle: hs_postcard
+          dependee: field_hs_postcard_layout
+          settings:
+            state: visible
+            reset: false
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: vertical
+            effect: show
+            effect_options: {  }
+            selector: ''
 hidden:
   created: true
   field_hs_postcard_display: true

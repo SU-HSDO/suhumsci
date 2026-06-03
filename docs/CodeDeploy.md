@@ -88,7 +88,7 @@ composer install
 - Update the PR description with release notes if applicable.
 - Review changes and confirm SEMVER alignment.
 
-:warning: **Double check the PR label!** The label must be correct (`major`, `minor`, or `patch`) — GitHub Actions will not trigger without it.
+> **Warning:** Double-check the PR label. The label must be correct (`major`, `minor`, or `patch`) — GitHub Actions will not trigger without it.
 
 ### Merge the Release PR
 - Wait for all GitHub Actions tests to pass.
@@ -157,17 +157,17 @@ After confirming the automation, generate a summary of updated dependencies:
 ### Notify Teams of Release
 Announce the new release in relevant Slack channels:
 
-- **Client channel** (e.g., `#hs-sws`):
-	> :launch1: A new 12.1.1 release has been created. The deployment to production will [begin momentarily / take place later tonight].
+- **Client channel:**
+	> A new 12.1.1 release has been created. The deployment to production will [begin momentarily / take place later tonight].
 
-- **Internal developer channel** (e.g., `#fourkitchens-sws-hs`):
-	> :version: A new 12.1.1 release was created for suhumsci. The deployment to production will [take place momentarily / take place later tonight after hours]. Use the `<major>.x` branch as normal.
+- **Internal developer channel:**
+	> A new 12.1.1 release was created for suhumsci. The deployment to production will [take place momentarily / take place later tonight after hours]. Use the `<major>.x` branch as normal.
 
-:information_source: The release has been created and the deployment artifact is ready, but production deployment has not yet occurred. The next step is to deploy to production, which is the true “point of no return”.
+> **Note:** The release has been created and the deployment artifact is ready, but production deployment has not yet occurred. The next step is to deploy to production, which is the true “point of no return”.
 
 ## Deploy the Release Code Artifact to Production
 
-:memo: **Remember:** Before deploying to production, take a moment to verify all steps and details above. If anything feels off, pause and ask for a second opinion.
+> **Note:** Before deploying to production, verify all steps and details above. If anything feels off, pause and ask for a second opinion.
 
 ### Prerequisites for Deployment
 - Open the application in the Acquia Cloud UI.
@@ -192,15 +192,15 @@ In Acquia Cloud UI:
 - If any sites failed, follow troubleshooting steps below.
   - If there is a new site provisioned in the release, the updates will run and "fail" on this site. This is not a failure, since there is no site installed yet.
 
-:confetti_ball: Congratulations on a successful deployment! Remember to share the good news in Slack and celebrate your accomplishment.
+Announce the successful deployment in relevant Slack channels.
 
 ## Troubleshooting a Deployment
 
-:information_source: If a site failed to update, investigate using the deployment task log in Acquia Cloud UI. This log indicates which sites failed to update at the bottom.
+> **Note:** If a site failed to update, investigate using the deployment task log in Acquia Cloud UI. This log indicates which sites failed to update at the bottom.
 
-:handshake: For major failures or critical troubleshooting, reach out to another developer or senior engineer. Collaboration is key, and no one is expected to solve production issues alone.
+For major failures or critical troubleshooting, reach out to another developer or senior engineer. No one is expected to solve production issues alone.
 
-:bulb: **Note:** If a new site is provisioned in the release, it may show as "failed" during updates because the site is not yet installed. This is not a failure and can be ignored.
+> **Note:** If a new site is provisioned in the release, it may show as "failed" during updates because the site is not yet installed. This is not a failure and can be ignored.
 
 ### Manual Site Updates
 
@@ -217,7 +217,7 @@ If a site failed to update:
 
 ## Rolling Back a Deployment
 
-:bulb: **Tip:** Consult with another developer or senior engineer before proceeding with a rollback. Rollbacks are rare and should be a shared decision. A hotfix or fixing issues in place is usually preferred.
+> **Tip:** Consult with another developer or senior engineer before proceeding with a rollback. Rollbacks are rare and should be a shared decision. A hotfix or fixing issues in place is usually preferred.
 
 To rollback a deployment:
 1. Deploy the previous code artifact to production (following the deployment steps above).

@@ -12,6 +12,7 @@ dependencies:
     - node.type.hs_event
     - node.type.hs_event_series
   module:
+    - better_exposed_filters
     - node
     - smart_date
     - stanford_media
@@ -91,7 +92,7 @@ display:
             view_mode: responsive_lazy
             link: true
             image_style: hs_medium_rectangle_360x250
-            remove_alt: 0
+            remove_alt: false
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -639,7 +640,7 @@ display:
             offset_label: Offset
           quantity: 9
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Apply
           reset_button: true
@@ -648,6 +649,22 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: true
+              auto_submit_sort_only: false
+              autosubmit_breakpoint: ''
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 300
+              autosubmit_textfield_minimum_length: 3
+              autosubmit_hide: false
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
       access:
         type: perm
         options:
@@ -866,7 +883,10 @@ display:
       use_ajax: true
       header: {  }
       footer: {  }
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
+          exclude_args: ''
     cache_metadata:
       max-age: -1
       contexts:
@@ -1592,7 +1612,10 @@ display:
         filters: false
         filter_groups: false
       display_description: ''
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
+          exclude_args: ''
       block_hide_empty: true
     cache_metadata:
       max-age: -1
@@ -1977,7 +2000,10 @@ display:
         filters: false
         filter_groups: false
       display_description: ''
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
+          exclude_args: ''
     cache_metadata:
       max-age: -1
       contexts:
@@ -2580,7 +2606,10 @@ display:
         fields: false
       css_class: ''
       display_description: ''
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
+          exclude_args: ''
       block_hide_empty: true
     cache_metadata:
       max-age: -1

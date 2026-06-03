@@ -15,6 +15,7 @@ dependencies:
     - node.type.hs_course
     - taxonomy.vocabulary.hs_course_tags
   module:
+    - better_exposed_filters
     - datetime
     - hs_entities
     - hs_field_helpers
@@ -363,7 +364,7 @@ display:
         options:
           offset: 0
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Apply
           reset_button: true
@@ -372,6 +373,90 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: true
+              auto_submit_sort_only: false
+              autosubmit_breakpoint: ''
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 300
+              autosubmit_textfield_minimum_length: 3
+              autosubmit_hide: false
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              title:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: false
+                  field_classes: ''
+                options_show_only_used: false
+                options_show_only_used_filtered: false
+                options_hide_when_empty: false
+                options_show_items_count: false
+              field_hs_course_section_quarter_value:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
+                  rewrite:
+                    filter_rewrite_values: ''
+                    filter_rewrite_values_key: false
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: false
+                  field_classes: ''
+                options_show_only_used: false
+                options_show_only_used_filtered: false
+                options_hide_when_empty: false
+                options_show_items_count: 0
+              title_1:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: false
+                  field_classes: ''
+                options_show_only_used: false
+                options_show_only_used_filtered: false
+                options_hide_when_empty: false
+                options_show_items_count: false
+              field_hs_course_tags_target_id:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
+                  placeholder_text: ''
+                  rewrite:
+                    filter_rewrite_values: ''
+                    filter_rewrite_values_key: false
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: false
+                  field_classes: ''
+                options_show_only_used: false
+                options_show_only_used_filtered: false
+                options_hide_when_empty: false
+                options_show_items_count: 0
       access:
         type: perm
         options:
@@ -832,7 +917,10 @@ display:
             format: basic_html
           tokenize: false
       footer: {  }
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
+          exclude_args: ''
     cache_metadata:
       max-age: -1
       contexts:
@@ -1835,7 +1923,10 @@ display:
         filter_groups: false
       display_description: ''
       exposed_block: false
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
+          exclude_args: ''
       block_category: 'Courses (Views)'
     cache_metadata:
       max-age: -1
@@ -2369,7 +2460,10 @@ display:
             value: "<div class=\"Cell\" role=\"columnheader\" id=\"a1\">\r\n  Title\r\n</div>"
             format: basic_html
           tokenize: false
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
+          exclude_args: ''
     cache_metadata:
       max-age: -1
       contexts:
@@ -3536,7 +3630,10 @@ display:
         filter_groups: false
       display_description: ''
       exposed_block: false
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
+          exclude_args: ''
     cache_metadata:
       max-age: -1
       contexts:

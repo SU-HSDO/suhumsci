@@ -10,6 +10,8 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\hs_entities\HsEntityInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_ENTITY_TYPE_view_alter().
@@ -114,4 +116,44 @@ function hs_events_cron() {
   // be auto-unpublished and then unpublish them.
   $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish_events');
   $auto_unpublish_service->unpublishPastEvents();
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function hs_events_views_query_alter(ViewExecutable $view, QueryPluginBase $query): void {
+  // Restrict the Duplicate Events admin view to events that share both their
+  // title and start date with at least one other published event.
+  if ($view->id() !== 'hs_default_duplicate_events') {
+    return;
+  }
+
+  // Build a correlated subquery returning nids whose (title, start_date)
+  // tuple appears more than once among published hs_event nodes.
+  $outer = \Drupal::database()->select('node_field_data', 'd_nfd');
+  $outer->innerJoin(
+    'node__field_hs_event_date',
+    'd_date',
+    'd_date.entity_id = d_nfd.nid AND d_date.deleted = 0'
+  );
+  $outer->addField('d_nfd', 'nid');
+  $outer->where(
+    "(d_nfd.title, d_date.field_hs_event_date_value) IN (
+       SELECT sub_nfd.title, sub_date.field_hs_event_date_value
+       FROM {node_field_data} sub_nfd
+       INNER JOIN {node__field_hs_event_date} sub_date
+         ON sub_date.entity_id = sub_nfd.nid AND sub_date.deleted = 0
+       WHERE sub_nfd.type = :type AND sub_nfd.status = 1
+       GROUP BY sub_nfd.title, sub_date.field_hs_event_date_value
+       HAVING COUNT(sub_nfd.nid) > 1
+     )",
+    [':type' => 'hs_event']
+  );
+
+  /** @var \Drupal\views\Plugin\views\query\Sql $query */
+  $query->addWhereExpression(
+    0,
+    'node_field_data.nid IN (' . $outer . ')',
+    $outer->getArguments()
+  );
 }

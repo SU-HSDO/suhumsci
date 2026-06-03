@@ -25,12 +25,14 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Coding Standards](docs/CodingStandards.md) (PHPStan, PHPCS, etc.)
 - [Configuration Management](docs/Config.md)
 - [Development Requirements](docs/DevelopmentRequirements.md)
+- [Documentation Standards](docs/DocumentationStandards.md)
 
 ### Process Guides
 
 - [Release and Code Deployment](docs/CodeDeploy.md)
 - [Site Launch](docs/Launch.md)
 - [Provisioning a New Site](docs/NewSite.md)
+- [Copying a Site](docs/CopySite.md)
 - [Decommissioning and Deleting a Site](docs/DeleteSite.md)
 - [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
 - [Patching](docs/Patching.md)

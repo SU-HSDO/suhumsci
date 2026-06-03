@@ -2,6 +2,12 @@
 
 This document defines the standards for creating and updating documentation in this repository. It applies to `README.md` and everything in `docs/` (except `docs/Codeception.md` unless specifically requested). It is a living document — update it whenever conventions change.
 
+## Project Context
+
+- The primary audience for operational documentation is experienced Drupal developers on the H&S team
+- The primary operational stakeholders are the **H&S web team** — use this term when documentation refers to site owners, editors, or operational contacts (e.g., "Notify the H&S web team and/or site owner")
+- `DocumentationStandards.md` also serves as AI context for Claude Code in this repository — keep it accurate and up to date
+
 ## Language and Tone
 
 - Use clear, direct language targeted at experienced Drupal developers
@@ -85,6 +91,7 @@ This repository is public. Before committing documentation:
 - Do not link to the `develop` branch (retired); use `main` or the current `<major>.x` branch
 - When linking to a specific file in the GitHub repo, use the `main` branch unless the content is version-specific
 - Review links for accuracy when updating documentation — external links go stale between major upgrades
+- Every file added under `docs/` must be linked from `README.md` in the appropriate Documentation section before the PR is merged
 
 ## Branch and Version References
 
@@ -129,4 +136,5 @@ ADRs in `docs/architecture/decisions/` are **immutable historical records**:
 1. If a new development tool is required by the project, add it to `docs/DevelopmentRequirements.md`
 1. If a step is unclear or potentially missing, note it explicitly with a `> **Note:**` rather than guessing
 1. Review links for accuracy — external links go stale
+1. If a new file was added under `docs/`, confirm it is linked from `README.md` in the appropriate Documentation section
 1. Update this file whenever new documentation conventions are established

@@ -3,23 +3,55 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.hs_callout_box.field_hs_callout_box_align
+    - field.field.paragraph.hs_callout_box.field_hs_callout_align
+    - field.field.paragraph.hs_callout_box.field_hs_callout_background
     - field.field.paragraph.hs_callout_box.field_hs_callout_box_body
+    - field.field.paragraph.hs_callout_box.field_hs_callout_box_align
     - field.field.paragraph.hs_callout_box.field_hs_callout_style
     - paragraphs.paragraphs_type.hs_callout_box
   module:
+    - field_formatter_class
+    - style_selector
     - text
 id: paragraph.hs_callout_box.default
 targetEntityType: paragraph
 bundle: hs_callout_box
 mode: default
 content:
-  field_hs_callout_box_align:
-    type: options_select
-    weight: 1
+  field_hs_callout_align:
+    type: style_selector_tile_widget
+    weight: 2
     region: content
-    settings: {  }
-    third_party_settings: {  }
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+  field_hs_callout_background:
+    type: style_selector_tile_widget
+    weight: 4
+    region: content
+    settings:
+      size: default
+      advanced:
+        extra_classes: color-widget
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   field_hs_callout_box_body:
     type: text_textarea
     weight: 0
@@ -28,12 +60,8 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  field_hs_callout_style:
-    type: options_select
-    weight: 2
-    region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
   created: true
+  field_hs_callout_box_align: true
+  field_hs_callout_style: true
   status: true

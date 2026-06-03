@@ -424,7 +424,7 @@ const SelectList = ({
         </ul>
       </div>
       {name && (
-        <input ref={inputRef} name={name} type="hidden" value={value ?? ''} />
+        <input ref={inputRef} name={name} type="hidden" value={value ?? ''} disabled />
       )}
     </div>
   );

@@ -13,7 +13,8 @@
     );
     if (textInputs.some((input) => input.value.trim() !== '')) return true;
 
-    // Native <select> elements.
+    // Native <select> elements (including those managed by the Preact combobox,
+    // which keeps the native <select> in sync via option.selected).
     // For multi-selects, check whether *any* option is selected.
     // For single selects, skip the "All" / empty default.
     const selects = Array.from(form.querySelectorAll('select'));
@@ -24,17 +25,7 @@
         }
         return select.value !== '' && select.value !== 'All';
       })
-    )
-      return true;
-
-    // Hidden inputs written by the Preact combobox (e.g. value="Winter").
-    // These live inside .select-preact wrappers and are never empty when
-    // a selection is active — skip the ones whose value is blank or "All".
-    const hiddenInputs = Array.from(
-      form.querySelectorAll('.select-preact input[type="hidden"]'),
-    );
-    if (hiddenInputs.some((input) => input.value !== '' && input.value !== 'All'))
-      return true;
+    ) return true;
 
     // Checkboxes and radio buttons.
     const checkables = Array.from(

@@ -150,6 +150,17 @@ if (process.env.NODE_ENV === 'development') {
           contextClass = '.' + context.getAttribute('class').replace(/ /g, '.');
         } catch (e) {}
 
+        // Remove stale island instances left over from prior AJAX cycles.
+        // Without this, each AJAX re-attach accumulates extra <select> and
+        // hidden input elements in the DOM, polluting form serialization.
+        const selector = contextClass
+          ? `${contextClass} .select-preact`
+          : '.select-preact';
+        document.querySelectorAll(selector).forEach((wrapper) => {
+          const existing = wrapper.querySelector('combobox-select-list');
+          if (existing) existing.remove();
+        });
+
         const island = createIslandWebComponent(
           'combobox-select-list',
           FilterIsland,

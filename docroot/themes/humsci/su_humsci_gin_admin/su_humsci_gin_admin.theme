@@ -14,9 +14,19 @@ use Drupal\paragraphs\ParagraphInterface;
  */
 function su_humsci_gin_admin_form_alter(&$form, $form_state, $form_id) {
   // Adds the fe theme admin-preview library on flexible and private page forms.
-  if (preg_match('/node_hs_(basic|private)_page(_edit)?_form/', $form_id)) {
+  if (
+    preg_match('/node_hs_(basic|private)_page(_edit)?_form/', $form_id) ||
+    preg_match('/paragraph_\w+_entity_edit_form/', $form_id)
+  ) {
     $theme = \Drupal::config('system.theme')->get('default');
-    $form['#attached']['library'][] = $theme . '/admin-preview';
+    $library_discovery = \Drupal::service('library.discovery');
+    $libraries = ['admin-preview', 'admin-colors'];
+    foreach ($libraries as $library) {
+      if ($library_discovery->getLibraryByName($theme, $library)) {
+        $form['#attached']['library'][] = $theme . '/' . $library;
+      }
+    }
+    $form['#attached']['library'][] = 'su_humsci_gin_admin/style-selector-widgets';
   }
 }
 
@@ -86,6 +96,17 @@ function su_humsci_gin_admin_preprocess_html(&$variables, $hook) {
     $variables['#attached']['library'][] = 'su_humsci_gin_admin/su_humsci_dashboard';
     $variables['#attached']['library'][] = 'su_humsci_gin_admin/ajax-scroll-fix';
   }
+
+  // Add classes for theme and color pairing (used by component previews and
+  // style list widgets.)
+  $theme = \Drupal::config('system.theme')->get('default');
+  $color_pairing = theme_get_setting('theme_color_pairing', $theme);
+  $prefix = [
+    'humsci_traditional' => 'ht',
+    'humsci_colorful' => 'hc',
+  ];
+  $variables['html_attributes']->addClass(Html::cleanCssIdentifier('theme-' . $theme));
+  $variables['html_attributes']->addClass($prefix[$theme] . '-pairing-' . $color_pairing);
 }
 
 /**

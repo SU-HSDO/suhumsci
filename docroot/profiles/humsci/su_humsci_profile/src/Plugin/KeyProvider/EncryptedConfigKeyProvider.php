@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\encrypt\EncryptService;
 use Drupal\encrypt\Entity\EncryptionProfile;
-use Drupal\key\Exception\KeyValueNotSetException;
 use Drupal\key\KeyInterface;
 use Drupal\key\Plugin\KeyProvider\ConfigKeyProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,7 +65,7 @@ class EncryptedConfigKeyProvider extends ConfigKeyProvider {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $encryption_profiles = [];
-    /** @var Drupal\encrypt\Entity\EncryptionProfile $profile */
+    /** @var \Drupal\encrypt\Entity\EncryptionProfile $profile */
     foreach (EncryptionProfile::loadMultiple() as $profile) {
       $encryption_profiles[$profile->id()] = $profile->label();
     }
@@ -99,12 +98,7 @@ class EncryptedConfigKeyProvider extends ConfigKeyProvider {
     $encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile']);
     $this->configuration['key_value'] = $this->encryption->encrypt($key_value, $encryption_profile);
 
-    if (isset($this->configuration['key_value'])) {
-      return TRUE;
-    }
-    else {
-      throw new KeyValueNotSetException();
-    }
+    return TRUE;
   }
 
   /**
@@ -112,8 +106,8 @@ class EncryptedConfigKeyProvider extends ConfigKeyProvider {
    */
   public function calculateDependencies() {
     $dependencies = parent::calculateDependencies();
-    /** @var Drupal\encrypt\Entity\EncryptionProfile $encryption_profile */
     if ($encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile'])) {
+      /** @var \Drupal\encrypt\Entity\EncryptionProfile $encryption_profile */
       $dependencies['config'][] = $encryption_profile->getConfigDependencyName();
     }
     return $dependencies;

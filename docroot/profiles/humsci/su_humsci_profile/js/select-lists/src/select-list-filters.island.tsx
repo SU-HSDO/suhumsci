@@ -99,11 +99,16 @@ const FilterIsland = ({}) => {
       option.getAttribute('value'),
     );
 
-    if (value.length === allValues.length) {
-      setSelectedValues(allValues);
-    } else {
-      setSelectedValues(value);
-    }
+    const nextValues = value.length === allValues.length ? allValues : value;
+
+    // Set the .selected property on each option (not just the attribute)
+    Array.from(originalSelect.options).forEach((option) => {
+      option.selected = nextValues.includes(option.getAttribute('value'));
+    });
+
+    originalSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+    setSelectedValues(nextValues);
   };
 
   return (

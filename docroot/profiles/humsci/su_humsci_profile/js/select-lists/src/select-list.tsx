@@ -316,8 +316,6 @@ const SelectList = ({
 
   const optionChosen = multiple && value ? value.length > 0 : !!value;
 
-  console.log(value, optionChosen);
-
   return (
     <div
       {...containerProps}

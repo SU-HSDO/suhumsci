@@ -63,16 +63,19 @@ final class HsSqlQueryDrushCommands extends DrushCommands {
   #[CLI\Argument(name: 'query', description: 'A read-only SQL query to run (SELECT, SHOW, DESCRIBE, EXPLAIN).')]
   #[CLI\Argument(name: 'env', description: 'Target environment: local, dev, stage, or prod.')]
   #[CLI\Option(name: 'multisites', description: 'Comma-separated list of site machine names to query. Defaults to all sites in drush.yml.')]
-  #[CLI\Option(name: 'format', description: 'Output format: table, raw, or json.')]
+  #[CLI\Option(name: 'format', description: 'Output format: table, raw, json, or sites-only.')]
+  #[CLI\Option(name: 'hide-empty', description: 'Omit sites that returned no rows from the report.')]
   #[CLI\Usage(name: 'drush humsci:sql:query "SELECT COUNT(*) FROM users" prod', description: 'Count users on every site in prod.')]
   #[CLI\Usage(name: 'drush hs:sqlq "SHOW TABLES" stage --multisites=aaai,biology', description: 'List tables for two sites on stage.')]
   #[CLI\Usage(name: 'drush hs:sqlq "SELECT name FROM users LIMIT 5" dev --format=json', description: 'Return results as JSON.')]
+  #[CLI\Usage(name: 'drush hs:sqlq "SELECT nid FROM node WHERE type=\'page\'" prod --format=sites-only --hide-empty', description: 'List only sites that have page nodes.')]
   public function sqlQuery(
     string $query,
     string $env,
     array $options = [
       'multisites' => InputOption::VALUE_OPTIONAL,
       'format' => 'table',
+      'hide-empty' => FALSE,
     ],
   ): void {
     // Validate environment.
@@ -86,9 +89,9 @@ final class HsSqlQueryDrushCommands extends DrushCommands {
 
     // Validate format.
     $format = $options['format'] ?? 'table';
-    if (!in_array($format, ['table', 'raw', 'json'], TRUE)) {
+    if (!in_array($format, ['table', 'raw', 'json', 'sites-only'], TRUE)) {
       throw new \InvalidArgumentException(sprintf(
-        'Invalid format "%s". Allowed values: table, raw, json.',
+        'Invalid format "%s". Allowed values: table, raw, json, sites-only.',
         $format
       ));
     }
@@ -139,7 +142,7 @@ final class HsSqlQueryDrushCommands extends DrushCommands {
 
     // Report results.
     $this->output()->writeln('');
-    $this->renderResults($results, $format);
+    $this->renderResults($results, $format, !empty($options['hide-empty']));
   }
 
   /**
@@ -279,10 +282,30 @@ final class HsSqlQueryDrushCommands extends DrushCommands {
    * @param array $results
    *   Results array, each entry: [site, env, success, output, error].
    * @param string $format
-   *   One of 'table', 'raw', or 'json'.
+   *   One of 'table', 'raw', 'json', or 'sites-only'.
+   * @param bool $hideEmpty
+   *   When TRUE, sites that succeeded but returned no output are omitted.
    */
-  protected function renderResults(array $results, string $format): void {
+  protected function renderResults(array $results, string $format, bool $hideEmpty = FALSE): void {
+    if ($hideEmpty) {
+      $results = array_filter(
+        $results,
+        fn(array $r) => !$r['success'] || $r['output'] !== ''
+      );
+    }
+
+    if (empty($results)) {
+      $this->io()->note('No results to display' . ($hideEmpty ? ' (all sites returned empty output)' : '') . '.');
+      return;
+    }
+
     switch ($format) {
+      case 'sites-only':
+        foreach ($results as $data) {
+          $this->output()->writeln($data['site']);
+        }
+        return;
+
       case 'json':
         $this->output()->writeln(json_encode(array_values($results), JSON_PRETTY_PRINT));
         return;

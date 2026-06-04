@@ -7,7 +7,10 @@ The platform uses a combination of contributed and custom modules to manage conf
 - Prevents import and export of configuration that should be editable on individual sites, such as blocks, displays, and site-specific settings (homepage, 404, analytics, permissions).
 - If a config is ignored and needs to be changed across all sites, changes must be made directly on the site or via a database update hook.
 - Exception rules allow selective import/export of configs even if a broad ignore pattern is present.
-- During config import, `config_ignore` uses the ignore rules from the codebase (`config_ignore.settings.yml` in your config export), not the current active config on the site.
+- By default, `config_ignore` reads its rules from sync storage — the `config_ignore.settings.yml` in your config export — for both imports and exports. On local environments with a config_split that patches `config_ignore` settings, this means the local split's overrides are applied during import but silently bypassed during export, which causes local-only ignore rules to have no effect on `drush config-export`.
+- To correct this, local settings files (`local.settings.php` and `default.local.settings.php`) set `$settings['config_ignore_storage'] = 'active'`. This tells `config_ignore` to read its rules from active configuration — including any config_split patches currently applied — for both imports and exports. As a result, locally-ignored configuration (such as role permissions) is correctly excluded from exports, and the local split's intent is fully respected in both directions.
+
+> **Note:** This setting also means that during a site sync to local, `config_ignore` uses the active configuration on the site at the time of the sync. On a fresh site sync, the local split is not yet imported, so the first import uses the production ignore rules from `config/default`. Once the local split is imported, all subsequent imports and exports use the local split's rules.
 
 ## config_split
 

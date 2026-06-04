@@ -175,7 +175,6 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
           ],
         ];
 
-
         $element['subform']['field_title']['widget'][0]['value']['#states'] = [
           'required' => [$header_conditions],
           'visible' => [$header_conditions],
@@ -197,20 +196,23 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
 function hs_paragraph_types_validate_collection_title(&$element, FormStateInterface $form_state, &$form) {
   $parents = $element['#parents'];
 
-  // Find 'field_title' in the parents array to locate the subform boundary,
-  // rather than relying on a magic slice offset that breaks if nesting changes.
+  if (!$parents) {
+    return;
+  }
+
+  // Find 'field_title' in the parents array to locate the subform boundary.
   $field_title_pos = array_search('field_title', $parents);
 
-  if ($field_title_pos === FALSE || $field_title_pos < 1) {
+  if (!$field_title_pos) {
     // Can't determine the subform path; skip validation.
     return;
   }
 
   // Everything up to (but not including) 'field_title' is the subform path.
   $subform_parents = array_slice($parents, 0, $field_title_pos);
-  $settings_parents = array_merge($subform_parents, ['field_title_settings', 0, 'value']);
+  $title_settings_path = array_merge($subform_parents, ['field_title_settings', 0, 'value']);
 
-  $title_settings_value = $form_state->getValue($settings_parents);
+  $title_settings_value = $form_state->getValue($title_settings_path);
 
   $requires_title = in_array($title_settings_value ?? '', [
     'collection_title_visible',

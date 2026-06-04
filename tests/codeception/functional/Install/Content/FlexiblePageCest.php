@@ -78,8 +78,10 @@ class FlexiblePageCest {
     $I->cantSeeElement('.hs-duplicated');
     $I->click('Toggle Actions', '.paragraph-type--hs-postcard');
     $I->click('Duplicate', '.paragraph-type--hs-postcard');
-    $I->waitForText('Title', 30, '.hs-duplicated');
-    $I->canSeeInField('Title', $card_title);
+    // Wait for the duplicated paragraph to be visible.
+    $I->waitForElementVisible('.hs-duplicated', 10);
+    // Check if the duplicated paragraph has the same title as the original.
+    $I->canSeeInField('.hs-duplicated input[name$="[field_hs_postcard_title][0][value]"]', $card_title);
   }
 
   /**

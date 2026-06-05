@@ -30,7 +30,7 @@ switch (EnvironmentDetector::getAhEnv()) {
 
   default:
     $envs = array_filter(EnvironmentDetector::getEnvironments());
-    $env = key($envs);
+    $env = key($envs) ?? 'Local';
     $config['environment_indicator.indicator']['bg_color'] = '#086601';
     $config['environment_indicator.indicator']['fg_color'] = '#fff';
     $config['environment_indicator.indicator']['name'] = $env;

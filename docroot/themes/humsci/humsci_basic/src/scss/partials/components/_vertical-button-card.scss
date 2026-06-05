@@ -81,18 +81,28 @@
     }
 
     .hb-card__button.hs-button {
-
       position: relative;
       margin-top: auto;
       margin-left: hb-calculate-rems(-24px);
       margin-right: hb-calculate-rems(-24px);
 
-      a {
+      a,
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
         @include hb-secondary-button;
 
         border-width: 0;
         border-top-width: 2px;
         width: 100%;
+      }
+
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
+        margin-right: 0;
+
+        &::after {
+          display: none;
+        }
       }
     }
 
@@ -176,11 +186,23 @@
       }
     }
 
-    .hb-card__button.hs-button a {
-      padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
-        hb-calculate-rems(6px);
-      background-color: color('primary');
-      border-color: color('primary');
+    .hb-card__button.hs-button {
+      a {
+        padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
+          hb-calculate-rems(6px);
+        background-color: color('primary');
+        border-color: color('primary');
+      }
+
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
+        margin-right: 0;
+        color: color('white', 'global');
+
+        &::after {
+          display: none;
+        }
+      }
     }
   }
 }

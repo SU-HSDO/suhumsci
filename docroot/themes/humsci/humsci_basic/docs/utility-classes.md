@@ -87,25 +87,25 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 
 ### WYSIWYG Platform Wide Text Area Classes
 
-| Class                | Works in Views? |
-| -------------------- | :-------------: |
-| hs-font-splash       |       ✅        |
-| hs-font-lead         |       ✅        |
-| hs-short-line-length |       ✅        |
-| hs-caption           |       ✅        |
-| hs-credits           |       ✅        |
-| hs-button            |       ✅        |
-| hs-button--big       |       ✅        |
-| hs-secondary-button  |       ✅        |
-| hs-external-link     |       ✅        |
-| hs-private-link      |       ✅        |
-| hs-mailto-link       |       ✅        |
-| hs-emphasized-text   |       ✅        |
-| hs-more-link         |       ✅        |
-| hs-pdf-link          |       ❗️       |
-| hs-file-link         |       ❗️       |
-| hs-table--borderless |        -        |
-| hs-breakout-box      |       ✅        |
+| Class                           | Works in Views? |
+| --------------------            | :-------------: |
+| hs-font-splash                  |       ✅        |
+| hs-font-lead                    |       ✅        |
+| hs-short-line-length            |       ✅        |
+| hs-caption                      |       ✅        |
+| hs-credits                      |       ✅        |
+| hs-button                       |       ✅        |
+| hs-button--big                  |       ✅        |
+| hs-secondary-button             |       ✅        |
+| hs-external-link                |       ✅        |
+| hs-private-link                 |       ✅        |
+| ~hs-mailto-link~ **DEPRECATED** |        -        |
+| hs-emphasized-text              |       ✅        |
+| hs-more-link                    |       ✅        |
+| hs-pdf-link                     |       ❗️        |
+| hs-file-link                    |       ❗️        |
+| hs-table--borderless            |        -        |
+| hs-breakout-box                 |       ✅        |
 
 <br>
 

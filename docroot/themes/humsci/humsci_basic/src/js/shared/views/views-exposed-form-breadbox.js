@@ -1,7 +1,17 @@
 ((Drupal, once) => {
-  const getActiveFilters = (form) => Array.from(form.querySelectorAll('select[multiple]')).flatMap((select) => Array.from(select.options)
-    .filter((opt) => opt.selected)
-    .map((opt) => ({ select, option: opt })));
+  const getActiveFilters = (form) => Array.from(form.querySelectorAll('select')).flatMap((select) => {
+    if (select.multiple) {
+      return Array.from(select.options)
+        .filter((opt) => opt.selected)
+        .map((opt) => ({ select, option: opt }));
+    }
+    // Single select: only include if a real value is chosen.
+    const selected = select.options[select.selectedIndex];
+    if (!selected || selected.value === '' || selected.value === 'All') {
+      return [];
+    }
+    return [{ select, option: selected }];
+  });
 
   const updateBreadbox = (form, breadbox) => {
     breadbox.querySelectorAll('.breadbox__item').forEach((c) => c.remove());
@@ -14,19 +24,37 @@
       const item = document.createElement('button');
       item.type = 'button';
       item.className = 'breadbox__item';
-      item.setAttribute('aria-label', 'Remove filter:');
-      item.textContent = option.text;
+      item.setAttribute('aria-label', `Remove filter: ${option.text}`);
+
+      const label = document.createElement('span');
+      label.className = 'breadbox__label';
+      label.textContent = option.text;
+
+      item.appendChild(label);
 
       item.addEventListener('click', () => {
         const selectId = select.getAttribute('id');
-        const itemId = `${selectId}-preact-${option.value.replace(/\W+/g, '-')}`;
-        const listItem = document.getElementById(itemId);
 
-        if (listItem) {
-          listItem.click();
+        if (select.multiple) {
+          // Multi-select: click the matching Preact listbox item to deselect.
+          const itemId = `${selectId}-preact-${option.value.replace(/\W+/g, '-')}`;
+          const listItem = document.getElementById(itemId);
+          if (listItem) {
+            listItem.click();
+          } else {
+            option.selected = false;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+          }
         } else {
-          option.selected = false;
-          select.dispatchEvent(new Event('change', { bubbles: true }));
+          // Single select: click the "Any" / empty option in the Preact listbox.
+          const emptyItemId = `${selectId}-preact-empty`;
+          const emptyItem = document.getElementById(emptyItemId);
+          if (emptyItem) {
+            emptyItem.click();
+          } else {
+            select.value = 'All';
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+          }
         }
       });
 

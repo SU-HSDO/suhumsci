@@ -14,10 +14,6 @@ echo "=== Setting up web root ==="
 rm -rf /var/www/html
 ln -s /workspaces/suhumsci /var/www/html
 
-# Set file permissions for Drupal files directory
-chown -R www-data:www-data docroot/sites/default/files
-chmod -R 755 docroot/sites/default/files
-
 # Restart Apache with new configuration and document root
 apache2ctl restart
 
@@ -43,5 +39,9 @@ fi
 # Install default site only
 echo "=== Installing default site ==="
 drush sws:multisite:install -n --site=default
+
+# Set file permissions for Drupal files directory
+chown -R www-data:www-data docroot/sites/default/files
+chmod -R 755 docroot/sites/default/files
 
 echo "=== Installation complete ==="

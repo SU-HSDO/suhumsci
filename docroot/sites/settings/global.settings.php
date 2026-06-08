@@ -38,11 +38,6 @@ $additionalSettingsFiles = [
   DRUPAL_ROOT . '/../keys/secrets.settings.php',
 ];
 
-// Include Codespaces settings when in a Codespaces environment.
-if (getenv('CODESPACE_NAME')) {
-  $additionalSettingsFiles[] = __DIR__ . '/codespaces.settings.php';
-}
-
 foreach ($additionalSettingsFiles as $settingsFile) {
   if (file_exists($settingsFile)) {
     // phpcs:ignore

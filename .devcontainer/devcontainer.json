@@ -1,21 +1,7 @@
 {
-  "name": "suhumsci-codespaces",
+  "name": "HSDP Codespace",
   "dockerComposeFile": "docker-compose.yml",
   "service": "web",
-  "workspaceFolder": "/workspace",
-  "features": {
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {}
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-vscode.vscode-node-debug2",
-        "bmewburn.vscode-intellicode-ce",
-        "felixbecker.php-debug"
-      ]
-    }
-  },
   "forwardPorts": [80, 443],
   "portsAttributes": {
     "80": {
@@ -29,5 +15,37 @@
   },
   "onCreateCommand": "bash .devcontainer/on-create.sh",
   "postCreateCommand": "bash .devcontainer/post-create.sh",
-  "remoteUser": "root"
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "files.associations": {
+          "*.inc": "php",
+          "*.module": "php",
+          "*.install": "php",
+          "*.theme": "php",
+          "*.profile": "php",
+          "*.test": "php",
+          "*.php": "php",
+          "*.info": "ini"
+        },
+        "editor.rulers": [80, 120],
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "[php]": {
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true
+        },
+        "explorer.autoReveal": true,
+        "editor.quickSuggestions": {
+          "other": "off"
+        },
+        "remote.autoForwardPortsSource": "hybrid",
+        "workbench.startupEditor": "none"
+      },
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "mblode.twig-language-2"
+      ]
+    }
+  }
 }

@@ -7,10 +7,17 @@ const FilterIsland = ({}) => {
   const [originalSelect, setOriginalSelect] = useState(null);
   const [label, setLabel] = useState('');
   const [selectedValues, setSelectedValues] = useState([]);
+  const [autoSubmit, setAutoSubmit] = useState(false);
 
   useEffect(() => {
     setOriginalSelect(ref.current.parentNode.querySelector('select'));
     setLabel(ref.current.parentNode.querySelector('label').textContent);
+
+    // Detect whether the closest views exposed form has BEF auto-submit.
+    const form = ref.current.closest('form, .views-exposed-form');
+    setAutoSubmit(
+      !!(form && (form.hasAttribute('data-bef-auto-submit') || form.closest('[data-bef-auto-submit]')))
+    );
 
     // Add the same min width of the selector to parent.
     const parent = ref.current.parentNode;
@@ -130,6 +137,7 @@ const FilterIsland = ({}) => {
               ? selectedValues
               : undefined
           }
+          autoSubmit={autoSubmit}
         />
       )}
     </div>

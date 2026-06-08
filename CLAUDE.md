@@ -16,12 +16,11 @@ The project supports GitHub Codespaces for cloud-based development. Configuratio
 - `.devcontainer/on-create.sh` runs once on codespace creation (installs dependencies and site)
 - `.devcontainer/post-create.sh` runs after creation and displays access information
 - `.devcontainer/QUICKSTART.md` is the user guide (non-technical)
-- `docroot/sites/settings/codespaces.settings.php` contains Codespaces-specific Drupal settings
 - `docs/GithubCodespaces.md` is the developer guide
 
 When maintaining Codespaces support:
-- Codespaces settings are detected via the `CODESPACES` environment variable (set automatically by GitHub Codespaces) in `global.settings.php`
-- Database config is in `codespaces.settings.php` with host set to the MySQL service name
+- The SWS drush commands generate site-specific settings during `drush sws:multisite:settings`
+- The `.devcontainer/drush.yml` file configures the database host and name for the installation process
 - Update `.devcontainer/on-create.sh` if the site installation command changes
 - MySQL configuration is in `docker-compose.yml` (database name, user, password)
 - The `CODESPACE_NAME` environment variable is automatically set by GitHub Codespaces and used to construct the site URL in post-create.sh

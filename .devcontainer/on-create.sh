@@ -7,6 +7,9 @@ echo "=== Installing dependencies ==="
 # Install Composer dependencies
 composer install -n
 
+# Copy Codespaces drush configuration
+cp .devcontainer/drush.yml drush/local.drush.yml
+
 # Generate multisite settings
 drush sws:multisite:settings
 

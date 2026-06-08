@@ -75,6 +75,7 @@ This applies consistently: `<SITENAME>`, `<ISSUE_NUMBER>`, `<YYYYMMDD>`, `<MAJOR
 - **No internal Confluence, Atlassian, or Jira URLs** — this is a public repository
 - **No vendor-specific internal identifiers** (internal channel names, internal project keys, etc.)
 - **No credentials, tokens, API keys, or secrets** — always use `<PLACEHOLDER>` syntax in examples
+- **No hardcoded tool or library versions** - versions change frequently and make documentation stale. Reference the source of truth instead (composer.json, Dockerfile, .nvmrc, .devcontainer/devcontainer.json, etc.) or describe services generically ("the configured PHP version") without specific version numbers
 
 ## Security and Public Repo
 

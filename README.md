@@ -9,7 +9,7 @@ Note the following properties of this project:
 * Production release branch: `main`
 * Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-<SPRINT_NUMBER>`
 * Development branching convention: branch off the current major development branch
-* Local environment: DDEV, Lando or bare metal LAMP
+* Development environments: GitHub Codespaces, DDEV, Lando, or bare metal LAMP
 * Local drush alias: `@<SITE_ALIAS>.local`
 * Local site URL: `http://<SITE_ALIAS>.suhumsci.loc`
 
@@ -26,6 +26,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Configuration Management](docs/Config.md)
 - [Development Requirements](docs/DevelopmentRequirements.md)
 - [Documentation Standards](docs/DocumentationStandards.md)
+- [GitHub Codespaces](docs/GithubCodespaces.md)
 
 ### Process Guides
 
@@ -50,7 +51,14 @@ See [Development Requirements](docs/DevelopmentRequirements.md).
 
 ## Local Setup and Installation
 
-You can run the site on DDEV, Lando, or bare metal.
+You can run the site on GitHub Codespaces, DDEV, Lando, or bare metal.
+
+### Setup on GitHub Codespaces
+
+GitHub Codespaces provides a cloud-based development environment with all dependencies pre-installed. This is the fastest way to get started.
+
+* [Follow the Codespaces Quick Start guide](.devcontainer/QUICKSTART.md).
+* [Read the developer guide](docs/GithubCodespaces.md) for configuration and troubleshooting.
 
 ### Setup on DDEV or Lando
 * [Follow the DDEV instructions](.ddev/DDEV-README.md).

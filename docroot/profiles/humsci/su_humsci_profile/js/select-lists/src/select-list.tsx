@@ -34,21 +34,6 @@ const SelectedItem = styled.span`
   white-space: nowrap;
 `;
 
-const renderSelectedValue = (
-  value: SelectValue<string, boolean>,
-  options: SelectOptionDefinition<string>[],
-) => {
-  if (Array.isArray(value)) {
-    return value.map((item) => (
-      <SelectedItem key={item}>
-        {renderSelectedValue(item, options)}
-      </SelectedItem>
-    ));
-  }
-  const selectedOption = options.find((option) => option.value === value);
-  return selectedOption ? selectedOption.label : '';
-};
-
 const getDisplayText = (
   multiple: boolean,
   value: SelectValue<string, boolean>,
@@ -60,7 +45,7 @@ const getDisplayText = (
 
     return `${count} filter${count === 1 ? '' : 's'} applied`;
   } else {
-    return value === 'All' ? 'Any' : renderSelectedValue(value, options) as string;
+    return value === 'All' ? 'Any' : '1 filter applied';
   }
 };
 

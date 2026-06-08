@@ -80,6 +80,12 @@
             form.appendChild(breadbox);
           }
 
+          // Move Reset button into the breadbox row.
+          const resetBtn = form.querySelector('[data-drupal-selector^="edit-reset"]');
+          if (resetBtn) {
+            breadbox.appendChild(resetBtn);
+          }
+
           updateBreadbox(form, breadbox);
 
           form.addEventListener('change', () => updateBreadbox(form, breadbox));

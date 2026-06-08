@@ -14,9 +14,6 @@ echo "=== Setting up web root ==="
 rm -rf /var/www/html
 ln -s /workspaces/suhumsci /var/www/html
 
-# Restart Apache with new configuration and document root
-apache2ctl restart
-
 echo "=== Installing dependencies ==="
 
 # Install Composer dependencies

@@ -1,6 +1,8 @@
 {
   "name": "suhumsci-codespaces",
-  "image": "pookmish/drupal8ci:php8.3",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "web",
+  "workspaceFolder": "/workspace",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
@@ -14,7 +16,7 @@
       ]
     }
   },
-  "forwardPorts": [80, 443, 3306],
+  "forwardPorts": [80, 443],
   "portsAttributes": {
     "80": {
       "label": "Web",
@@ -23,13 +25,9 @@
     "443": {
       "label": "Web (HTTPS)",
       "onAutoForward": "notify"
-    },
-    "3306": {
-      "label": "MySQL",
-      "onAutoForward": "ignore"
     }
   },
-  "postCreateCommand": "bash .devcontainer/init-codespace.sh",
-  "postStartCommand": "service mysql start && apachectl start",
+  "onCreateCommand": "bash .devcontainer/on-create.sh",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "remoteUser": "root"
 }

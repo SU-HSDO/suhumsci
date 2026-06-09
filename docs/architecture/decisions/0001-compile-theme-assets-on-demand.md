@@ -4,6 +4,8 @@
 
 Accepted
 
+> **Note:** The BLT command references in the Consequences section below have been superseded by SWS Drush Commands (SWSDC). See [ADR 0002](0002-replace-blt-with-sws-drush-commands.md) for the replacement decision.
+
 ## Context
 To improve development workflows and increase efficiency, custom theme assets can be compiled on demand and through automation instead of as part of the development workflow. Additionally, compiled theme assets do not need to be committed to the repo.
 

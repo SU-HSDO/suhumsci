@@ -129,7 +129,7 @@ function hs_events_views_query_alter(ViewExecutable $view, QueryPluginBase $quer
   }
 
   // Build a correlated subquery returning nids whose (title, start_date)
-  // tuple appears more than once among published hs_event nodes.
+  // appears more than once among published hs_event nodes.
   $outer = \Drupal::database()->select('node_field_data', 'd_nfd');
   $outer->innerJoin(
     'node__field_hs_event_date',

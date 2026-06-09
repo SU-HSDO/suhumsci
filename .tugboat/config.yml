@@ -94,6 +94,8 @@ services:
         - drush @west.local cr
         - drush @west.local deploy
 
+        # Prevent puppeteer from downloading chrome, we don't need it here.
+        - export PUPPETEER_SKIP_DOWNLOAD=true
         # Build frontend assets.
         - npm run theme-build
 

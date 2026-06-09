@@ -51,14 +51,18 @@
         (wrapper) => {
           const form = wrapper.querySelector('form') ?? wrapper;
 
-          // Set initial visibility.
+          // Set initial visibility based on current field values (which reflect
+          // URL parameters on page load or after AJAX re-render).
           updateResetVisibility(form);
 
-          // React to any filter change or text input, including changes
-          // dispatched by the Preact combobox (it fires 'change' on the
-          // hidden native <select> after every selection).
-          form.addEventListener('change', () => updateResetVisibility(form));
-          form.addEventListener('input', () => updateResetVisibility(form));
+          // Only update Reset visibility live on change/input when the form has
+          // auto-submit enabled. On non-auto-submit forms, changing a filter
+          // does not update the results until the user explicitly submits —
+          // showing Reset before submission would be misleading.
+          if (wrapper.hasAttribute('data-bef-auto-submit')) {
+            form.addEventListener('change', () => updateResetVisibility(form));
+            form.addEventListener('input', () => updateResetVisibility(form));
+          }
         },
       );
     },

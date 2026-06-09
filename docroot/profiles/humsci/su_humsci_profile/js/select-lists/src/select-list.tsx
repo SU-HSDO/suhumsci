@@ -26,27 +26,42 @@ interface OptionProps {
   multiple?: boolean;
 }
 
-const SelectedItem = styled.span`
-  border: 1px solid #b6b1a9;
-  padding: 4px 8px;
-  margin-right: 5px;
-  border-radius: 4px;
-  white-space: nowrap;
-`;
+/** Returns the display label for a single option value, or empty string if not found. */
+const getOptionLabel = (
+  value: string,
+  options: SelectOptionDefinition<string>[],
+): string => options.find((o) => o.value === value)?.label ?? '';
 
-const getDisplayText = (
+/** Returns true if two string arrays contain the same values (order-independent). */
+const sameStringSet = (a: string[], b: string[]): boolean =>
+  a.length === b.length && [...a].sort().every((v, i) => v === [...b].sort()[i]);
+
+const getDisplayInfo = (
   multiple: boolean,
   value: SelectValue<string, boolean>,
-  options: SelectOptionDefinition<string>[]
-): { text: string; isApplied: boolean } => {
+  options: SelectOptionDefinition<string>[],
+  autoSubmit: boolean,
+  defaultValue?: SelectValue<string, boolean>,
+): DisplayInfo => {
   if (multiple) {
     const current = (value as string[]) ?? [];
+    const committed = (defaultValue as string[]) ?? [];
     const count = current.length;
-
-    return `${count} filter${count === 1 ? '' : 's'} applied`;
-  } else {
-    return value === 'All' ? 'Any' : '1 filter applied';
+    const isApplied = autoSubmit || sameStringSet(current, committed);
+    return {
+      text: `${count} filter${count === 1 ? '' : 's'} ${isApplied ? 'applied' : 'selected'}`,
+      isApplied,
+    };
   }
+
+  const singleValue = value as string;
+  const isApplied = autoSubmit || singleValue === (defaultValue as string);
+  return {
+    text: isApplied
+      ? (singleValue === 'All' ? 'Any' : getOptionLabel(singleValue, options))
+      : '1 filter selected',
+    isApplied,
+  };
 };
 
 const StyledOption = styled.li<{
@@ -229,6 +244,7 @@ interface Props {
   value?: SelectValue<string, boolean>;
   required?: boolean;
   name: string;
+  autoSubmit?: boolean;
 }
 
 const SelectList = ({
@@ -239,6 +255,7 @@ const SelectList = ({
   required,
   defaultValue,
   name,
+  autoSubmit = true,
   ...props
 }: Props) => {
   const labelId = name;
@@ -340,10 +357,12 @@ const SelectList = ({
           }}
         >
           {optionChosen && (() => {
+            const { text, isApplied } = getDisplayInfo(multiple, value, options, autoSubmit, defaultValue);
             return (
-              <span style={{ overflow: 'hidden', maxWidth: 'calc(100% - 30px)', padding: '8px 5px 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span class="select-preact__checkmark"></span>
-                {getDisplayText(multiple, value, options)}
+              <span
+                className={`select-preact__option-label ${isApplied ? 'select-preact__checkmark' : ''}`}
+              >
+                {text}
               </span>
             );
           })()}

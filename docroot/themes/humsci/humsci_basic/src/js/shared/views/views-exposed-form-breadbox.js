@@ -1,15 +1,15 @@
 ((Drupal, once) => {
+  const isAutoSubmit = (form) => form.hasAttribute('data-bef-auto-submit')
+    || !!form.closest('[data-bef-auto-submit]');
+
   const getActiveFilters = (form) => Array.from(form.querySelectorAll('select')).flatMap((select) => {
     if (select.multiple) {
       return Array.from(select.options)
         .filter((opt) => opt.selected)
         .map((opt) => ({ select, option: opt }));
     }
-    // Single select: only include if a real value is chosen.
     const selected = select.options[select.selectedIndex];
-    if (!selected || selected.value === '' || selected.value === 'All') {
-      return [];
-    }
+    if (!selected || selected.value === '' || selected.value === 'All') return [];
     return [{ select, option: selected }];
   });
 
@@ -17,7 +17,6 @@
     breadbox.querySelectorAll('.breadbox__item').forEach((c) => c.remove());
 
     const filters = getActiveFilters(form);
-
     breadbox.classList.toggle('breadbox--hidden', filters.length === 0);
 
     filters.forEach(({ select, option }) => {
@@ -29,14 +28,12 @@
       const label = document.createElement('span');
       label.className = 'breadbox__label';
       label.textContent = option.text;
-
       item.appendChild(label);
 
       item.addEventListener('click', () => {
         const selectId = select.getAttribute('id');
 
         if (select.multiple) {
-          // Multi-select: click the matching Preact listbox item to deselect.
           const itemId = `${selectId}-preact-${option.value.replace(/\W+/g, '-')}`;
           const listItem = document.getElementById(itemId);
           if (listItem) {
@@ -46,7 +43,6 @@
             select.dispatchEvent(new Event('change', { bubbles: true }));
           }
         } else {
-          // Single select: click the "Any" / empty option in the Preact listbox.
           const emptyItemId = `${selectId}-preact-empty`;
           const emptyItem = document.getElementById(emptyItemId);
           if (emptyItem) {
@@ -56,6 +52,17 @@
             select.dispatchEvent(new Event('change', { bubbles: true }));
           }
         }
+
+        setTimeout(() => {
+          updateBreadbox(form, breadbox);
+
+          if (!isAutoSubmit(form)) {
+            const applyBtn = form.querySelector(
+              '[data-drupal-selector^="edit-submit"], .js-form-submit[value="Apply"]',
+            );
+            if (applyBtn) applyBtn.click();
+          }
+        }, 10);
       });
 
       breadbox.appendChild(item);
@@ -67,9 +74,10 @@
       once('views-exposed-form-breadbox', '.views-exposed-form', context).forEach(
         (wrapper) => {
           const form = wrapper.querySelector('form') ?? wrapper;
+          const autoSubmit = isAutoSubmit(form);
 
           const breadbox = document.createElement('div');
-          breadbox.className = 'breadbox';
+          breadbox.className = 'breadbox breadbox--hidden';
 
           const actions = form.querySelector(
             '[data-drupal-selector="edit-actions"], .form-actions',
@@ -80,15 +88,35 @@
             form.appendChild(breadbox);
           }
 
-          // Move Reset button into the breadbox row.
           const resetBtn = form.querySelector('[data-drupal-selector^="edit-reset"]');
-          if (resetBtn) {
-            breadbox.appendChild(resetBtn);
-          }
+          if (resetBtn) breadbox.appendChild(resetBtn);
 
           updateBreadbox(form, breadbox);
 
-          form.addEventListener('change', () => updateBreadbox(form, breadbox));
+          if (autoSubmit) {
+            form.addEventListener('change', () => updateBreadbox(form, breadbox));
+          } else {
+            // Delegated on document so it survives AJAX DOM replacement.
+            const formSelector = form.getAttribute('data-drupal-selector')
+              ?? form.getAttribute('id');
+
+            document.addEventListener('submit', (e) => {
+              const submittedForm = e.target.closest
+                ? e.target
+                : null;
+              if (
+                submittedForm
+                && (submittedForm === form
+                  || submittedForm.getAttribute('data-drupal-selector') === formSelector
+                  || submittedForm.getAttribute('id') === formSelector)
+              ) {
+                // The breadbox may have been rebuilt by AJAX — find the current one.
+                const currentBreadbox = submittedForm.parentElement?.querySelector('.breadbox')
+                  ?? document.querySelector('.breadbox');
+                if (currentBreadbox) updateBreadbox(submittedForm, currentBreadbox);
+              }
+            });
+          }
         },
       );
     },

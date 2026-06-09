@@ -359,8 +359,9 @@ const SelectList = ({
           {optionChosen && (() => {
             const { text, isApplied } = getDisplayInfo(multiple, value, options, autoSubmit, defaultValue);
             return (
-              <span style={{ overflow: 'hidden', maxWidth: 'calc(100% - 30px)', padding: '8px 5px 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                {isApplied && <span class="select-preact__checkmark"></span>}
+              <span
+                className={`select-preact__option-label ${isApplied ? 'select-preact__checkmark' : ''}`}
+              >
                 {text}
               </span>
             );

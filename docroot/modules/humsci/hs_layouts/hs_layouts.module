@@ -332,3 +332,25 @@ function hs_layouts_preprocess_pattern_date_stacked_vertical_card(&$variables) {
     $variables['title'] = $original_title;
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_layouts_preprocess_pattern_hero_text_overlay(&$variables) {
+  $context = $variables['context'];
+  // Get the paragraph entity and skip if invalid.
+  $paragraph = $context->getProperty('entity');
+  if (!($paragraph instanceof ParagraphInterface)) {
+    return;
+  }
+  // Get parent entity and skip if not a carousel.
+  $parent = $paragraph->getParentEntity();
+  if (!($parent instanceof ParagraphInterface) || $parent->bundle() !== 'hs_carousel') {
+    return;
+  }
+  // Change the image style based on the current theme.
+  $current_theme = \Drupal::config('system.theme')->get('default');
+  if ($current_theme === 'humsci_traditional') {
+    $variables['image']['field_hs_hero_image'][0]['#stanford_media_image_style'] = 'banner_text_box_traditional';
+  }
+}

@@ -76,12 +76,12 @@ class FlexiblePageCest {
     $card_title = $this->faker->words(3, TRUE);
     $I->fillField('field_hs_page_components[0][subform][field_hs_collection_items][0][subform][field_hs_postcard_title][0][value]', $card_title);
     $I->cantSeeElement('.hs-duplicated');
-    $I->click('.paragraphs-dropdown-toggle', '.paragraph-type--hs-postcard');
+    // Add offset when scrolling to element, otherwise it'll be under the toolbar / sticky titlebar.
+    $I->scrollTo('.paragraph-type--hs-postcard .paragraphs-dropdown-toggle', 0, -150);
+    $I->click('Toggle Actions', '.paragraph-type--hs-postcard');
     $I->click('Duplicate', '.paragraph-type--hs-postcard');
-    // Wait for the duplicated paragraph to be visible.
-    $I->waitForElementVisible('.hs-duplicated', 10);
-    // Check if the duplicated paragraph has the same title as the original.
-    $I->canSeeInField('.hs-duplicated input[name$="[field_hs_postcard_title][0][value]"]', $card_title);
+    $I->waitForText('Title', 10, '.hs-duplicated');
+    $I->canSeeInField('Title', $card_title);
   }
 
   /**

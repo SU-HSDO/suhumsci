@@ -1,7 +1,7 @@
 # Coding Standards
 
 ## Drupal Coding Standards
-This repo folows [Drupal Coding Standards](https://www.drupal.org/docs/develop/standards/php/php-coding-standards).
+This repo follows [Drupal Coding Standards](https://www.drupal.org/docs/develop/standards/php/php-coding-standards).
 
 - Where relevant `snake_case` should be used for PHP functions and variables, not `camelCase`.
 - Code should be adequately commented.
@@ -9,7 +9,7 @@ This repo folows [Drupal Coding Standards](https://www.drupal.org/docs/develop/s
 
 ## Code Security
 - User input should be [properly sanitized when rendered](https://www.drupal.org/docs/8/security/drupal-8-sanitizing-output).
-- Code should follow [Drupal Security Best Practices](https://www.drupal.org/docs/8/security).
+- Code should follow [Drupal Security Best Practices](https://www.drupal.org/docs/develop/security).
 
 ## Automation and Tools
 - This repo includes both PHPCS and PHPStan configured for Drupal code, with CI runners for each on pull requests.

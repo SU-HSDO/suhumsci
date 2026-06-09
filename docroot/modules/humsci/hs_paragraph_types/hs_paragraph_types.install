@@ -11,3 +11,641 @@
 function hs_paragraph_types_update_last_removed() {
   return 10019;
 }
+
+/**
+ * Creates new fields for using style select widgets in components.
+ */
+function hs_paragraph_types_update_10020() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigStorage $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldStorageConfigStorage $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  $storages_to_create = [
+    'field.storage.paragraph.field_hs_spotlight_background',
+    'field.storage.paragraph.field_hs_spotlight_image_height',
+    'field.storage.paragraph.field_hs_spotlight_style',
+    'field.storage.paragraph.field_hs_spotlight_media_align',
+    'field.storage.paragraph.field_hs_testimonial_align',
+    'field.storage.paragraph.field_hs_banner_image_height',
+    'field.storage.paragraph.field_hs_callout_align',
+    'field.storage.paragraph.field_hs_callout_background',
+    'field.storage.paragraph.field_hs_clr_bnd_bg',
+    'field.storage.paragraph.field_hs_clr_bnd_width',
+    'field.storage.paragraph.field_hs_gradient_hero_alignment',
+    'field.storage.paragraph.field_hs_accordion_style',
+    'field.storage.paragraph.field_hs_collection_background',
+    'field.storage.paragraph.field_hs_collection_bg_width',
+    'field.storage.paragraph.field_hs_gallery_style',
+  ];
+
+  foreach ($storages_to_create as $storage_name) {
+    $storage_config = $config_storage->read($storage_name);
+    if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
+      $field_storage->createFromStorageRecord($storage_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
+        '%field_name' => $storage_config['field_name'],
+        '%entity_type' => $storage_config['entity_type'],
+      ]);
+    }
+  }
+
+  $fields_to_create = [
+    'field.field.paragraph.hs_spotlight.field_hs_spotlight_background',
+    'field.field.paragraph.hs_spotlight.field_hs_spotlight_image_height',
+    'field.field.paragraph.hs_spotlight.field_hs_spotlight_style',
+    'field.field.paragraph.hs_spotlight.field_hs_spotlight_media_align',
+    'field.field.paragraph.hs_testimonial.field_hs_testimonial_align',
+    'field.field.paragraph.hs_banner.field_hs_banner_image_height',
+    'field.field.paragraph.hs_callout_box.field_hs_callout_align',
+    'field.field.paragraph.hs_callout_box.field_hs_callout_background',
+    'field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bg',
+    'field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_width',
+    'field.field.paragraph.hs_gradient_hero.field_hs_gradient_hero_alignment',
+    'field.field.paragraph.hs_accordion.field_hs_accordion_style',
+    'field.field.paragraph.hs_collection.field_hs_collection_background',
+    'field.field.paragraph.hs_collection.field_hs_collection_bg_width',
+    'field.field.paragraph.hs_priv_collection.field_hs_collection_background',
+    'field.field.paragraph.hs_priv_collection.field_hs_collection_bg_width',
+    'field.field.paragraph.stanford_gallery.field_hs_gallery_style',
+  ];
+
+  foreach ($fields_to_create as $field_name) {
+    $field_config = $config_storage->read($field_name);
+    if (
+      !empty($field_config) &&
+      empty($field_config_storage->load('paragraph.' . $field_config['bundle'] . '.' . $field_config['field_name']))
+    ) {
+      $field_config_storage->create($field_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+        '%field_name' => $field_config['field_name'],
+        '%entity_type' => $field_config['entity_type'],
+        '%bundle' => $field_config['bundle'],
+      ]);
+    }
+  }
+}
+
+/**
+ * Migrate Spotlight paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10021(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_spotlight')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $height_map = [
+    'default' => 'tall',
+    'preview' => 'short',
+  ];
+
+  $style_map = [
+    'classic' => 'framed',
+    'expanded' => 'expanded',
+  ];
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_spotlight_bg -> field_hs_spotlight_background.
+    if ($paragraph->hasField('field_hs_spotlight_bg') && $paragraph->hasField('field_hs_spotlight_background')) {
+      $value = $paragraph->get('field_hs_spotlight_bg')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_spotlight_background', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_spotlight_height -> field_hs_spotlight_image_height.
+    if ($paragraph->hasField('field_hs_spotlight_height') && $paragraph->hasField('field_hs_spotlight_image_height')) {
+      $value = $paragraph->get('field_hs_spotlight_height')->value;
+      if (!empty($value) && isset($height_map[$value])) {
+        $paragraph->set('field_hs_spotlight_image_height', $height_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_spotlight_style -> field_hs_spotlight_image_style.
+    if ($paragraph->hasField('field_spotlight_style') && $paragraph->hasField('field_hs_spotlight_style')) {
+      $value = $paragraph->get('field_spotlight_style')->value;
+      if (!empty($value) && isset($style_map[$value])) {
+        $paragraph->set('field_hs_spotlight_style', $style_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_spotlight_image_align -> field_hs_spotlight_media_align.
+    if ($paragraph->hasField('field_hs_spotlight_image_align') && $paragraph->hasField('field_hs_spotlight_media_align')) {
+      $value = $paragraph->get('field_hs_spotlight_image_align')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_spotlight_media_align', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_spotlight paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_spotlight paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Testimonial paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10022(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_testimonial')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_testimonial_quote_align -> field_hs_testimonial_align.
+    if ($paragraph->hasField('field_hs_testimonial_quote_align') && $paragraph->hasField('field_hs_testimonial_align')) {
+      $value = $paragraph->get('field_hs_testimonial_quote_align')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_testimonial_align', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_testimonial paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_testimonial paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Banner paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10023(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_banner')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_banner_height -> field_hs_banner_image_height.
+    if ($paragraph->hasField('field_hs_banner_height') && $paragraph->hasField('field_hs_banner_image_height')) {
+      $value = $paragraph->get('field_hs_banner_height')->value;
+      $paragraph->set('field_hs_banner_image_height', $value == 'preview' ? 'tall' : 'short');
+      $save_needed = TRUE;
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_banner paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_banner paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Callout Box paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10024(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_callout_box')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $style_map = [
+    'default' => 'default',
+    'hs_well' => 'light',
+  ];
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_callout_box_align -> field_hs_callout_align.
+    if ($paragraph->hasField('field_hs_callout_box_align') && $paragraph->hasField('field_hs_callout_align')) {
+      $value = $paragraph->get('field_hs_callout_box_align')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_callout_align', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_callout_style -> field_hs_callout_background.
+    if ($paragraph->hasField('field_hs_callout_style') && $paragraph->hasField('field_hs_callout_background')) {
+      $value = $paragraph->get('field_hs_callout_style')->value;
+      if (!empty($value) && isset($style_map[$value])) {
+        $paragraph->set('field_hs_callout_background', $style_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_callout_box paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_callout_box paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Color Band paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10025(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_clr_bnd')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $width_map = [
+    'default' => 'full-width',
+    'preview' => 'limited-width',
+  ];
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_clr_bnd_wdth -> field_hs_clr_bnd_width.
+    if ($paragraph->hasField('field_hs_clr_bnd_wdth') && $paragraph->hasField('field_hs_clr_bnd_width')) {
+      $value = $paragraph->get('field_hs_clr_bnd_wdth')->value;
+      if (!empty($value) && isset($width_map[$value])) {
+        $paragraph->set('field_hs_clr_bnd_width', $width_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_clr_bnd_bgc -> field_hs_clr_bnd_bg.
+    if ($paragraph->hasField('field_hs_clr_bnd_bgc') && $paragraph->hasField('field_hs_clr_bnd_bg')) {
+      $value = $paragraph->get('field_hs_clr_bnd_bgc')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_clr_bnd_bg', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_clr_bnd paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_clr_bnd paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Gradient Hero paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10026(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_gradient_hero')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_gradient_hero_align -> field_hs_gradient_hero_alignment.
+    if ($paragraph->hasField('field_hs_gradient_hero_align') && $paragraph->hasField('field_hs_gradient_hero_alignment')) {
+      $value = $paragraph->get('field_hs_gradient_hero_align')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_gradient_hero_alignment', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_gradient_hero paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_gradient_hero paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Accordion paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10027(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_accordion')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_accordion_style -> field_hs_accordion_style.
+    if ($paragraph->hasField('field_accordion_style') && $paragraph->hasField('field_hs_accordion_style')) {
+      $value = $paragraph->get('field_accordion_style')->value;
+      $paragraph->set('field_hs_accordion_style', !empty($value) ? $value : 'default');
+      $save_needed = TRUE;
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_accordion paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_accordion paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Collections paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10028(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    // Get list of collection paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', ['hs_collection', 'hs_priv_collection'], 'IN')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+
+  }
+
+  // Map old width machine names (underscores) to new ones (hyphens).
+  $width_map = [
+    'limited_width' => 'limited-width',
+    'full_width'    => 'full-width',
+  ];
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_bg_color -> field_hs_collection_background.
+    // Empty/null values become "bg-none" in the new field.
+    if ($paragraph->hasField('field_bg_color') && $paragraph->hasField('field_hs_collection_background')) {
+      $value = $paragraph->get('field_bg_color')->value;
+      $background = empty($value) ? 'bg-none' : $value;
+      $paragraph->set('field_hs_collection_background', $background);
+      $save_needed = TRUE;
+    }
+
+    // Migrate field_bg_color_width -> field_hs_collection_bg_width.
+    // Only migrate if a value exists and a mapping is defined.
+    if ($paragraph->hasField('field_bg_color_width') && $paragraph->hasField('field_hs_collection_bg_width')) {
+      $value = $paragraph->get('field_bg_color_width')->value;
+      if (!empty($value) && isset($width_map[$value])) {
+        $paragraph->set('field_hs_collection_bg_width', $width_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count hs_collections and hs_priv_collections paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total hs_collections and hs_priv_collections paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Gallery paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10029(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'stanford_gallery')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $style_map = [
+    'default' => 'grid',
+    'hs_gallery_slideshow' => 'slideshow',
+  ];
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_photoalbum_style -> field_hs_gallery_style.
+    if ($paragraph->hasField('field_photoalbum_style') && $paragraph->hasField('field_hs_gallery_style')) {
+      $value = $paragraph->get('field_photoalbum_style')->value;
+      if (!empty($value) && isset($style_map[$value])) {
+        $paragraph->set('field_hs_gallery_style', $style_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    if ($sandbox['updated'] !== $sandbox['total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count stanford_gallery paragraphs.', [
+        '%count' => $sandbox['total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Updated %updated of %total stanford_gallery paragraphs.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['total'],
+    ]);
+  }
+}

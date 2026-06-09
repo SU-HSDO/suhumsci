@@ -27,7 +27,7 @@ class SourceField extends FieldPluginBase {
       return $this->t('Local');
     }
 
-    $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);
+    $migration = \Drupal::service('stanford_migrate')->getEntityMigration($node);
     return ($migration) ? $this->t('Imported') : $this->t('Local');
   }
 

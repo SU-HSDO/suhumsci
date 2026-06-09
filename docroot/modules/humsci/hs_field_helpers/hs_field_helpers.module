@@ -798,7 +798,7 @@ function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
   // @see stanford_migrate_entity_form_display_alter.
   $imported_fields = [];
 
-  $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);
+  $migration = \Drupal::service('stanford_migrate')->getEntityMigration($node);
 
   // Check if the current node was imported.
   if (!$migration) {
@@ -826,13 +826,14 @@ function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
     // If the migration destination has the `overwrite_properties` configured,
     // those fields specifically should be locked, not the other fields that
     // are not designated in the original process configuration.
-    if ($processing && !empty($migration->get('destination')['overwrite_properties'])) {
+    $destination = $migration->getDestinationConfiguration();
+    if ($processing && !empty($destination['overwrite_properties'])) {
       // If the current field doesn't exist in the overwrite_properties, it
       // should not be considered to be processing since it's a one time only
       // import.
       $processing = FALSE;
 
-      foreach ($migration->get('destination')['overwrite_properties'] as $overwrite_property) {
+      foreach ($destination['overwrite_properties'] as $overwrite_property) {
         // If any part of the field is set to overwrite, lock the whole field
         // down.
         $overwrite_property = strstr($overwrite_property, '/', TRUE) ?: $overwrite_property;

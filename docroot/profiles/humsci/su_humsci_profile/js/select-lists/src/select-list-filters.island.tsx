@@ -30,16 +30,9 @@ const FilterIsland = ({}) => {
     origLabel.style.position = 'absolute';
 
     if (origSelect?.getAttribute('multiple')) {
-      const allValues = Array.from(origSelect.children).map((option) =>
-        option.getAttribute('value'),
-      );
       const selectedOptions = Array.from(origSelect.children)
         .filter((option) => option.getAttribute('selected') === 'selected')
         .map((option) => option.getAttribute('value'));
-
-      if (selectedOptions.length === allValues.length) {
-        selectedOptions.push('All');
-      }
 
       setSelectedValues(selectedOptions);
     }
@@ -59,11 +52,6 @@ const FilterIsland = ({}) => {
 
   const getSelectOptions = (selectElement) => {
     const options = [];
-
-    if (selectElement?.getAttribute('multiple')) {
-      // Add "All" as the first option
-      options.push({ value: 'All', label: 'All', disabled: false });
-    }
 
     const optionElements = selectElement.children;
 
@@ -106,25 +94,12 @@ const FilterIsland = ({}) => {
       option.getAttribute('value'),
     );
 
-    // Handle "All" selection logic
-    if (value.includes('All')) {
-      if (selectedValues.includes('All')) {
-        const valueWithoutAll = value.filter((v) => v !== 'All');
-        setSelectedValues(valueWithoutAll);
-      } else {
-        setSelectedValues([...allValues, 'All']);
-      }
+    if (value.length === allValues.length) {
+      setSelectedValues(allValues);
     } else {
-      if (selectedValues.includes('All') && value.length === allValues.length) {
-        setSelectedValues([]);
-      } else if (value.length === allValues.length) {
-        setSelectedValues([...allValues, 'All']);
-      } else {
-        setSelectedValues(value);
-      }
+      setSelectedValues(value);
     }
   };
-
 
   return (
     <div ref={ref}>
@@ -145,7 +120,6 @@ const FilterIsland = ({}) => {
               ? selectedValues
               : undefined
           }
-          emptyLabel={selectOptions.find((item) => item.value === 'All')?.label}
         />
       )}
     </div>

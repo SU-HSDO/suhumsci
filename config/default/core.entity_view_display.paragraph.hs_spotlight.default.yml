@@ -3,12 +3,16 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_spotlight.field_hs_spotlight_background
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_bg
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_body
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_height
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_image
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_image_align
+    - field.field.paragraph.hs_spotlight.field_hs_spotlight_image_height
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_link
+    - field.field.paragraph.hs_spotlight.field_hs_spotlight_media_align
+    - field.field.paragraph.hs_spotlight.field_hs_spotlight_style
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_title
     - field.field.paragraph.hs_spotlight.field_spotlight_style
     - paragraphs.paragraphs_type.hs_spotlight
@@ -31,7 +35,7 @@ third_party_settings:
         pattern:
           field_templates: default
           variant: _field
-          variant_field: field_hs_spotlight_image_align
+          variant_field: field_hs_spotlight_media_align
           variant_field_values:
             default: image-right
             left: image-left
@@ -121,8 +125,12 @@ content:
     weight: 1
     region: overlay_text
 hidden:
+  field_hs_spotlight_background: true
   field_hs_spotlight_bg: true
   field_hs_spotlight_height: true
   field_hs_spotlight_image_align: true
+  field_hs_spotlight_image_height: true
+  field_hs_spotlight_media_align: true
+  field_hs_spotlight_style: true
   field_spotlight_style: true
   search_api_excerpt: true

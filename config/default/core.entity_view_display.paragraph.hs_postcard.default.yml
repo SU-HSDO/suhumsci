@@ -19,6 +19,7 @@ dependencies:
     - hs_field_helpers
     - linkit
     - stanford_media
+    - style_selector
     - text
 third_party_settings:
   ds:
@@ -51,6 +52,14 @@ targetEntityType: paragraph
 bundle: hs_postcard
 mode: default
 content:
+  field_hs_postcard_alignment:
+    type: style_selector_css_class_formatter
+    label: above
+    settings:
+      extra_classes: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_hs_postcard_body:
     type: text_default
     label: hidden
@@ -75,6 +84,14 @@ content:
         inline_contents: 0
     weight: 1
     region: image
+  field_hs_postcard_layout:
+    type: style_selector_css_class_formatter
+    label: above
+    settings:
+      extra_classes: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
   field_hs_postcard_link:
     type: linkit
     label: hidden
@@ -100,9 +117,14 @@ content:
     third_party_settings: {  }
     weight: 0
     region: title
+  field_hs_postcard_vertical_style:
+    type: style_selector_css_class_formatter
+    label: above
+    settings:
+      extra_classes: ''
+    third_party_settings: {  }
+    weight: 5
+    region: content
 hidden:
-  field_hs_postcard_alignment: true
   field_hs_postcard_display: true
-  field_hs_postcard_layout: true
-  field_hs_postcard_vertical_style: true
   search_api_excerpt: true

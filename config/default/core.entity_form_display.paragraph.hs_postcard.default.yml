@@ -15,9 +15,11 @@ dependencies:
   module:
     - allowed_formats
     - conditional_fields
+    - field_formatter_class
     - linkit
     - maxlength
     - media_library
+    - style_selector
     - text
 _core:
   default_config_hash: UysLzDvqJYQV5qn6Jc5j3y3Mqf9g8r0XAlQJ4o0SV2U
@@ -27,13 +29,24 @@ bundle: hs_postcard
 mode: default
 content:
   field_hs_postcard_alignment:
-    type: options_buttons
+    type: style_selector_tile_widget
     weight: 6
     region: content
-    settings: {  }
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
     third_party_settings:
+      field_formatter_class:
+        class: ''
       conditional_fields:
-        baa7177d-6ca7-46a0-a25f-6bb3f87c5238:
+        1307736b-c392-43c5-9179-493ce35be541:
           entity_type: paragraph
           bundle: hs_postcard
           dependee: field_hs_postcard_layout
@@ -75,11 +88,22 @@ content:
       media_types: {  }
     third_party_settings: {  }
   field_hs_postcard_layout:
-    type: options_buttons
-    weight: 5
+    type: style_selector_tile_widget
+    weight: 4
     region: content
-    settings: {  }
-    third_party_settings: {  }
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   field_hs_postcard_link:
     type: linkit
     weight: 3
@@ -102,13 +126,24 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_hs_postcard_vertical_style:
-    type: options_buttons
-    weight: 7
+    type: style_selector_tile_widget
+    weight: 5
     region: content
-    settings: {  }
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
     third_party_settings:
+      field_formatter_class:
+        class: ''
       conditional_fields:
-        799a8294-bb0f-424f-a0a0-ff59fa51c535:
+        e5808d1c-a34b-4af1-aab5-a2f2177ff549:
           entity_type: paragraph
           bundle: hs_postcard
           dependee: field_hs_postcard_layout

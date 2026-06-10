@@ -7,33 +7,22 @@
 
 .hb-three-column__main .views-exposed-form,
 .hb-three-column__sidebar-1 .views-exposed-form {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  margin-bottom: hb-spacing-width('md');
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(247px, 1fr));
   gap: hb-calculate-rems(16px);
+  align-items: end;
+  margin-bottom: hb-spacing-width('md');
 
   form {
     max-width: 100%;
   }
 
-  .form-item {
-    min-width: hb-calculate-rems(247px);
-    max-width: hb-calculate-rems(390px);
-    flex: 1 1 hb-calculate-rems(247px);
-
-    @include grid-media-min('md') {
-      width: auto;
-    }
+  .form-item,
+  .form-actions {
+    width: 100%;
   }
 
   .form-actions {
-    min-width: hb-calculate-rems(247px);
-    max-width: hb-calculate-rems(390px);
-    flex: 1 1 hb-calculate-rems(247px);
-    align-self: flex-end;
-
-    // prevent the button itself from stretching
     .form-submit {
       width: auto;
     }
@@ -43,7 +32,6 @@
 .views-exposed-form .select-preact {
   button {
     border-color: color('gray-400', 'global') !important;
-    padding-inline: hb-calculate-rems(16px);
 
     .select-preact__option-label {
       overflow: hidden;
@@ -113,7 +101,7 @@
   color: color('gray-dark', 'global');
   padding: hb-calculate-rems(4px) hb-calculate-rems(10px);
   font-size: hb-calculate-rems(14px);
-  line-height: 140%;
+  line-height: 1.5;
   background: color('white', 'global');
   cursor: pointer;
 

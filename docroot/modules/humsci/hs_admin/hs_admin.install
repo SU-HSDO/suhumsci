@@ -5,6 +5,8 @@
  * hs_admin.install
  */
 
+use Drupal\user\RoleInterface;
+
 /**
  * Implements hook_update_last_removed().
  */
@@ -403,7 +405,7 @@ function hs_admin_update_10010(): string {
   $granted = [];
   foreach ($role_permissions as $role_id => $permissions) {
     $role = $role_storage->load($role_id);
-    if (!$role instanceof \Drupal\user\RoleInterface) {
+    if (!$role instanceof RoleInterface) {
       continue;
     }
     $existing = $role->getPermissions();

@@ -402,9 +402,8 @@ function hs_admin_update_10010(): string {
 
   $granted = [];
   foreach ($role_permissions as $role_id => $permissions) {
-    /** @var \Drupal\user\Entity\Role $role */
     $role = $role_storage->load($role_id);
-    if (!$role) {
+    if (!$role instanceof \Drupal\user\RoleInterface) {
       continue;
     }
     $existing = $role->getPermissions();

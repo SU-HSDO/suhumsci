@@ -13,6 +13,6 @@ if [[ ! "$1" =~ ^[a-zA-Z0-9_]+$ ]]; then
   exit 1
 fi
 
-DB_NAME="suhumsci_$1"
+DB_NAME="drupal_$1"
 mysql -udrupal -pdrupal -hdatabase -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;" 2>/dev/null
 echo "Database $DB_NAME created (or already exists)."

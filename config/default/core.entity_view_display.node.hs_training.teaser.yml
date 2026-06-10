@@ -1,0 +1,55 @@
+uuid: 7329039b-4ecd-45f5-91fb-3f1491472f04
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.hs_training.body
+    - field.field.node.hs_training.field_hs_training_audience
+    - field.field.node.hs_training.field_hs_training_contacts
+    - field.field.node.hs_training.field_hs_training_date_range
+    - field.field.node.hs_training.field_hs_training_deliverymethod
+    - field.field.node.hs_training.field_hs_training_location
+    - field.field.node.hs_training.field_hs_training_name
+    - field.field.node.hs_training.field_hs_training_nodate
+    - field.field.node.hs_training.field_hs_training_product
+    - field.field.node.hs_training.field_hs_training_provider
+    - field.field.node.hs_training.field_hs_training_resource_links
+    - field.field.node.hs_training.field_hs_training_sourcesite
+    - field.field.node.hs_training.field_hs_training_unit
+    - node.type.hs_training
+  module:
+    - text
+    - user
+id: node.hs_training.teaser
+targetEntityType: node
+bundle: hs_training
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_hs_training_audience: true
+  field_hs_training_contacts: true
+  field_hs_training_date_range: true
+  field_hs_training_deliverymethod: true
+  field_hs_training_location: true
+  field_hs_training_name: true
+  field_hs_training_nodate: true
+  field_hs_training_product: true
+  field_hs_training_provider: true
+  field_hs_training_resource_links: true
+  field_hs_training_sourcesite: true
+  field_hs_training_unit: true
+  search_api_excerpt: true

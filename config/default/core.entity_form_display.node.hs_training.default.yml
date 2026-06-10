@@ -1,0 +1,249 @@
+uuid: 889bb946-b81f-4255-9059-23702adf4024
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.hs_training.body
+    - field.field.node.hs_training.field_hs_training_audience
+    - field.field.node.hs_training.field_hs_training_contacts
+    - field.field.node.hs_training.field_hs_training_date_range
+    - field.field.node.hs_training.field_hs_training_deliverymethod
+    - field.field.node.hs_training.field_hs_training_location
+    - field.field.node.hs_training.field_hs_training_name
+    - field.field.node.hs_training.field_hs_training_nodate
+    - field.field.node.hs_training.field_hs_training_product
+    - field.field.node.hs_training.field_hs_training_provider
+    - field.field.node.hs_training.field_hs_training_resource_links
+    - field.field.node.hs_training.field_hs_training_sourcesite
+    - field.field.node.hs_training.field_hs_training_unit
+    - node.type.hs_training
+  module:
+    - conditional_fields
+    - link
+    - path
+    - smart_date
+    - text
+id: node.hs_training.default
+targetEntityType: node
+bundle: hs_training
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 1
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_training_audience:
+    type: entity_reference_autocomplete
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_training_contacts:
+    type: text_textarea
+    weight: 6
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_training_date_range:
+    type: smartdate_default
+    weight: 3
+    region: content
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: |-
+        30
+        60|1 hour
+        90
+        120|2 hours
+        custom
+      show_extra: false
+      hide_date: true
+      allday: true
+      remove_seconds: false
+      duration_overlay: true
+    third_party_settings:
+      conditional_fields:
+        4f766028-2b5f-4fc7-82ce-ba7a94348bea:
+          entity_type: node
+          bundle: hs_training
+          dependee: field_hs_training_nodate
+          settings:
+            state: disabled
+            reset: false
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+        534e68e4-74a6-45e8-aaac-3da3885f34b2:
+          entity_type: node
+          bundle: hs_training
+          dependee: field_hs_training_nodate
+          settings:
+            state: '!visible'
+            reset: false
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+        d531dde0-bce2-4aef-9b9f-cd2dbb9d718b:
+          entity_type: node
+          bundle: hs_training
+          dependee: field_hs_training_nodate
+          settings:
+            state: empty
+            reset: false
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: empty
+            effect_options:
+              empty:
+                value: ''
+                reset: 1
+            selector: ''
+  field_hs_training_deliverymethod:
+    type: text_textarea
+    weight: 7
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_training_location:
+    type: text_textarea
+    weight: 4
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_training_name:
+    type: entity_reference_autocomplete
+    weight: -1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      conditional_fields: {  }
+  field_hs_training_nodate:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_hs_training_product:
+    type: entity_reference_autocomplete
+    weight: 10
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_training_provider:
+    type: options_select
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_training_resource_links:
+    type: link_default
+    weight: 5
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 14
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 18
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 15
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 12
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  url_redirects:
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_hs_training_sourcesite: true
+  field_hs_training_unit: true

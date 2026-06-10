@@ -237,55 +237,46 @@ function hs_admin_update_10006(): string {
 /**
  * Add Training shortcuts to their respective dropdown menus.
  */
-function hs_admin_update_10007() {
+function hs_admin_update_10007(): string {
   $shortcut_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
 
-  // Look up parent shortcut UUIDs by title (titles may vary by site).
-  $add_content_uuid = NULL;
-  $manage_content_uuid = NULL;
-  foreach ($shortcut_storage->loadByProperties(['shortcut_set' => 'default']) as $s) {
-    $title = $s->getTitle();
-    if (in_array($title, ['Add content', 'Add Content'])) {
-      $add_content_uuid = $s->uuid();
-    }
-    elseif (in_array($title, ['Manage content', 'Manage Content'])) {
-      $manage_content_uuid = $s->uuid();
-    }
-  }
-
+  // Use the same UUIDs as the shortcuts in the humsci_default_content module so
+  // existing sites and fresh installs share a single, stable set of entities.
+  // Parent UUIDs reference the default "Add content" and "Manage content"
+  // shortcuts shipped by humsci_default_content.
   $new_shortcuts = [
-    'Add Training' => [
+    '44bd1036-9ff4-422c-bd97-1264215d6e9e' => [
+      'title' => 'Add Training',
       'uri' => 'internal:/node/add/hs_training',
       'weight' => 8,
-      'parent' => $add_content_uuid,
+      'parent' => '3c769f63-f502-4f76-b4dd-85b7a584cd5b',
     ],
-    'Manage Training' => [
+    'c8b3c7b6-0bac-4b5a-92cd-8cbe24fa7a02' => [
+      'title' => 'Manage Training',
       'uri' => 'internal:/admin/content/manage/training',
       'weight' => 21,
-      'parent' => $manage_content_uuid,
+      'parent' => '5744f2de-74a1-448f-aac1-61983a136cdb',
     ],
   ];
 
   $created = [];
-  foreach ($new_shortcuts as $title => $config) {
-    $existing = $shortcut_storage->loadByProperties([
-      'shortcut_set' => 'default',
-      'title' => $title,
-    ]);
-    if (empty($existing)) {
-      $values = [
-        'shortcut_set' => 'default',
-        'title' => $title,
-        'link' => ['uri' => $config['uri']],
-        'weight' => $config['weight'],
-      ];
-      if ($config['parent']) {
-        $values['parent'] = $config['parent'];
-        $values['depth'] = 1;
-      }
-      $shortcut_storage->create($values)->save();
-      $created[] = $title;
+  foreach ($new_shortcuts as $uuid => $config) {
+    // Skip if a shortcut with this UUID already exists (e.g. provided by
+    // humsci_default_content during install).
+    if (!empty($shortcut_storage->loadByProperties(['uuid' => $uuid]))) {
+      continue;
     }
+    $values = [
+      'uuid' => $uuid,
+      'shortcut_set' => 'default',
+      'title' => $config['title'],
+      'link' => ['uri' => $config['uri']],
+      'weight' => $config['weight'],
+      'parent' => $config['parent'],
+      'depth' => 1,
+    ];
+    $shortcut_storage->create($values)->save();
+    $created[] = $config['title'];
   }
 
   return empty($created)
@@ -296,7 +287,7 @@ function hs_admin_update_10007() {
 /**
  * Import hs_training display configs missing from active storage.
  */
-function hs_admin_update_10008() {
+function hs_admin_update_10008(): string {
   $sync = \Drupal::service('config.storage.sync');
   $active = \Drupal::service('config.storage');
 
@@ -351,4 +342,89 @@ function hs_admin_update_10009(): string {
 
   $active->write('views.view.hs_manage_content', $active_config);
   return 'Added training display to hs_manage_content view.';
+}
+
+/**
+ * Grant Training content and taxonomy permissions to roles.
+ *
+ * Role permissions are excluded from config import/export by config_ignore
+ * (`user.role.*:permissions`), so the permission additions in the role config
+ * files do not take effect on existing sites. This update grants them directly.
+ */
+function hs_admin_update_10010(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  // Permissions to grant per role, matching the role config changes.
+  $role_permissions = [
+    'author' => [
+      'edit own hs_training content',
+    ],
+    'contributor' => [
+      'create hs_training content',
+      'edit any hs_training content',
+      'edit own hs_training content',
+      'revert hs_training revisions',
+      'view hs_training revisions',
+    ],
+    'preparer' => [
+      'create hs_training content',
+      'edit own hs_training content',
+      'view any unpublished hs_training content',
+    ],
+    'reviewer' => [
+      'view any unpublished hs_training content',
+    ],
+    'site_manager' => [
+      'create hs_training content',
+      'create terms in hs_training_audience',
+      'create terms in hs_training_name',
+      'create terms in hs_training_product',
+      'create terms in hs_training_provider',
+      'create terms in hs_training_unit',
+      'delete any hs_training content',
+      'delete own hs_training content',
+      'delete terms in hs_training_audience',
+      'delete terms in hs_training_name',
+      'delete terms in hs_training_product',
+      'delete terms in hs_training_provider',
+      'delete terms in hs_training_unit',
+      'edit any hs_training content',
+      'edit own hs_training content',
+      'edit terms in hs_training_audience',
+      'edit terms in hs_training_name',
+      'edit terms in hs_training_product',
+      'edit terms in hs_training_provider',
+      'edit terms in hs_training_unit',
+      'revert hs_training revisions',
+      'view hs_training revisions',
+    ],
+  ];
+
+  $granted = [];
+  foreach ($role_permissions as $role_id => $permissions) {
+    /** @var \Drupal\user\Entity\Role $role */
+    $role = $role_storage->load($role_id);
+    if (!$role) {
+      continue;
+    }
+    $existing = $role->getPermissions();
+    $to_grant = array_diff($permissions, $existing);
+    if (!empty($to_grant)) {
+      foreach ($to_grant as $perm) {
+        $role->grantPermission($perm);
+      }
+      $role->save();
+      $granted[$role_id] = count($to_grant);
+    }
+  }
+
+  if (empty($granted)) {
+    return 'No Training permissions needed granting; roles already up to date.';
+  }
+
+  $summary = [];
+  foreach ($granted as $role_id => $count) {
+    $summary[] = "$role_id (+$count)";
+  }
+  return 'Granted Training permissions to: ' . implode(', ', $summary) . '.';
 }

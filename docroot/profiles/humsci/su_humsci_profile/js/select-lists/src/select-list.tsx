@@ -357,6 +357,7 @@ const SelectList = ({
           borderRadius: '5px',
           textAlign: 'left',
           minHeight: '40px',
+          paddingInline: !optionChosen && multiple ? '10px' : '16px',
         }}
       >
         <span

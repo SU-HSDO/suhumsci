@@ -416,28 +416,30 @@ $container-small: 576px;
     }
   }
 
-  // Styles for the collapsible caption.
-  .hb-media-image .field-media-image-caption.collapsible-caption {
-    @include hb-themes(('colorful', 'airy')) {
-      padding-inline: hb-calculate-rems(40px) max(50px, calc(100% - hb-calculate-rems(456px)));
-      padding-block: 5% calc(25% + hb-calculate-rems(4px));
+  // Styles for the collapsible caption when the hero has a text box.
+  .hb-hero-overlay:not(.hb-hero-overlay--no-text) {
+    .hb-media-image .field-media-image-caption.collapsible-caption {
+      @include hb-themes(('colorful', 'airy')) {
+        padding-inline: hb-calculate-rems(40px) max(50px, calc(100% - hb-calculate-rems(456px)));
+        padding-block: 5% calc(25% + hb-calculate-rems(4px));
 
-      @container carousel (width > #{$container-caption}) {
-        padding: 0 hb-calculate-rems(20px) hb-calculate-rems(21px);
-      }
+        @container carousel (width > #{$container-caption}) {
+          padding: 0 hb-calculate-rems(20px) hb-calculate-rems(21px);
+        }
 
-      @container carousel (width > #{$container-medium}) {
-        padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
-      }
+        @container carousel (width > #{$container-medium}) {
+          padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
+        }
 
-      .toggle-caption__content {
-        @include hb-themes(('colorful', 'airy')) {
-          @container carousel (width > #{$container-caption}) {
-            max-width: 20%;
-          }
+        .toggle-caption__content {
+          @include hb-themes(('colorful', 'airy')) {
+            @container carousel (width > #{$container-caption}) {
+              max-width: 20%;
+            }
 
-          @container carousel (width > #{$container-large}) {
-            max-width: 30%;
+            @container carousel (width > #{$container-large}) {
+              max-width: 30%;
+            }
           }
         }
       }

@@ -60,7 +60,7 @@ class EntityMigrationField extends FieldPluginBase {
         return '';
       }
 
-      $migration = $this->stanfordMigrate->getNodesMigration($values->_entity);
+      $migration = $this->stanfordMigrate->getEntityMigration($values->_entity);
       if ($migration) {
         return $migration->label();
       }

@@ -203,7 +203,7 @@ function hs_paragraph_types_validate_collection_title(&$element, FormStateInterf
   // Find 'field_title' in the parents array to locate the subform boundary.
   $field_title_pos = array_search('field_title', $parents);
 
-  if (!$field_title_pos) {
+  if ($field_title_pos === FALSE) {
     // Can't determine the subform path; skip validation.
     return;
   }

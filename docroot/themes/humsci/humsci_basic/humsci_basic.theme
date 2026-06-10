@@ -752,9 +752,13 @@ function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
   foreach ($paragraph->field_hs_collection_items as $item) {
     $entity = $item->entity;
 
+    if (!$entity) {
+      continue;
+    }
+
     if ($entity->bundle() !== 'hs_view') {
       $variables['has_content'] = TRUE;
-      continue;
+      break;
     }
 
     $view_field = $entity->field_hs_view->first();
@@ -770,13 +774,21 @@ function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
     }
 
     $view->setDisplay($view_field->display_id);
-    $view->preExecute();
-    $view->execute();
 
     $has_empty_handlers = !empty($view->display_handler->getHandlers('empty'));
 
-    if (!empty($view->result) || $view_field->show_title || $has_empty_handlers) {
+    if ($view_field->show_title || $has_empty_handlers) {
       $variables['has_content'] = TRUE;
+      break;
+    }
+
+    $view->preExecute();
+
+    $view->execute();
+
+    if (!empty($view->result)) {
+      $variables['has_content'] = TRUE;
+      break;
     }
   }
 }

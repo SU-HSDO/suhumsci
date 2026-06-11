@@ -9,20 +9,25 @@
 .hb-three-column__sidebar-1 .views-exposed-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(247px, 1fr));
-  gap: hb-calculate-rems(16px);
   align-items: end;
+  gap: hb-calculate-rems(16px);
   margin-bottom: hb-spacing-width('md');
 
   form {
     max-width: 100%;
   }
 
-  .form-item,
-  .form-actions {
+  .form-item {
     width: 100%;
+
+    @include grid-media-min('md') {
+      max-width: hb-calculate-rems(390px);
+    }
   }
 
   .form-actions {
+    width: fit-content;
+
     .form-submit {
       width: auto;
     }

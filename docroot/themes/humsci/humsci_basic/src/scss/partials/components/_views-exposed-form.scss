@@ -25,8 +25,17 @@
     }
   }
 
+  .form-item-with-actions {
+    display: contents;
+  }
+
   .form-actions {
     width: fit-content;
+
+    // On mobile: detach from grid flow, sit below everything
+    @include grid-media-max('sm') {
+      grid-column: 1 / -1;
+    }
 
     .form-submit {
       width: auto;

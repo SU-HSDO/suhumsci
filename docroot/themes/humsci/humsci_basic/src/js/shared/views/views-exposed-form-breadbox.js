@@ -74,6 +74,18 @@
         (wrapper) => {
           const form = wrapper.querySelector('form') ?? wrapper;
 
+          const formItems = Array.from(form.querySelectorAll('.form-item'));
+          const actions = form.querySelector('.form-actions');
+          if (formItems.length && actions) {
+            const lastItem = formItems[formItems.length - 1];
+            const newWrapper = document.createElement('div');
+            newWrapper.className = 'form-item-with-actions';
+
+            lastItem.parentNode.insertBefore(newWrapper, lastItem);
+            newWrapper.appendChild(lastItem);
+            newWrapper.appendChild(actions);
+          }
+
           // Only initialize on BEF auto-submit forms.
           if (!isAutoSubmit(form)) {
             return;
@@ -97,18 +109,6 @@
           form.addEventListener('change', () => {
             updateBreadbox(form, breadbox);
           });
-
-          const formItems = Array.from(form.querySelectorAll('.form-item'));
-          const actions = form.querySelector('.form-actions');
-          if (formItems.length && actions) {
-            const lastItem = formItems[formItems.length - 1];
-            const newWrapper = document.createElement('div');
-            newWrapper.className = 'form-item-with-actions';
-
-            lastItem.parentNode.insertBefore(newWrapper, lastItem);
-            newWrapper.appendChild(lastItem);
-            newWrapper.appendChild(actions);
-          }
         },
       );
     },

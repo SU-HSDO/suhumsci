@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 #[Action(
   id: 'node_clone_action',
-  action_label: new TranslatableMarkup('Publish'),
+  action_label: new TranslatableMarkup('Clone selected content'),
   type: 'node',
 )]
 class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInterface, ContainerFactoryPluginInterface {

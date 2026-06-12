@@ -213,3 +213,21 @@ function hs_admin_deploy_10004(): string {
   }
   return 'Granted Training permissions to: ' . implode(', ', $summary) . '.';
 }
+
+/**
+ * Re-import updated hs_training default display config.
+ *
+ * config_ignore prevents core.entity_view_display.node.hs_* from being
+ * imported by drush config:import, so this hook imitates that process manually.
+ */
+function hs_admin_deploy_10005(): string {
+  $sync = \Drupal::service('config.storage.sync');
+  $name = 'core.entity_view_display.node.hs_training.default';
+  $data = $sync->read($name);
+  if (!$data) {
+    return "Config $name not found in sync storage, no changes made.";
+  }
+
+  \Drupal::configFactory()->getEditable($name)->setData($data)->save();
+  return "Imported updated $name from sync to active storage.";
+}

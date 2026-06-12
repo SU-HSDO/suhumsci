@@ -217,8 +217,8 @@ function hs_admin_deploy_10004(): string {
 /**
  * Re-import updated hs_training default display config.
  *
- * config_ignore prevents core.entity_view_display.node.hs_* from being
- * imported by drush config:import, so this hook imitates that process manually.
+ * Because config_ignore excludes core.entity_view_display.node.hs_* from
+ * drush config:import, this hook imitates that process manually.
  */
 function hs_admin_deploy_10005(): string {
   $sync = \Drupal::service('config.storage.sync');

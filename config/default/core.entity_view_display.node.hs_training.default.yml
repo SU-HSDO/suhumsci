@@ -17,11 +17,350 @@ dependencies:
     - field.field.node.hs_training.field_hs_training_sourcesite
     - field.field.node.hs_training.field_hs_training_unit
     - node.type.hs_training
+    - system.menu.main
   module:
+    - hs_blocks
+    - hs_layouts
+    - layout_builder
     - link
+    - menu_block
     - smart_date
     - text
     - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: three_column
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+          section_width: decanter-grid
+          region_widths: center
+        components:
+          06eb4aee-dd54-4dba-9e77-58e3bc9b7944:
+            uuid: 06eb4aee-dd54-4dba-9e77-58e3bc9b7944
+            region: main
+            configuration:
+              id: 'field_block:node:hs_training:body'
+              label: 'Description:'
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: text_default
+                label: above
+                settings: {  }
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: hb-highlighted-label
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 7
+            additional: {  }
+          1404a43e-d745-4939-b3dc-8d270d23db27:
+            uuid: 1404a43e-d745-4939-b3dc-8d270d23db27
+            region: main
+            configuration:
+              id: 'field_block:node:hs_training:field_hs_training_resource_links'
+              label: 'Resource Links:'
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: link
+                label: above
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: '0'
+                  target: '0'
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: hb-highlighted-label
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 8
+            additional: {  }
+          a25a41cf-3f11-4256-a596-a9e5d58f6e54:
+            uuid: a25a41cf-3f11-4256-a596-a9e5d58f6e54
+            region: left_sidebar
+            configuration:
+              id: 'menu_block:main'
+              label: 'Main navigation'
+              label_display: visible
+              provider: menu_block
+              context_mapping: {  }
+              follow: false
+              follow_parent: child
+              display_empty: false
+              label_link: false
+              label_type: root
+              level: 2
+              depth: 0
+              expand_all_items: true
+              parent: 'main:'
+              render_parent: false
+              suggestion: menu_block__main
+              hide_on_nonactive: false
+            weight: 0
+            additional: {  }
+          389a15d7-82e7-493d-b84d-1b3b71f393e2:
+            uuid: 389a15d7-82e7-493d-b84d-1b3b71f393e2
+            region: main
+            configuration:
+              id: hs_blocks_back_to_top_block
+              label: 'Back To Top Block'
+              label_display: '0'
+              provider: hs_blocks
+              context_mapping: {  }
+            weight: 9
+            additional: {  }
+          75779ac3-3492-4087-a66f-9dd9b38bb834:
+            uuid: 75779ac3-3492-4087-a66f-9dd9b38bb834
+            region: main
+            configuration:
+              id: 'field_block:node:hs_training:title'
+              label: Title
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: entity_title_heading
+                label: above
+                settings:
+                  tag: h2
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 2
+            additional: {  }
+          cd2d6c3c-dd8f-48c5-9c0a-27517eb11d18:
+            uuid: cd2d6c3c-dd8f-48c5-9c0a-27517eb11d18
+            region: right_sidebar
+            configuration:
+              id: 'group_block:node'
+              label: 'Training Event Contact Information'
+              label_display: '0'
+              provider: hs_blocks
+              context_mapping:
+                entity: layout_builder.entity
+              uuid: cd2d6c3c-dd8f-48c5-9c0a-27517eb11d18
+              children:
+                a2e5ac0d-d774-46b4-96e1-013c10c4bf5f:
+                  id: 'field_block:node:hs_training:field_hs_training_provider'
+                  label: 'Provided by:'
+                  label_display: ''
+                  provider: layout_builder
+                  formatter:
+                    label: above
+                    type: entity_reference_label
+                    settings:
+                      link: 0
+                    third_party_settings:
+                      empty_fields:
+                        handler: ''
+                      field_formatter_class:
+                        class: hb-highlighted-label
+                      hs_field_helpers:
+                        inline_contents: 0
+                  context_mapping:
+                    entity: layout_builder.entity
+                    view_mode: view_mode
+                6eec4cb7-0461-4750-bfa4-2804c5f1af3f:
+                  id: 'field_block:node:hs_training:field_hs_training_contacts'
+                  label: 'Training Contacts and Lead:'
+                  label_display: ''
+                  provider: layout_builder
+                  formatter:
+                    label: above
+                    type: text_default
+                    settings: {  }
+                    third_party_settings:
+                      empty_fields:
+                        handler: ''
+                      field_formatter_class:
+                        class: hb-highlighted-label
+                      hs_field_helpers:
+                        inline_contents: 0
+                  context_mapping:
+                    entity: layout_builder.entity
+                    view_mode: view_mode
+              class: ''
+            weight: 0
+            additional: {  }
+          889b7bb7-3e66-495e-b001-7d299abaa66c:
+            uuid: 889b7bb7-3e66-495e-b001-7d299abaa66c
+            region: main
+            configuration:
+              id: 'field_block:node:hs_training:field_hs_training_audience'
+              label: 'Audience:'
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: false
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: hb-highlighted-label
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 3
+            additional: {  }
+          9831f103-a871-4f64-847b-576a1a43645d:
+            uuid: 9831f103-a871-4f64-847b-576a1a43645d
+            region: main
+            configuration:
+              id: 'field_block:node:hs_training:field_hs_training_date_range'
+              label: 'Date:'
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: smartdate_custom
+                label: inline
+                settings:
+                  separator: ' - '
+                  time_diff:
+                    enabled: 0
+                    future_format: '@interval hence'
+                    past_format: '@interval ago'
+                    granularity: '2'
+                    refresh: '60'
+                    description: ''
+                  date_format: 'l F jS Y'
+                  custom_date_format: ''
+                  timezone: ''
+                  tooltip:
+                    date_format: ''
+                    custom_date_format: ''
+                  join: ', '
+                  time_format: 'g:iA'
+                  time_hour_format: ''
+                  allday_label: 'All day'
+                  date_first: '1'
+                  ampm_reduce: 1
+                  site_time_toggle: '1'
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: hb-highlighted-label
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 4
+            additional: {  }
+          2c9d5709-e200-4f89-95bf-751482a776a7:
+            uuid: 2c9d5709-e200-4f89-95bf-751482a776a7
+            region: main
+            configuration:
+              id: 'field_block:node:hs_training:field_hs_training_deliverymethod'
+              label: 'Delivery Method:'
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: text_default
+                label: inline
+                settings: {  }
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: hb-highlighted-label
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 5
+            additional: {  }
+          eddf0df1-2189-49ff-9ffe-cded95eda972:
+            uuid: eddf0df1-2189-49ff-9ffe-cded95eda972
+            region: main
+            configuration:
+              id: 'field_block:node:hs_training:field_hs_training_location'
+              label: 'Location:'
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: text_default
+                label: inline
+                settings: {  }
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: hb-highlighted-label
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 6
+            additional: {  }
+          2d924b36-0925-497d-8a53-53c033e38f2b:
+            uuid: 2d924b36-0925-497d-8a53-53c033e38f2b
+            region: main
+            configuration:
+              id: 'field_block:node:hs_training:field_hs_training_product'
+              label: Product
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: entity_reference_label
+                label: visually_hidden
+                settings:
+                  link: false
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: hb-single-category
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 1
+            additional: {  }
+          c24fc92c-d770-4daf-92ba-a240be5d61e4:
+            uuid: c24fc92c-d770-4daf-92ba-a240be5d61e4
+            region: main
+            configuration:
+              id: hs_layouts_skipnav_main_anchor
+              label: 'Main content anchor target'
+              label_display: '0'
+              provider: hs_layouts
+              context_mapping: {  }
+            weight: 0
+            additional: {  }
+        third_party_settings: {  }
 id: node.hs_training.default
 targetEntityType: node
 bundle: hs_training

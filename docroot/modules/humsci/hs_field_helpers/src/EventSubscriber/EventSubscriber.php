@@ -124,13 +124,12 @@ class EventSubscriber implements EventSubscriberInterface {
     $root = end($trail);
 
     // Create the link to put as the label.
-    if ($root_link = $this->linkManager->createInstance($root)) {
-      $link = Link::fromTextAndUrl($label, $root_link->getUrlObject());
-      $label = $link->toRenderable();
+    $root_link = $this->linkManager->createInstance($root);
+    $link = Link::fromTextAndUrl($label, $root_link->getUrlObject());
+    $label = $link->toRenderable();
 
-      if (count($trail) == 1) {
-        $label['#attributes']['class'][] = 'is-active';
-      }
+    if (count($trail) == 1) {
+      $label['#attributes']['class'][] = 'is-active';
     }
   }
 

@@ -3,7 +3,6 @@
 namespace Drupal\su_humsci_profile\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\default_content\Event\DefaultContentEvents;
 use Drupal\default_content\Event\ImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -35,7 +34,7 @@ class HumsciEventSubscriber implements EventSubscriberInterface {
    * {@inheritDoc}
    */
   public static function getSubscribedEvents() {
-    return [DefaultContentEvents::IMPORT => 'onContentImport'];
+    return ['default_content.import' => 'onContentImport'];
   }
 
   /**

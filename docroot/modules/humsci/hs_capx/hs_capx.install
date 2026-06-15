@@ -5,8 +5,6 @@
  * hs_capx.install
  */
 
-use Drupal\hs_capx\Entity\CapxImporter;
-
 /**
  * Implements hook_schema().
  */
@@ -57,100 +55,8 @@ function hs_capx_schema() {
 }
 
 /**
- * Create config entities from old configuration.
+ * Implements hook_update_last_removed().
  */
-function hs_capx_update_8001() {
-  drupal_flush_all_caches();
-
-  $capx_settings = \Drupal::configFactory()->getEditable('hs_capx.settings');
-  $orgs = $capx_settings->get('organizations');
-  $workgroups = $capx_settings->get('workgroups');
-  if ($orgs || $workgroups) {
-    $importer = CapxImporter::create([
-      'id' => 'custm_capx_importer',
-      'label' => 'CapX Importer',
-      'workgroups' => explode(',', $workgroups),
-      'childOrganizations' => $capx_settings->get('child_organizations'),
-      'organizations' => explode(',', $orgs),
-    ]);
-    $importer->save();
-  }
-  $capx_settings->clear('organizations');
-  $capx_settings->clear('workgroups');
-  $capx_settings->clear('child_organizations');
-  $capx_settings->save();
-
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_updater = \Drupal::entityDefinitionUpdateManager();
-  $entity_definition = $entity_type_manager->getDefinition('capx_importer');
-  $entity_updater->installEntityType($entity_definition);
-}
-
-/**
- * Add a new column to the migrate map table.
- */
-function hs_capx_update_8002() {
-  $schema = \Drupal::database()->schema();
-  if (!$schema->tableExists('migrate_map_hs_capx')) {
-    return;
-  }
-  $field_spec = [
-    'type' => 'int',
-    'not null' => FALSE,
-  ];
-  $schema->addField('migrate_map_hs_capx', 'destid2', $field_spec);
-
-  $node_query = \Drupal::database()
-    ->select('node', 'n')
-    ->fields('n', ['nid', 'vid'])
-    ->execute()
-    ->fetchAllKeyed();
-  foreach ($node_query as $nid => $vid) {
-    \Drupal::database()
-      ->update('migrate_map_hs_capx')
-      ->fields(['destid2' => $vid])
-      ->condition('destid1', $nid)
-      ->execute();
-  }
-}
-
-/**
- * Disable CAPx migration if no username or password is set (not in use).
- */
-function hs_capx_update_8003() {
-  $capx_settings = \Drupal::config('hs_capx.settings');
-  $config_factory = \Drupal::configFactory();
-
-  // Delete the image importer since it is now part of the normal importer.
-  $config_factory->getEditable('migrate_plus.migration.hs_capx_images')
-    ->delete();
-  $schema = \Drupal::database()->schema();
-  if ($schema->tableExists('migrate_map_hs_capx_images')) {
-    \Drupal::database()->schema()->dropTable('migrate_map_hs_capx_images');
-  }
-  if ($schema->tableExists('migrate_message_hs_capx_images')) {
-    \Drupal::database()->schema()->dropTable('migrate_message_hs_capx_images');
-  }
-
-  $ignored_config = $config_factory->getEditable('config_ignore.settings');
-  $ignored_entities = $ignored_config->get('ignored_config_entities');
-  $ignored_entities[] = 'migrate_plus.migration.*:status';
-  $ignored_config->set('ignored_config_entities', $ignored_entities)->save();
-
-  if (empty($capx_settings->get('username')) && empty($capx_settings->get('password'))) {
-    // Disable capx migrations if they aren't being used.
-    $config_factory->getEditable('migrate_plus.migration.hs_capx')
-      ->set('status', FALSE)
-      ->save();
-  }
-}
-
-/**
- * Disable migrations in config and rely on overrides.
- */
-function hs_capx_update_8004() {
-  \Drupal::configFactory()
-    ->getEditable('migrate_plus.migration.hs_capx')
-    ->set('status', FALSE)
-    ->save();
+function hs_capx_update_last_removed() {
+  return 8004;
 }

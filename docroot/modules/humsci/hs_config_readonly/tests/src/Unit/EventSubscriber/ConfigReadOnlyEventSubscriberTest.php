@@ -16,13 +16,14 @@ use Drupal\Core\Form\FormState;
 use Drupal\ctools\Wizard\EntityFormWizardBase;
 use Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class ConfigReadOnlyEventSubscriberTest
- *
- * @group hs_config_readonly
- * @coversDefaultClass \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
  */
+#[CoversClass(ConfigReadOnlyEventSubscriber::class)]
+#[Group('hs_config_readonly')]
 class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
 
   /**
@@ -81,14 +82,11 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
     switch ($arg) {
       case 'bypass_form_ids':
         return ['bypassed_form'];
-        break;
       case 'form_ids':
         return [];
-        break;
 
       case 'excluded_modules':
         return [];
-        break;
 
       case 'ignored_config_entities':
         return [
@@ -96,7 +94,6 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
           'ignore.wildcard.config.*',
           'ignore.part.config:test',
         ];
-        break;
     }
   }
 
@@ -246,9 +243,11 @@ class TestEntityFormWizardCallbackObject extends EntityFormWizardBase {
   }
 
   public function getMachineLabel() {
+    return 'Machine label';
   }
 
   public function getWizardLabel() {
+    return 'Wizard label';
   }
 
   public function getEntityType() {
@@ -256,9 +255,11 @@ class TestEntityFormWizardCallbackObject extends EntityFormWizardBase {
   }
 
   public function getOperations($cached_values) {
+    return [];
   }
 
   public function exists() {
+    return static fn () => FALSE;
   }
 
 }

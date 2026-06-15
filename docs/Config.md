@@ -6,19 +6,22 @@ The platform uses a combination of contributed and custom modules to manage conf
 
 - Prevents import and export of configuration that should be editable on individual sites, such as blocks, displays, and site-specific settings (homepage, 404, analytics, permissions).
 - If a config is ignored and needs to be changed across all sites, changes must be made directly on the site or via a database update hook.
-- Exception rules allow us to selectively import/export configs even if a broad ignore pattern is present.
-- During config import, `config_ignore` uses the ignore rules from the codebase (`config_ignore.settings.yml` in your config export), not the current active config on the site.
+- Exception rules allow selective import/export of configs even if a broad ignore pattern is present.
+- By default, `config_ignore` reads its rules from sync storage (`config/default/config_ignore.settings.yml`) for both imports and exports. On local environments with a `config_split` that patches `config_ignore` settings, this means the local split's overrides are applied during import but silently bypassed during export, which causes local-only ignore rules to have no effect on `drush config-export`.
+- To correct this, local settings files (`local.settings.php` and `default.local.settings.php`) set `$settings['config_ignore_storage'] = 'active'`. This tells `config_ignore` to read its rules from active configuration, including any config_split patches currently applied, for both imports and exports. As a result, locally-ignored configuration (such as role permissions) is correctly excluded from exports, and the local split's intent is fully respected in both directions. This setting is only needed where the local config_split is active; CI and Tugboat do not enable the local split, so active and sync config_ignore are always identical there.
+
+> **Note:** This setting also means that during a site sync to local, `config_ignore` uses the active configuration on the site at the time of the sync. On a fresh site sync, the local split is not yet imported, so the first import uses the production ignore rules from `config/default`. Once the local split is imported, all subsequent imports and exports use the local split's rules.
 
 ## config_split
 
-- Manages environment-specific configuration and modules (dev, stage, prod, local, ci, etc.,).
+- Manages environment-specific configuration and modules (dev, stage, prod, local, ci, etc.).
 - Splits can be patch-based or complete splits in 2.x and use the config transformation pipeline for safe, granular config management.
 - Ensures modules like `acquia_connector`, `purge`, and `stage_file_proxy` are enabled/disabled per environment.
 
 ## config_readonly & hs_config_readonly
 
 - `config_readonly` locks the majority of configuration editing via the UI, ideal for production.
-- `hs_config_readonly` allows dynamic unlocking of configs that are ignored, so site admins can edit only what’s intended.
+- `hs_config_readonly` allows dynamic unlocking of configs that are ignored, so site admins can edit only what's intended.
 
 ## hs_config_prefix
 
@@ -27,14 +30,14 @@ The platform uses a combination of contributed and custom modules to manage conf
 
 ## Partial Config Imports & hs_config_partial
 
-- We use partial config imports to preserve custom site configuration.
+- Partial config imports are used to preserve custom site configuration.
 - Partial imports only create or update config, never delete, so customizations are safe **unless** the config is explicitly allowed to be deleted (see below).
 - If config needs to be deleted across all sites, a database update hook is required, or you may allow deletion by adding a prefix to the allow-list.
 - Previously, partial imports were run using the `--partial` flag with `drush config-import`. With `config_split` 2.x and `config_ignore` 3.x, the config transformation pipeline is used, and `--partial` does not respect these modules.
 - The custom `hs_config_partial` module implements partial import behavior using the transformation pipeline. The `--partial` flag is now deprecated and destructive. Do not use it.
 - The `acquia.settings.php` enables the `hs_config_partial` enabled setting on all Acquia environments, in addition to `config_split` to ensure this stays on.
 - The partial import also prevents any configuration that would be deleted by `config_split` when switching between different splits, including configuration attached to a module getting uninstalled. If a module is being uninstalled but associated configuration is blocked from deletion, the config import will fail. This means all module uninstalls need to take place before the config import step, **unless** the config is explicitly allowed to be deleted via the `hs_config_partial_allow_delete` setting.
-- We allow deletion of a configurations through the `hs_config_partial_allow_delete` setting in the `settings.php` file. Currently this is only used to allow deletion of configuration associated with modules being uninstalled when syncing from different environments.
+- Deletion of specific configurations is allowed through the `hs_config_partial_allow_delete` setting in the `settings.php` file. Currently this is only used to allow deletion of configuration associated with modules being uninstalled when syncing from different environments.
 - For more information see the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
 
@@ -44,12 +47,12 @@ The platform uses a combination of contributed and custom modules to manage conf
 - Never use the `--partial` flag on environments with upgraded config modules and `hs_config_partial` enabled.
 - For site-specific config changes or deletions, use update hooks or direct site editing.
 - For local development, `config_ignore` and `config_split` can be overridden in settings files to match the local environment.
-- Running `config-import` twice is a recommended approach. Certain configuration can require a fully configuration import before it is respected, especially with `config_split`.
+- Running `config-import` twice is a recommended approach. Certain configuration can require a fully completed config import before it is respected, especially with `config_split`.
 - Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these.
 - If you need to allow deletion of specific config (e.g., for module uninstalls or legacy cleanup), add the appropriate prefix to the allow-list in `settings.php` as described in the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
 
-### Exporting config_split changes
+### Export config_split Changes
 
 To safely export configuration changes for a config_split, follow these steps:
 
@@ -68,7 +71,7 @@ To safely export configuration changes for a config_split, follow these steps:
 		 ```
 	 - This ensures you start from a clean default config state and avoid mixing settings from other splits.
 
-2. **Enable the desired split (e.g., dev):**
+1. **Enable the desired split (e.g., dev):**
 	 - In `local.settings.php`, set:
 		 ```php
 		 $config['config_split.config_split.dev']['status'] = TRUE;
@@ -82,20 +85,20 @@ To safely export configuration changes for a config_split, follow these steps:
 		 drush ci -y && drush ci -y
 		 ```
 
-3. **Make your changes:**
+1. **Make your changes:**
 	 - Apply the desired configuration changes in the UI or via code.
 
-4. **Export configuration:**
+1. **Export configuration:**
 	 - Export config:
 		 ```sh
 		 drush config-export -y
 		 ```
 	 - Note: Split-specific configuration is not shown in the export output. Use `git status` to verify exported changes in split directories.
 
-5. **Revert split overrides:**
+1. **Revert split overrides:**
 	 - In `local.settings.php`, comment out or remove the split status overrides. This prevents accidental imports/exports using the wrong split in future work.
 
-6. **Restore your environment:**
+1. **Restore your environment:**
 	 - Import configuration, install a fresh site, or pull down a fresh site as needed. Always ensure the correct splits are enabled before making further changes locally.
 
 **Tips:**

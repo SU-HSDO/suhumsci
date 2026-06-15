@@ -57,8 +57,9 @@ class DateTimeYearOnly extends WidgetBase {
     ];
     $element = ['value' => $element];
 
-    /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
-    if ($date = $items->get($delta)->date) {
+    $item = $items->get($delta);
+    if ($item instanceof DateTimeItem && $item->date instanceof DrupalDateTime) {
+      $date = $item->date;
       // The date was created and verified during field_load(), so it is safe to
       // use without further inspection.
       $date->setTimezone(new \DateTimeZone(date_default_timezone_get()));

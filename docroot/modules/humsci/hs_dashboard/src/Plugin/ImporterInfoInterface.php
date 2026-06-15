@@ -29,7 +29,7 @@ interface ImporterInfoInterface extends PluginInspectionInterface {
   /**
    * Gets the table suffix for the importer.
    *
-   * @return Drupal\Core\StringTranslation\TranslatableMarkup
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   A table suffix.
    */
   public function getTableSuffix(): ?TranslatableMarkup;
@@ -37,7 +37,7 @@ interface ImporterInfoInterface extends PluginInspectionInterface {
   /**
    * Gets the caption for the importer.
    *
-   * @return Drupal\Core\StringTranslation\TranslatableMarkup|null
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   A caption or null.
    */
   public function getCaption(): TranslatableMarkup | null;
@@ -45,7 +45,7 @@ interface ImporterInfoInterface extends PluginInspectionInterface {
   /**
    * Gets the no data caption for the importer.
    *
-   * @return Drupal\Core\StringTranslation\TranslatableMarkup
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   A no data caption.
    */
   public function getNoDataCaption(): TranslatableMarkup;

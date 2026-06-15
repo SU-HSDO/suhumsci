@@ -17,7 +17,7 @@ class MenuLinkItemConstraintValidator extends ConstraintValidator implements Con
   /**
    * Current request.
    *
-   * @var \Drupal\path_alias\AliasManagerInterface
+   * @var \Symfony\Component\HttpFoundation\Request|null
    */
   protected $request;
 
@@ -55,11 +55,16 @@ class MenuLinkItemConstraintValidator extends ConstraintValidator implements Con
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
+    if (!$constraint instanceof MenuLinkItemConstraint) {
+      return;
+    }
+
     /** @var \Drupal\menu_link_content\MenuLinkContentInterface $value */
     /** @var \Drupal\Core\Field\FieldItemInterface $link_value */
     $link_value = $value->get('link')->get(0);
     $link_uri = $link_value->get('uri')->getString();
-    if (str_contains($link_uri, $this->request->getSchemeAndHttpHost())) {
+    $scheme_and_host = $this->request?->getSchemeAndHttpHost();
+    if ($scheme_and_host !== NULL && str_contains($link_uri, $scheme_and_host)) {
       $this->context->addViolation($constraint->absoluteLink);
     }
   }

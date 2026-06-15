@@ -46,7 +46,34 @@ const renderSelectedValue = (
     ));
   }
   const selectedOption = options.find((option) => option.value === value);
-  return selectedOption ? selectedOption.label : null;
+  return selectedOption ? selectedOption.label : '';
+};
+
+const getDisplayText = (
+  multiple: boolean,
+  defaultValue: SelectValue<string, boolean>,
+  value: SelectValue<string, boolean>,
+  options: SelectOptionDefinition<string>[]
+): { text: string; isApplied: boolean } => {
+  if (multiple) {
+    const current = (value as string[]) ?? [];
+    const defaultArray = (defaultValue as string[]) ?? [];
+    const count = current.length;
+
+    const isSame = current.length === defaultArray.length &&
+      [...current].sort().every((val, idx) => val === [...defaultArray].sort()[idx]);
+
+    return {
+      text: `${count} filter${count === 1 ? '' : 's'} ${isSame ? 'applied' : 'selected'}`,
+      isApplied: isSame,
+    };
+  } else {
+    const isSame = value === defaultValue;
+    return {
+      text: isSame ? renderSelectedValue(value, options) as string : '1 filter selected',
+      isApplied: isSame,
+    };
+  }
 };
 
 const StyledOption = styled.li<{
@@ -57,17 +84,17 @@ const StyledOption = styled.li<{
   cursor: pointer;
   overflow: hidden;
   margin: 0 !important;
-  padding: 5px 10px !important;
+  padding: 8px 16px !important;
+  fontSize: 16px;
+  fontWeight: 400;
+  lineHeight: 140%;
   background: ${(props) =>
     props.disabled
       ? '#f1f0ee'
       : props.selected
-      ? '#b6b1a9'
-      : props.highlighted
       ? '#d9d7d2'
       : ''};
   color: ${(props) => (props.disabled ? '#b6b1a9' : '#000')};
-  text-decoration: ${(props) => (props.highlighted ? 'underline' : 'none')};
 
   &:hover {
     background: ${(props) =>
@@ -75,10 +102,13 @@ const StyledOption = styled.li<{
         ? '#f1f0ee'
         : props.selected || props.highlighted
         ? ''
-        : '#dbdcde'};
+        : '#f1f0ee'};
     color: ${(props) =>
       props.disabled ? '#b6b1a9' : props.selected ? '' : '#000'};
-    text-decoration: ${(props) => !props.disabled && 'underline'};
+
+    input[type='checkbox']::before {
+      border-color: #b6b1a9;
+    }
   }
 
   &:before {
@@ -87,31 +117,63 @@ const StyledOption = styled.li<{
 
   input[type='checkbox'] {
     margin-right: 8px;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     appearance: none;
     background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 2px;
+    border: 1px solid #000000;
+    border-radius: 0;
     position: relative;
     cursor: pointer;
   }
 
-  input[type='checkbox']:checked {
-    background-color: #413e39;
-    border-color: #413e39;
-  }
-
-  input[type='checkbox']:checked::before {
+  input[type='checkbox']::before {
     content: '';
     position: absolute;
     top: 1px;
     left: 4px;
-    width: 6px;
-    height: 10px;
-    border: solid #fff;
-    border-width: 0 2px 2px 0;
+    width: 4px;
+    height: 8px;
+    border: solid transparent;
+    border-width: 0 1px 1px 0;
     transform: rotate(45deg);
+  }
+
+  input[type='checkbox']:checked {
+    background-color: transparent;
+  }
+
+  input[type='checkbox']:checked::before {
+    border-color: #000000;
+  }
+
+  /* Hide checkmark */
+  &:hover input[type='checkbox']:checked::before {
+    border-color: transparent;
+  }
+
+  /* Show × on hover when already selected */
+  &:hover input[type='checkbox']:checked {
+    &::before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    &::before,
+    &::after {
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 1px;
+      border: none;
+      background: #000;
+    }
+
   }
 
   /* Adjusting for disabled state */
@@ -193,8 +255,6 @@ interface Props {
   disabled?: boolean;
   value?: SelectValue<string, boolean>;
   required?: boolean;
-  emptyValue?: string;
-  emptyLabel?: string;
   name: string;
 }
 
@@ -206,8 +266,6 @@ const SelectList = ({
   required,
   defaultValue,
   name,
-  emptyValue,
-  emptyLabel = '- None -',
   ...props
 }: Props) => {
   const labelId = name;
@@ -239,7 +297,21 @@ const SelectList = ({
     }
   }, [listboxVisible, value]);
 
+  const [listboxMaxHeight, setListboxMaxHeight] = useState<string>('auto');
+
   useLayoutEffect(() => {
+    // Measure actual height of first 6 items
+    if (listboxRef.current) {
+      const items = Array.from(listboxRef.current.children) as HTMLElement[];
+      if (items.length <= 6) {
+        setListboxMaxHeight('fit-content');
+      } else {
+        const maxHeight = items.slice(0, 6).reduce((sum, el) => sum + el.offsetHeight, 0);
+        setListboxMaxHeight(`${maxHeight}px`);
+      }
+    }
+
+    // Existing scroll-into-view logic
     const parentContainer =
       listboxRef.current?.parentElement?.getBoundingClientRect();
     if (
@@ -285,6 +357,7 @@ const SelectList = ({
           borderRadius: '5px',
           textAlign: 'left',
           minHeight: '40px',
+          paddingInline: !optionChosen && multiple ? '10px' : '16px',
         }}
       >
         <span
@@ -294,29 +367,20 @@ const SelectList = ({
             flexWrap: 'wrap',
           }}
         >
-          {optionChosen && (
-            <span
-              style={{
-                overflow: 'hidden',
-                maxWidth: 'calc(100% - 30px)',
-                padding: '8px 5px 8px 0',
-              }}
-            >
-              {multiple
-                ? value?.length == options.length
-                  ? 'All selected'
-                  : `${value?.length} selected`
-                : renderSelectedValue(value, options)}
-            </span>
-          )}
-          {!optionChosen && !multiple && (
+          {optionChosen && (() => {
+            const { text, isApplied } = getDisplayText(multiple, defaultValue, value, options);
+            return (
+              <span style={{ overflow: 'hidden', maxWidth: 'calc(100% - 30px)', padding: '8px 5px 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {isApplied && (
+                  <span class="select-preact__checkmark"></span>
+                )}
+                {text}
+              </span>
+            );
+          })()}
+          {!optionChosen && (
             <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
-              {emptyLabel}
-            </span>
-          )}
-          {!optionChosen && multiple && (
-            <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
-              Choose one or more options
+              {multiple ? 'Choose one or more options' : 'Any'}
             </span>
           )}
 
@@ -336,12 +400,10 @@ const SelectList = ({
           position: 'absolute',
           zIndex: '10',
           background: '#fff',
-          maxHeight: '125px',
-          overflowY: 'scroll',
+          maxHeight: listboxMaxHeight,
+          overflowY: options.length > 6 ? 'scroll' : 'auto',
           width: '100%',
-          border: '1px solid #D5D5D4',
-          boxShadow:
-            'rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px',
+          border: '1px solid #ababa9',
           display: listboxVisible ? 'block' : 'none',
         }}
       >
@@ -358,11 +420,11 @@ const SelectList = ({
           <SelectProvider value={contextValue}>
             {!required && !multiple && (
               <CustomOption
-                value={emptyValue ?? ''}
+                value=''
                 rootRef={listboxRef}
                 id={`${name}-empty`}
               >
-                {emptyLabel}
+                Any
               </CustomOption>
             )}
 

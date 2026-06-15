@@ -20,17 +20,18 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class CapxTest.
- *
- * @covers \Drupal\hs_capx\Capx
- * @group hs_capx
  */
+#[CoversClass(Capx::class)]
+#[Group('hs_capx')]
 class CapxTest extends UnitTestCase {
 
   /**
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \GuzzleHttp\Client&\PHPUnit\Framework\MockObject\MockObject
    */
   protected $guzzle;
 
@@ -40,7 +41,7 @@ class CapxTest extends UnitTestCase {
   protected $capx;
 
   /**
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 
@@ -50,14 +51,17 @@ class CapxTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->guzzle = $this->createMock(Client::class);
+    /** @var \GuzzleHttp\Client&\PHPUnit\Framework\MockObject\MockObject $guzzle */
+    $guzzle = $this->createMock(Client::class);
+    $this->guzzle = $guzzle;
 
-
-    $this->cache = $this->createMock(CacheBackendInterface::class);
+    /** @var \Drupal\Core\Cache\CacheBackendInterface&\PHPUnit\Framework\MockObject\MockObject $cache */
+    $cache = $this->createMock(CacheBackendInterface::class);
+    $this->cache = $cache;
     $database = $this->createMock(DatabaseConnection::class);
     $merge = $this->createMock(Merge::class);
-    $merge->method('fields')->will($this->returnValue($merge));
-    $merge->method('key')->will($this->returnValue($merge));
+    $merge->method('fields')->willReturn($merge);
+    $merge->method('key')->willReturn($merge);
     $database->method('merge')->willReturn($merge);
 
     $config_object = $this->createMock(ImmutableConfig::class);
@@ -129,7 +133,7 @@ class CapxTest extends UnitTestCase {
   public function testOrgData() {
     $this->guzzle->method('request')
       ->withAnyParameters()
-      ->will($this->returnCallback([$this, 'guzzleRequestCallback']));
+      ->willReturnCallback([$this, 'guzzleRequestCallback']);
     $data = $this->capx->getOrgData();
 
     $this->assertArrayHasKey('name', $data);
@@ -141,7 +145,7 @@ class CapxTest extends UnitTestCase {
   public function testCachedOrgData() {
     $this->cache->method('GET')
       ->withAnyParameters()
-      ->will($this->returnCallback([$this, 'cacheGetCallback']));
+      ->willReturnCallback([$this, 'cacheGetCallback']);
     $this->testOrgData();
 
     $this->assertNotEmpty($this->capx->getAccessToken());
@@ -150,9 +154,9 @@ class CapxTest extends UnitTestCase {
   public function testSync() {
     $this->cache->method('GET')
       ->withAnyParameters()
-      ->will($this->returnCallback([$this, 'cacheGetCallback']));
+      ->willReturnCallback([$this, 'cacheGetCallback']);
 
-    $this->assertNull($this->capx->syncOrganizations($this->capx->getOrgData()));
+    $this->assertNull($this->capx->syncOrganizations());
   }
 
   /**

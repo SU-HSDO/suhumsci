@@ -36,6 +36,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Decommissioning and Deleting a Site](docs/DeleteSite.md)
 - [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
 - [Patching](docs/Patching.md)
+- [Deprecating and Removing a Module](docs/ModuleUninstall.md)
 - [Codeception Tests](docs/Codeception.md)
 
 ### Migration

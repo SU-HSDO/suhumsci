@@ -347,6 +347,7 @@ const SelectList = ({
           borderRadius: '5px',
           textAlign: 'left',
           minHeight: '40px',
+          paddingInline: !optionChosen && multiple ? '10px' : '16px',
         }}
       >
         <span
@@ -366,6 +367,12 @@ const SelectList = ({
               </span>
             );
           })()}
+          {!optionChosen && multiple && (
+            <span className='select-preact__option-label'>
+              Choose one or more options
+            </span>
+          )}
+
           <ChevronDownIcon
             width={20}
             style={{

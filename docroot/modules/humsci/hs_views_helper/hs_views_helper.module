@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -112,6 +113,26 @@ function hs_views_helper_form_views_exposed_form_alter(&$form, FormStateInterfac
   // the access and apply some javascript to help keep the ajaxy feel.
   $form['actions']['reset']['#access'] = TRUE;
   $form['#attached']['library'][] = 'hs_views_helper/views_reset';
+}
+
+/**
+ * Implements hook_views_pre_render().
+ *
+ * Alters the page title for taxonomy terms rendered by the
+ * hs_default_taxonomy_term view to [vocabulary]: [term].
+ *
+ * This replicates the standard taxonomy term canonical page title handling by
+ * \Drupal\stanford_fields\Hook\StanfordFieldsHooks::preprocessPage().
+ */
+function hs_views_helper_views_pre_render(ViewExecutable $view) {
+  if ($view->id() === 'hs_default_taxonomy_term' && !empty($view->args[0])) {
+    $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($view->args[0]);
+    if ($term instanceof TermInterface) {
+      $vocab = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->load($term->bundle());
+      $vocab_label = $vocab ? $vocab->label() : $term->bundle();
+      $view->setTitle($vocab_label . ': ' . $term->label());
+    }
+  }
 }
 
 /**

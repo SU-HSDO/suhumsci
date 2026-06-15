@@ -15,6 +15,7 @@ This document defines the standards for creating and updating documentation in t
 - Use active voice
 - Use active voice especially in warnings — "Take a database backup before proceeding" not "Database backups are required"
 - Avoid filler words ("simply", "just", "easily", "very good", etc.)
+- Do not use em dashes (—). Rewrite the sentence to avoid them.
 - Avoid meta-notes written to the author (e.g., "update this before publishing") — those belong in PR descriptions or commit messages, not in committed docs
 
 ## Document Types

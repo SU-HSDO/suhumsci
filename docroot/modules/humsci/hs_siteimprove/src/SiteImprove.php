@@ -70,7 +70,7 @@ class SiteImprove implements SiteImproveInterface {
   }
 
   /**
-   * Is there enough config info to make API calls?
+   * Checks whether the minimum config is set for API calls to continue.
    */
   protected function hasSiteConfig(): bool {
     return !empty($this->getApiKey()) && !empty($this->getUsername());
@@ -84,7 +84,7 @@ class SiteImprove implements SiteImproveInterface {
    *
    * @return array
    */
-  public function getSites(bool $refresh = FALSE): array {
+  protected function getSites(bool $refresh = FALSE): array {
     $cid = 'hs_siteimprove:sites';
     if (!$refresh && $cache = $this->cache->get($cid)) {
       return $cache->data;
@@ -170,11 +170,11 @@ class SiteImprove implements SiteImproveInterface {
           return $site;
         }
       }
+      $this->logger->error('Could not find a SiteImprove site for the site: @production_url', ['@production_url' => $production_url]);
     }
     catch (\Exception $e) {
       $this->logger->error('Failed to get current site: @message', ['@message' => $e->getMessage()]);
     }
-    $this->logger->error('Could not find a SiteImprove site for the site: @production_url', ['@production_url' => $production_url]);
 
     return NULL;
   }
@@ -217,6 +217,9 @@ class SiteImprove implements SiteImproveInterface {
       }
 
       throw new SiteImproveException('API request failed with status code: ' . $response->getStatusCode());
+    }
+    catch (\JsonException $e) {
+      throw new SiteImproveException('API response is not valid JSON: ' . $e->getMessage(), 0, $e);
     }
     catch (\Exception $e) {
       throw new SiteImproveException('API request failed: ' . $e->getMessage(), 0, $e);

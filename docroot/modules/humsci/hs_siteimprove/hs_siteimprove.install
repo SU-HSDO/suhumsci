@@ -5,13 +5,8 @@
  * hs_siteimprove.install
  */
 
-use Drupal\Core\Utility\UpdateException;
-use Drupal\SwsDrush\Helpers\EnvironmentDetector;
-
 /**
  * Refresh the cached SiteImprove site ID.
- *
- * @throws \Drupal\Core\Utility\UpdateException
  */
 function hs_siteimprove_update_10001(): string {
   /** @var \Drupal\hs_siteimprove\SiteImprove $site_improve */
@@ -19,14 +14,8 @@ function hs_siteimprove_update_10001(): string {
   $site_id = $site_improve->getCurrentSiteId(TRUE);
 
   if (!$site_id) {
-    // On local, keys are probably not set up.  Allow DB updates to continue.
-    // Everywhere else, we want to know if there's a problem.
-    $envs = EnvironmentDetector::getEnvironments();
-    $env = key($envs) ?? 'local';
-    if ($env !== 'local') {
-      throw new UpdateException('Could not retrieve SiteImprove site ID. Check the API settings at /admin/config/services/siteimprove.');
-    }
-    return t('SiteImprove site ID not refreshed. Intentionally allowing execution to continue because this is a local site.')->render();
+    \Drupal::logger('hs_siteimprove')->warning('Could not retrieve SiteImprove site ID. Check the API settings at /admin/config/services/siteimprove.');
+    return t('SiteImprove site ID not refreshed. Check the API settings at /admin/config/services/siteimprove.')->render();
   }
 
   return t('SiteImprove site ID refreshed: @id.', ['@id' => $site_id])->render();

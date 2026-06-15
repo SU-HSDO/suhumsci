@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 #[Action(
   id: 'migration_ignore',
-  action_label: new TranslatableMarkup('Ignore from importing'),
+  label: new TranslatableMarkup('Ignore from importing'),
   type: 'node',
 )]
 class MigrationIgnore extends ViewsBulkOperationsActionBase implements ContainerFactoryPluginInterface {

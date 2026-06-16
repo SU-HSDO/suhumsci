@@ -1,0 +1,29 @@
+uuid: 1ba33257-5ad8-489b-b7d2-1affcc12cf7e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_project_media
+    - node.type.hs_project
+  module:
+    - media
+id: node.hs_project.field_hs_project_media
+field_name: field_hs_project_media
+entity_type: node
+bundle: hs_project
+label: Media
+description: 'Add up to 10 supporting images or videos. Use for galleries, demos, or supplementary visuals.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+      video: video
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

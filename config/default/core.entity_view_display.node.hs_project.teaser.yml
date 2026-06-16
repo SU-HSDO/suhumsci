@@ -1,0 +1,41 @@
+uuid: 53b566bf-7a49-4cdc-b5f1-4fd382c872a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.hs_project.field_hs_project_category
+    - field.field.node.hs_project.field_hs_project_description
+    - field.field.node.hs_project.field_hs_project_external_links
+    - field.field.node.hs_project.field_hs_project_featured_image
+    - field.field.node.hs_project.field_hs_project_is_active
+    - field.field.node.hs_project.field_hs_project_media
+    - node.type.hs_project
+  module:
+    - text
+    - user
+id: node.hs_project.teaser
+targetEntityType: node
+bundle: hs_project
+mode: teaser
+content:
+  field_hs_project_description:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_hs_project_category: true
+  field_hs_project_external_links: true
+  field_hs_project_featured_image: true
+  field_hs_project_is_active: true
+  field_hs_project_media: true
+  search_api_excerpt: true

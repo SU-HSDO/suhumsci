@@ -1,0 +1,23 @@
+uuid: 7a653363-d8c3-433d-8ebd-b576c5e5cf8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.hs_project
+  module:
+    - node
+id: hs_project
+label: 'Project Content'
+type: 'canonical_entities:node'
+pattern: '/project/[node:title]'
+selection_criteria:
+  b1de5922-9e61-41e9-b017-7e47c5845658:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      hs_project: hs_project
+selection_logic: and
+weight: -5
+relationships: {  }

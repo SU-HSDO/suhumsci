@@ -118,9 +118,23 @@ function su_humsci_profile_update_11001(): string {
 }
 
 /**
+ * Add hs_training content type to single_content_sync allow list.
+ */
+function su_humsci_profile_update_11002(): string {
+  $config = \Drupal::configFactory()->getEditable('single_content_sync.settings');
+  $allowed = $config->get('allowed_entity_types');
+  if (!in_array('hs_training', $allowed['node'] ?? [])) {
+    $allowed['node'][] = 'hs_training';
+    $config->set('allowed_entity_types', $allowed)->save();
+    return t('Added hs_training to single_content_sync allowed node types.');
+  }
+  return t('hs_training was already in single_content_sync allowed node types.');
+}
+
+/**
  * Remove unused postcard image styles.
  */
-function su_humsci_profile_update_11002() {
+function su_humsci_profile_update_11003() {
   // List of unused image styles to remove.
   $image_styles_to_remove = [
     'postcard_horizontal_356px_',

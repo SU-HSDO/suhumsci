@@ -8,11 +8,13 @@ a.button {
   @include hb-button;
   font-size: hb-calculate-rems(18px);
 
-  // Target all BEF reset buttons — BEF appends a unique suffix to the
-  // data-drupal-selector (e.g. edit-reset-view-name-xyz), so use ^= (starts-with).
   &[data-drupal-selector^='edit-reset'] {
-    @include hb-reset-button;
-    margin-right: 0;
+    @include hb-secondary-button;
+
+    [data-bef-auto-submit] & {
+      @include hb-reset-button;
+      margin-right: 0;
+    }
   }
 }
 

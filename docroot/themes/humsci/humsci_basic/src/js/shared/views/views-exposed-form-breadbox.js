@@ -59,9 +59,7 @@
           }
         }
 
-        setTimeout(() => {
-          updateBreadbox(form, breadbox);
-        }, 10);
+        updateBreadbox(form, breadbox);
       });
 
       breadbox.appendChild(item);
@@ -94,7 +92,7 @@
           const breadbox = document.createElement('div');
           breadbox.className = 'breadbox breadbox--hidden';
 
-          form.insertAdjacentElement('afterend', breadbox);
+          form.insertAdjacentElement('beforeend', breadbox);
 
           const resetBtn = form.querySelector(
             '[data-drupal-selector^="edit-reset"]',

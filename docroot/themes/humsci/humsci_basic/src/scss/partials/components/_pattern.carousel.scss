@@ -190,6 +190,11 @@ $container-small: 576px;
     // Override hb-page-width width.
     min-height: auto !important;
 
+    @container carousel (width > #{$container-medium}) {
+      padding-inline: hb-calculate-rems(24px);
+      padding-bottom: hb-calculate-rems(24px);
+    }
+
     @include hb-themes(('colorful', 'airy')) {
       background-color: color-mix(in srgb, color('black', 'global') 75%, transparent);
 
@@ -213,6 +218,11 @@ $container-small: 576px;
         bottom: 0;
         left: 0;
         top: 0;
+      }
+
+      @container carousel (width > #{$container-xlarge}) {
+        padding-block: hb-calculate-rems(20px) hb-calculate-rems(32px);
+        padding-inline: hb-calculate-rems(32px);
       }
 
       &.animate {
@@ -251,14 +261,12 @@ $container-small: 576px;
       }
     }
 
-    @container carousel (width > #{$container-medium}) {
-      padding-inline: hb-calculate-rems(24px);
-    }
 
     h2 {
       @include hb-heading-2;
 
-      margin: 0 0 hb-calculate-rems(2px);
+      padding-bottom: hb-calculate-rems(2px);
+      margin: 0;
     }
 
     h2,
@@ -278,21 +286,6 @@ $container-small: 576px;
       }
     }
 
-    p,
-    p:last-child {
-      @include hb-themes(('colorful', 'airy')) {
-        margin-block: hb-calculate-rems(2px);
-      }
-
-      @include hb-traditional {
-        margin-block: hb-calculate-rems(4px);
-      }
-
-      @container carousel (width > #{$container-medium}) {
-        margin-block: hb-calculate-rems(6px) hb-calculate-rems(4px);
-      }
-    }
-
     // Styles for the body.
     .field-hs-hero-body {
       display: inline-block;
@@ -300,40 +293,44 @@ $container-small: 576px;
 
       @include hb-themes(('colorful', 'airy')) {
         @container carousel (width > #{$container-small}) {
-          margin-bottom: hb-calculate-rems(2px);
+          padding-block: hb-calculate-rems(2px) hb-calculate-rems(4px);
         }
       }
 
       @include hb-traditional {
-        margin-bottom: hb-calculate-rems(6px);
+        padding-block: hb-calculate-rems(4px) hb-calculate-rems(10px);
       }
 
       @container carousel (width > #{$container-medium}) {
-        margin-bottom: hb-calculate-rems(4px);
+        padding-block: hb-calculate-rems(6px) hb-calculate-rems(12px);
       }
     }
 
     // Styles for the link.
     .field-hs-hero-link {
+      @include hb-themes(('colorful', 'airy')) {
+        padding-block: hb-calculate-rems(6px) hb-calculate-rems(2px);
+
+        @container carousel (width > #{$container-small}) {
+          padding-block: hb-calculate-rems(12px) hb-calculate-rems(2px);
+        }
+      }
+
+      @include hb-traditional {
+        padding-block: hb-calculate-rems(4px) hb-calculate-rems(2px);
+
+        @container carousel (width > #{$container-medium}) {
+          padding-block: hb-calculate-rems(12px) hb-calculate-rems(2px);
+        }
+      }
+
       a {
         padding: hb-calculate-rems(4px) hb-calculate-rems(24px) hb-calculate-rems(6px);
+        margin: 0;
 
         @include hb-themes(('colorful', 'airy')) {
-          margin-block: hb-calculate-rems(6px) hb-calculate-rems(2px);
           border-color: color('white', 'global');
           color: color('white', 'global');
-
-          @container carousel (width > #{$container-small}) {
-            margin-block: hb-calculate-rems(12px) hb-calculate-rems(2px);
-          }
-        }
-
-        @include hb-traditional {
-          margin-block: hb-calculate-rems(4px) hb-calculate-rems(2px);
-
-          @container carousel (width > #{$container-medium}) {
-            margin-block: hb-calculate-rems(12px) hb-calculate-rems(2px);
-          }
         }
       }
     }

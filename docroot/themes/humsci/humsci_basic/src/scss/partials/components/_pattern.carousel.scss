@@ -185,7 +185,7 @@ $container-small: 576px;
 
   // Styles for the text container.
   .hb-hero-overlay__text {
-    padding: hb-calculate-rems(16px) hb-calculate-rems(10px);
+    padding: hb-calculate-rems(10px) hb-calculate-rems(16px) hb-calculate-rems(16px);
 
     // Override hb-page-width width.
     min-height: auto !important;
@@ -199,14 +199,24 @@ $container-small: 576px;
       background-color: color-mix(in srgb, color('black', 'global') 75%, transparent);
 
       // Override hb-page-width width.
-      max-width: hb-calculate-rems(450px) !important;
-      width: calc(100% - 2 * 2rem) !important;
-      margin: -25% 0 0 !important;
-      left: hb-calculate-rems(10px);
+      width: calc(100% - hb-calculate-rems(24px)) !important;
+      max-width: 100% !important;
+      margin: hb-calculate-rems(-34px) auto 0 !important;
       transform: none;
 
       @container carousel (width > #{$container-small}) {
+        // Override hb-page-width width.
+        width: calc(100% - hb-calculate-rems(42px)) !important;
+      }
+
+      @container carousel (width > #{$container-caption}) {
+        // Override hb-page-width width.
+        width: calc(100% - hb-calculate-rems(64px)) !important;
+        max-width: hb-calculate-rems(450px) !important;
+        margin: 0 !important;
+        position: absolute;
         left: hb-calculate-rems(16px);
+        bottom: 0;
       }
 
       @container carousel (width > #{$container-medium}) {
@@ -418,12 +428,12 @@ $container-small: 576px;
   .swiper-button-next {
     @include grid-media-min('md') {
       @include hb-traditional {
-        top: calc(50% - #{hb-calculate-rems(30px)});
+        top: calc(50% - #{hb-calculate-rems(76px)});
         bottom: unset;
       }
 
       @include hb-themes(('colorful', 'airy')) {
-        top: calc(50% - #{hb-calculate-rems(21px)});
+        top: calc(50% - #{hb-calculate-rems(62px)});
         bottom: unset;
       }
 
@@ -442,8 +452,8 @@ $container-small: 576px;
   .hb-hero-overlay:not(.hb-hero-overlay--no-text) {
     .hb-media-image .field-media-image-caption.collapsible-caption {
       @include hb-themes(('colorful', 'airy')) {
-        padding-inline: hb-calculate-rems(40px) max(50px, calc(100% - hb-calculate-rems(456px)));
-        padding-block: 5% calc(25% + hb-calculate-rems(4px));
+        padding-inline: hb-calculate-rems(12px);
+        padding-block: 3% hb-calculate-rems(28px);
 
         @container carousel (width > #{$container-caption}) {
           padding: 0 hb-calculate-rems(20px) hb-calculate-rems(21px);

@@ -96,39 +96,7 @@ composer install
 - Merge the PR using a **merge commit** (not squash merge).
 - The merge commit subject should be the version number (e.g., `12.1.1`).
 
-### Back to Dev (Sync main into current development branch)
-After the release PR is merged into `main`, create and merge a "back to dev" pull request to sync `main` back into the current `<major>.x` development branch:
-
-1. Fetch and pull the latest `main` and current major branch:
-	```bash
-	git checkout main && git fetch && git pull
-	git checkout CURRENT_MAJOR_BRANCH && git fetch && git pull
-	```
-
-2. Create a back-to-dev branch off the current major branch:
-	```bash
-	git checkout CURRENT_MAJOR_BRANCH && git checkout -b backtodev-VERSION
-	
-	# Example:
-	git checkout 12.x && git checkout -b backtodev-12.1.1
-	```
-
-3. Merge `main` into your back-to-dev branch:
-	```bash
-	git merge main
-	```
-
-4. Update the version number in `docroot/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml` to the next dev version (e.g., `12.1.2-dev`):
-	```bash
-	git add . && git commit -m "backtodev-VERSION"
-	git push
-	```
-
-5. Open a pull request from `backtodev-VERSION` into the current `<major>.x` branch.
-
-6. Merge the back-to-dev pull request before deleting the release branch. This PR may be force-merged if necessary to bypass test checks on the development branch.
-
-**Note:** If a production hotfix is ever made directly on `main`, sync that change back to the current `<major>.x` branch in a separate pull request.
+> **Note:** Syncing `main` back into the current `<major>.x` branch is not part of the release process. Every release branch is created from `<major>.x`, so `main` contains nothing that `<major>.x` does not already have. If a change is ever merged directly into `main` outside the normal release flow, follow the policy in [Branching Strategy](BranchingStrategy.md).
 
 ### Confirm Automation (Release PR Merge)
 When the release PR is merged into `main`, GitHub Actions automatically:

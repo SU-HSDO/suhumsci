@@ -393,6 +393,51 @@ $container-small: 576px;
     }
   }
 
+  // Fix slider arrows at the top so they don't move with height changes.
+  .swiper-button-next {
+    @include hb-traditional {
+      top: hb-calculate-rems(188px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      top: hb-calculate-rems(204px);
+    }
+  }
+
+  .swiper-button-prev {
+    @include hb-traditional {
+      top: hb-calculate-rems(84px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      top: hb-calculate-rems(100px);
+    }
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    @include grid-media-min('md') {
+      @include hb-traditional {
+        top: calc(50% - #{hb-calculate-rems(30px)});
+        bottom: unset;
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        top: calc(50% - #{hb-calculate-rems(21px)});
+        bottom: unset;
+      }
+
+      // styles specific to the main content area are applied by targeting
+      // the sidebar classes. We can use these classes to move the swiper bullets.
+      :not(.hs-full-width).hb-three-column--no-sidebar &,
+      .hb-three-column--one-sidebar &,
+      .hb-three-column--two-sidebar & {
+        top: calc(50% - #{hb-calculate-rems(46px)});
+        bottom: unset;
+      }
+    }
+  }
+
   // Styles for the collapsible caption when the hero has a text box.
   .hb-hero-overlay:not(.hb-hero-overlay--no-text) {
     .hb-media-image .field-media-image-caption.collapsible-caption {

@@ -179,8 +179,16 @@ If a site failed to update:
 	```bash
 	drush @DRUSHALIAS.prod updatedb -y
 	drush @DRUSHALIAS.prod ci
+	drush @DRUSHALIAS.prod deploy:hook -y
 	drush @DRUSHALIAS.prod cr
 	```
+
+	If you only need to re-run the full deploy sequence rather than step through commands individually, use:
+	```bash
+	drush @DRUSHALIAS.prod deploy
+	```
+
+	> **Important:** Always include `deploy:hook` after `config:import`. Deploy hooks run after config import by design and will be skipped if omitted. See [ADR 0004](architecture/decisions/0004-use-deploy-hooks-for-post-config-operations.md).
 3. For major failures, coordinate with other developers and consider a hotfix or rollback.
 
 ## Rolling Back a Deployment

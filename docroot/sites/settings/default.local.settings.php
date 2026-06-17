@@ -32,3 +32,8 @@ if (file_exists(DRUPAL_ROOT . '/sites/local.services.yml')) {
 if (getenv('TUGBOAT_REPO')) {
   unset($config['samlauth.authentication'], $config['stanford_samlauth.settings']);
 }
+
+// Use active storage for config_ignore so the local config_split's ignore rules
+// apply on exports as well as imports. Without this, exports use sync storage
+// (config/default), bypassing local split overrides. See docs/Config.md.
+$settings['config_ignore_storage'] = 'active';

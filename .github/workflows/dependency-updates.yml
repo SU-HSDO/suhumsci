@@ -6,8 +6,9 @@ name: Automated Dependency Updates
 
 on:
   schedule:
-    # Run on Fridays at 2 PM UTC.
-    - cron: '0 14 * * 5'
+    # Run on Fridays at ~2:15 AM Central (7:15 UTC / CDT). Off-peak to reduce
+    # GitHub scheduler delays.
+    - cron: '15 7 * * 5'
   workflow_dispatch:
 
 jobs:
@@ -87,7 +88,7 @@ jobs:
           echo '```' >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Automated Dependency Updates ${{ steps.date.outputs.date }}"

@@ -3,7 +3,13 @@
 <div{{ attributes }}>
   {% if image %}
     <div class="hb-vertical-linked-card__img">
-      {{ image }}
+      {% if href and title|render|trim is empty %}
+        <a href="{{ href }}" class="hb-card__img__link">
+          {{ image }}
+        </a>
+      {% else %}
+        {{ image }}
+      {% endif %}
     </div>
   {% endif %}
 

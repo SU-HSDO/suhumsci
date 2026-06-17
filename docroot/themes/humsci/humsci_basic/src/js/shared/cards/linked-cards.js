@@ -32,11 +32,8 @@ import addImageLinkEvents from './image-link-handler';
         // Logic for vertical card and date stacked card.
         if (card.querySelector('.hb-card__title a')) {
           mainLink = card.querySelector('.hb-card__title a');
-          // Logic for vertical linked card.
         } else {
-          mainLink = card.querySelector(
-            '.hb-vertical-linked-card__title__link',
-          );
+          mainLink = card.querySelector('.hb-vertical-linked-card__title__link');
         }
 
         if (!mainLink) {

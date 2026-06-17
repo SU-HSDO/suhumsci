@@ -13,7 +13,13 @@
   {% if image %}
     <div class="hb-card__graphics">
       <div class="hb-card__img">
-        {{ image }}
+        {% if href and title|render|trim is empty %}
+          <a href="{{ href }}" class="hb-card__img__link">
+            {{ image }}
+          </a>
+        {% else %}
+          {{ image }}
+        {% endif %}
       </div>
     </div>
   {% endif %}

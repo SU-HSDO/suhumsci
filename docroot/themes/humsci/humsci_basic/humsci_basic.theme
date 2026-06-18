@@ -104,6 +104,7 @@ function humsci_basic_preprocess_html(&$vars) {
   }
 
   $paragraph = $node->get('field_hs_page_hero')->entity;
+  $current_theme = \Drupal::config('system.theme')->get('default');
 
   $paragraphs_map = [
     'hs_gradient_hero_slider' => [
@@ -114,7 +115,7 @@ function humsci_basic_preprocess_html(&$vars) {
     'hs_carousel' => [
       'field' => 'field_hs_carousel_slides',
       'image_field' => 'field_hs_hero_image',
-      'style' => 'hero_with_text_large',
+      'style' => $current_theme === 'humsci_traditional' ? 'banner_text_box_traditional' : 'banner_text_box_colorful',
     ],
     'hs_banner' => [
       'field' => 'field_hs_banner_image',

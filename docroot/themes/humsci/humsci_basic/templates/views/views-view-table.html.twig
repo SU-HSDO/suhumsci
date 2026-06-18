@@ -33,6 +33,7 @@
  * @ingroup themeable
  */
 #}
+{{ attach_library('humsci_basic/table') }}
 {{ attach_library('humsci_basic/table-wrap') }}
 {{ attach_library('humsci_basic/table-scope') }}
 
@@ -41,6 +42,7 @@
     'cols-' ~ header|length,
     responsive ? 'responsive-enabled',
     sticky ? 'sticky-enabled',
+    'table',
   ]
 %}
 <table{{ attributes.addClass(classes) }}>

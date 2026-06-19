@@ -6,7 +6,6 @@ This document defines the standards for creating and updating documentation in t
 
 - The primary audience for operational documentation is experienced Drupal developers on the H&S team
 - The primary operational stakeholders are the **H&S web team** — use this term when documentation refers to site owners, editors, or operational contacts (e.g., "Notify the H&S web team and/or site owner")
-- Do not use the terms "stakeholders" or "clients" — use "H&S web team" for operational contacts, or name the specific team or role
 - `DocumentationStandards.md` also serves as AI context for Claude Code in this repository — keep it accurate and up to date
 
 ## Language and Tone

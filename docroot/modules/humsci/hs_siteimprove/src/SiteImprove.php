@@ -142,8 +142,10 @@ class SiteImprove implements SiteImproveInterface {
 
     try {
       $pages = $this->call('GET', "/sites/$site_id/quality_assurance/links/pages_with_broken_links", ['page_size' => 5]);
-      // Cache for 5 minutes.
-      $this->cache->set('hs_siteimprove_broken_links', $pages->items, time() + 900);
+      // Cache the result so that we don't hit the API on every dashboard load.
+      // (SiteImprove typically only scans once per day unless a manual scan is
+      // triggered).
+      $this->cache->set('hs_siteimprove_broken_links', $pages->items, time() + (60 * 15));
       return $pages->items;
     }
     catch (SiteImproveException $e) {
@@ -210,13 +212,6 @@ class SiteImprove implements SiteImproveInterface {
     try {
       $response = $this->http_client->request($method, $this->baseUrl . $endpoint, $options);
       $response_body = json_decode($response->getBody(), FALSE, 16, JSON_THROW_ON_ERROR);
-
-      if ($response->getStatusCode() === 200) {
-        unset($response_body->ErrorCode, $response_body->ErrorMessage);
-        return $response_body;
-      }
-
-      throw new SiteImproveException('API request failed with status code: ' . $response->getStatusCode());
     }
     catch (\JsonException $e) {
       throw new SiteImproveException('API response is not valid JSON: ' . $e->getMessage(), 0, $e);
@@ -224,6 +219,13 @@ class SiteImprove implements SiteImproveInterface {
     catch (\Exception $e) {
       throw new SiteImproveException('API request failed: ' . $e->getMessage(), 0, $e);
     }
+
+    if ($response->getStatusCode() === 200) {
+      unset($response_body->ErrorCode, $response_body->ErrorMessage);
+      return $response_body;
+    }
+
+    throw new SiteImproveException('API request failed with status code: ' . $response->getStatusCode());
   }
 
   /**

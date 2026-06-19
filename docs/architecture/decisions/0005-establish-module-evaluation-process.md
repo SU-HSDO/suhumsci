@@ -10,11 +10,11 @@ HSDP runs 130+ Drupal sites for Stanford's School of Humanities and Sciences on 
 
 Custom solutions offer precision and flexibility, but they introduce maintenance complexity and long-term ownership obligations specific to this team. Core and community-contributed modules benefit from broad community support and established security processes, which can reduce maintenance burden at scale. At the same time, contributed modules carry their own ongoing costs: monitoring for updates, verifying compatibility across Drupal core upgrades, and confirming they continue to behave correctly in this platform's environment.
 
-The right choice in any situation is whichever approach produces the lowest total cost over time, accounting for both implementation effort and ongoing maintenance. Decisions between contributed and custom solutions have historically been made without a shared framework, leading to inconsistent outcomes and choices made without full visibility into their long-term implications.
+The right choice in any situation weighs two factors: how well the approach fits the requirement and how readily it can be delivered, and what it will cost to maintain over time. A contributed module that already solves the problem has genuine value in its existence. Rebuilding something that works is rarely justified, even if a custom solution might theoretically be leaner long-term. Decisions between contributed and custom solutions have historically been made without a shared framework, leading to inconsistent outcomes and choices made without full visibility into either factor.
 
 ## Decision
 
-Module choices (whether to use a core module, a community-contributed module, or a custom H&S solution) will be evaluated using a documented framework rather than made ad-hoc. The guiding question is which option produces the lowest total cost: implementation cost plus ongoing maintenance cost.
+Module choices (whether to use a core module, a community-contributed module, or a custom H&S solution) will be evaluated using a documented framework rather than made ad-hoc. The evaluation weighs two factors: fit to the requirement, including how readily a solution can be delivered, and long-term cost, meaning implementation effort plus ongoing maintenance.
 
 Core and contributed modules should be considered first. When a suitable option exists that fits the requirement and the platform's environment without significant workarounds, it is often the right choice. When no suitable option exists, or when the workarounds required to make a contributed module fit would exceed the cost of a targeted custom solution, custom development is the appropriate path.
 

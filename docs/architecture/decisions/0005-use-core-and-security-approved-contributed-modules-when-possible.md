@@ -1,4 +1,4 @@
-# 1. Use core and security-approved contributed modules when possible
+# 5. Use core and security-approved contributed modules when possible
 
 ## Status
 

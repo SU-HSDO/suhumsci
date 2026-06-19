@@ -26,6 +26,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Configuration Management](docs/Config.md)
 - [Development Requirements](docs/DevelopmentRequirements.md)
 - [Documentation Standards](docs/DocumentationStandards.md)
+- [Module Evaluation](docs/ModuleEvaluation.md)
 
 ### Process Guides
 

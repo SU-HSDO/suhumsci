@@ -1,0 +1,156 @@
+name: suhumsci
+type: drupal9
+docroot: docroot
+php_version: "8.3"
+webserver_type: nginx-fpm
+xdebug_enabled: false
+additional_hostnames:
+  - aaai
+  - aaas
+  - aarcs
+  - africanstudies
+  - amstudies
+  - anthrohandbook
+  - anthropology
+  - archaeology
+  - art
+  - artexhibitions
+  - artgradguide
+  - arthandbook
+  - aviditacharya-humsci
+  - bingschool
+  - biocapstoneshowcase
+  - biology
+  - biologyvirtualshowcase
+  - bsurp
+  - buddhiststudies
+  - buddhiststudies2026
+  - cas
+  - ccsre
+  - ceas
+  - cesta
+  - chemistry
+  - clas
+  - classics
+  - cmbprogram
+  - cmems
+  - cqmd
+  - creativewriting
+  - creees
+  - culture-emotion-lab
+  - datasciencemajor
+  - default
+  - dennylab
+  - development-humsci
+  - dlcl
+  - dsresearch
+  - duboislab
+  - ealc
+  - economics
+  - em1060
+  - english
+  - environmentalhumanities
+  - ethicsinsociety
+  - facultyaffairs-humsci
+  - feminist
+  - finance-humsci
+  - francestanford
+  - gavin-wright-humsci
+  - gender
+  - globalcurrents
+  - grandtour
+  - gus-humsci
+  - history
+  - hps
+  - hs-colorful
+  - hs-design
+  - hs-fps
+  - hs-sandbox
+  - hs-sandbox-1
+  - hs-sandbox-2
+  - hs-sandbox-3
+  - hs-testing-sandbox
+  - hs-traditional
+  - hsbi
+  - hshr
+  - hsweb-referencetraditional
+  - hsweb-userguide
+  - humanbiology
+  - humanitiescore
+  - humanrights
+  - insidehs
+  - integrativeoceans
+  - internationalrelations
+  - iranianstudies
+  - iriss
+  - islamicstudies
+  - it-humsci
+  - it-humsci2023
+  - jewishstudies
+  - jrbp2025
+  - justsocieties
+  - language
+  - linguistics
+  - lowe
+  - mathematics
+  - mcs
+  - medicalhumanities
+  - memorylab
+  - middleeast
+  - morrisoninstitute
+  - mrc
+  - mtl
+  - music
+  - philit
+  - philosophy
+  - physics
+  - planning-humsci
+  - politicalscience
+  - popstudies
+  - psychology
+  - ptarmigan
+  - publichumanities
+  - publicpolicy
+  - publicpulse
+  - religiousstudies
+  - researchadmin-humsci
+  - sgs
+  - shenlab
+  - sitp
+  - siw
+  - sociology
+  - southasia
+  - stanfordsciencefellows
+  - statistics
+  - sts
+  - suac
+  - symsys
+  - tessier-lavigne-lab
+  - texttechnologies
+  - urbanstudies
+  - vpnl
+  - west
+  - womensleadership
+  - womensleadershipcp
+additional_fqdns: []
+database:
+  type: mysql
+  version: "8.0"
+use_dns_when_possible: true
+disable_settings_management: true
+composer_version: "2.8.2"
+web_environment: []
+corepack_enable: false
+additional_services:
+  - selenium
+upload_dirs:
+  - sites/*/files
+  - themes/humsci/humsci_basic/node_modules
+
+hooks:
+  post-start:
+    - exec-host: cp .ddev/ddev.sites.php docroot/sites/local.sites.php
+    - exec: composer install
+    - exec: /var/www/html/vendor/bin/drush sws:multisite:settings
+    - exec: /var/www/html/.ddev/scripts/configure-local-settings.sh
+    - exec: /var/www/html/.ddev/scripts/create-local-databases.sh

@@ -70,8 +70,8 @@ function hs_migrate_preprocess_form(&$variables) {
 /**
  * Checks to see if a given media ID is associated with a migration.
  *
- * @var int $media_id
- *   The media ID
+ * @param int $media_id
+ *   The media ID.
  *
  * @return bool
  *   TRUE if media was part of a migration
@@ -120,7 +120,7 @@ function _hs_migrate_media_imported($media_id) {
       $migration = NULL;
       $nodes = Node::loadMultiple($results);
       foreach ($nodes as $node) {
-        $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);
+        $migration = \Drupal::service('stanford_migrate')->getEntityMigration($node);
       }
       if ($migration) {
         return TRUE;

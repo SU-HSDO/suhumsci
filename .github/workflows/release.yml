@@ -1,4 +1,9 @@
 # .github/workflows/release.yml
+# This workflow automates the release and production deploy process.
+#
+# When a pull request is merged into the main branch it:
+# - Creates a new tag and release
+# - Creates a code artifact and pushes it to Acquia for deployment
 name: Release
 
 on:
@@ -8,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions: write-all
-    if: github.event.pull_request.merged
+    if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'main'
     container:
       image: pookmish/drupal8ci:php8.3
     steps:
@@ -17,7 +22,7 @@ jobs:
         uses: K-Phoen/semver-release-action@master
         with:
           release_strategy: none
-          release_branch: develop
+          release_branch: main
           tag_format: "%major%.%minor%.%patch%"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -40,7 +45,7 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: ${{ steps.tag.outputs.tag }}
         with:
           ref: ${{ github.sha }}
@@ -53,14 +58,14 @@ jobs:
           cache-dependency-path: docroot/themes/humsci/humsci_basic/package-lock.json
       - name: Restore Cache
         if: ${{ steps.tag.outputs.tag }}
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Install theme dependencies
         if: ${{ steps.tag.outputs.tag }}
         run: npm ci --prefix docroot/themes/humsci/humsci_basic
@@ -72,26 +77,4 @@ jobs:
           git config --global user.name "Github Actions" &&
           ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
-          blt blt:telemetry:disable --no-interaction &&
-          blt deploy --tag=$(date +'%Y-%m-%d')"_"${{ steps.tag.outputs.tag }} --commit-msg=${{ steps.tag.outputs.tag }} --no-interaction
-      - name: Get Next Release
-        if: ${{ steps.tag.outputs.tag }}
-        id: next_tag
-        run: |
-          NEXT_VERSION=$(echo ${{ steps.tag.outputs.tag }} | awk -F. -v OFS=. '{$NF += 1 ; print}') &&
-          sed -i "s/^version:.*/version: $NEXT_VERSION/g" docroot/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml &&
-          echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
-      - name: Create Next Release
-        if: ${{ steps.tag.outputs.tag }}
-        uses: peter-evans/create-pull-request@v6
-        with:
-          committer: Github Actions <sws-developers@lists.stanford.edu>
-          author: Github Actions <sws-developers@lists.stanford.edu>
-          commit-message: ${{ steps.next_tag.outputs.version }}
-          branch: ${{ steps.next_tag.outputs.version }}-release
-          base: develop
-          title: ${{ steps.next_tag.outputs.version }}
-          body: "# DO NOT DELETE"
-      - name: Push New Branch
-        if: ${{ steps.next_tag.outputs.version }}
-        run: blt deploy --branch=${{ steps.next_tag.outputs.version }}-release-build --commit-msg=${{ steps.next_tag.outputs.version }} --ignore-dirty -n
+          drush sws:artifact:deploy --tag=$(date +'%Y-%m-%d')"_"${{ steps.tag.outputs.tag }} --commit-msg=${{ steps.tag.outputs.tag }} -v -n

@@ -1,18 +1,22 @@
-@use '../variables/su-core-colors' as *;
 @use '../variables/general' as *;
 @use '../variables/fonts' as *;
+@use '../variables/colors.su-core' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/general' as *;
 @use '../mixins/text' as *;
 @use '../mixins/links' as *;
 @use '../mixins/forms' as *;
+@use '../mixins/generate-css-vars' as *;
 
 // Define variable to be able to override the link color in some scenarios.
 :root {
-  --link-base-current-color: var(--palette--link-base-color);
-  --link-base-hover-current-color: var(--palette--link-base-hover-color);
+  @include generate-css-vars('su-core', $su-core-colors);
+
+  --link-base-current-color: #{color(link-base)};
+  --link-base-hover-current-color: #{color(link-base-hover)};
 
   @include hb-themes(('colorful', 'airy')) {
     --normal-line-height: 165%;
@@ -38,7 +42,7 @@ html {
 }
 
 body {
-  background-color: $su-color-white;
+  background-color: color('white', 'su-core');
   overflow-x: hidden;
 
   // Apply font smoothing for Mac OS when possible
@@ -71,7 +75,7 @@ h1 {
 
     &:hover,
     &:focus {
-      color: var(--palette--black);
+      color: color('black', 'global');
     }
   }
 }
@@ -85,7 +89,7 @@ h2 {
 
     &:hover,
     &:focus {
-      color: var(--palette--black);
+      color: color('black', 'global');
     }
   }
 }
@@ -98,7 +102,7 @@ h3 {
 
     &:hover,
     &:focus {
-      color: var(--palette--black);
+      color: color('black', 'global');
     }
   }
 }
@@ -111,7 +115,7 @@ h4 {
 
     &:hover,
     &:focus {
-      color: var(--palette--black);
+      color: color('black', 'global');
     }
   }
 }
@@ -124,7 +128,7 @@ h5 {
 
     &:hover,
     &:focus {
-      color: var(--palette--black);
+      color: color('black', 'global');
     }
   }
 }
@@ -137,7 +141,7 @@ h6 {
 
     &:hover,
     &:focus {
-      color: var(--palette--black);
+      color: color('black', 'global');
     }
   }
 }
@@ -192,7 +196,7 @@ caption:not([class]) {
   font-size: hb-calculate-rems(14px);
 
   @include hb-colorful {
-    color: var(--palette--gray-dark);
+    color: color('gray-dark', 'global');
   }
 }
 
@@ -225,6 +229,34 @@ button:not([class]) {
     animation-iteration-count: 1 !important;
     background-attachment: initial !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Ignore this override for swiper wrapper
+  * which causes the slides not to work
+  * when reduce motion is enabled.
+  */
+  *:not(.swiper-wrapper),
+  ::before,
+  ::after {
     transition-duration: 0s !important;
+  }
+}
+
+@media print {
+  // Hide menu, footer and sidebar
+  header,
+  footer,
+  .hb-three-column__sidebar-1 {
+    display: none;
+  }
+
+  // Force desktop layout width
+  body {
+    min-width: hb-calculate-rems(1200px);
+  }
+
+  // Kill Swiper JS inline styles
+  .swiper-wrapper {
+    height: auto !important;
   }
 }

@@ -3,27 +3,37 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.minimal_html
     - media.type.embeddable
     - media.type.file
     - media.type.google_form
     - media.type.image
     - media.type.video
+    - node.type.hs_basic_page
+    - node.type.hs_course
     - node.type.hs_event
+    - node.type.hs_event_series
     - node.type.hs_news
     - node.type.hs_person
+    - node.type.hs_private_page
     - node.type.hs_publications
+    - node.type.hs_research
+    - node.type.hs_training
   module:
     - dropzonejs
     - file
+    - filter
     - hs_entities
     - media
     - node
     - paragraphs
+    - toolbar
 id: author
 label: Author
 weight: -7
 is_admin: null
 permissions:
+  - 'access toolbar'
   - 'create embeddable media'
   - 'create google_form media'
   - 'create humsci entity'
@@ -41,9 +51,16 @@ permissions:
   - 'edit behavior plugin settings'
   - 'edit humsci entity'
   - 'edit own file media'
+  - 'edit own hs_basic_page content'
+  - 'edit own hs_course content'
   - 'edit own hs_event content'
+  - 'edit own hs_event_series content'
   - 'edit own hs_news content'
   - 'edit own hs_person content'
+  - 'edit own hs_private_page content'
   - 'edit own hs_publications content'
+  - 'edit own hs_research content'
+  - 'edit own hs_training content'
   - 'update media'
+  - 'use text format minimal_html'
   - 'view own unpublished media'

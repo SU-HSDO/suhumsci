@@ -1,5 +1,6 @@
 @use '../variables/general' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/general' as *;
 @use '../mixins/layout' as *;
@@ -21,7 +22,7 @@
       &.ptype-hs-accordion {
         details {
           margin: 0;
-          background-color: var(--palette--white);
+          background-color: color('white', 'global');
         }
       }
 
@@ -32,7 +33,7 @@
 
         .hb-hero-overlay::before,
         .hb-gradient-hero::before {
-          background-color: var(--palette--gray-medium);
+          background-color: color('gray-medium', 'global');
         }
       }
     }
@@ -73,11 +74,11 @@
   }
 
   &--gray-well {
-    background-color: var(--palette--gray-well);
+    background-color: color('gray-well', 'global');
   }
 
   &--light-well {
-    background-color: var(--palette--light-well);
+    background-color: color('light-well');
   }
 }
 

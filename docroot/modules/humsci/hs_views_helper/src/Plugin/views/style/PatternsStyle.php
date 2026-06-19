@@ -4,24 +4,25 @@ namespace Drupal\hs_views_helper\Plugin\views\style;
 
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\style\StylePluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ui_patterns\UiPatternsManager;
 use Drupal\ui_patterns\UiPatternsSourceManager;
+use Drupal\views\Plugin\views\style\StylePluginBase;
+use Drupal\views\Attribute\ViewsStyle;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Pattern style plugin to wrap rows in a pattern.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "pattern",
- *   title = @Translation("Pattern"),
- *   help = @Translation("Use a pattern to wrap the rows."),
- *   theme = "views_view_pattern",
- *   display_types = {"normal"}
- * )
  */
+#[ViewsStyle(
+  id: "pattern",
+  title: new TranslatableMarkup("Pattern"),
+  help: new TranslatableMarkup("Use a pattern to wrap the rows."),
+  theme: "views_view_pattern",
+  display_types: ["normal"],
+)]
 class PatternsStyle extends StylePluginBase {
 
   /**

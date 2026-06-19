@@ -3,6 +3,7 @@
 namespace Drupal\hs_dashboard\Plugin\views\relationship;
 
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
+use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Plugin\ViewsHandlerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -54,6 +55,10 @@ class NodeFromEditoria11yResults extends RelationshipPluginBase {
    */
   public function query() {
     $this->ensureMyTable();
+    if (!$this->query instanceof Sql) {
+      return;
+    }
+
     $def = [
       'left_table' => $this->tableAlias,
       'left_field' => 'entity_id',

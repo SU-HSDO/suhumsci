@@ -2,6 +2,7 @@
 
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/swiper' as *;
@@ -10,13 +11,6 @@
 .hs-gallery-slideshow {
   @include swiper-container;
   @include swiper-arrows;
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    svg {
-      display: none;
-    }
-  }
 
   .swiper-button-prev {
     bottom: hb-calculate-rems(98px);
@@ -34,6 +28,17 @@
     }
   }
 
+  .swiper-button-prev,
+  .swiper-button-next {
+    @include grid-media('md') {
+      bottom: calc(50% - #{hb-calculate-rems(46px)});
+    }
+
+    svg {
+      display: none;
+    }
+  }
+
   .hb-media-image {
     position: relative;
 
@@ -43,12 +48,17 @@
       inset: calc(100% - 78px) 0 0; // match height of caption / credit background
 
       @include hb-themes(('colorful', 'airy')) {
-        background: linear-gradient(to top, var(--palette--black), transparent);
+        background: linear-gradient(to top, color('black', 'global'), transparent);
       }
 
       @include hb-traditional {
-        background: linear-gradient(to top, var(--palette--black), transparent);
+        background: linear-gradient(to top, color('black', 'global'), transparent);
       }
+    }
+
+    img,
+    picture {
+      width: 100%;
     }
   }
 
@@ -62,8 +72,9 @@
 
     @include grid-media-min('sm') {
       display: block;
+      width: auto;
       text-align: left;
-      color: var(--palette--white);
+      color: color('white', 'global');
       font-weight: hb-theme-font-weight(bold);
       bottom: hb-calculate-rems(17px);
       padding-inline-start: hb-calculate-rems(25px);

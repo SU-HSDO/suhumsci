@@ -1,0 +1,53 @@
+diff --git a/content_access.module b/content_access.module
+index 7429298..3566198 100644
+--- a/content_access.module
++++ b/content_access.module
+@@ -75,9 +75,7 @@ function content_access_user_update(EntityInterface $account) {
+     // Check if the user has 'access administration pages' permissions.
+     $account = \Drupal::currentUser();
+     if ($account->hasPermission('access administration pages')) {
+-      // Rebuild the permissions.
+-      \Drupal::messenger()->addMessage(t('Your changes have been saved. You may have to <a href=":rebuild">rebuild permissions</a> for your changes to take effect.',
+-        [':rebuild' => Url::fromRoute('node.configure_rebuild_confirm')->toString()]));
++      \Drupal::messenger()->addMessage(t('Your changes have been saved. You may have to rebuild permissions for your changes to take effect.'));
+     }
+   }
+ }
+diff --git a/src/Form/ContentAccessAdminSettingsForm.php b/src/Form/ContentAccessAdminSettingsForm.php
+index 1725c11..efbca0f 100644
+--- a/src/Form/ContentAccessAdminSettingsForm.php
++++ b/src/Form/ContentAccessAdminSettingsForm.php
+@@ -204,10 +204,9 @@ class ContentAccessAdminSettingsForm extends FormBase {
+           $node_types = node_type_get_names();
+         }
+         // This does not guarantee a rebuild.
+-        $this->messenger()->addMessage($this->t('Permissions have been changed for the content type @types.<br />You may have to <a href=":rebuild">rebuild permissions</a> for your changes to take effect.',
++        $this->messenger()->addMessage($this->t('Permissions have been changed for the content type @types.<br />You may have to rebuild permissions for your changes to take effect.',
+         [
+           '@types' => $node_types[$node_type],
+-          ':rebuild' => Url::fromRoute('node.configure_rebuild_confirm')->toString(),
+         ]));
+       }
+     }
+diff --git a/src/Form/ContentAccessPageForm.php b/src/Form/ContentAccessPageForm.php
+index 1bba34c..22732c2 100644
+--- a/src/Form/ContentAccessPageForm.php
++++ b/src/Form/ContentAccessPageForm.php
+@@ -8,7 +8,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
+ use Drupal\Core\Form\FormBase;
+ use Drupal\Core\Form\FormStateInterface;
+ use Drupal\Core\Template\Attribute;
+-use Drupal\Core\Url;
+ use Drupal\node\NodeGrantDatabaseStorageInterface;
+ use Drupal\node\NodeInterface;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+@@ -193,8 +192,7 @@ class ContentAccessPageForm extends FormBase {
+     // xxxx
+     // route: node.configure_rebuild_confirm:
+     // path:  '/admin/reports/status/rebuild'.
+-    $this->messenger()->addMessage($this->t('Your changes have been saved. You may have to <a href=":rebuild">rebuild permissions</a> for your changes to take effect.',
+-      [':rebuild' => Url::fromRoute('node.configure_rebuild_confirm')->toString()]));
++    $this->messenger()->addMessage($this->t('Your changes have been saved. You may have to rebuild permissions for your changes to take effect.'));
+   }
+ 
+   /**

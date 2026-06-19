@@ -192,11 +192,13 @@ function su_humsci_profile_post_update_9200() {
     if (!$parent) {
       continue;
     }
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $parent */
     _su_humsci_profile_enable_paragraph($parent_type, $parent->bundle(), $parent_field, 'hs_sptlght_slder');
     _su_humsci_profile_disable_paragraph($parent_type, $parent->bundle(), $parent_field, 'hs_spotlight');
 
     $parent_values = $parent->get($parent_field)->getValue();
 
+    /** @var \Drupal\paragraphs\ParagraphInterface $new_spotlight */
     $new_spotlight = \Drupal::entityTypeManager()
       ->getStorage('paragraph')
       ->create([

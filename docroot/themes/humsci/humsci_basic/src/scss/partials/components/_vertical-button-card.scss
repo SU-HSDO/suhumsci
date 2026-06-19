@@ -1,4 +1,5 @@
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/buttons' as *;
 
@@ -19,7 +20,7 @@
     margin-bottom: 0;
   }
 
-  .hs-button {
+  .hs-button a {
     width: 100%;
     font-size: hb-calculate-rems(18px);
     hyphens: auto;
@@ -29,14 +30,14 @@
     &:hover,
     &:focus,
     &.is-focused {
-      background-color: var(--palette--primary-dark);
-      border-color: var(--palette--primary-dark);
+      background-color: color('primary-dark');
+      border-color: color('primary-dark');
     }
   }
 
   @include hb-traditional {
-    border: 2px solid var(--palette--secondary);
-    background-color: var(--palette--white);
+    border: 2px solid color('secondary');
+    background-color: color('white', 'global');
 
     .hb-card__content-wrapper {
       display: flex;
@@ -71,14 +72,19 @@
     }
 
     .hs-button {
-      @include hb-secondary-button;
 
       position: relative;
-      border-width: 0;
-      border-top-width: 2px;
       margin-top: auto;
       margin-left: hb-calculate-rems(-24px);
       margin-right: hb-calculate-rems(-24px);
+
+      a {
+        @include hb-secondary-button;
+
+        border-width: 0;
+        border-top-width: 2px;
+        width: 100%;
+      }
     }
 
     &:has(.hb-card__graphics) {
@@ -98,16 +104,16 @@
     }
 
     .hb-card__title {
-      color: var(--palette--secondary);
+      color: color('secondary');
     }
 
     .hb-card__content {
       padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
-      border: 2px solid var(--palette--tertiary-highlight);
+      border: 2px solid color('tertiary-highlight');
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px)
         hb-calculate-rems(35px)
-        color-mix(in srgb, var(--palette--black) 10%, transparent);
-      background-color: var(--palette--white);
+        color-mix(in srgb, color('black', 'global') 10%, transparent);
+      background-color: color('white', 'global');
 
       .hb-raised-cards--uniform-height & {
         height: 100%;
@@ -168,11 +174,11 @@
       }
     }
 
-    .hs-button {
+    .hs-button a {
       padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
         hb-calculate-rems(6px);
-      background-color: var(--palette--primary);
-      border-color: var(--palette--primary);
+      background-color: color('primary');
+      border-color: color('primary');
     }
   }
 }

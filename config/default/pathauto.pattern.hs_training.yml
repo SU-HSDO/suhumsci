@@ -1,0 +1,23 @@
+uuid: cfabfd1c-5e4f-485c-9a5c-301e8fa27790
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.hs_training
+  module:
+    - node
+id: hs_training
+label: 'Training Content'
+type: 'canonical_entities:node'
+pattern: '/training/[node:title]'
+selection_criteria:
+  b1de5922-9e61-41e9-b017-7e47c5845657:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      hs_training: hs_training
+selection_logic: and
+weight: -5
+relationships: {  }

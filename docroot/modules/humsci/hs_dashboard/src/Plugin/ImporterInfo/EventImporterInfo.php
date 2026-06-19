@@ -48,7 +48,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   /**
    * Localist config pages entity.
    *
-   * @var \Drupal\config_pages\Entity\ConfigPages
+   * @var \Drupal\config_pages\Entity\ConfigPages|null
    */
   protected $localistConfigPages;
 
@@ -103,7 +103,9 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
     $this->entityTypeManager = $entity_type_manager;
     $this->widgetManager = $widget_manager;
     $this->entityFieldManager = $entity_field_manager;
-    $this->localistConfigPages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
+    /** @var \Drupal\config_pages\Entity\ConfigPages|null $localist_config_pages */
+    $localist_config_pages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
+    $this->localistConfigPages = $localist_config_pages;
     $this->eventTableRows = [];
   }
 
@@ -405,7 +407,9 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    */
   private function sortTableRows() {
     usort($this->eventTableRows, function ($a, $b) {
-      return strcasecmp($a['data'][0]['data'], $b['data'][0]['data']);
+      // These may be string objects (with placeholders), so cast to a string to
+      // determine alphabetical order.
+      return strcasecmp((string) $a['data'][0]['data'], (string) $b['data'][0]['data']);
     });
   }
 

@@ -1,31 +1,32 @@
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 
 // Override color of base and base hover link for dark mode pattern.
 .hb-dark-pattern,
 .hb-dark-inversion .views-element-container {
-  --link-base-current-color: var(--palette--link-base-color-dark);
-  --link-base-hover-current-color: var(--palette--link-base-hover-color-dark);
+  --link-base-current-color: #{color('link-base-dark')};
+  --link-base-hover-current-color: #{color('link-base-hover-dark')};
 }
 
 .hb-dark-pattern.hb-local-footer {
   @include hb-colorful {
-    --link-base-current-color: var(--palette--white);
-    --link-base-current-hover-color: var(--palette--gray-medium);
+    --link-base-current-color: #{color('white', 'global')};
+    --link-base-current-hover-color: #{color('gray-medium', 'global')};
   }
 }
 
 // Dark mode pattern utility class
 .hb-dark-pattern {
-  color: var(--palette--white);
-  background-color: var(--palette--primary-dark);
+  color: color('white', 'global');
+  background-color: color('primary-dark');
 
   .views-element-container & {
     padding: hb-spacing-width('xs');
 
     .field-content,
     .views-label {
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
   }
 }
@@ -33,13 +34,13 @@
 // Dark mode inversion for full site toggle
 .hb-dark-inversion {
   .views-element-container {
-    color: var(--palette--white);
-    background-color: var(--palette--primary-dark);
+    color: color('white', 'global');
+    background-color: color('primary-dark');
     padding: hb-spacing-width('xs');
 
     .field-content,
     .views-label {
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
   }
 }

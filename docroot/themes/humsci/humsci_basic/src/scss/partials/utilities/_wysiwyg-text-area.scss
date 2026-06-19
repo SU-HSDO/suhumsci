@@ -1,11 +1,10 @@
 // WYSIWYG text area styles
 
-@use '../variables/colorful-pairings' as *;
-@use '../variables/traditional-pairings' as *;
 @use '../variables/general' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/general' as *;
 @use '../mixins/breakpoints' as *;
@@ -186,14 +185,14 @@ $credits: (hs-credits, credits);
   font-size: hb-calculate-rems(20px);
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
-  color: var(--palette--gray-dark);
+  color: color('gray-dark', 'global');
 
   @include grid-media-min('lg') {
     font-size: hb-calculate-rems(22px);
   }
 
   .hb-dark-pattern & {
-    color: var(--palette--gray-light);
+    color: color('gray-light', 'global');
   }
 
   li & {
@@ -230,15 +229,15 @@ $credits: (hs-credits, credits);
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--primary);
+      color: color('primary');
 
       .hb-dark-pattern & {
-        color: var(--palette--gray-light);
+        color: color('gray-light', 'global');
       }
     }
 
     @include hb-traditional {
-      color: var(--palette--primary);
+      color: color('primary');
     }
 
     li & {
@@ -377,12 +376,13 @@ $credits: (hs-credits, credits);
 
     font-size: 12px !important;
     box-sizing: border-box;
-    color: var(--palette--white) !important;
+    color: color('white', 'global') !important;
     border: none;
     background: linear-gradient(
       to top,
-      var(--palette--black),
-      transparent
+      rgb(0 0 0 / 60%) 0%,
+      rgb(0 0 0 / 60%) 60%,
+      rgb(0 0 0 / 0%) 100%
     ) !important;
     z-index: 1;
   }
@@ -429,7 +429,7 @@ a.private-link,
     margin-bottom: hb-calculate-rems(-2px);
     margin-right: hb-calculate-rems(2px);
 
-    @include hb-icon-background('lock', 'link-base-color', true);
+    @include hb-icon-background('lock', 'link-base', true);
     mask-repeat: no-repeat;
     mask-size: cover;
     background-color: var(--link-base-current-color);
@@ -437,16 +437,6 @@ a.private-link,
 
   &:hover::before {
     background-color: var(--link-base-hover-current-color);
-  }
-}
-
-.hs-mailto-link a,
-a.hs-mailto-link {
-  @include hb-fa-mailto-icon;
-
-  // The font awesome icon is hidden by default in themes, this shows it
-  .fa-mailto {
-    display: initial;
   }
 }
 
@@ -494,11 +484,11 @@ a.hs-file-link {
 // Adds a breakout box with background color to CKeditor font styles
 .hs-breakout-box {
   @include hb-themes(('colorful', 'airy')) {
-    background-color: var(--palette--spotlight);
+    background-color: color('spotlight');
   }
 
   @include hb-traditional {
-    background-color: var(--palette--spotlight);
+    background-color: color('spotlight');
   }
 
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);

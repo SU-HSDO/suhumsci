@@ -1,6 +1,6 @@
 <?php
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 
 $databases = [
   'default' =>
@@ -18,12 +18,6 @@ $databases = [
         ],
     ],
 ];
-
-// On CircleCI we only do dependency updates. To help that work better, make sure
-// the system doesn't ignore any configs.
-if (getenv('CIRCLECI')) {
-  $config['config_ignore.settings']['ignored_config_entities'] = range(1, 100);
-}
 
 if (getenv('TUGBOAT_SERVICE')) {
   /**
@@ -45,11 +39,13 @@ if (getenv('TUGBOAT_SERVICE')) {
           ],
       ],
   ];
+  // Always enable partial imports in Tugboat to preserve custom site
+  // configuration.
+  $config['hs_config_partial.settings']['enabled'] = TRUE;
 }
 
 // Use development service parameters.
 $settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/development.services.yml';
-$settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/blt.development.services.yml';
 
 // Allow access to update.php.
 $settings['update_free_access'] = TRUE;

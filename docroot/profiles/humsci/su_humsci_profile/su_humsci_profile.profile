@@ -126,7 +126,7 @@ function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface
     $manual_label = \Drupal::state()->get('stanford_ssp.manual_label', FALSE);
     $form['manual']['#open'] = TRUE;
     if ($manual_label) {
-      $form['manual']['#title'] = $manual_label ?: t('Local Login');
+      $form['manual']['#title'] = $manual_label;
     }
   }
 
@@ -409,7 +409,7 @@ function su_humsci_profile_node_insert(NodeInterface $node) {
  */
 function su_humsci_profile_node_update(NodeInterface $node) {
   /** @var \Drupal\node\NodeInterface $original_node */
-  $original_node = $node->original;
+  $original_node = $node->getOriginal();
   // Compare the original menu link with the new menu link data. If any
   // important parts changed, clear the menu links cache.
   if (
@@ -730,6 +730,9 @@ function su_humsci_profile_preprocess_pattern_alert(&$variables) {
  * Implements hook_node_access().
  */
 function su_humsci_profile_node_access(EntityInterface $node, $op, AccountInterface $account) {
+  if (!$node->id()) {
+    return AccessResult::neutral();
+  }
   if ($op == 'delete') {
     $site_config = \Drupal::config('system.site');
     $node_urls = [$node->toUrl()->toString(), "/node/{$node->id()}"];
@@ -802,6 +805,7 @@ function _su_humsci_profile_allowed_to_grant_role(AccountInterface $account) {
 function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (preg_match('/^node.*edit_form$/', $form_id)) {
     $node = $form_state->getBuildInfo()['callback_object']->getEntity();
+
     $access = su_humsci_profile_node_access($node, 'delete', \Drupal::currentUser());
     $form['status']['#access'] = !$access->isForbidden();
   }
@@ -858,13 +862,14 @@ function su_humsci_profile_menu_link_content_delete(MenuLinkContentInterface $en
  * Implements hook_ENTITY_TYPE_update().
  */
 function su_humsci_profile_menu_link_content_update(MenuLinkContentInterface $entity) {
+  $original_entity = $entity->getOriginal();
   $original = [
-    $entity->original->get('title')->getValue(),
-    $entity->original->get('description')->getValue(),
-    $entity->original->get('link')->getValue(),
-    $entity->original->get('parent')->getValue(),
-    $entity->original->get('weight')->getValue(),
-    $entity->original->get('expanded')->getValue(),
+    $original_entity->get('title')->getValue(),
+    $original_entity->get('description')->getValue(),
+    $original_entity->get('link')->getValue(),
+    $original_entity->get('parent')->getValue(),
+    $original_entity->get('weight')->getValue(),
+    $original_entity->get('expanded')->getValue(),
   ];
   $updated = [
     $entity->get('title')->getValue(),
@@ -1019,18 +1024,38 @@ function su_humsci_profile_form_stanford_samlauth_add_user_alter(&$form, FormSta
  *   The processed form element.
  */
 function _su_humsci_profile_process_per_role_field(&$element, FormStateInterface $form_state, &$complete_form) {
-  if (isset($element['search_indexer'])) {
-    $element['search_indexer']['#access'] = FALSE;
-  }
-  if (isset($element['anonymous'])) {
-    $element['anonymous']['#access'] = FALSE;
-  }
-  if (isset($element['authenticated'])) {
-    $element['authenticated']['#title'] = 'All logged in users';
-  }
-  if (isset($element['site_manager'])) {
-    $element['site_manager']['#default_value'] = 'site_manager';
-    $element['site_manager']['#disabled'] = TRUE;
-  }
+  // 2026-02-23: Commenting this out for now. Hiding these roles from the
+  // content access control form using #access = FALSE resulted in the fields
+  // for these roles to not be rendered in the form. This caused all permissions
+  // to be set to FALSE for these roles when the form was saved. The largest
+  // consequence of this was anonymous users losing access to all content of the
+  // type configured. Hiding the roles also prevented access from being restored
+  // to these roles through the site UI, and required drush to delete or modify
+  // the configuration directly. See HSD8-1815 for more details.
+  // phpcs:disable
+  // if (isset($element['search_indexer'])) {
+  //   $element['search_indexer']['#access'] = FALSE;
+  // }
+  // if (isset($element['anonymous'])) {
+  //   $element['anonymous']['#access'] = FALSE;
+  // }
+  // if (isset($element['authenticated'])) {
+  //   $element['authenticated']['#title'] = 'All logged in users';
+  // }
+  // if (isset($element['site_manager'])) {
+  //   $element['site_manager']['#default_value'] = 'site_manager';
+  //   $element['site_manager']['#disabled'] = TRUE;
+  // }
+  // phpcs:enable
   return $element;
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function su_humsci_profile_preprocess_html(&$variables) {
+  // Add classes to the <body> to identify SWS and H&S applications. Primarily
+  // for SiteImprove targeting.
+  $variables['attributes']['class'][] = 'sws-acquia';
+  $variables['attributes']['class'][] = 'sws-hsdp';
 }

@@ -32,7 +32,9 @@ class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
       $this->getLogger('hs_field_helpers')
         ->error('Error during rendering: ' . $e->getMessage());
       return [
-        '#markup' => $this->t('An error occurred when generating your content.'),
+        0 => [
+          '#markup' => $this->t('An error occurred when generating your content.'),
+        ],
       ];
     }
 

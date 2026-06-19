@@ -1,0 +1,164 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/mixins/breakpoints' as b;
+
+@include describe('Breakpoint Mixins') {
+  @include describe('grid-media-min() mixin') {
+    @include it(
+      'wraps content in a min-width media query for the medium (over 768px) breakpoint.'
+    ) {
+      @include assert {
+        @include output {
+          .hb-test-min {
+            @include b.grid-media-min('md') {
+              color: red;
+            }
+          }
+        }
+
+        @include contains {
+          @media (min-width: 768px) {
+            .hb-test-min {
+              color: red;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include describe('grid-media-max() mixin') {
+    @include it(
+      'wraps content in a max-width media query for the small (up to 767px) breakpoint.'
+    ) {
+      @include assert {
+        @include output {
+          .hb-test-max {
+            @include b.grid-media-max('sm') {
+              color: blue;
+            }
+          }
+        }
+
+        @include contains {
+          @media (max-width: 767px) {
+            .hb-test-max {
+              color: blue;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include describe('grid-media() mixin') {
+    @include it(
+      'wraps content in a breakpoint media query for the medium (over 768px) breakpoint.'
+    ) {
+      @include assert {
+        @include output {
+          .hb-test-media {
+            @include b.grid-media('md') {
+              color: green;
+            }
+          }
+        }
+
+        @include contains {
+          @media only screen and (min-width: 768px) {
+            .hb-test-media {
+              color: green;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include describe('grid-media-between() mixin') {
+    @include it(
+      'wraps content in a min/max range for small to large breakpoints.'
+    ) {
+      @include assert {
+        @include output {
+          .hb-test-between {
+            @include b.grid-media-between('sm', 'lg') {
+              color: orange;
+            }
+          }
+        }
+
+        @include contains {
+          @media (min-width: 576px) and (max-width: 1199px) {
+            .hb-test-between {
+              color: orange;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include describe('grid-media-only() mixin') {
+    @include it(
+      'wraps content in a single-breakpoint media query for the medium breakpoint.'
+    ) {
+      @include assert {
+        @include output {
+          .hb-test-only {
+            @include b.grid-media-only('md') {
+              color: teal;
+            }
+          }
+        }
+
+        @include contains {
+          @media only screen and (min-width: 768px) and (max-width: 991px) {
+            .hb-test-only {
+              color: teal;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include describe('grid-media-device() mixin') {
+    @include it('wraps content in the tablet device media query.') {
+      @include assert {
+        @include output {
+          .hb-test-device {
+            @include b.grid-media-device('tablet') {
+              color: rebeccapurple;
+            }
+          }
+        }
+
+        @include contains {
+          @media only screen and (min-width: 768px) {
+            .hb-test-device {
+              color: rebeccapurple;
+            }
+          }
+        }
+      }
+    }
+
+    @include it('outputs content directly for the mobile device.') {
+      @include assert {
+        @include output {
+          .hb-test-mobile {
+            @include b.grid-media-device('mobile') {
+              color: black;
+            }
+          }
+        }
+
+        @include contains {
+          .hb-test-mobile {
+            color: black;
+          }
+        }
+      }
+    }
+  }
+}

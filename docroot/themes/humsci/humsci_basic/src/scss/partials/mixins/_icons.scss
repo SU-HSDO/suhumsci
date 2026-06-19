@@ -1,7 +1,8 @@
 @use 'sass:map';
-@use '../variables/colorful-pairings' as *;
-@use '../variables/traditional-pairings' as *;
+@use '../variables/colors.colorful' as *;
+@use '../variables/colors.traditional' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../functions/svg' as *;
 @use '../functions/icons' as *;
 @use 'theme' as *;
@@ -11,21 +12,21 @@
   $method: if($mask, 'mask-image', 'background-image');
 
   @include hb-themes(('colorful', 'airy')) {
-    @if map.has-key($hc-colorful-globals, $color) {
-      $icon-color: map.get($hc-colorful-globals, $color);
+    @if map.has-key($colorful-global-colors, $color) {
+      $icon-color: map.get($colorful-global-colors, $color);
       #{$method}: svg(hc-get-icons($icon, $icon-color));
     } @else {
-      $icon-color: map.get(map.get($hc-colorful-pairings, 'cardinal'), $color);
+      $icon-color: map.get(map.get($colorful-pairings-colors, 'cardinal'), $color);
       #{$method}: svg(hc-get-icons($icon, $icon-color));
 
       .hc-pairing-ocean & {
-        $icon-color: map.get(map.get($hc-colorful-pairings, 'ocean'), $color);
+        $icon-color: map.get(map.get($colorful-pairings-colors, 'ocean'), $color);
         #{$method}: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-mountain & {
         $icon-color: map.get(
-          map.get($hc-colorful-pairings, 'mountain'),
+          map.get($colorful-pairings-colors, 'mountain'),
           $color
         );
         #{$method}: svg(hc-get-icons($icon, $icon-color));
@@ -33,43 +34,43 @@
 
       .hc-pairing-cardinal & {
         $icon-color: map.get(
-          map.get($hc-colorful-pairings, 'cardinal'),
+          map.get($colorful-pairings-colors, 'cardinal'),
           $color
         );
         #{$method}: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-lake & {
-        $icon-color: map.get(map.get($hc-colorful-pairings, 'lake'), $color);
+        $icon-color: map.get(map.get($colorful-pairings-colors, 'lake'), $color);
         #{$method}: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-canyon & {
-        $icon-color: map.get(map.get($hc-colorful-pairings, 'canyon'), $color);
+        $icon-color: map.get(map.get($colorful-pairings-colors, 'canyon'), $color);
         #{$method}: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-cliff & {
-        $icon-color: map.get(map.get($hc-colorful-pairings, 'cliff'), $color);
+        $icon-color: map.get(map.get($colorful-pairings-colors, 'cliff'), $color);
         #{$method}: svg(hc-get-icons($icon, $icon-color));
       }
     }
   }
 
   @include hb-traditional {
-    @if map.has-key($ht-traditional-globals, $color) {
-      $icon-color: map.get($ht-traditional-globals, $color);
+    @if map.has-key($traditional-global-colors, $color) {
+      $icon-color: map.get($traditional-global-colors, $color);
       #{$method}: svg(hc-get-icons($icon, $icon-color));
     } @else {
       $icon-color: map.get(
-        map.get($ht-traditional-pairings, 'cardinal'),
+        map.get($traditional-pairings-colors, 'cardinal'),
         $color
       );
       #{$method}: svg(hc-get-icons($icon, $icon-color));
 
       .ht-pairing-cardinal & {
         $icon-color: map.get(
-          map.get($ht-traditional-pairings, 'cardinal'),
+          map.get($traditional-pairings-colors, 'cardinal'),
           $color
         );
         #{$method}: svg(hc-get-icons($icon, $icon-color));
@@ -77,7 +78,7 @@
 
       .ht-pairing-bluejay & {
         $icon-color: map.get(
-          map.get($ht-traditional-pairings, 'bluejay'),
+          map.get($traditional-pairings-colors, 'bluejay'),
           $color
         );
         #{$method}: svg(hc-get-icons($icon, $icon-color));
@@ -85,7 +86,7 @@
 
       .ht-pairing-warbler & {
         $icon-color: map.get(
-          map.get($ht-traditional-pairings, 'warbler'),
+          map.get($traditional-pairings-colors, 'warbler'),
           $color
         );
         #{$method}: svg(hc-get-icons($icon, $icon-color));
@@ -93,7 +94,7 @@
 
       .ht-pairing-firefinch & {
         $icon-color: map.get(
-          map.get($ht-traditional-pairings, 'firefinch'),
+          map.get($traditional-pairings-colors, 'firefinch'),
           $color
         );
         #{$method}: svg(hc-get-icons($icon, $icon-color));
@@ -101,7 +102,7 @@
 
       .ht-pairing-vireo & {
         $icon-color: map.get(
-          map.get($ht-traditional-pairings, 'vireo'),
+          map.get($traditional-pairings-colors, 'vireo'),
           $color
         );
         #{$method}: svg(hc-get-icons($icon, $icon-color));
@@ -110,7 +111,11 @@
   }
 
   @if $mask {
-    background-color: var(--palette--#{$color});
+    @if map.has-key($colorful-global-colors, $color) or map.has-key($traditional-global-colors, $color) {
+      background-color: color($color, 'global');
+    } @else {
+      background-color: color($color);
+    }
   }
 }
 
@@ -123,7 +128,7 @@
   position: relative;
 
   &::after {
-    @include hb-icon-background('ext-link', 'link-base-color', true);
+    @include hb-icon-background('ext-link', 'link-base', true);
 
     content: '';
     display: inline-block;
@@ -173,23 +178,4 @@
   @include hb-icon-background($type, $color);
   background-repeat: no-repeat;
   background-position: top left;
-}
-
-@mixin hb-fa-mailto-icon {
-  span.fa-mailto {
-    margin-left: hb-calculate-rems(4px);
-
-    span.fa-envelope {
-      color: var(--palette--tertiary);
-    }
-  }
-
-  &:hover,
-  &:focus {
-    span.fa-mailto {
-      span.fa-envelope {
-        color: var(--palette--tertiary-darken-20);
-      }
-    }
-  }
 }

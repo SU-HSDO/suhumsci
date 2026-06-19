@@ -6,7 +6,6 @@
 // .su-brand-bar--dark - White wordmark on dark grey background
 // .su-brand-bar--white - Cardinal red wordmark on white background
 
-@use '../variables/su-core-colors' as *;
 @use '../functions/color' as *;
 @use '../mixins/general' as *;
 @use '../mixins/layout' as *;
@@ -14,7 +13,7 @@
 .su-brand-bar {
   width: 100%;
   height: 30px;
-  background-color: color(su-brand);
+  background-color: color('brand', 'su-core');
 }
 
 .su-brand-bar__container {
@@ -25,32 +24,33 @@
   @include logo;
   margin-top: 8px;
   white-space: nowrap;
-  color: $su-color-white;
+  color: color('white', 'su-core');
   font-size: 20px;
 
   &:hover,
   &:active,
   &:focus {
-    color: $su-color-white;
+    color: color('white', 'su-core');
   }
 }
 
 // Brand bar with white wordmark on bright red background.
 .su-brand-bar--bright {
-  background-color: color(su-brand-bright);
+  background-color: color('brand-bright', 'su-core');
 }
 
 // Brand bar with white wordmark on dark grey background.
 .su-brand-bar--dark {
-  background-color: color(su-bg-reverse);
+  background-color: color('background-reverse', 'su-core');
 }
 
 // Brand bar with cardinal red wordmark on white background.
 .su-brand-bar--white {
-  background-color: color(su-bg);
+  /* stylelint-disable-next-line declaration-property-value-keyword-no-deprecated */
+  background-color: color('background', 'su-core');
 
   .su-brand-bar__logo {
     @include font-smoothing(auto);
-    color: color(su-brand);
+    color: color('brand', 'su-core');
   }
 }

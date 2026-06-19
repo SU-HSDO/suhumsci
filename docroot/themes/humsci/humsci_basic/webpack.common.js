@@ -12,6 +12,7 @@ const jsSrcDir = path.resolve(__dirname, 'src/js/');
 
 // Shared JS files. Used in both traditional and colorful themes.
 const shared = {
+  init: 'shared/init/init.js',
   accordion: 'shared/accordion/accordion-toggle-all.js',
   addtocal: 'shared/addtocal/addtocal.js',
   'page-scroll-animations': 'shared/animation/page-scroll.js',
@@ -23,11 +24,14 @@ const shared = {
   'main-content-fallback':
     'shared/main-content-fallback/main-content-fallback.js',
   'video-with-caption': 'shared/media/video-with-caption.js',
+  'lazy-load-video': 'shared/media/lazy-load-video.js',
   megamenu: 'shared/megamenu/index.js',
   'main-menu': 'shared/navigation/main-menu-index.js',
+  'media-caption-toggle': 'shared/media/media-caption-toggle.js',
   'secondary-toggler': 'shared/navigation/secondary-toggler.js',
   colorbox: 'shared/photo-album/colorbox.js',
   search: 'shared/search/search-expand.js',
+  'swiper-reduced-motion': 'shared/carousel-slides/swiper-reduced-motion.js',
   'table-scope': 'shared/tables/scope.js',
   'table-pattern': 'shared/tables/table-pattern.js',
   'table-wrap': 'shared/tables/wrap.js',
@@ -38,7 +42,9 @@ const shared = {
 const colorful = {};
 const traditional = {};
 
-const sassFiles = globSync('src/scss/**/*.scss', { exclude: ['src/scss/partials/**/*.scss'] });
+const sassFiles = globSync('src/scss/**/*.scss', {
+  exclude: ['src/scss/partials/**/*.scss'],
+});
 
 export default {
   entry() {

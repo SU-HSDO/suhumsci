@@ -1,3 +1,5 @@
+# .github/workflows/phpcs.yml
+# Runs PHPCS on pull requests.
 name: Drupal PHP CodeSniffer
 on:
   pull_request:
@@ -11,16 +13,16 @@ jobs:
     container:
       image: pookmish/drupal8ci:php8.3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Run PHPCS
         run: |
           composer install -n &&

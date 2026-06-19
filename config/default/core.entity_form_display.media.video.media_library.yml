@@ -5,7 +5,11 @@ dependencies:
   config:
     - core.entity_form_mode.media.media_library
     - field.field.media.video.field_media_oembed_video
+    - field.field.media.video.field_poster_image_override
+    - image.style.thumbnail
     - media.type.video
+  module:
+    - image
 id: media.video.media_library
 targetEntityType: media
 bundle: video
@@ -13,11 +17,19 @@ mode: media_library
 content:
   field_media_oembed_video:
     type: string_textfield
-    weight: 26
+    weight: 1
     region: content
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_poster_image_override:
+    type: image_image
+    weight: 2
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
     third_party_settings: {  }
   name:
     type: string_textfield

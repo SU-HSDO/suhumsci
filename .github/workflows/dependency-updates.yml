@@ -1,12 +1,14 @@
 # .github/workflows/dependency-updates.yml
-# Automate dependency updates using the latest release branch.
+# Automate dependency updates.
 # Runs composer update, database updates, exports configurations, generates a
 # composer.lock diff, and creates a pull request.
 name: Automated Dependency Updates
 
 on:
   schedule:
-    - cron: '0 14 * * 5'
+    # Run on Fridays at ~2:15 AM Central (7:15 UTC / CDT). Off-peak to reduce
+    # GitHub scheduler delays.
+    - cron: '15 7 * * 5'
   workflow_dispatch:
 
 jobs:
@@ -23,7 +25,7 @@ jobs:
       DRUPAL_DATABASE_HOST: mysql
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_DATABASE: drupal
           MYSQL_USER: drupal
@@ -34,34 +36,23 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Set git safe directory
         run: git config --system --add safe.directory '*'
-      - name: Fetch all branches
-        run: git fetch --all
-      - name: Find latest release branch
-        id: find_release
-        run: |
-          LATEST=$(git branch -r | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+-release' | sort -V | tail -n1)
-          echo "Latest release branch: $LATEST"
-          echo "branch=${LATEST}" >> $GITHUB_OUTPUT
-      - name: Checkout latest release branch
-        run: |
-          git checkout ${{ steps.find_release.outputs.branch }}
       - name: Set date variable
         id: date
         run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Install dependencies
         run: composer install -n
       - name: Install Drupal site
@@ -71,7 +62,7 @@ jobs:
           ln -snf $GITHUB_WORKSPACE /var/www/html
           mkdir -p docroot/sites/default/files
           chmod -R 777 docroot/sites/default/files/
-          blt drupal:install -n
+          drush sws:multisite:install -n
       - name: Import configuration
         run: drush cim -y
       - name: Update Composer dependencies
@@ -83,7 +74,7 @@ jobs:
       - name: Generate composer.lock diff (markdown)
         id: lockdiff
         run: |
-          vendor/bin/composer-lock-diff --md --from origin/${{ steps.find_release.outputs.branch }}:composer.lock --to composer.lock > composer-lock-diff.md
+          vendor/bin/composer-lock-diff --md --from origin/${{ github.event.repository.default_branch }}:composer.lock --to composer.lock > composer-lock-diff.md
           echo "diff<<EOF" >> $GITHUB_OUTPUT
           cat composer-lock-diff.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -97,12 +88,12 @@ jobs:
           echo '```' >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
           branch: automated/dependency-update-${{ steps.date.outputs.date }}-${{ github.run_id }}
-          base: ${{ steps.find_release.outputs.branch }}
+          base: ${{ github.event.repository.default_branch }}
           title: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
           body: |
             This PR was created automatically by a scheduled GitHub Actions workflow to update Composer dependencies and export Drupal configuration.

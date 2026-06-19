@@ -17,6 +17,7 @@ class HsEntityTypeForm extends BundleEntityFormBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    /** @var \Drupal\hs_entities\Entity\HsEntityType $entity_type */
     $entity_type = $this->entity;
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('Edit %label HumSci entity type', ['%label' => $entity_type->label()]);
@@ -59,6 +60,7 @@ class HsEntityTypeForm extends BundleEntityFormBase {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\hs_entities\Entity\HsEntityType $entity_type */
     $entity_type = $this->entity;
 
     $entity_type->set('id', trim($entity_type->id()));
@@ -79,6 +81,8 @@ class HsEntityTypeForm extends BundleEntityFormBase {
     }
 
     $form_state->setRedirectUrl($entity_type->toUrl('collection'));
+
+    return $status;
   }
 
 }

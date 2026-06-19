@@ -1,5 +1,6 @@
 @use '../variables/general' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/heros' as *;
@@ -14,7 +15,7 @@
       @include hb-themes(('colorful', 'airy')) {
         background: linear-gradient(
           to right,
-          var(--palette--black) 0%,
+          color('black', 'global') 0%,
           $hb-color--transparent 100%
         );
       }
@@ -22,7 +23,7 @@
       @include hb-traditional {
         background: linear-gradient(
           to right,
-          var(--palette--black) 0%,
+          color('black', 'global') 0%,
           $hb-color--transparent 100%
         );
       }
@@ -31,7 +32,7 @@
         @include hb-themes(('colorful', 'airy')) {
           background: linear-gradient(
             to left,
-            var(--palette--black) 0%,
+            color('black', 'global') 0%,
             $hb-color--transparent 100%
           );
         }
@@ -39,7 +40,7 @@
         @include hb-traditional {
           background: linear-gradient(
             to left,
-            var(--palette--black) 0%,
+            color('black', 'global') 0%,
             $hb-color--transparent 100%
           );
         }

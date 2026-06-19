@@ -1,6 +1,6 @@
 <?php
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 
 $group = EnvironmentDetector::getAhGroup();
 $environment = EnvironmentDetector::getAhEnv();
@@ -12,5 +12,5 @@ $settings['letsencrypt_challenge_directory'] = $settings['file_temp_path'];
 // Disables domain redirect on all environments except production.
 $config['domain_301_redirect.settings']['enabled'] = EnvironmentDetector::isProdEnv();
 
-// Enable shield on non prod.
-$config['shield.settings']['shield_enable'] = !EnvironmentDetector::isProdEnv();
+// Always enable partial imports on Acquia environments.
+$config['hs_config_partial.settings']['enabled'] = TRUE;

@@ -1,10 +1,22 @@
 // Spotlight Slider styles
+
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/general' as *;
+@use '../mixins/heros' as *;
+@use '../mixins/swiper' as *;
+
+$container-sidebar: 880px;
+
 .paragraph--type--hs-sptlght-slder {
   @include hb-hero-full-width;
-  @include slick-container;
-  @include slick-dots;
-  @include slick-arrows;
+  @include swiper-container;
+  @include swiper-pagination;
+  @include swiper-arrows;
   position: relative;
+  container-name: spotlightslider;
+  container-type: inline-size;
 
   .hs-full-width & {
     .hb-spotlight {
@@ -12,16 +24,41 @@
     }
   }
 
-  // slick dots do not display in mobile
-  .slick-dots {
+  // swiper pagination do not display in mobile
+  .swiper-pagination {
+    @include hb-themes(('colorful', 'airy')) {
+      bottom: hb-calculate-rems(38px);
+    }
+
+    @include hb-traditional {
+      bottom: hb-calculate-rems(20px);
+    }
+
     @include grid-media-max('sm') {
       @include visually-hidden;
     }
   }
 
   &:has(.hb-spotlight--expanded) {
-    .slick-dots {
-      bottom: 0;
+    .swiper-pagination {
+      bottom: hb-calculate-rems(21px);
+    }
+  }
+
+  .swiper-pagination-bullet {
+    height: hb-calculate-rems(4.5px);
+  }
+
+  &:has(.hb-spotlight--expanded):has(.field-media-image-caption) {
+    @include grid-media-min('md') {
+      @include hb-themes(('colorful', 'airy')) {
+        @container spotlightslider (width < #{$container-sidebar}) {
+          .swiper-button-prev,
+          .swiper-button-next {
+            bottom: calc(60% - #{hb-calculate-rems(21px)});
+          }
+        }
+      }
     }
   }
 }
@@ -32,16 +69,7 @@
       height: 100%;
     }
 
-    .slick-track {
-      bottom: 0;
-      height: 100%;
-    }
-
-    .slick__slide > div:first-child {
-      height: 100%;
-    }
-
-    .slick-prev {
+    .swiper-button-prev {
       @include hb-traditional {
         bottom: 15% !important;
       }
@@ -51,7 +79,7 @@
       }
     }
 
-    .slick-next {
+    .swiper-button-next {
       @include hb-traditional {
         bottom: 55% !important;
       }
@@ -61,4 +89,13 @@
       }
     }
   }
+}
+
+// Full Width Spotlight Sliders.
+// Only full width if no sidebars present in page layout.
+.hb-three-column--no-sidebar
+  .paragraph--type--hs-sptlght-slder.paragraph--style--full-width {
+  left: calc(-50vw + 50%);
+  position: relative;
+  width: 100vw;
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_migrate\Plugin\views\field;
 
+use Drupal\node\NodeInterface;
 use Drupal\stanford_migrate\StanfordMigrateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -55,15 +56,19 @@ class EntityMigrationField extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     try {
-      $migration = $this->stanfordMigrate->getNodesMigration($values->_entity);
+      if (!$values->_entity instanceof NodeInterface) {
+        return '';
+      }
+
+      $migration = $this->stanfordMigrate->getEntityMigration($values->_entity);
       if ($migration) {
-        return ['#markup' => $migration->label()];
+        return $migration->label();
       }
     }
     catch (\Exception $e) {
       // Nothing to do.
     }
-    return NULL;
+    return '';
   }
 
 }

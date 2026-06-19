@@ -1,54 +1,85 @@
 @use 'sass:meta';
+@use '../variables/theme' as *;
+@use '../variables/fonts' as *;
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
 
-$hb-current-theme: 'traditional' !default;
+// Font definitions.
+@use '../fonts/fonts';
 
-@import '../base-imports';
+// Files from main
+@use '../objects/layouts.general' as *;
+@use '../components/media';
 
 .paragraph-admin-preview {
-  @each $color, $value in $hc-colorful-globals {
-    --palette--#{$color}: #{$value};
-  }
+  @include generate-css-vars('su-core', $su-core-colors);
 
-  // Load main stylesheet with current theme.
-  // All styles will be prefixed with the `.paragraph-admin-preview` class.
-  @include meta.load-css(
-    '../main',
-    $with: (
-      'hb-current-theme': $hb-current-theme,
-    )
-  );
-
-  // Style fixes for specific elements.
-  .paragraph--type--hs-sptlght-slder.paragraph--view-mode--preview {
-    padding-right: 0;
-  }
-
-  .paragraph--type--hs-gradient-hero-slider {
-    .slick-dots {
-      bottom: -2rem;
-    }
-  }
-
-  .ptype-hs-carousel .ptype-hs-hero-image,
-  .paragraph--type--hs-carousel.ptype-hs-hero-image {
-    .hb-hero-overlay {
-      background-color: transparent;
-
-      &::before {
-        content: '';
+  @include hb-themes(('colorful', 'airy')) {
+    @each $pairing, $colors in $colorful-pairings-colors {
+      .hc-pairing-#{$pairing} {
+        @include generate-css-vars('colorful-pairings', $colors);
       }
     }
+
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 
-  .hs-paragraph-style--well {
-    width: auto;
+  @include hb-traditional {
+    @each $pairing, $colors in $traditional-pairings-colors {
+      .ht-pairing-#{$pairing} {
+        @include generate-css-vars('traditional-pairings', $colors);
+      }
+    }
+
+    @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 
-  .hs-paragraph-style--well-full-width {
-    left: auto;
-    width: auto;
+  // Load some stylesheet.
+  // All styles will be prefixed with the `.paragraph-admin-preview` class.
+  @include meta.load-css(
+    '../base/normalize',
+  );
+  @include meta.load-css(
+    '../base/base',
+  );
+  @include meta.load-css(
+    '../base/forms',
+  );
+  @include meta.load-css(
+    '../base/tables',
+  );
+  @include meta.load-css(
+    '../base/details',
+  );
+  @include meta.load-css(
+    '../components/buttons',
+  );
+  @include meta.load-css(
+    '../components/block-layout',
+  );
+  @include meta.load-css(
+    '../components/pattern.color-band',
+  );
+
+  // Utility classes.
+  @include meta.load-css(
+    '../utilities/utilities',
+  );
+
+  // Link current color variables.
+  .paragraph-item {
+    --link-base-current-color: #{color('link-base')};
+    --link-base-hover-current-color: #{color('link-base-hover')};
   }
 
+  // Style fixes for specific elements.
   .hb-color-band {
     &::before,
     &::after {
@@ -56,9 +87,59 @@ $hb-current-theme: 'traditional' !default;
     }
   }
 
+  .paragraph--type--hs-sptlght-slder.paragraph--view-mode--preview,
+  .paragraph--type--hs-carousel.paragraph--view-mode--preview {
+    padding-right: 0;
+  }
+
+  .paragraph--type--hs-gradient-hero-slider {
+    .swiper-pagination {
+      bottom: 0;
+    }
+  }
+
+  .paragraph--type--hs-carousel .swiper-container {
+    .swiper-button-prev,
+    .swiper-button-next {
+      @include hb-traditional {
+        bottom: 4.76rem;
+      }
+    }
+  }
+
+  .ptype-hs-carousel .ptype-hs-hero-image,
+  .paragraph--type--hs-carousel.ptype-hs-hero-image {
+    .hb-hero-overlay {
+      background-color: transparent;
+    }
+  }
+
+  .hs-paragraph-style--well-full-width {
+    left: auto;
+    width: auto;
+  }
+
+  // The font size it's too big.
   .ptype-hs-view {
     h2 {
       font-size: 1.5rem;
+    }
+  }
+
+  // Remove margin on timeline items.
+  .hb-timeline-item {
+    margin: 0;
+  }
+
+
+  @include hb-themes(('colorful', 'airy')) {
+    .field-hs-postcard-link a {
+      color: transparent;
+
+      &:hover,
+      &:focus {
+        color: transparent;
+      }
     }
   }
 
@@ -68,25 +149,10 @@ $hb-current-theme: 'traditional' !default;
     }
   }
 
+  // To make the help text for callouts to look better.
   .ptype-hs-callout-box > p {
     margin: 0 0 1rem !important;
     font-size: 0.875rem;
-  }
-
-  .hb-vertical-linked-card__title {
-    font-size: hb-calculate-rems(20px);
-  }
-
-  .field-hs-postcard-link a {
-    color: transparent;
-  }
-
-  .hb-timeline-item {
-    margin: 0;
-  }
-
-  .field-hs-collection-items.item-per-row--2 .paragraph-item {
-    margin: 0 !important;
   }
 
   // Gin styles overrides.
@@ -94,6 +160,7 @@ $hb-current-theme: 'traditional' !default;
 
   box-sizing: border-box;
   font-family: $su-font-sans;
+  -webkit-font-smoothing: antialiased;
 
   a:hover {
     text-decoration: unset;
@@ -112,5 +179,16 @@ $hb-current-theme: 'traditional' !default;
   details summary {
     background-color: transparent;
     font-weight: 400;
+  }
+}
+
+.hb-raised-cards--uniform-height
+  .field-hs-collection-items
+  .ptype-hs-postcard
+  .paragraph-admin-preview {
+  display: flex;
+
+  & div:only-child:not(.hb-card__date-tile, .hb-pill) {
+    width: 100%;
   }
 }

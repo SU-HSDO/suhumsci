@@ -2,50 +2,234 @@
 
 /**
  * @file
- * Update functions for hs_dashboard module.
+ * hs_admin.install
  */
-
-use Drupal\shortcut\Entity\Shortcut;
 
 /**
- * Create the dashboard shortcut.
+ * Implements hook_update_last_removed().
  */
-function hs_admin_update_10000() {
-  $dashboard_shorcut = Shortcut::create([
-    'shortcut_set' => 'default',
-    'title' => 'Dashboard',
-    'link' => [
-      'uri' => 'internal:/admin/dashboard',
-    ],
-    'weight' => -5,
-  ]);
-  $dashboard_shorcut->save();
-
-  // Set the weight of the 'home' shortcut to -10.
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $home_shortcut = $entity_type_manager->getStorage('shortcut')->loadByProperties(['title' => 'Home']);
-  if (!empty($home_shortcut)) {
-    $home_shortcut = reset($home_shortcut);
-    $home_shortcut->setWeight(-10);
-    $home_shortcut->save();
-  }
+function hs_admin_update_last_removed() {
+  return 10004;
 }
 
 /**
- * Grant permissions to site manager and contributor roles.
+ * Changes to shortcuts: delete, rename, move, and adjust weights.
  */
-function hs_admin_update_10001() {
-  // Grant permissions to site manager role.
-  user_role_grant_permissions('site_manager', [
-    'access user profiles',
-    'manage editoria11y results',
-  ]);
+function hs_admin_update_10005() {
+  // Delete shortcuts: Add User, Accessibility Guide, Reference Site.
+  $delete_shortcuts = [
+    'aec62668-8ea6-4143-beea-b5b11ef1734b',
+    'd9760a43-a41d-4aab-925b-b3cdb6979111',
+    'e19e66c4-9dda-450b-a643-4d573114aee2',
+  ];
+  $delete_shortcuts_bytitle = [
+    'Add User',
+    'Accessibility Guide',
+    'Reference Site',
+  ];
+  // Rename shortcuts: User Guide, Google Analytics.
+  $rename_shortcuts = [
+    '7b558737-510d-4d83-84e2-de2d6c11d22a' => 'User Guide and Training Resources',
+    'b54b0f26-8bd0-4d03-a050-d3359ce191e0' => 'View Google Analytics',
+  ];
+  $rename_shortcuts_bytitle = [
+    'User Guide' => 'User Guide and Training Resources',
+    'Google Analytics' => 'View Google Analytics',
+  ];
+  // Move shortcuts: Add Global Message Banner.
+  $move_shortcuts = [
+    '87cae7b2-943b-4f7e-b57f-a684bcb8fd55' => '3c769f63-f502-4f76-b4dd-85b7a584cd5b',
+  ];
+  $move_shortcuts_bytitle = [
+    'Add Global Message Banner' => '3c769f63-f502-4f76-b4dd-85b7a584cd5b',
+  ];
+  // Change weights for shortcuts.
+  $shortcut_weights = [
+    '0c69448d-c6fa-4fb8-9b2e-f93f3a955baf' => 28,
+    '2502bdcb-e704-4660-86f3-bdff9b178907' => 16,
+    '264204ed-bc7e-416b-a20e-31fb6f555f11' => 26,
+    '2fc25079-f676-4529-a0ef-2aead39bda38' => 29,
+    '4a1ba363-4bfb-48df-98ab-722d70d045b3' => 15,
+    '4af76520-ff7e-4e4d-a3ef-756fa1a008d1' => 18,
+    '4f2cd363-97fd-4ace-bf32-0f5fbea7aa74' => 34,
+    '5744f2de-74a1-448f-aac1-61983a136cdb' => 14,
+    '757a3343-882e-4e11-9cda-cf72eff99d69' => 21,
+    '7b558737-510d-4d83-84e2-de2d6c11d22a' => 35,
+    '7e6fcda2-8ac9-486d-bbc6-e6690405bdec' => 33,
+    '7f373d0e-d750-4372-a4e9-bc488533cbb8' => 17,
+    '87cae7b2-943b-4f7e-b57f-a684bcb8fd55' => 13,
+    '8819c42b-f9f9-44b5-b4dc-f4bee61c3b4a' => 31,
+    '908835fd-c2a8-44e8-9904-cdef5bf9b31a' => 20,
+    'a044b262-23f6-4dea-9d8b-c3957a96206e' => 22,
+    'b54b0f26-8bd0-4d03-a050-d3359ce191e0' => 32,
+    'be2afd3b-708e-41da-bbe8-08b37b8f8457' => 19,
+    'd1f61cec-c768-47e0-87f7-b0d8e8a97999' => 23,
+    'e8723330-0baa-458c-bda6-a30eaaf0cd37' => 24,
+    'ec9a0386-434d-4f06-921d-4b87fd182880' => 27,
+  ];
+  $shortcut_weights_bytitle = [
+    'Manage Categories' => 28,
+    'Manage Courses' => 16,
+    'Manage User Permissions' => 26,
+    'Manage Sorting' => 29,
+    'Manage Flexible Page' => 15,
+    'Manage Event Series' => 18,
+    'Support Ticket' => 34,
+    'Manage content' => 14,
+    'Manage Research Area' => 21,
+    'User Guide and Training Resources' => 35,
+    'User Guide' => 35,
+    'Get Help' => 33,
+    'Manage Events' => 17,
+    'Add Global Message Banner' => 13,
+    'Edit Main Menu' => 31,
+    'Manage People' => 20,
+    'Manage Private Page' => 22,
+    'View Google Analytics' => 32,
+    'Google Analytics' => 32,
+    'Manage News' => 19,
+    'Manage Publications' => 23,
+    'Manage Media' => 24,
+    'Site actions' => 27,
+  ];
+  $manage_content_uuid = '5744f2de-74a1-448f-aac1-61983a136cdb';
+  $create_manage_alt_text = TRUE;
+  $shortcuts_created = [];
+  $shortcuts_deleted = [];
+  $shortcuts_renamed = [];
+  $shortcuts_moved = [];
+  $shortcuts_weighted = [];
 
-  // Grant permissions to contributor role.
-  user_role_grant_permissions('contributor', [
-    'access user profiles',
-    'manage editoria11y results',
-    'view editoria11y checker',
-    'view user list',
+  $shortcut_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+
+  foreach ($shortcut_storage->loadByProperties(['shortcut_set' => 'default']) as $shortcut) {
+    $changed = FALSE;
+    $uuid = $shortcut->uuid();
+    $title = $shortcut->getTitle();
+
+    // Delete shortcuts.
+    if (
+      in_array($uuid, $delete_shortcuts) ||
+      in_array($title, $delete_shortcuts_bytitle)
+    ) {
+      $shortcuts_deleted[$uuid] = $title;
+      $shortcut->delete();
+      continue;
+    }
+
+    // Rename shortcuts.
+    if (isset($rename_shortcuts[$uuid])) {
+      $shortcut->setTitle($rename_shortcuts[$uuid]);
+      $shortcuts_renamed[$uuid] = $rename_shortcuts[$uuid];
+      $changed = TRUE;
+    }
+    elseif (isset($rename_shortcuts_bytitle[$title])) {
+      $shortcut->setTitle($rename_shortcuts_bytitle[$title]);
+      $shortcuts_renamed[$uuid] = $rename_shortcuts_bytitle[$title];
+      $changed = TRUE;
+    }
+
+    // Move shortcuts.
+    if (isset($move_shortcuts[$uuid])) {
+      $shortcut->set('parent', $move_shortcuts[$uuid]);
+      $shortcuts_moved[$uuid] = $title;
+      $changed = TRUE;
+    }
+    elseif (isset($move_shortcuts_bytitle[$title])) {
+      $shortcut->set('parent', $move_shortcuts_bytitle[$title]);
+      $shortcuts_moved[$uuid] = $title;
+      $changed = TRUE;
+    }
+
+    // Adjust shortcut weights.
+    if (isset($shortcut_weights[$uuid])) {
+      $shortcut->setWeight($shortcut_weights[$uuid]);
+      $shortcuts_weighted[$uuid] = $title;
+      $changed = TRUE;
+    }
+    elseif (isset($shortcut_weights_bytitle[$title])) {
+      $shortcut->setWeight($shortcut_weights_bytitle[$title]);
+      $shortcuts_weighted[$uuid] = $title;
+      $changed = TRUE;
+    }
+
+    // Get "Manage Content" shortcut UUID if different.
+    if (
+      $shortcut->getTitle() === 'Manage content' &&
+      $shortcut->uuid() !== $manage_content_uuid
+    ) {
+      $manage_content_uuid = $shortcut->uuid();
+    }
+    // Check if "Manage Alt Text" shortcut exists.
+    if (
+      $shortcut->getTitle() === 'Manage alt text' ||
+      $shortcut->uuid() === '6c80046f-4281-42cf-95a7-4cc0d6975092'
+     ) {
+      $create_manage_alt_text = FALSE;
+    }
+
+    // Only save shortcut if changed.
+    if ($changed) {
+      $shortcut->save();
+    }
+  }
+
+  // Create shortcut: "Manage Alt Text".
+  if ($create_manage_alt_text) {
+    $manage_alt_text = $shortcut_storage->create([
+      'uuid' => '6c80046f-4281-42cf-95a7-4cc0d6975092',
+      'shortcut_set' => 'default',
+      'title' => 'Manage Alt Text',
+      'link' => [
+        'uri' => 'internal:/admin/content/alt',
+      ],
+      'weight' => 25,
+      'parent' => $manage_content_uuid,
+      'depth' => 1,
+    ]);
+    $manage_alt_text->save();
+    $shortcuts_created[$manage_alt_text->uuid()] = $manage_alt_text->getTitle();
+  }
+
+  return t('Shortcuts update complete. Created: @created, Deleted: @deleted, Renamed: @renamed, Moved: @moved, Weighted: @weighted.', [
+    '@created' => count($shortcuts_created),
+    '@deleted' => count($shortcuts_deleted),
+    '@renamed' => count($shortcuts_renamed),
+    '@moved' => count($shortcuts_moved),
+    '@weighted' => count($shortcuts_weighted),
+  ]);
+}
+
+/**
+ * Remove role delegation permissions from the site manager role.
+ */
+function hs_admin_update_10006(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  /** @var \Drupal\user\Entity\Role $role */
+  $role = $role_storage->load('site_manager');
+  $removed_permissions = [];
+
+  // Permissions to remove.
+  $permissions = [
+    'assign contributor role',
+    'assign site_manager role',
+  ];
+
+  // Remove permissions from Site Manager.
+  $role_permissions = $role->getPermissions();
+  if (!empty($to_remove = array_intersect($permissions, $role_permissions))) {
+    foreach ($to_remove as $perm) {
+      $role->revokePermission($perm);
+      $removed_permissions[] = $perm;
+    }
+    $role->save();
+  }
+
+  if (empty($removed_permissions)) {
+    return t('No permissions were removed from the Site Manager role.');
+  }
+
+  return t('Removed permissions from Site Manager role: @removed_permissions.', [
+    '@removed_permissions' => implode(', ', $removed_permissions),
   ]);
 }

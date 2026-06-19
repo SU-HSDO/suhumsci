@@ -3,9 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
+    - block_content.type.hs_basic_block
     - dashboard.dashboard.main_dashboard
     - entityqueue.entity_queue.hs_person
     - filter.format.basic_html
+    - filter.format.bold_italics_links
     - filter.format.minimal_html
     - filter.format.minimal_html_with_styles
     - media.type.embeddable
@@ -21,8 +23,10 @@ dependencies:
     - node.type.hs_private_page
     - node.type.hs_publications
     - node.type.hs_research
+    - node.type.hs_training
     - taxonomy.vocabulary.hs_course_component
     - taxonomy.vocabulary.hs_course_tags
+    - taxonomy.vocabulary.hs_curriculum_requirement_type
     - taxonomy.vocabulary.hs_event_audience
     - taxonomy.vocabulary.hs_event_category
     - taxonomy.vocabulary.hs_event_status
@@ -34,8 +38,14 @@ dependencies:
     - taxonomy.vocabulary.hs_person_staff_type
     - taxonomy.vocabulary.hs_person_student_type
     - taxonomy.vocabulary.hs_publication_type
+    - taxonomy.vocabulary.hs_training_audience
+    - taxonomy.vocabulary.hs_training_name
+    - taxonomy.vocabulary.hs_training_product
+    - taxonomy.vocabulary.hs_training_provider
+    - taxonomy.vocabulary.hs_training_unit
   module:
-    - block_content_permissions
+    - block_content
+    - content_access_simple
     - contextual
     - dashboard
     - dropzonejs
@@ -47,7 +57,6 @@ dependencies:
     - help
     - hs_blocks
     - hs_entities
-    - hs_page_reports
     - media
     - menu_admin_per_menu
     - node
@@ -69,6 +78,7 @@ weight: -9
 is_admin: null
 permissions:
   - 'access administration pages'
+  - 'access content access simple'
   - 'access content overview'
   - 'access contextual links'
   - 'access entity usage statistics'
@@ -81,9 +91,9 @@ permissions:
   - 'administer nodes'
   - 'administer users'
   - 'assign author role'
-  - 'assign contributor role'
   - 'assign intranet_viewer role'
-  - 'assign site_manager role'
+  - 'assign preparer role'
+  - 'assign reviewer role'
   - 'create embeddable media'
   - 'create file media'
   - 'create hs_basic_block block content'
@@ -96,11 +106,13 @@ permissions:
   - 'create hs_private_page content'
   - 'create hs_publications content'
   - 'create hs_research content'
+  - 'create hs_training content'
   - 'create humsci entity'
   - 'create image media'
   - 'create media'
   - 'create terms in hs_course_component'
   - 'create terms in hs_course_tags'
+  - 'create terms in hs_curriculum_requirement_type'
   - 'create terms in hs_event_audience'
   - 'create terms in hs_event_category'
   - 'create terms in hs_event_status'
@@ -112,6 +124,11 @@ permissions:
   - 'create terms in hs_person_staff_type'
   - 'create terms in hs_person_student_type'
   - 'create terms in hs_publication_type'
+  - 'create terms in hs_training_audience'
+  - 'create terms in hs_training_name'
+  - 'create terms in hs_training_product'
+  - 'create terms in hs_training_provider'
+  - 'create terms in hs_training_unit'
   - 'create url aliases'
   - 'create video media'
   - 'delete any hs_basic_page content'
@@ -123,6 +140,7 @@ permissions:
   - 'delete any hs_private_page content'
   - 'delete any hs_publications content'
   - 'delete any hs_research content'
+  - 'delete any hs_training content'
   - 'delete humsci entity'
   - 'delete media'
   - 'delete own file media'
@@ -136,10 +154,13 @@ permissions:
   - 'delete own hs_private_page content'
   - 'delete own hs_publications content'
   - 'delete own hs_research content'
+  - 'delete own hs_training content'
   - 'delete own image media'
   - 'delete own video media'
+  - 'delete term revisions in hs_curriculum_requirement_type'
   - 'delete terms in hs_course_component'
   - 'delete terms in hs_course_tags'
+  - 'delete terms in hs_curriculum_requirement_type'
   - 'delete terms in hs_event_audience'
   - 'delete terms in hs_event_category'
   - 'delete terms in hs_event_status'
@@ -151,8 +172,14 @@ permissions:
   - 'delete terms in hs_person_staff_type'
   - 'delete terms in hs_person_student_type'
   - 'delete terms in hs_publication_type'
+  - 'delete terms in hs_training_audience'
+  - 'delete terms in hs_training_name'
+  - 'delete terms in hs_training_product'
+  - 'delete terms in hs_training_provider'
+  - 'delete terms in hs_training_unit'
   - 'dropzone upload files'
   - 'edit any file media'
+  - 'edit any hs_basic_block block content'
   - 'edit any hs_basic_page content'
   - 'edit any hs_course content'
   - 'edit any hs_event content'
@@ -162,6 +189,7 @@ permissions:
   - 'edit any hs_private_page content'
   - 'edit any hs_publications content'
   - 'edit any hs_research content'
+  - 'edit any hs_training content'
   - 'edit any image media'
   - 'edit any video media'
   - 'edit behavior plugin settings'
@@ -176,11 +204,13 @@ permissions:
   - 'edit own hs_private_page content'
   - 'edit own hs_publications content'
   - 'edit own hs_research content'
+  - 'edit own hs_training content'
   - 'edit own image media'
   - 'edit own video media'
   - 'edit social media block'
   - 'edit terms in hs_course_component'
   - 'edit terms in hs_course_tags'
+  - 'edit terms in hs_curriculum_requirement_type'
   - 'edit terms in hs_event_audience'
   - 'edit terms in hs_event_category'
   - 'edit terms in hs_event_status'
@@ -192,6 +222,11 @@ permissions:
   - 'edit terms in hs_person_staff_type'
   - 'edit terms in hs_person_student_type'
   - 'edit terms in hs_publication_type'
+  - 'edit terms in hs_training_audience'
+  - 'edit terms in hs_training_name'
+  - 'edit terms in hs_training_product'
+  - 'edit terms in hs_training_provider'
+  - 'edit terms in hs_training_unit'
   - 'import hs_capx migration'
   - 'import hs_events_importer migration'
   - 'manage editoria11y results'
@@ -212,17 +247,17 @@ permissions:
   - 'revert hs_private_page revisions'
   - 'revert hs_publications revisions'
   - 'revert hs_research revisions'
+  - 'revert hs_training revisions'
+  - 'revert term revisions in hs_curriculum_requirement_type'
   - 'unpublish any content'
   - 'unpublish editable content'
-  - 'update any hs_basic_block block content'
   - 'update any media'
   - 'update hs_person entityqueue'
   - 'update media'
   - 'use text format basic_html'
+  - 'use text format bold_italics_links'
   - 'use text format minimal_html'
   - 'use text format minimal_html_with_styles'
-  - 'view 403 reports'
-  - 'view 404 reports'
   - 'view any unpublished content'
   - 'view editoria11y checker'
   - 'view hs_basic_page revisions'
@@ -234,9 +269,10 @@ permissions:
   - 'view hs_private_page revisions'
   - 'view hs_publications revisions'
   - 'view hs_research revisions'
+  - 'view hs_training revisions'
   - 'view main_dashboard dashboard'
   - 'view own unpublished content'
   - 'view own unpublished media'
-  - 'view restricted block content'
+  - 'view term revisions in hs_curriculum_requirement_type'
   - 'view the administration theme'
   - 'view user list'

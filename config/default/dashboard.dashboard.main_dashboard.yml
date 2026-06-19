@@ -6,7 +6,7 @@ dependencies:
     - views.view.dashboard_entityqueue
     - views.view.duplicate_people
     - views.view.editoria11y_results
-    - views.view.my_latest_edits
+    - views.view.my_latest_revisions
     - views.view.site_dashboard_active_site_editors
   module:
     - hs_blocks
@@ -43,30 +43,31 @@ layout:
       label: 'My Latest Edits Section'
       context_mapping: {  }
     components:
-      5271f7a7-d525-4063-a38e-e68c6c8eef26:
-        uuid: 5271f7a7-d525-4063-a38e-e68c6c8eef26
+      16d5b5ff-2a0c-4fcc-985c-fabe57729873:
+        uuid: 16d5b5ff-2a0c-4fcc-985c-fabe57729873
         region: content
         configuration:
-          id: 'views_block:my_latest_edits-block_1'
+          id: 'views_block:my_latest_revisions-block_1'
           label: ''
           label_display: visible
           provider: views
           context_mapping: {  }
           views_label: ''
-          items_per_page: none
+          items_per_page: 0
           exposed: {  }
         weight: 0
         additional: {  }
     third_party_settings: {  }
   -
-    layout_id: layout_onecol
+    layout_id: layout_twocol_section
     layout_settings:
-      label: 'Pages with the most accessibility issues Section'
+      label: 'Pages with the most accessibility issues / SiteImprove Broken Links Section'
       context_mapping: {  }
+      column_widths: 50-50
     components:
       4ec36b0a-20e8-4b96-b9d2-cf40f9438a27:
         uuid: 4ec36b0a-20e8-4b96-b9d2-cf40f9438a27
-        region: content
+        region: first
         configuration:
           id: 'views_block:editoria11y_results-block_top_results'
           label: ''
@@ -74,20 +75,13 @@ layout:
           provider: views
           context_mapping: {  }
           views_label: ''
-          items_per_page: none
+          items_per_page: 0
           exposed: {  }
         weight: 0
         additional: {  }
-    third_party_settings: {  }
-  -
-    layout_id: layout_onecol
-    layout_settings:
-      label: 'SiteImprove Broken Links Section'
-      context_mapping: {  }
-    components:
       5abbe598-4aa6-4f17-a593-45c27378f502:
         uuid: 5abbe598-4aa6-4f17-a593-45c27378f502
-        region: content
+        region: second
         configuration:
           id: hs_siteimprove_broken_links
           label: 'Pages with Broken Links'
@@ -98,14 +92,15 @@ layout:
         additional: {  }
     third_party_settings: {  }
   -
-    layout_id: layout_onecol
+    layout_id: layout_twocol_section
     layout_settings:
-      label: 'Duplicate Profiles Section'
+      label: 'Duplicate Profile / Content Sorting Section'
       context_mapping: {  }
+      column_widths: 50-50
     components:
       11de9985-525e-4dd4-b5ce-c8789d008462:
         uuid: 11de9985-525e-4dd4-b5ce-c8789d008462
-        region: content
+        region: first
         configuration:
           id: 'views_block:duplicate_people-block_1'
           label: ''
@@ -113,20 +108,13 @@ layout:
           provider: views
           context_mapping: {  }
           views_label: ''
-          items_per_page: none
+          items_per_page: 0
           exposed: {  }
         weight: 0
         additional: {  }
-    third_party_settings: {  }
-  -
-    layout_id: layout_onecol
-    layout_settings:
-      label: 'Content Sorting Section'
-      context_mapping: {  }
-    components:
       36857474-0fa2-48b0-8b32-b129e92cefa6:
         uuid: 36857474-0fa2-48b0-8b32-b129e92cefa6
-        region: content
+        region: second
         configuration:
           id: 'views_block:dashboard_entityqueue-block_sorting'
           label: ''
@@ -134,20 +122,32 @@ layout:
           provider: views
           context_mapping: {  }
           views_label: ''
-          items_per_page: none
+          items_per_page: 0
           exposed: {  }
         weight: 0
         additional: {  }
     third_party_settings: {  }
   -
-    layout_id: layout_onecol
+    layout_id: layout_twocol_section
     layout_settings:
-      label: 'Active Site Editors Section'
+      label: 'Importers / Active Site Editors Section'
       context_mapping: {  }
+      column_widths: 50-50
     components:
+      fd1a16b1-6039-40c4-848f-c96aa72b84e0:
+        uuid: fd1a16b1-6039-40c4-848f-c96aa72b84e0
+        region: first
+        configuration:
+          id: hs_dashboard_importers
+          label: Importers
+          label_display: visible
+          provider: hs_dashboard
+          context_mapping: {  }
+        weight: 0
+        additional: {  }
       f9927c52-346e-4010-964b-4e368eeb9cc2:
         uuid: f9927c52-346e-4010-964b-4e368eeb9cc2
-        region: content
+        region: second
         configuration:
           id: 'views_block:site_dashboard_active_site_editors-block_1'
           label: ''
@@ -155,26 +155,8 @@ layout:
           provider: views
           context_mapping: {  }
           views_label: ''
-          items_per_page: none
+          items_per_page: 0
           exposed: {  }
-        weight: 0
-        additional: {  }
-    third_party_settings: {  }
-  -
-    layout_id: layout_onecol
-    layout_settings:
-      label: 'Importers Section'
-      context_mapping: {  }
-    components:
-      fd1a16b1-6039-40c4-848f-c96aa72b84e0:
-        uuid: fd1a16b1-6039-40c4-848f-c96aa72b84e0
-        region: content
-        configuration:
-          id: hs_dashboard_importers
-          label: Importers
-          label_display: visible
-          provider: hs_dashboard
-          context_mapping: {  }
         weight: 0
         additional: {  }
     third_party_settings: {  }

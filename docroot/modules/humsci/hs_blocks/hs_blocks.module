@@ -11,6 +11,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_help().
@@ -42,6 +43,8 @@ function hs_blocks_theme($existing, $type, $theme, $path) {
       'variables' => [
         'icon_size' => NULL,
         'layout' => NULL,
+        'text_above' => NULL,
+        'text_below' => NULL,
         'links' => [],
       ],
     ],
@@ -120,9 +123,9 @@ function hs_blocks_form_block_form_alter(&$form, FormStateInterface $form_state)
   $block = $block_form->getEntity();
   // Hide visibility & region fields from non-developers on social media block.
   if ($block instanceof Block && $block->getPluginId() == 'hs_blocks_social_media_block') {
-    /** @var Drupal\Entity\User $current_user */
-    $current_user = \Drupal::currentUser();
-    if (!$current_user->hasRole('administrator')) {
+    $uid = \Drupal::currentUser()->id();
+    $user = User::load($uid);
+    if (!$user->hasRole('administrator')) {
       $form['visibility']['#access'] = FALSE;
       $form['region']['#access'] = FALSE;
     }

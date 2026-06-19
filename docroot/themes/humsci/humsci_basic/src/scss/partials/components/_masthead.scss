@@ -1,10 +1,21 @@
+@use 'sass:map';
+@use '../variables/general' as *;
+@use '../variables/zindex' as *;
+@use '../functions/fonts' as *;
+@use '../functions/color' as *;
+@use '../functions/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/general' as *;
+@use '../mixins/flex-grid' as *;
+@use '../mixins/layout' as *;
+
 .su-masthead {
   box-shadow: none;
   z-index: $hb-z-index-masthead;
   border-bottom: $hb-thin-border;
-  border-color: var(--palette--gray);
+  border-color: color('gray', 'global');
   position: relative;
-  background-color: color(su-bg);
+  background-color: color('background', 'su-core');
   max-width: 100%;
 
   > section:last-of-type {
@@ -74,12 +85,12 @@
           margin-bottom: hb-calculate-rems(7.5px);
           border-bottom: $hb-thin-border;
           border-color: #2e2d29;
-          content: "";
+          content: '';
           display: block;
           width: hb-calculate-rems(120px);
 
           .hb-dark-pattern & {
-            border-color: var(--palette--white);
+            border-color: color('white', 'su-core');
           }
         }
       }
@@ -112,7 +123,7 @@
       order: -1;
       position: absolute;
       right: 0;
-      max-width: $hb-input-max-width;
+      max-width: hb-calculate-rems(265px);
     }
   }
 
@@ -122,11 +133,11 @@
 
     @include grid-media-only('xs') {
       // We can't use 100vw for this because it doesn't work with OSX system preference to always show scrollbar
-      width: calc(100% + #{map-get($su-screen-margins, 'xs') * 2});
+      width: calc(100% + #{map.get($su-screen-margins, 'xs') * 2});
     }
 
     @include grid-media-only('sm') {
-      width: calc(100% + #{map-get($su-screen-margins, 'sm') * 2});
+      width: calc(100% + #{map.get($su-screen-margins, 'sm') * 2});
     }
 
     @include grid-media-min('sm') {
@@ -144,7 +155,7 @@
       &__line3,
       &__line4,
       &__line5 {
-        color: var(--palette--white);
+        color: color('white', 'su-core');
       }
 
       // Dark mode masthead lockup vertical pipe
@@ -152,7 +163,7 @@
       &__cell2,
       &__line4::after,
       &__line5::before {
-        border-color: var(--palette--white);
+        border-color: color('white', 'su-core');
       }
     }
   }
@@ -169,7 +180,7 @@
 }
 
 .su-masthead--dark {
-  background-color: color(su-bg-reverse);
+  background-color: color('background-reverse', 'su-core');
 
   .su-lockup__wordmark,
   .su-lockup__line1,
@@ -177,10 +188,10 @@
   .su-lockup__line3,
   .su-lockup__line4,
   .su-lockup__line5 {
-    color: color(su-link-reverse);
+    color: color('link-reverse', 'su-core');
   }
 
   .su-lockup__cell2 {
-    border-color: color(su-link-reverse);
+    border-color: color('link-reverse', 'su-core');
   }
 }

@@ -1,15 +1,157 @@
-# This file defines drush configuration that applies to drush commands
-# for the entire application. For site-specific settings, like URI, use
-# ../docroot/sites/[site]/drush.yml
 drush:
   paths:
-    # Load a drush.yml configuration file from the current working directory.
     config:
       - ../docroot/sites/default/local.drush.yml
       - docroot/sites/default/local.drush.yml
-      # Allow local global config overrides.
       - local.drush.yml
+      - drush/local.drush.yml
       - drush/local.drush.yml
     include:
       - '${env.home}/.drush'
       - /usr/share/drush/commands
+project:
+  profile: su_humsci_profile
+command:
+  sws:
+    options:
+      git-url:
+        - 'humscigryphon@svn-2314.prod.hosting.acquia.com:humscigryphon.git'
+      post-build-script: drush/deploy-post-build.sh
+      artifact-dir: deploy
+      alias-dir: drush/sites
+      test-dir: docroot/profiles/humsci/su_humsci_profile/tests/codeception
+      app-id: 60ee2ebb-94f3-415d-a289-c23889ecec18
+      sync-ssh: humscigryphon.prod@web-42199.prod.hosting.acquia.com
+      sync-files:
+        - /mnt/gfs/humscigryphon.prod/nobackup/apikeys/
+        - /mnt/gfs/humscigryphon.prod/secrets.settings.php
+      multisites:
+        - aaai
+        - aaas
+        - aarcs
+        - africanstudies
+        - amstudies
+        - anthrohandbook
+        - anthropology
+        - appliedphysics
+        - archaeology
+        - art
+        - artexhibitions
+        - artgradguide
+        - arthandbook
+        - aviditacharya__humsci
+        - bingschool
+        - biocapstoneshowcase
+        - biology
+        - biologyvirtualshowcase
+        - bsurp
+        - buddhiststudies
+        - buddhiststudies2026
+        - cas
+        - ccsre
+        - ceas
+        - cesta
+        - chemistry
+        - clas
+        - classics
+        - cmbprogram
+        - cmems
+        - cqmd
+        - creativewriting
+        - creees
+        - culture_emotion_lab
+        - datasciencemajor
+        - default
+        - dennylab
+        - development_humsci
+        - dlcl
+        - dsresearch
+        - duboislab
+        - ealc
+        - economics
+        - em1060
+        - english
+        - environmentalhumanities
+        - ethicsinsociety
+        - facultyaffairs_humsci
+        - feminist
+        - finance_humsci
+        - francestanford
+        - gavin_wright__humsci
+        - gender
+        - globalcurrents
+        - grandtour
+        - gus_humsci
+        - history
+        - hps
+        - hs_colorful
+        - hs_design
+        - hs_fps
+        - hs_sandbox
+        - hs_sandbox_1
+        - hs_sandbox_2
+        - hs_sandbox_3
+        - hs_testing_sandbox
+        - hs_traditional
+        - hsbi
+        - hshr
+        - hsweb_referencetraditional
+        - hsweb_userguide
+        - humanbiology
+        - humanitiescore
+        - humanrights
+        - insidehs
+        - integrativeoceans
+        - internationalrelations
+        - iranianstudies
+        - iriss
+        - islamicstudies
+        - it_humsci
+        - it_humsci2023
+        - jewishstudies
+        - jrbp2025
+        - justsocieties
+        - language
+        - linguistics
+        - lowe
+        - mathematics
+        - mcs
+        - medicalhumanities
+        - memorylab
+        - middleeast
+        - morrisoninstitute
+        - mrc
+        - mtl
+        - music
+        - philit
+        - philosophy
+        - physics
+        - planning_humsci
+        - politicalscience
+        - popstudies
+        - psychology
+        - ptarmigan
+        - publichumanities
+        - publicpolicy
+        - publicpulse
+        - religiousstudies
+        - researchadmin_humsci
+        - sgs
+        - shenlab
+        - sitp
+        - siw
+        - sociology
+        - southasia
+        - stanfordsciencefellows
+        - statistics
+        - sts
+        - suac
+        - symsys
+        - tessier_lavigne_lab
+        - texttechnologies
+        - urbanstudies
+        - vpnl
+        - west
+        - womensleadership
+        - womensleadership2026
+        - womensleadershipcp

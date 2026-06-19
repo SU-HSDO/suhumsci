@@ -1,3 +1,10 @@
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../functions/animation' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/icons' as *;
+
 .hb-three-column__main .views-exposed-form,
 .hb-three-column__sidebar-1 .views-exposed-form {
   display: flex;
@@ -12,6 +19,7 @@
   .form-item {
     width: 100%;
     margin-bottom: hb-spacing-width('xs');
+
     @include grid-media-min('md') {
       width: calc(50% - #{hb-calculate-rems(18px)});
       margin-right: hb-calculate-rems(18px);
@@ -55,10 +63,40 @@
 
 .views-exposed-form .select-preact {
   button {
-    border-color: var(--palette--gray) !important;
+    border-color: color('gray-400', 'global') !important;
+
+    .select-preact__checkmark {
+      width: 13px;
+      height: 10px;
+      background-repeat: no-repeat;
+
+      @include hb-icon-background('checkmark', 'gray-900');
+    }
+
+    svg {
+      transition: hb-transition(transform);
+    }
 
     @include hb-traditional {
       border-radius: 0 !important;
+    }
+
+    &[aria-expanded='true'] {
+      background-color: color('gray-100', 'global') !important;
+      color: color('gray-900', 'global') !important;
+
+      svg {
+        transform: rotate(180deg);
+      }
+
+      @include hb-colorful {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+
+        & + div {
+          border-radius: 0 0 4px 4px;
+        }
+      }
     }
   }
 }

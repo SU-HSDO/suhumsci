@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# DDEV command for setting up a fresh test environment using Drush (like GitHub)
+# This mimics the CI environment exactly
+# Usage: ddev setup-tests
+
+set -e
+
+echo "🧪 Setting up fresh test environment..."
+
+# Create a fresh database
+DB_NAME="drupal_default"
+echo "🗄️  Creating fresh database: $DB_NAME"
+
+mysql -h db -u root -proot -e "DROP DATABASE IF EXISTS $DB_NAME; CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO 'db'@'%'; FLUSH PRIVILEGES;"
+
+echo "✅ Database created successfully"
+
+# Clear any existing settings and localhost directory
+echo "🧹 Clearing existing settings..."
+sudo rm -f docroot/sites/default/settings.php
+sudo rm -f docroot/sites/default/settings/local.settings.php
+sudo rm -f docroot/sites/default/settings.local.php
+sudo rm -rf docroot/sites/localhost/
+
+# Temporarily move local Drush config
+echo "🔧 Temporarily moving local Drush config..."
+if [ -f "drush/local.drush.yml" ]; then
+    mv drush/local.drush.yml drush/local.drush.yml.backup
+    echo "✅ Moved drush/local.drush.yml to drush/local.drush.yml.backup"
+fi
+
+# Generate settings
+echo "⚙️  Generating settings files..."
+vendor/bin/drush sws:multisite:settings
+
+# Create files directory and set permissions (like GitHub does)
+echo "📁 Creating files directory..."
+mkdir -p docroot/sites/default/files
+chmod -R 777 docroot/sites/default/files/
+
+# Install Drupal
+echo "🚀 Installing Drupal with su_humsci_profile..."
+vendor/bin/drush si su_humsci_profile -y
+
+echo "✅ Fresh Drupal installation complete"
+
+# Compile theme assets (like GitHub Actions does)
+echo "🎨 Compiling theme assets..."
+cd docroot/themes/humsci/humsci_basic
+if [ -f "package.json" ]; then
+    npm install --silent
+    npm run build --silent
+    echo "✅ Theme assets compiled successfully"
+else
+    echo "⚠️  No package.json found in theme directory"
+fi
+cd /var/www/html
+
+# Setup Codeception configuration
+echo "⚙️  Setting up Codeception configuration..."
+cp .ddev/default.codeception.yml tests/codeception.yml
+
+echo "✅ Codeception configuration updated to match CI"
+
+
+
+# Restore local drush config
+echo "🔧 Restoring local drush config..."
+if [ -f "drush/local.drush.yml.backup" ]; then
+    mv drush/local.drush.yml.backup drush/local.drush.yml
+    echo "✅ Restored drush/local.drush.yml"
+fi
+
+echo "🎉 Test environment setup complete!"
+echo ""
+echo "The fresh test environment is now ready with:"
+echo "- Fresh Drupal installation in sites/default"
+echo "- Database: $DB_NAME"
+echo "- Theme assets compiled"
+echo "- Codeception configured for localhost"
+echo ""
+echo "To run tests using Drush:"
+echo "  ddev drush sws:codeception --group=install --suite=acceptance"
+echo "  ddev drush sws:codeception --group=install --suite=functional"
+echo ""
+echo "Or using the direct commands:"
+echo "  ddev codeception run acceptance --group=install"
+echo "  ddev codeception run functional --group=install"

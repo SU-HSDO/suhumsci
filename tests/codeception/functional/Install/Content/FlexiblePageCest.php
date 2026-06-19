@@ -168,7 +168,7 @@ class FlexiblePageCest {
     $I->click('Save');
 
     $I->waitForText('Demo Basic Page');
-    $I->canSeeNumberOfElements('.slick img', 1);
+    $I->canSeeNumberOfElements('.swiper-container img', 1);
   }
 
   /**
@@ -199,7 +199,7 @@ class FlexiblePageCest {
       $I->click('.hb-main-nav__link');
     }
 
-    // As of 2025-05-13 there is no secondary level menu items to test on a 
+    // As of 2025-05-13 there is no secondary level menu items to test on a
     // newly provisioned site.
     // This try/catch keeps the toggle consistent between environment testing.
     // Check nested menu item links.
@@ -301,7 +301,7 @@ class FlexiblePageCest {
     $I->click('Save');
     // Check spotlight 2.
     $I->waitForText($page_title);
-    $I->click('.slick-next');
+    $I->click('.swiper-button-next');
     $I->waitForText('Spotlight #2 Title');
     $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
     // @todo Fix flaky canSee test.
@@ -393,8 +393,8 @@ class FlexiblePageCest {
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'accordion');
     $I->click('Accordion', '.paragraphs-ee-add-dialog');
-    $I->waitForText('Summary');
-    $I->fillField('Summary', 'Sed augue ipsum egestas nec');
+    $I->waitForText('Add Expand/Collapse All');
+    $I->fillField('field_hs_page_components[1][subform][field_hs_accordion_summary][0][value]', 'Sed augue ipsum egestas nec');
     $I->fillField('.ck-editor__editable_inline', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
     $I->click('Save');
     $I->waitForText('Demo Basic Page');
@@ -501,7 +501,8 @@ class FlexiblePageCest {
     $I->click('Collection', '.paragraphs-ee-add-dialog');
     $I->waitForText('Items Per Row');
     $I->selectOption('Items Per Row', 2);
-    $I->canSeeOptionIsSelected('Background Color', '- None -');
+    // ✅ Checks the radio input with value="bg-none" is checked
+    $I->seeCheckboxIsChecked('input[value="bg-none"].ssui__input');
     // Add a Text Area component to the Collection.
     $I->selectOption('Title Settings', 'I do not want a heading for this Collection');
     $I->cantSee('field_hs_page_components[1][subform][field_title][0][value]');

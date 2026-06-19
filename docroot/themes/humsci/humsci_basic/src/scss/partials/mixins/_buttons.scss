@@ -1,0 +1,275 @@
+@use '../variables/general' as *;
+@use '../variables/fonts' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../functions/color' as *;
+@use 'theme' as *;
+
+// This removes styles added by default to button elements.
+// For when something should semantically be a button,
+// but isn't buttony in appearance.
+@mixin hb-unbuttonize {
+  background-color: transparent;
+  color: inherit;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  text-align: inherit;
+  font: inherit;
+  border-radius: 0;
+  appearance: none; // Just in case we missed anything.
+  text-decoration: none;
+}
+
+@mixin hb-button-base {
+  display: inline-block;
+  width: auto;
+  font-weight: hb-theme-font-weight(semibold);
+  font-size: hb-calculate-rems(16px);
+  line-height: 1.4;
+  text-decoration: none;
+  text-align: center;
+  border-width: hb-calculate-rems(2px);
+  border-style: solid;
+  transition: hb-transition(background-color), hb-transition(border-color);
+  border-radius: 0;
+  appearance: none; // Just in case we missed anything.
+  margin: 0;
+  background-color: transparent;
+  color: inherit;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-image: none;
+    outline: none;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-family: $hb-colorful-font--sans;
+    border-radius: $hb-button-border-radius;
+    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--sans;
+    padding: hb-calculate-rems(6px) hb-calculate-rems(26px);
+  }
+}
+
+@mixin hb-button {
+  @include hb-button-base;
+  color: color('white', 'global');
+  background-color: color('secondary');
+  border-color: color('secondary');
+
+  &:hover {
+    background-color: color('secondary-darken-12');
+    border-color: color('secondary-darken-12');
+    color: color('white', 'global');
+  }
+
+  &:active,
+  &:focus {
+    background-color: color('secondary');
+    border-color: color('white', 'global');
+    color: color('white', 'global');
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    &:active,
+    &:focus {
+      box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
+    }
+  }
+
+  @include hb-traditional {
+    &:active,
+    &:focus {
+      box-shadow: 0 0 0 hb-calculate-rems(1px) color('secondary-active');
+    }
+  }
+
+  @include hb-colorful {
+    .hc-pairing-ocean & {
+      background-color: color('secondary-darken-12');
+      border-color: color('secondary-darken-12');
+
+      &:hover {
+        background-color: color('primary-dark');
+        border-color: color('primary-dark');
+      }
+    }
+  }
+}
+
+@mixin hb-big-button {
+  @include hb-button;
+  font-size: hb-calculate-rems(18px);
+  border-width: hb-calculate-rems(3px);
+
+  @include hb-themes(('colorful', 'airy')) {
+    padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
+  }
+
+  @include hb-traditional {
+    padding: hb-calculate-rems(8px) hb-calculate-rems(35px);
+  }
+}
+
+@mixin hb-secondary-button {
+  @include hb-button-base;
+  border-color: color('secondary');
+  color: color('secondary');
+
+  &:hover {
+    color: color('white', 'global');
+    background-color: color('secondary');
+
+    .hb-dark-pattern & {
+      background-color: transparent;
+    }
+  }
+
+  &:active,
+  &:focus {
+    color: color('secondary');
+    background-color: transparent;
+    box-shadow:
+      0 0 0 hb-calculate-rems(2px) color('white', 'global'),
+      0 0 0 hb-calculate-rems(4px) color('secondary-active');
+
+    .hb-dark-pattern & {
+      box-shadow: none;
+    }
+  }
+
+  @include hb-traditional {
+    border-width: hb-calculate-rems(1px);
+
+    &:active,
+    &:focus {
+      outline: hb-calculate-rems(2px) solid;
+      outline-color: color('white', 'global');
+      box-shadow: 0 0 0 hb-calculate-rems(3px) color('secondary-active');
+    }
+
+    .hb-dark-pattern & {
+      color: color('tertiary-highlight');
+      border-color: color('tertiary-highlight');
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: color('tertiary-highlight-darken-10');
+        border-color: color('tertiary-highlight-darken-10');
+      }
+    }
+  }
+
+  @include hb-colorful {
+    .hc-pairing-ocean & {
+      border-color: color('secondary-darken-12');
+      color: color('secondary-darken-12');
+
+      &:hover {
+        color: color('white', 'global');
+        background-color: color('secondary-darken-12');
+      }
+    }
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    .hb-dark-pattern & {
+      color: color('tertiary-reversed');
+      border-color: color('tertiary-reversed');
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: color(secondary-highlight);
+        border-color: color(secondary-highlight);
+      }
+    }
+  }
+}
+
+@mixin hb-reset-button {
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: 0;
+  line-height: 1;
+  min-height: auto;
+  color: color('secondary');
+  cursor: pointer;
+
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    color: color('tertiary-reversed');
+  }
+
+  &:hover {
+    color: color('secondary-darken-12');
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      color: color('tertiary-highlight');
+    }
+  }
+
+  &:focus {
+    border-bottom-color: transparent;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    padding: hb-calculate-rems(4px) 0;
+    border-bottom: $hb-thin-border;
+    border-bottom-color: color('secondary');
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      border-bottom-color: color('tertiary-reversed');
+    }
+
+    &:hover {
+      border-bottom-color: color('secondary-darken-12');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        border-bottom-color: color('tertiary-highlight');
+      }
+    }
+  }
+
+  @include hb-traditional {
+    text-decoration: underline;
+    line-height: 1.4;
+    border: $hb-thin-border;
+    border-color: transparent;
+    padding: hb-calculate-rems(3px) hb-calculate-rems(6px);
+
+    &:focus,
+    &:active {
+      border-color: color('secondary');
+      box-shadow: none;
+    }
+  }
+
+  @include hb-colorful {
+    .hc-pairing-ocean & {
+      color: color('secondary-darken-12');
+      border-bottom-color: color('secondary-darken-12');
+
+      &:hover {
+        color: color('primary-dark');
+        border-color: transparent transparent color('primary-dark');
+        background-color: transparent;
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use 'theme' as *;
+
+@mixin hb-raised-cards-shadow {
+  @include hb-traditional {
+    box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px)
+      hb-calculate-rems(17px) color('gray-medium', 'global');
+  }
+
+  @include hb-themes(('airy', 'colorful')) {
+    box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px)
+      hb-calculate-rems(35px)
+      color-mix(in srgb, color('black', 'global') 12%, transparent);
+  }
+}
+
+@mixin hb-raised-cards-shadow--alt {
+  box-shadow: 0 0 hb-calculate-rems(5px)
+    color-mix(in srgb, color('black', 'global') 34%, transparent);
+  border: 1px solid color-mix(in srgb, color('black', 'global') 22%, transparent);
+}

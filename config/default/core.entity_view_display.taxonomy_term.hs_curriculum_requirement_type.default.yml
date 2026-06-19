@@ -1,0 +1,32 @@
+uuid: 6d904529-534a-41ac-8093-7f36923fb19a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.hs_curriculum_requirement_type.field_hs_curriculum_course_color
+    - taxonomy.vocabulary.hs_curriculum_requirement_type
+  module:
+    - style_selector
+    - text
+id: taxonomy_term.hs_curriculum_requirement_type.default
+targetEntityType: taxonomy_term
+bundle: hs_curriculum_requirement_type
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_hs_curriculum_course_color:
+    type: style_selector_css_class_formatter
+    label: above
+    settings:
+      extra_classes: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

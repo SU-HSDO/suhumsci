@@ -1,3 +1,8 @@
+@use '../variables/zindex' as *;
+@use '../functions/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/general' as *;
+
 .hb-callout-box {
   width: 100%;
   position: relative;
@@ -28,70 +33,6 @@
 
     .hs-font-splash {
       margin-bottom: 0;
-    }
-  }
-
-  // Link color overrides for Canyon color pairing.
-  @include hb-themes(('colorful', 'airy')) {
-    &--well,
-    .hc-pairing-canyon .hb-well &,
-    .hc-pairing-canyon .hs-paragraph-style--well &,
-    .hc-pairing-canyon .hs-paragraph-style--well-full-width & {
-      a:not([class]), a.mailto, a[href^='mailto:'], a.ext {
-        color: var(--palette--primary);
-
-        &:hover,
-        &:focus {
-          color: var(--palette--tertiary-darken-20);
-        }
-      }
-    }
-  }
-
-  // Link color overrides for Firefinch color pairing.
-  @include hb-traditional {
-    &--well,
-    .hb-well &,
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width &,
-    .hs-breakout-box {
-      .ht-pairing-firefinch & {
-        a.hs-more-link, a.hs-private-link, a.hs-pdf-link, a.hs-file-link {
-          color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
-
-        // Ensure that the private link icon color and more link icon color are correct.
-        a.hs-private-link {
-          &::before {
-            background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::before {
-              background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
-
-        a.hs-more-link {
-          &::after {
-            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
-      }
     }
   }
 }

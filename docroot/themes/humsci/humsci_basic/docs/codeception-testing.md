@@ -1,6 +1,6 @@
 # Codeception Testing Information
 
-To setup Codeception testing locally you will want to defer to the steps listed in the [Lando setup Readme](/lando/README.md#setup-for-local-codeception-testing). This section is intended to provide some extra information or tips for running or writing your tests locally.
+To setup Codeception testing locally you will want to defer to the steps listed in the [DDEV setup Readme](/.ddev/README.md#areas-that-need-work). This section is intended to provide some extra information or tips for running or writing your tests locally.
 
 * [Codeception Documentation](https://codeception.com/docs/01-Introduction)
 
@@ -10,8 +10,8 @@ To setup Codeception testing locally you will want to defer to the steps listed 
 * The different types have different engines running their functionality, therefor are capable of different things
   * Acceptance tests, these tests run with a headless Chrome browser or Chromedriver and are designed to reproduce an acceptance tester’s actions in scenarios and run them automatically.
   * Functional tests, these tests run with Symfony BrowserKit to send requests to your app and doesn't make actual HTTP requests, these tests are intended to test functionality only and do not require a Chromedriver like Acceptance test do. These should run very fast in comparison.
-* This info is listed in the Lando setup steps, but bears repeating for understanding here.
-  * To run codeception tests run `lando blt codeception --group=install`. Or if you wish to run a single class/method add the annotation in the docblock `@group testme` and then run `lando blt codeception --group=testme`.
+* This info is listed in the DDEV setup steps, but bears repeating for understanding here.
+  * To run codeception tests run `ddev drush sws:codeception --group=install`. Or if you wish to run a single class/method add the annotation in the docblock `@group testme` and then run `ddev drush sws:codeception --group=testme`.
 
     ```php
     /**

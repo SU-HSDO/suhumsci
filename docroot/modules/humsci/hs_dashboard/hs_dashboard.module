@@ -44,7 +44,7 @@ function hs_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $q
 
     /** @var Drupal\hs_views_helper\Plugin\views\query\Sql $query */
     $query->addWhereExpression(
-      NULL,
+      '0',
       'node_field_data.title IN (' . $sub_query->__toString() . ')'
     );
   }
@@ -60,6 +60,18 @@ function hs_dashboard_views_data_alter(array &$data) {
     'help' => t('The source of the content - imported or local.'),
     'field' => [
       'id' => 'hs_dashboard_source_field',
+    ],
+  ];
+  // Join node data to editoria11y_results.
+  $data['editoria11y_results']['node'] = [
+    'title' => t('Referenced node'),
+    'help' => t('Relate this result to its node.'),
+    'relationship' => [
+      'base' => 'node_field_data',
+      'base field' => 'nid',
+      'field' => 'entity_id',
+      'id' => 'editoria11y_results_node',
+      'label' => t('Node from editoria11y_results'),
     ],
   ];
 }

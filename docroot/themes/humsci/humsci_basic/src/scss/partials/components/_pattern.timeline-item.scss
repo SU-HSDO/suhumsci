@@ -1,4 +1,12 @@
 // styles for a single item in a timeline
+
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/general' as *;
+@use '../mixins/text' as *;
+@use '../mixins/icons' as *;
+
 .ptype-hs-timeline-item,
 .views-view-pattern .hb-timeline-item {
   @include clearfix;
@@ -9,7 +17,7 @@
     position: absolute;
     height: calc(100% - 20px);
     width: 4px;
-    background-color: var(--palette--primary);
+    background-color: color('primary');
     left: hb-calculate-rems(10px);
     bottom: hb-calculate-rems(-2px);
   }
@@ -26,14 +34,14 @@
         position: absolute;
         height: calc(100% - 20px);
         width: 4px;
-        background-color: var(--palette--primary);
+        background-color: color('primary');
         left: hb-calculate-rems(10px);
         bottom: hb-calculate-rems(-2px);
       }
 
       // last item has small filled circle or square endcap when open
       &::after {
-        background-color: var(--palette--primary);
+        background-color: color('primary');
         content: '';
         position: absolute;
         height: 12px;
@@ -45,7 +53,7 @@
     }
   }
 
-  .field-hs-collection-items[class*="item-per-row--"] & {
+  .field-hs-collection-items[class*='item-per-row--'] & {
     margin-bottom: 0 !important;
   }
 }
@@ -56,11 +64,11 @@
 
   &__summary {
     padding: 0 0 hb-spacing-width('xs');
-    line-height: 133%;
     list-style-type: none; // will hide the marker
     list-style-image: none;
 
-    &::-webkit-details-marker { // hide the marker in Safari
+    &::-webkit-details-marker {
+      // hide the marker in Safari
       display: none;
     }
 
@@ -74,7 +82,7 @@
     // in Safari where :focus-visible is not supported
     &:focus {
       outline: solid;
-      outline-color: var(--palette--secondary-highlight-darken);
+      outline-color: color('secondary-highlight-darken');
     }
 
     // :only-child prevents timeline items without a description (revealed details) from having a pointer cursor
@@ -96,9 +104,9 @@
   }
 
   &__heading {
-    color: var(--palette--primary);
-    font-size: hb-calculate-rems(18px);
-    font-weight: hb-theme-font-weight('bold');
+    @include hb-heading-5;
+
+    color: color('primary');
     padding: 0 hb-calculate-rems(32px);
     position: relative;
 
@@ -109,7 +117,7 @@
       height: hb-calculate-rems(13px);
       top: hb-calculate-rems(1.2px);
       left: hb-calculate-rems(1.2px);
-      border: 4px solid var(--palette--primary);
+      border: 4px solid color('primary');
       border-radius: 50%;
       box-sizing: content-box;
     }
@@ -117,6 +125,7 @@
     &::after {
       content: '';
       position: absolute;
+
       @include hb-icon-background('timeline-toggle', 'primary');
       background-repeat: no-repeat;
       width: hb-calculate-rems(24px);
@@ -154,79 +163,8 @@
   &__description {
     font-size: hb-calculate-rems(16px);
     padding: 0 hb-calculate-rems(32px);
-
-    @include hb-themes(('colorful', 'airy')) {
-      line-height: 128%;
-
-      // Link color overrides for Canyon color pairing.
-      .hc-pairing-canyon .hb-well &,
-      .hc-pairing-canyon .hs-paragraph-style--well &,
-      .hc-pairing-canyon .hs-paragraph-style--well-full-width & {
-        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
-          color: var(--palette--primary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
-
-        a.hs-external-link::after {
-          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
-        }
-      }
-    }
-
-    @include hb-traditional {
-      line-height: 124%;
-
-      // Override links color and links with icons for the Firefinch color pairing.
-      .hb-well &,
-      .hs-paragraph-style--well &,
-      .hs-paragraph-style--well-full-width &,
-      .hs-breakout-box {
-        .ht-pairing-firefinch & {
-          a.hs-more-link, a.hs-private-link, a.hs-pdf-link, a.hs-file-link {
-            color: var(--palette--tertiary);
-
-            &:hover,
-            &:focus {
-              color: var(--palette--tertiary-darken-20);
-            }
-          }
-
-          // Ensure that the private link icon color and more link icon color are correct.
-          a.hs-private-link {
-            &::before {
-              background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-            }
-
-            &:hover,
-            &:focus {
-              &::before {
-                background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-              }
-            }
-          }
-
-          a.hs-more-link {
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-            }
-
-            &:hover,
-            &:focus {
-              &::after {
-                background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-              }
-            }
-          }
-        }
-      }
-    }
   }
 }
-
 
 @keyframes timelineFadeInDown {
   0% {

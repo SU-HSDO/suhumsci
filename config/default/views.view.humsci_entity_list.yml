@@ -81,15 +81,23 @@ display:
           buttons: false
           action_title: Action
           clear_on_exposed: true
-          force_selection_info: true
+          show_multipage_selection_box: default
+          show_select_all: default
           selected_actions:
             -
               action_id: views_bulk_edit
               preconfiguration:
                 add_confirmation: true
+                confirm_help_text: ''
+                message_override: ''
                 get_bundles_from_results: true
             -
               action_id: views_bulk_operations_delete_entity
+              preconfiguration:
+                add_confirmation: false
+                confirm_help_text: ''
+                message_override: ''
+          force_selection_info: true
         id:
           id: id
           table: hs_entity
@@ -516,6 +524,8 @@ display:
           bef:
             general:
               autosubmit: false
+              auto_submit_sort_only: false
+              autosubmit_breakpoint: ''
               autosubmit_exclude_textfield: false
               autosubmit_textfield_delay: 500
               autosubmit_textfield_minimum_length: 3
@@ -529,10 +539,14 @@ display:
               label:
                 plugin_id: default
                 advanced:
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
                   placeholder_text: ''
                   collapsible: false
+                  open_by_default: false
                   is_secondary: false
                   hide_label: false
+                  field_classes: ''
                 options_show_only_used: false
                 options_show_only_used_filtered: false
                 options_hide_when_empty: false
@@ -541,11 +555,15 @@ display:
                 plugin_id: default
                 advanced:
                   sort_options: true
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
                   rewrite:
                     filter_rewrite_values: ''
                   collapsible: false
+                  open_by_default: false
                   is_secondary: false
                   hide_label: false
+                  field_classes: ''
                 options_show_only_used: false
                 options_show_only_used_filtered: false
                 options_hide_when_empty: false
@@ -620,15 +638,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              administrator: '0'
-              site_manager: '0'
-              contributor: '0'
-              author: '0'
-              intranet_viewer: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
-              anonymous: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -670,15 +679,6 @@ display:
             multiple: true
             remember_roles:
               authenticated: authenticated
-              administrator: '0'
-              site_manager: '0'
-              contributor: '0'
-              author: '0'
-              intranet_viewer: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
-              anonymous: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -747,6 +747,7 @@ display:
           empty_table: false
           caption: ''
           description: ''
+          class: ''
       row:
         type: fields
       query:

@@ -8,6 +8,8 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -17,28 +19,34 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
   $bundle = $paragraph->bundle();
 
-  // Exit early if it's not a relevant bundle.
-  if (!in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
-    return;
+  if (in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
+    $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
+    $variables['attributes']['class'][] = 'hs-paragraph-style';
+
+    if (!$paragraph->hasField('field_hs_collection_background') || !$paragraph->hasField('field_hs_collection_bg_width')) {
+      return;
+    }
+
+    // Replace underscores with hyphens in the bg_color value.
+    $bg_color = $paragraph->get('field_hs_collection_background')->getString();
+
+    // Append "-well" to the bg_color.
+    $bg_width = $paragraph->get('field_hs_collection_bg_width')->getString();
+    if (!empty($bg_color) && $bg_color !== 'bg-none') {
+      $bg_width_class = $bg_width == 'full-width' ? 'well-full-width' : 'well';
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . Html::cleanCssIdentifier($bg_color) . '-well';
+    }
   }
+  elseif ($bundle == 'hs_sptlght_slder') {
+    if (!$paragraph->hasField('field_bg_color_width')) {
+      return;
+    }
 
-  $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
-  $variables['attributes']['class'][] = 'hs-paragraph-style';
-
-  if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
-    return;
-  }
-
-  // Replace underscores with hyphens in the bg_color value.
-  $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
-
-  // Append "-well" to the bg_color.
-  $bg_width = $paragraph->get('field_bg_color_width')->getString();
-  if (!empty($bg_color)) {
-    $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
-    $bg_color .= '-well';
-    $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
-    $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
+    $bg_width = $paragraph->get('field_bg_color_width')->getString();
+    if ($bg_width == 'full_width') {
+      $variables['attributes']['class'][] = 'paragraph--style--full-width';
+    }
   }
 }
 
@@ -58,10 +66,29 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
 function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
+  // Hide the 'Background Color Width' field for Spotlight Slider paragraphs
+  // in the full width region.
+  if (
+    !empty($field_widget_form['widget']['#field_name']) &&
+    $field_widget_form['widget']['#field_name'] == 'field_hs_page_hero'
+  ) {
+    foreach (Element::children($field_widget_form['widget']) as $key) {
+      if (!is_int($key)) {
+        continue;
+      }
+      if (
+        $field_widget_form['widget'][$key]['#paragraph_type'] == 'hs_sptlght_slder' &&
+        isset($field_widget_form['widget'][$key]['subform']['field_bg_color_width'])
+      ) {
+        $field_widget_form['widget'][$key]['subform']['field_bg_color_width']['#access'] = FALSE;
+      }
+    }
+  }
   $elements_to_change = [
     'field_hs_carousel_slides',
     'field_hs_sptlght_sldes',
     'field_hs_page_components',
+    'field_hs_priv_page_components',
   ];
   // We need the field name to alter the correct element.
   if (
@@ -104,6 +131,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
       break;
 
     case 'field_hs_page_components':
+    case 'field_hs_priv_page_components':
       // There are multiple issues with setting and removing the required state
       // from paragraph fields when using the `conditional_fields` module, so
       // use form alter to use the states api instead.
@@ -117,7 +145,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         $element = $field_widget_form['widget'][$key];
         if (
           empty($element['#paragraph_type']) ||
-          $element['#paragraph_type'] != 'hs_collection' ||
+          !in_array($element['#paragraph_type'], ['hs_collection', 'hs_priv_collection']) ||
           empty($element['subform']['field_title']) ||
           empty($element['subform']['field_title_settings'])
         ) {
@@ -156,21 +184,59 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
 }
 
 /**
- * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ * Implements hook_entity_view_mode_alter().
  */
-function hs_paragraph_types_field_widget_complete_options_select_form_alter(array &$field_widget_form, FormStateInterface &$form_state, array $context) {
-  // Change the default "None" label for certain select fields.
-  if (!isset($context['items'])) {
+function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  if (!$entity instanceof ParagraphInterface) {
     return;
   }
 
-  $none_labels = [
-    'field_accordion_style' => t('Default'),
-    'field_hs_banner_height' => t('Short'),
-  ];
-  $field_name = $context['items']->getName();
+  switch ($entity->bundle()) {
+    case 'hs_spotlight':
+      if (!$entity->hasField('field_hs_spotlight_image_height') || $entity->get('field_hs_spotlight_image_height')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_spotlight_image_height')->value == 'tall' ? 'default' : 'preview';
+      break;
 
-  if (array_key_exists($field_name, $none_labels)) {
-    $field_widget_form['widget']['#options']['_none'] = $none_labels[$field_name];
+    case 'hs_banner':
+      if (!$entity->hasField('field_hs_banner_image_height') || $entity->get('field_hs_banner_image_height')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_banner_image_height')->value == 'tall' ? 'preview' : 'default';
+      break;
+
+    case 'hs_callout_box':
+      if (!$entity->hasField('field_hs_callout_background') || $entity->get('field_hs_callout_background')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_callout_background')->value == 'light' ? 'hs_well' : 'default';
+      break;
+
+    case 'hs_clr_bnd':
+      if (!$entity->hasField('field_hs_clr_bnd_width') || $entity->get('field_hs_clr_bnd_width')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_clr_bnd_width')->value == 'full-width' ? 'default' : 'preview';
+      break;
+
+    case 'stanford_gallery':
+      if ($entity->hasField('field_hs_gallery_style') && !$entity->get('field_hs_gallery_style')->isEmpty()) {
+        $view_mode = $entity->get('field_hs_gallery_style')->value == 'slideshow' ? 'hs_gallery_slideshow' : 'default';
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function hs_paragraph_types_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'paragraph_view_mode_alter') {
+    // Ensure that the view mode selection logic defined in this module is
+    // executed at the end, to override legacy "Display Mode Select" fields.
+    $group = $implementations['hs_paragraph_types'];
+    unset($implementations['hs_paragraph_types']);
+    $implementations['hs_paragraph_types'] = $group;
   }
 }

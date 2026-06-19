@@ -431,7 +431,7 @@ function hs_field_helpers_node_validate_date(array &$element, FormStateInterface
 function hs_field_helpers_field_formatter_settings_summary_alter(&$summary, $context) {
   $inline = $context['formatter']->getThirdPartySetting('hs_field_helpers', 'inline_contents');
   if (!empty($inline)) {
-    $summary[] = t('Inline Contents: @inline', ['@inline' => $inline ? t('Yes') : t('No')]);
+    $summary[] = t('Inline Contents: @inline', ['@inline' => t('Yes')]);
   }
 }
 
@@ -516,10 +516,7 @@ function hs_field_helpers_preprocess_field(&$variables) {
       }
       $pitem['attributes']['class'][] = "paragraph-item";
       $pitem['attributes']['class'][] = $ptype;
-
-      if ($paragraph_type == 'hs_clr_bnd') {
-        $pitem['attributes']['id'] = 'component-' . $pitem['content']['#paragraph']->id();
-      }
+      $pitem['attributes']['id'] = 'component-' . $pitem['content']['#paragraph']->id();
     }
   }
 }
@@ -601,12 +598,18 @@ function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $ent
       }
     }
   }
+
+  return NULL;
 }
 
 /**
  * Implements hook_ENTITY_TYPE_presave().
  */
 function hs_field_helpers_node_presave(EntityInterface $entity) {
+  if (!$entity instanceof NodeInterface) {
+    return;
+  }
+
   $rabbit_hole = \Drupal::config('rabbit_hole.behavior_settings.node_type_' . $entity->bundle());
 
   if ($rabbit_hole->get('redirect') && $rabbit_hole->get('allow_override')) {
@@ -618,7 +621,7 @@ function hs_field_helpers_node_presave(EntityInterface $entity) {
 
     // Check if the token that was provided is actually a url. If it is, then we
     // can set the rabbit hole action to redirect to that url.
-    if (is_string($target) && UrlHelper::isValid($target, TRUE)) {
+    if (UrlHelper::isValid($target, TRUE)) {
       $entity->set('rh_action', 'bundle_default');
     }
   }
@@ -647,18 +650,6 @@ function hs_field_helpers_preprocess_ds_entity_view(&$variables) {
     'Drupal\hs_field_helpers\PreRenderer',
     'preRenderDsEntity',
   ];
-}
-
-/**
- * Implements hook_form_alter().
- */
-function hs_field_helpers_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (strpos($form_id, 'views_form_') === 0) {
-    // Remove the select all since it selects every node, not just the ones
-    // from the active filters.
-    // @link https://www.drupal.org/project/views_bulk_operations/issues/3055770#comment-13116724
-    unset($form['header']['views_bulk_operations_bulk_form']['select_all']);
-  }
 }
 
 /**
@@ -691,6 +682,7 @@ function hs_field_helpers_field_widget_complete_link_default_form_alter(&$field_
     'menu_link_content_form',
   ];
 
+  $appended = '';
   if (in_array($base_form, $append_extra_text_to)) {
     $appended = t('Enter %front to link to the front page. Enter %no_link to display a menu item that is only text without a link.', [
       '%front' => '<front>',
@@ -710,7 +702,7 @@ function hs_field_helpers_field_widget_complete_link_default_form_alter(&$field_
   }
 
   // External link help text.
-  elseif (!$supports_internal && $supports_external) {
+  elseif (!$supports_internal) {
     $description = t('This must be an external URL such as %external_link. @appended', $placeholders);
   }
 
@@ -805,7 +797,7 @@ function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
   // @see stanford_migrate_entity_form_display_alter.
   $imported_fields = [];
 
-  $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);
+  $migration = \Drupal::service('stanford_migrate')->getEntityMigration($node);
 
   // Check if the current node was imported.
   if (!$migration) {
@@ -833,13 +825,14 @@ function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
     // If the migration destination has the `overwrite_properties` configured,
     // those fields specifically should be locked, not the other fields that
     // are not designated in the original process configuration.
-    if ($processing && !empty($migration->get('destination')['overwrite_properties'])) {
+    $destination = $migration->getDestinationConfiguration();
+    if ($processing && !empty($destination['overwrite_properties'])) {
       // If the current field doesn't exist in the overwrite_properties, it
       // should not be considered to be processing since it's a one time only
       // import.
       $processing = FALSE;
 
-      foreach ($migration->get('destination')['overwrite_properties'] as $overwrite_property) {
+      foreach ($destination['overwrite_properties'] as $overwrite_property) {
         // If any part of the field is set to overwrite, lock the whole field
         // down.
         $overwrite_property = strstr($overwrite_property, '/', TRUE) ?: $overwrite_property;

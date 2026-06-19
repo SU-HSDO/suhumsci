@@ -4,9 +4,14 @@
 // in date stacked horizontal, date stacked vertical, horizontal,
 // and vertical cards in the Colorful theme.
 
+@use '../mixins/links' as *;
+@use '../mixins/icons' as *;
+@use '../functions/color' as *;
+
 .hb-display-more-link-text {
   .hb-card__decorative-link a, // cards in views
-  .field-hs-postcard-link a { // postcards in layout
+  .field-hs-postcard-link a {
+    // postcards in layout
     @include hb-more-link;
 
     &::before {
@@ -18,20 +23,19 @@
   .hb-dark-pattern .field-hs-postcard-link a,
   .hb-dark-inversion & .views-element-container .hb-card__decorative-link a,
   .hb-dark-inversion & .views-element-container.field-hs-postcard-link a {
-    color: var(--palette--white);
+    color: color('white', 'global');
 
     &::after {
       @include hb-icon-link-arrow('white');
-      background-size: 85%;
+      mask-size: 85%;
     }
 
     &:hover,
     &:focus {
-      color: var(--palette--gray-medium);
+      color: color('gray-medium', 'global');
 
       &::after {
-        @include hb-icon-link-arrow('gray-medium');
-        background-size: 85%;
+        background-color: color('gray-medium', 'global');
       }
     }
   }

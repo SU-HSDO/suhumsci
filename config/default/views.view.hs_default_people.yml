@@ -5,7 +5,6 @@ dependencies:
   config:
     - entityqueue.entity_queue.hs_person
     - field.storage.node.field_hs_person_department
-    - field.storage.node.field_hs_person_email
     - field.storage.node.field_hs_person_faculty_status
     - field.storage.node.field_hs_person_image
     - field.storage.node.field_hs_person_interests
@@ -14,7 +13,6 @@ dependencies:
     - field.storage.node.field_hs_person_office_hours
     - field.storage.node.field_hs_person_research
     - field.storage.node.field_hs_person_square_img
-    - field.storage.node.field_hs_person_telephone
     - field.storage.node.field_hs_person_title
     - node.type.hs_person
   module:
@@ -238,68 +236,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_hs_person_email:
-          id: field_hs_person_email
-          table: node__field_hs_person_email
-          field: field_hs_person_email
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: email_mailto
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
       pager:
         type: infinite_scroll
         options:
@@ -437,76 +373,76 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_person_image: 0
-            title: 0
-            field_hs_person_title: 0
-            field_hs_person_student_cohort: 0
-            field_hs_person_office_hours: 0
-            field_hs_person_office: 0
-            field_hs_person_telephone: 0
-            field_hs_person_email: 0
-            field_hs_person_links: 0
-            field_hs_person_research: 0
+            field_hs_person_image: '0'
+            title: '0'
+            field_hs_person_title: '0'
+            field_hs_person_student_cohort: '0'
+            field_hs_person_office_hours: '0'
+            field_hs_person_office: '0'
+            field_hs_person_telephone: '0'
+            field_hs_person_email: '0'
+            field_hs_person_links: '0'
+            field_hs_person_research: '0'
           separator: ''
-          hide_empty: 0
+          hide_empty: false
           pattern: structured_card
+          pattern_mapping:
+            'views_row:field_hs_person_image':
+              plugin: views_row
+              source: field_hs_person_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_person_office_hours':
+              plugin: views_row
+              source: field_hs_person_office_hours
+              destination: columns
+              weight: 1
+            'views_row:field_hs_person_links':
+              plugin: views_row
+              source: field_hs_person_links
+              destination: columns
+              weight: 2
+            'views_row:field_hs_person_telephone':
+              plugin: views_row
+              source: field_hs_person_telephone
+              destination: columns
+              weight: 3
+            'views_row:field_hs_person_student_cohort':
+              plugin: views_row
+              source: field_hs_person_student_cohort
+              destination: columns
+              weight: 4
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 5
+            'views_row:field_hs_person_title':
+              plugin: views_row
+              source: field_hs_person_title
+              destination: subtitle
+              weight: 6
+            'views_row:field_hs_person_email':
+              plugin: views_row
+              source: field_hs_person_email
+              destination: columns
+              weight: 7
+            'views_row:field_hs_person_office':
+              plugin: views_row
+              source: field_hs_person_office
+              destination: columns
+              weight: 8
+            'views_row:field_hs_person_research':
+              plugin: views_row
+              source: field_hs_person_research
+              destination: category
+              weight: 9
           variants:
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_person_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_person_image
-            'views_row:field_hs_person_office_hours':
-              destination: columns
-              weight: 1
-              plugin: views_row
-              source: field_hs_person_office_hours
-            'views_row:field_hs_person_links':
-              destination: columns
-              weight: 2
-              plugin: views_row
-              source: field_hs_person_links
-            'views_row:field_hs_person_telephone':
-              destination: columns
-              weight: 3
-              plugin: views_row
-              source: field_hs_person_telephone
-            'views_row:field_hs_person_student_cohort':
-              destination: columns
-              weight: 4
-              plugin: views_row
-              source: field_hs_person_student_cohort
-            'views_row:title':
-              destination: title
-              weight: 5
-              plugin: views_row
-              source: title
-            'views_row:field_hs_person_title':
-              destination: subtitle
-              weight: 6
-              plugin: views_row
-              source: field_hs_person_title
-            'views_row:field_hs_person_email':
-              destination: columns
-              weight: 7
-              plugin: views_row
-              source: field_hs_person_email
-            'views_row:field_hs_person_office':
-              destination: columns
-              weight: 8
-              plugin: views_row
-              source: field_hs_person_office
-            'views_row:field_hs_person_research':
-              destination: category
-              weight: 9
-              plugin: views_row
-              source: field_hs_person_research
       query:
         type: views_query
         options:
@@ -542,7 +478,6 @@ display:
         - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.hs_person'
-        - 'config:field.storage.node.field_hs_person_email'
         - 'config:field.storage.node.field_hs_person_image'
         - 'config:field.storage.node.field_hs_person_title'
   grid:
@@ -746,68 +681,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_hs_person_email:
-          id: field_hs_person_email
-          table: node__field_hs_person_email
-          field: field_hs_person_email
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: email_mailto
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
         field_hs_person_department:
           id: field_hs_person_department
           table: node__field_hs_person_department
@@ -1001,53 +874,53 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_person_image: 0
-            field_hs_person_square_img: 0
-            title: 0
-            field_hs_person_title: 0
-            field_hs_person_email: 0
-            field_hs_person_department: 0
+            field_hs_person_image: '0'
+            field_hs_person_square_img: '0'
+            title: '0'
+            field_hs_person_title: '0'
+            field_hs_person_email: '0'
+            field_hs_person_department: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: vertical_card
+          pattern_mapping:
+            'views_row:field_hs_person_image':
+              plugin: views_row
+              source: field_hs_person_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_person_square_img':
+              plugin: views_row
+              source: field_hs_person_square_img
+              destination: image
+              weight: 1
+            'views_row:field_hs_person_department':
+              plugin: views_row
+              source: field_hs_person_department
+              destination: description
+              weight: 2
+            'views_row:field_hs_person_title':
+              plugin: views_row
+              source: field_hs_person_title
+              destination: description
+              weight: 3
+            'views_row:field_hs_person_email':
+              plugin: views_row
+              source: field_hs_person_email
+              destination: description
+              weight: 4
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 5
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_person_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_person_image
-            'views_row:field_hs_person_square_img':
-              destination: image
-              weight: 1
-              plugin: views_row
-              source: field_hs_person_square_img
-            'views_row:field_hs_person_department':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: field_hs_person_department
-            'views_row:field_hs_person_title':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: field_hs_person_title
-            'views_row:field_hs_person_email':
-              destination: description
-              weight: 4
-              plugin: views_row
-              source: field_hs_person_email
-            'views_row:title':
-              destination: title
-              weight: 5
-              plugin: views_row
-              source: title
       defaults:
         pager: false
         style: false
@@ -1071,7 +944,6 @@ display:
       tags:
         - 'config:entityqueue.entity_queue.hs_person'
         - 'config:field.storage.node.field_hs_person_department'
-        - 'config:field.storage.node.field_hs_person_email'
         - 'config:field.storage.node.field_hs_person_square_img'
         - 'config:field.storage.node.field_hs_person_title'
   list_link:
@@ -1251,131 +1123,6 @@ display:
             html: false
           element_type: ''
           element_class: hb-subtitle
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_hs_person_email:
-          id: field_hs_person_email
-          table: node__field_hs_person_email
-          field: field_hs_person_email
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: Email
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: email_mailto
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_hs_person_telephone:
-          id: field_hs_person_telephone
-          table: node__field_hs_person_telephone
-          field: field_hs_person_telephone
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: Phone
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -1935,11 +1682,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              seven_admin_theme_user: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -1966,95 +1708,95 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_person_image: 0
-            field_hs_person_square_img: 0
-            title: 0
-            field_hs_person_title: 0
-            field_hs_person_email: 0
-            field_hs_person_telephone: 0
-            field_hs_person_office: 0
-            field_hs_person_office_hours: 0
-            field_hs_person_links: 0
-            field_hs_person_research: 0
-            field_hs_person_interests: 0
-            edit_node: 0
-            field_hs_person_department: 0
+            field_hs_person_image: '0'
+            field_hs_person_square_img: '0'
+            title: '0'
+            field_hs_person_title: '0'
+            field_hs_person_email: '0'
+            field_hs_person_telephone: '0'
+            field_hs_person_office: '0'
+            field_hs_person_office_hours: '0'
+            field_hs_person_links: '0'
+            field_hs_person_research: '0'
+            field_hs_person_interests: '0'
+            edit_node: '0'
+            field_hs_person_department: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: structured_card
+          pattern_mapping:
+            'views_row:field_hs_person_image':
+              plugin: views_row
+              source: field_hs_person_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_person_square_img':
+              plugin: views_row
+              source: field_hs_person_square_img
+              destination: image
+              weight: 1
+            'views_row:field_hs_person_department':
+              plugin: views_row
+              source: field_hs_person_department
+              destination: description
+              weight: 2
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 3
+            'views_row:field_hs_person_title':
+              plugin: views_row
+              source: field_hs_person_title
+              destination: subtitle
+              weight: 4
+            'views_row:field_hs_person_office':
+              plugin: views_row
+              source: field_hs_person_office
+              destination: columns
+              weight: 5
+            'views_row:field_hs_person_office_hours':
+              plugin: views_row
+              source: field_hs_person_office_hours
+              destination: columns
+              weight: 6
+            'views_row:field_hs_person_telephone':
+              plugin: views_row
+              source: field_hs_person_telephone
+              destination: columns
+              weight: 7
+            'views_row:field_hs_person_email':
+              plugin: views_row
+              source: field_hs_person_email
+              destination: columns
+              weight: 8
+            'views_row:field_hs_person_links':
+              plugin: views_row
+              source: field_hs_person_links
+              destination: columns
+              weight: 9
+            'views_row:edit_node':
+              plugin: views_row
+              source: edit_node
+              destination: bottom
+              weight: 10
+            'views_row:field_hs_person_research':
+              plugin: views_row
+              source: field_hs_person_research
+              destination: category
+              weight: 11
+            'views_row:field_hs_person_interests':
+              plugin: views_row
+              source: field_hs_person_interests
+              destination: category
+              weight: 12
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_person_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_person_image
-            'views_row:field_hs_person_square_img':
-              destination: image
-              weight: 1
-              plugin: views_row
-              source: field_hs_person_square_img
-            'views_row:field_hs_person_department':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: field_hs_person_department
-            'views_row:title':
-              destination: title
-              weight: 3
-              plugin: views_row
-              source: title
-            'views_row:field_hs_person_title':
-              destination: subtitle
-              weight: 4
-              plugin: views_row
-              source: field_hs_person_title
-            'views_row:field_hs_person_office':
-              destination: columns
-              weight: 5
-              plugin: views_row
-              source: field_hs_person_office
-            'views_row:field_hs_person_office_hours':
-              destination: columns
-              weight: 6
-              plugin: views_row
-              source: field_hs_person_office_hours
-            'views_row:field_hs_person_telephone':
-              destination: columns
-              weight: 7
-              plugin: views_row
-              source: field_hs_person_telephone
-            'views_row:field_hs_person_email':
-              destination: columns
-              weight: 8
-              plugin: views_row
-              source: field_hs_person_email
-            'views_row:field_hs_person_links':
-              destination: columns
-              weight: 9
-              plugin: views_row
-              source: field_hs_person_links
-            'views_row:edit_node':
-              destination: bottom
-              weight: 10
-              plugin: views_row
-              source: edit_node
-            'views_row:field_hs_person_research':
-              destination: category
-              weight: 11
-              plugin: views_row
-              source: field_hs_person_research
-            'views_row:field_hs_person_interests':
-              destination: category
-              weight: 12
-              plugin: views_row
-              source: field_hs_person_interests
       defaults:
         pager: false
         style: false
@@ -2079,14 +1821,12 @@ display:
       tags:
         - 'config:entityqueue.entity_queue.hs_person'
         - 'config:field.storage.node.field_hs_person_department'
-        - 'config:field.storage.node.field_hs_person_email'
         - 'config:field.storage.node.field_hs_person_interests'
         - 'config:field.storage.node.field_hs_person_links'
         - 'config:field.storage.node.field_hs_person_office'
         - 'config:field.storage.node.field_hs_person_office_hours'
         - 'config:field.storage.node.field_hs_person_research'
         - 'config:field.storage.node.field_hs_person_square_img'
-        - 'config:field.storage.node.field_hs_person_telephone'
         - 'config:field.storage.node.field_hs_person_title'
   list_link_grouped:
     id: list_link_grouped
@@ -2265,131 +2005,6 @@ display:
             html: false
           element_type: ''
           element_class: hb-subtitle
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_hs_person_email:
-          id: field_hs_person_email
-          table: node__field_hs_person_email
-          field: field_hs_person_email
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: Email
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: email_mailto
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_hs_person_telephone:
-          id: field_hs_person_telephone
-          table: node__field_hs_person_telephone
-          field: field_hs_person_telephone
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: Phone
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -3012,11 +2627,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              seven_admin_theme_user: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -3047,96 +2657,96 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_person_image: 0
-            field_hs_person_square_img: 0
-            title: 0
-            field_hs_person_title: 0
-            field_hs_person_email: 0
-            field_hs_person_telephone: 0
-            field_hs_person_office: 0
-            field_hs_person_office_hours: 0
-            field_hs_person_links: 0
-            field_hs_person_research: 0
-            field_hs_person_interests: 0
-            edit_node: 0
-            field_hs_person_faculty_status: 0
-            field_hs_person_department: 0
+            field_hs_person_image: '0'
+            field_hs_person_square_img: '0'
+            title: '0'
+            field_hs_person_title: '0'
+            field_hs_person_email: '0'
+            field_hs_person_telephone: '0'
+            field_hs_person_office: '0'
+            field_hs_person_office_hours: '0'
+            field_hs_person_links: '0'
+            field_hs_person_research: '0'
+            field_hs_person_interests: '0'
+            edit_node: '0'
+            field_hs_person_faculty_status: '0'
+            field_hs_person_department: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: structured_card
+          pattern_mapping:
+            'views_row:field_hs_person_image':
+              plugin: views_row
+              source: field_hs_person_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_person_square_img':
+              plugin: views_row
+              source: field_hs_person_square_img
+              destination: image
+              weight: 1
+            'views_row:field_hs_person_department':
+              plugin: views_row
+              source: field_hs_person_department
+              destination: description
+              weight: 2
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 3
+            'views_row:field_hs_person_title':
+              plugin: views_row
+              source: field_hs_person_title
+              destination: subtitle
+              weight: 4
+            'views_row:field_hs_person_office':
+              plugin: views_row
+              source: field_hs_person_office
+              destination: columns
+              weight: 5
+            'views_row:field_hs_person_office_hours':
+              plugin: views_row
+              source: field_hs_person_office_hours
+              destination: columns
+              weight: 6
+            'views_row:field_hs_person_telephone':
+              plugin: views_row
+              source: field_hs_person_telephone
+              destination: columns
+              weight: 7
+            'views_row:field_hs_person_email':
+              plugin: views_row
+              source: field_hs_person_email
+              destination: columns
+              weight: 8
+            'views_row:field_hs_person_links':
+              plugin: views_row
+              source: field_hs_person_links
+              destination: columns
+              weight: 9
+            'views_row:edit_node':
+              plugin: views_row
+              source: edit_node
+              destination: bottom
+              weight: 10
+            'views_row:field_hs_person_research':
+              plugin: views_row
+              source: field_hs_person_research
+              destination: category
+              weight: 11
+            'views_row:field_hs_person_interests':
+              plugin: views_row
+              source: field_hs_person_interests
+              destination: category
+              weight: 12
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_person_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_person_image
-            'views_row:field_hs_person_square_img':
-              destination: image
-              weight: 1
-              plugin: views_row
-              source: field_hs_person_square_img
-            'views_row:field_hs_person_department':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: field_hs_person_department
-            'views_row:title':
-              destination: title
-              weight: 3
-              plugin: views_row
-              source: title
-            'views_row:field_hs_person_title':
-              destination: subtitle
-              weight: 4
-              plugin: views_row
-              source: field_hs_person_title
-            'views_row:field_hs_person_office':
-              destination: columns
-              weight: 5
-              plugin: views_row
-              source: field_hs_person_office
-            'views_row:field_hs_person_office_hours':
-              destination: columns
-              weight: 6
-              plugin: views_row
-              source: field_hs_person_office_hours
-            'views_row:field_hs_person_telephone':
-              destination: columns
-              weight: 7
-              plugin: views_row
-              source: field_hs_person_telephone
-            'views_row:field_hs_person_email':
-              destination: columns
-              weight: 8
-              plugin: views_row
-              source: field_hs_person_email
-            'views_row:field_hs_person_links':
-              destination: columns
-              weight: 9
-              plugin: views_row
-              source: field_hs_person_links
-            'views_row:edit_node':
-              destination: bottom
-              weight: 10
-              plugin: views_row
-              source: edit_node
-            'views_row:field_hs_person_research':
-              destination: category
-              weight: 11
-              plugin: views_row
-              source: field_hs_person_research
-            'views_row:field_hs_person_interests':
-              destination: category
-              weight: 12
-              plugin: views_row
-              source: field_hs_person_interests
       defaults:
         pager: false
         style: false
@@ -3161,7 +2771,6 @@ display:
       tags:
         - 'config:entityqueue.entity_queue.hs_person'
         - 'config:field.storage.node.field_hs_person_department'
-        - 'config:field.storage.node.field_hs_person_email'
         - 'config:field.storage.node.field_hs_person_faculty_status'
         - 'config:field.storage.node.field_hs_person_interests'
         - 'config:field.storage.node.field_hs_person_links'
@@ -3169,7 +2778,6 @@ display:
         - 'config:field.storage.node.field_hs_person_office_hours'
         - 'config:field.storage.node.field_hs_person_research'
         - 'config:field.storage.node.field_hs_person_square_img'
-        - 'config:field.storage.node.field_hs_person_telephone'
         - 'config:field.storage.node.field_hs_person_title'
   research_area_grid:
     id: research_area_grid
@@ -3228,12 +2836,12 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: media_image_formatter
+          type: media_responsive_image_formatter
           settings:
             view_mode: responsive_lazy
             link: true
-            image_style: hs_small_square_200x200
-            remove_alt: false
+            image_style: hp_4_across_square
+            remove_alt: 0
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -3362,131 +2970,6 @@ display:
           type: string
           settings:
             link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_hs_person_telephone:
-          id: field_hs_person_telephone
-          table: node__field_hs_person_telephone
-          field: field_hs_person_telephone
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: hb-categories
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_hs_person_email:
-          id: field_hs_person_email
-          table: node__field_hs_person_email
-          field: field_hs_person_email
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: email_mailto
-          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3798,46 +3281,46 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_person_image: 0
-            field_hs_person_square_img: 0
-            title: 0
-            field_hs_person_title: 0
-            field_hs_person_telephone: 0
-            field_hs_person_email: 0
-            field_hs_person_office: 0
-            field_hs_person_office_hours: 0
-            field_hs_person_department: 0
+            field_hs_person_image: '0'
+            field_hs_person_square_img: '0'
+            title: '0'
+            field_hs_person_title: '0'
+            field_hs_person_telephone: '0'
+            field_hs_person_email: '0'
+            field_hs_person_office: '0'
+            field_hs_person_office_hours: '0'
+            field_hs_person_department: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: vertical_card
+          pattern_mapping:
+            'views_row:field_hs_person_image':
+              plugin: views_row
+              source: field_hs_person_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_person_square_img':
+              plugin: views_row
+              source: field_hs_person_square_img
+              destination: image
+              weight: 1
+            'views_row:field_hs_person_department':
+              plugin: views_row
+              source: field_hs_person_department
+              destination: description
+              weight: 2
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 3
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_person_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_person_image
-            'views_row:field_hs_person_square_img':
-              destination: image
-              weight: 1
-              plugin: views_row
-              source: field_hs_person_square_img
-            'views_row:field_hs_person_department':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: field_hs_person_department
-            'views_row:title':
-              destination: title
-              weight: 3
-              plugin: views_row
-              source: title
       defaults:
         pager: false
         style: false
@@ -3883,9 +3366,7 @@ display:
       tags:
         - 'config:entityqueue.entity_queue.hs_person'
         - 'config:field.storage.node.field_hs_person_department'
-        - 'config:field.storage.node.field_hs_person_email'
         - 'config:field.storage.node.field_hs_person_office'
         - 'config:field.storage.node.field_hs_person_office_hours'
         - 'config:field.storage.node.field_hs_person_square_img'
-        - 'config:field.storage.node.field_hs_person_telephone'
         - 'config:field.storage.node.field_hs_person_title'

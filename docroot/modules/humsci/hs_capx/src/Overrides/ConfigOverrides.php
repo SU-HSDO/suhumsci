@@ -2,7 +2,7 @@
 
 namespace Drupal\hs_capx\Overrides;
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
@@ -22,6 +22,13 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   use LoggerAwareTrait;
 
   /**
+   * Entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Config factory service.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -31,9 +38,11 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   /**
    * Array of available Capx Importers.
    *
-   * @var \Drupal\hs_capx\Entity\CapxImporter[]
+   * NULL indicates the importers have not been loaded yet.
+   *
+   * @var \Drupal\hs_capx\Entity\CapxImporter[]|null
    */
-  protected $importers = [];
+  protected $importers;
 
   /**
    * ConfigOverrides constructor.
@@ -47,12 +56,8 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
-
-    if ($entity_type_manager->hasDefinition('capx_importer')) {
-      $this->importers = $entity_type_manager->getStorage('capx_importer')
-        ->loadMultiple();
-    }
   }
 
   /**
@@ -164,7 +169,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $urls = [];
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
-    foreach ($this->importers as $importer) {
+    foreach ($this->getImporters() as $importer) {
       if ($publications && $importer->importPublications()) {
         $urls = array_merge($urls, $importer->getCapxUrls());
       }
@@ -185,7 +190,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $processes = [];
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
-    foreach ($this->importers as $importer) {
+    foreach ($this->getImporters() as $importer) {
       foreach (array_keys($importer->getFieldTags()) as $field_name) {
         $processes[$field_name] = [
           [
@@ -233,6 +238,29 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       $this->logger = \Drupal::logger('capx');
     }
     return $this->logger;
+  }
+
+  /**
+   * Get importer entities.
+   *
+   * @return \Drupal\hs_capx\Entity\CapxImporter[]
+   *   Loaded CapX importer entities.
+   */
+  protected function getImporters(): array {
+    if ($this->importers !== NULL) {
+      return $this->importers;
+    }
+
+    $this->importers = [];
+
+    if ($this->entityTypeManager->hasDefinition('capx_importer')) {
+      /** @var \Drupal\hs_capx\Entity\CapxImporter[] $importers */
+      $importers = $this->entityTypeManager->getStorage('capx_importer')
+        ->loadMultiple();
+      $this->importers = $importers;
+    }
+
+    return $this->importers;
   }
 
 }

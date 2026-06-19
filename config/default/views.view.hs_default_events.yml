@@ -872,13 +872,19 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_event_date: 0
-            field_hs_event_admission: 0
+            field_hs_event_date: '0'
+            field_hs_event_admission: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: vertical_card
+          pattern_mapping:
+            'views_row:field_hs_event_admission':
+              plugin: views_row
+              source: field_hs_event_admission
+              destination: description
+              weight: 0
           variants:
             accordion: closed
             alert: default
@@ -891,12 +897,6 @@ display:
             testimonial: top
             timeline-item: closed
             timeline: expanded
-          pattern_mapping:
-            'views_row:field_hs_event_admission':
-              destination: description
-              weight: 0
-              plugin: views_row
-              source: field_hs_event_admission
       query:
         type: views_query
         options:
@@ -992,7 +992,7 @@ display:
           click_sort_column: target_id
           type: media_responsive_image_formatter
           settings:
-            view_mode: default
+            view_mode: responsive_lazy
             link: true
             image_style: hp_3_across_events
             remove_alt: 0
@@ -1693,77 +1693,77 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
             field_hs_event_speaker: field_hs_event_speaker
-            field_hs_event_image: 0
-            field_hs_event_date_1: 0
-            field_hs_event_date_2: 0
-            field_hs_event_series: 0
-            title: 0
-            field_hs_event_date_4: 0
-            field_hs_event_location: 0
-            body: 0
-            view_node: 0
+            field_hs_event_image: '0'
+            field_hs_event_date_1: '0'
+            field_hs_event_date_2: '0'
+            field_hs_event_series: '0'
+            title: '0'
+            field_hs_event_date_4: '0'
+            field_hs_event_location: '0'
+            body: '0'
+            view_node: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: date_stacked_vertical_card
+          pattern_mapping:
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 0
+            'views_row:field_hs_event_date_4':
+              plugin: views_row
+              source: field_hs_event_date_4
+              destination: time
+              weight: 1
+            'views_row:field_hs_event_speaker':
+              plugin: views_row
+              source: field_hs_event_speaker
+              destination: speaker
+              weight: 2
+            'views_row:body':
+              plugin: views_row
+              source: body
+              destination: description
+              weight: 3
+            'views_row:view_node':
+              plugin: views_row
+              source: view_node
+              destination: button
+              weight: 4
+            'views_row:field_hs_event_series':
+              plugin: views_row
+              source: field_hs_event_series
+              destination: category
+              weight: 5
+            'views_row:field_hs_event_image':
+              plugin: views_row
+              source: field_hs_event_image
+              destination: image
+              weight: 6
+            'views_row:field_hs_event_date_2':
+              plugin: views_row
+              source: field_hs_event_date_2
+              destination: day
+              weight: 7
+            'views_row:field_hs_event_date_1':
+              plugin: views_row
+              source: field_hs_event_date_1
+              destination: month
+              weight: 8
+            'views_row:field_hs_event_location':
+              plugin: views_row
+              source: field_hs_event_location
+              destination: location
+              weight: 9
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:title':
-              destination: title
-              weight: 0
-              plugin: views_row
-              source: title
-            'views_row:field_hs_event_date_4':
-              destination: time
-              weight: 1
-              plugin: views_row
-              source: field_hs_event_date_4
-            'views_row:field_hs_event_speaker':
-              destination: speaker
-              weight: 2
-              plugin: views_row
-              source: field_hs_event_speaker
-            'views_row:body':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: body
-            'views_row:view_node':
-              destination: button
-              weight: 4
-              plugin: views_row
-              source: view_node
-            'views_row:field_hs_event_series':
-              destination: category
-              weight: 5
-              plugin: views_row
-              source: field_hs_event_series
-            'views_row:field_hs_event_image':
-              destination: image
-              weight: 6
-              plugin: views_row
-              source: field_hs_event_image
-            'views_row:field_hs_event_date_2':
-              destination: day
-              weight: 7
-              plugin: views_row
-              source: field_hs_event_date_2
-            'views_row:field_hs_event_date_1':
-              destination: month
-              weight: 8
-              plugin: views_row
-              source: field_hs_event_date_1
-            'views_row:field_hs_event_location':
-              destination: location
-              weight: 9
-              plugin: views_row
-              source: field_hs_event_location
       defaults:
         pager: false
         style: false
@@ -2102,7 +2102,7 @@ display:
           click_sort_column: target_id
           type: media_responsive_image_formatter
           settings:
-            view_mode: default
+            view_mode: responsive_lazy
             link: true
             image_style: hp_3_down_events
             remove_alt: 0
@@ -2607,85 +2607,85 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
             field_hs_event_speaker: field_hs_event_speaker
-            field_hs_event_series: 0
-            field_hs_event_type: 0
-            field_hs_event_date_1: 0
-            field_hs_event_date_2: 0
-            field_hs_event_image: 0
-            title: 0
-            body: 0
-            field_hs_event_date: 0
-            field_hs_event_date_3: 0
-            field_hs_event_location: 0
-            view_node: 0
-            field_hs_event_date_4: 0
+            field_hs_event_series: '0'
+            field_hs_event_type: '0'
+            field_hs_event_date_1: '0'
+            field_hs_event_date_2: '0'
+            field_hs_event_image: '0'
+            title: '0'
+            body: '0'
+            field_hs_event_date: '0'
+            field_hs_event_date_3: '0'
+            field_hs_event_location: '0'
+            view_node: '0'
+            field_hs_event_date_4: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: date_stacked_horizontal_card
+          pattern_mapping:
+            'views_row:field_hs_event_date_4':
+              plugin: views_row
+              source: field_hs_event_date_4
+              destination: time
+              weight: 0
+            'views_row:field_hs_event_type':
+              plugin: views_row
+              source: field_hs_event_type
+              destination: category
+              weight: 1
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 2
+            'views_row:field_hs_event_speaker':
+              plugin: views_row
+              source: field_hs_event_speaker
+              destination: speaker
+              weight: 3
+            'views_row:body':
+              plugin: views_row
+              source: body
+              destination: description
+              weight: 4
+            'views_row:view_node':
+              plugin: views_row
+              source: view_node
+              destination: button
+              weight: 5
+            'views_row:field_hs_event_series':
+              plugin: views_row
+              source: field_hs_event_series
+              destination: category
+              weight: 6
+            'views_row:field_hs_event_image':
+              plugin: views_row
+              source: field_hs_event_image
+              destination: image
+              weight: 7
+            'views_row:field_hs_event_date_2':
+              plugin: views_row
+              source: field_hs_event_date_2
+              destination: day
+              weight: 8
+            'views_row:field_hs_event_date_1':
+              plugin: views_row
+              source: field_hs_event_date_1
+              destination: month
+              weight: 9
+            'views_row:field_hs_event_location':
+              plugin: views_row
+              source: field_hs_event_location
+              destination: location
+              weight: 10
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_event_date_4':
-              destination: time
-              weight: 0
-              plugin: views_row
-              source: field_hs_event_date_4
-            'views_row:field_hs_event_type':
-              destination: category
-              weight: 1
-              plugin: views_row
-              source: field_hs_event_type
-            'views_row:title':
-              destination: title
-              weight: 2
-              plugin: views_row
-              source: title
-            'views_row:field_hs_event_speaker':
-              destination: speaker
-              weight: 3
-              plugin: views_row
-              source: field_hs_event_speaker
-            'views_row:body':
-              destination: description
-              weight: 4
-              plugin: views_row
-              source: body
-            'views_row:view_node':
-              destination: button
-              weight: 5
-              plugin: views_row
-              source: view_node
-            'views_row:field_hs_event_series':
-              destination: category
-              weight: 6
-              plugin: views_row
-              source: field_hs_event_series
-            'views_row:field_hs_event_image':
-              destination: image
-              weight: 7
-              plugin: views_row
-              source: field_hs_event_image
-            'views_row:field_hs_event_date_2':
-              destination: day
-              weight: 8
-              plugin: views_row
-              source: field_hs_event_date_2
-            'views_row:field_hs_event_date_1':
-              destination: month
-              weight: 9
-              plugin: views_row
-              source: field_hs_event_date_1
-            'views_row:field_hs_event_location':
-              destination: location
-              weight: 10
-              plugin: views_row
-              source: field_hs_event_location
       defaults:
         pager: false
         style: false
@@ -2968,12 +2968,12 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: media_image_formatter
+          type: media_responsive_image_formatter
           settings:
-            view_mode: default
+            view_mode: responsive_lazy
             link: true
-            image_style: hs_large_square_480x480
-            remove_alt: false
+            image_style: people_grid_list
+            remove_alt: 0
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -3499,13 +3499,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -3548,15 +3541,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              administrator: '0'
-              site_manager: '0'
-              contributor: '0'
-              author: '0'
-              intranet_viewer: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
-              anonymous: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3603,14 +3587,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
-              author: '0'
             reduce: 0
           is_grouped: false
           group_info:
@@ -3639,22 +3615,63 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_event_series: 0
-            field_hs_event_image: 0
-            field_hs_event_date_2: 0
-            field_hs_event_date_3: 0
-            title: 0
-            body: 0
-            field_hs_event_speaker: 0
-            field_hs_event_location: 0
-            view_node: 0
-            edit_node: 0
-            field_hs_event_date_4: 0
+            field_hs_event_series: '0'
+            field_hs_event_image: '0'
+            field_hs_event_date_2: '0'
+            field_hs_event_date_3: '0'
+            title: '0'
+            body: '0'
+            field_hs_event_speaker: '0'
+            field_hs_event_location: '0'
+            view_node: '0'
+            edit_node: '0'
+            field_hs_event_date_4: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: date_stacked_horizontal_card
+          pattern_mapping:
+            'views_row:field_hs_event_date_4':
+              plugin: views_row
+              source: field_hs_event_date_4
+              destination: time
+              weight: 0
+            'views_row:field_hs_event_series':
+              plugin: views_row
+              source: field_hs_event_series
+              destination: category
+              weight: 1
+            'views_row:field_hs_event_image':
+              plugin: views_row
+              source: field_hs_event_image
+              destination: image
+              weight: 2
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 3
+            'views_row:body':
+              plugin: views_row
+              source: body
+              destination: description
+              weight: 4
+            'views_row:field_hs_event_speaker':
+              plugin: views_row
+              source: field_hs_event_speaker
+              destination: speaker
+              weight: 5
+            'views_row:view_node':
+              plugin: views_row
+              source: view_node
+              destination: button
+              weight: 6
+            'views_row:edit_node':
+              plugin: views_row
+              source: edit_node
+              destination: description
+              weight: 7
           variants:
             accordion: closed
             alert: default
@@ -3662,47 +3679,6 @@ display:
             hero_text_overlay: default
             spotlight: default
             testimonial: top
-          pattern_mapping:
-            'views_row:field_hs_event_date_4':
-              destination: time
-              weight: 0
-              plugin: views_row
-              source: field_hs_event_date_4
-            'views_row:field_hs_event_series':
-              destination: category
-              weight: 1
-              plugin: views_row
-              source: field_hs_event_series
-            'views_row:field_hs_event_image':
-              destination: image
-              weight: 2
-              plugin: views_row
-              source: field_hs_event_image
-            'views_row:title':
-              destination: title
-              weight: 3
-              plugin: views_row
-              source: title
-            'views_row:body':
-              destination: description
-              weight: 4
-              plugin: views_row
-              source: body
-            'views_row:field_hs_event_speaker':
-              destination: speaker
-              weight: 5
-              plugin: views_row
-              source: field_hs_event_speaker
-            'views_row:view_node':
-              destination: button
-              weight: 6
-              plugin: views_row
-              source: view_node
-            'views_row:edit_node':
-              destination: description
-              weight: 7
-              plugin: views_row
-              source: edit_node
       defaults:
         title: false
         pager: false
@@ -3801,7 +3777,7 @@ display:
           click_sort_column: target_id
           type: media_responsive_image_formatter
           settings:
-            view_mode: default
+            view_mode: responsive_lazy
             link: true
             image_style: full_responsive
             remove_alt: 0
@@ -4522,79 +4498,79 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
             field_hs_event_speaker: field_hs_event_speaker
-            field_hs_event_image: 0
-            field_hs_event_date_1: 0
-            field_hs_event_date_2: 0
-            field_hs_event_series: 0
-            title: 0
-            field_hs_event_date: 0
-            field_hs_event_date_3: 0
-            field_hs_event_location: 0
-            body: 0
-            view_node: 0
-            field_hs_event_date_4: 0
+            field_hs_event_image: '0'
+            field_hs_event_date_1: '0'
+            field_hs_event_date_2: '0'
+            field_hs_event_series: '0'
+            title: '0'
+            field_hs_event_date: '0'
+            field_hs_event_date_3: '0'
+            field_hs_event_location: '0'
+            body: '0'
+            view_node: '0'
+            field_hs_event_date_4: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: date_stacked_vertical_card
+          pattern_mapping:
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 0
+            'views_row:field_hs_event_date_4':
+              plugin: views_row
+              source: field_hs_event_date_4
+              destination: time
+              weight: 1
+            'views_row:field_hs_event_speaker':
+              plugin: views_row
+              source: field_hs_event_speaker
+              destination: speaker
+              weight: 2
+            'views_row:body':
+              plugin: views_row
+              source: body
+              destination: description
+              weight: 3
+            'views_row:view_node':
+              plugin: views_row
+              source: view_node
+              destination: button
+              weight: 4
+            'views_row:field_hs_event_series':
+              plugin: views_row
+              source: field_hs_event_series
+              destination: category
+              weight: 5
+            'views_row:field_hs_event_image':
+              plugin: views_row
+              source: field_hs_event_image
+              destination: image
+              weight: 6
+            'views_row:field_hs_event_date_2':
+              plugin: views_row
+              source: field_hs_event_date_2
+              destination: day
+              weight: 7
+            'views_row:field_hs_event_date_1':
+              plugin: views_row
+              source: field_hs_event_date_1
+              destination: month
+              weight: 8
+            'views_row:field_hs_event_location':
+              plugin: views_row
+              source: field_hs_event_location
+              destination: location
+              weight: 9
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:title':
-              destination: title
-              weight: 0
-              plugin: views_row
-              source: title
-            'views_row:field_hs_event_date_4':
-              destination: time
-              weight: 1
-              plugin: views_row
-              source: field_hs_event_date_4
-            'views_row:field_hs_event_speaker':
-              destination: speaker
-              weight: 2
-              plugin: views_row
-              source: field_hs_event_speaker
-            'views_row:body':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: body
-            'views_row:view_node':
-              destination: button
-              weight: 4
-              plugin: views_row
-              source: view_node
-            'views_row:field_hs_event_series':
-              destination: category
-              weight: 5
-              plugin: views_row
-              source: field_hs_event_series
-            'views_row:field_hs_event_image':
-              destination: image
-              weight: 6
-              plugin: views_row
-              source: field_hs_event_image
-            'views_row:field_hs_event_date_2':
-              destination: day
-              weight: 7
-              plugin: views_row
-              source: field_hs_event_date_2
-            'views_row:field_hs_event_date_1':
-              destination: month
-              weight: 8
-              plugin: views_row
-              source: field_hs_event_date_1
-            'views_row:field_hs_event_location':
-              destination: location
-              weight: 9
-              plugin: views_row
-              source: field_hs_event_location
       defaults:
         pager: false
         style: false
@@ -4856,12 +4832,12 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: media_image_formatter
+          type: media_responsive_image_formatter
           settings:
-            view_mode: default
+            view_mode: responsive_lazy
             link: true
-            image_style: hs_large_square_480x480
-            remove_alt: false
+            image_style: people_grid_list
+            remove_alt: 0
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -5490,14 +5466,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
-              author: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -5541,13 +5509,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -5594,13 +5555,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
             reduce: 0
           is_grouped: false
           group_info:
@@ -5677,91 +5631,91 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_event_series: 0
-            field_hs_event_type: 0
-            field_hs_event_image: 0
-            field_hs_event_date_1: 0
-            field_hs_event_date_2: 0
-            title: 0
-            body: 0
-            field_hs_event_date: 0
-            field_hs_event_date_3: 0
-            field_hs_event_speaker: 0
-            field_hs_event_location: 0
-            view_node: 0
-            edit_node: 0
-            field_hs_event_date_4: 0
+            field_hs_event_series: '0'
+            field_hs_event_type: '0'
+            field_hs_event_image: '0'
+            field_hs_event_date_1: '0'
+            field_hs_event_date_2: '0'
+            title: '0'
+            body: '0'
+            field_hs_event_date: '0'
+            field_hs_event_date_3: '0'
+            field_hs_event_speaker: '0'
+            field_hs_event_location: '0'
+            view_node: '0'
+            edit_node: '0'
+            field_hs_event_date_4: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: date_stacked_horizontal_card
+          pattern_mapping:
+            'views_row:field_hs_event_date_4':
+              plugin: views_row
+              source: field_hs_event_date_4
+              destination: time
+              weight: 0
+            'views_row:field_hs_event_type':
+              plugin: views_row
+              source: field_hs_event_type
+              destination: category
+              weight: 1
+            'views_row:field_hs_event_date_1':
+              plugin: views_row
+              source: field_hs_event_date_1
+              destination: month
+              weight: 2
+            'views_row:field_hs_event_date_2':
+              plugin: views_row
+              source: field_hs_event_date_2
+              destination: day
+              weight: 3
+            'views_row:field_hs_event_speaker':
+              plugin: views_row
+              source: field_hs_event_speaker
+              destination: speaker
+              weight: 4
+            'views_row:field_hs_event_image':
+              plugin: views_row
+              source: field_hs_event_image
+              destination: image
+              weight: 5
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 6
+            'views_row:field_hs_event_series':
+              plugin: views_row
+              source: field_hs_event_series
+              destination: category
+              weight: 7
+            'views_row:body':
+              plugin: views_row
+              source: body
+              destination: description
+              weight: 8
+            'views_row:field_hs_event_location':
+              plugin: views_row
+              source: field_hs_event_location
+              destination: location
+              weight: 9
+            'views_row:edit_node':
+              plugin: views_row
+              source: edit_node
+              destination: description
+              weight: 10
+            'views_row:view_node':
+              plugin: views_row
+              source: view_node
+              destination: button
+              weight: 11
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_event_date_4':
-              destination: time
-              weight: 0
-              plugin: views_row
-              source: field_hs_event_date_4
-            'views_row:field_hs_event_type':
-              destination: category
-              weight: 1
-              plugin: views_row
-              source: field_hs_event_type
-            'views_row:field_hs_event_date_1':
-              destination: month
-              weight: 2
-              plugin: views_row
-              source: field_hs_event_date_1
-            'views_row:field_hs_event_date_2':
-              destination: day
-              weight: 3
-              plugin: views_row
-              source: field_hs_event_date_2
-            'views_row:field_hs_event_speaker':
-              destination: speaker
-              weight: 4
-              plugin: views_row
-              source: field_hs_event_speaker
-            'views_row:field_hs_event_image':
-              destination: image
-              weight: 5
-              plugin: views_row
-              source: field_hs_event_image
-            'views_row:title':
-              destination: title
-              weight: 6
-              plugin: views_row
-              source: title
-            'views_row:field_hs_event_series':
-              destination: category
-              weight: 7
-              plugin: views_row
-              source: field_hs_event_series
-            'views_row:body':
-              destination: description
-              weight: 8
-              plugin: views_row
-              source: body
-            'views_row:field_hs_event_location':
-              destination: location
-              weight: 9
-              plugin: views_row
-              source: field_hs_event_location
-            'views_row:edit_node':
-              destination: description
-              weight: 10
-              plugin: views_row
-              source: edit_node
-            'views_row:view_node':
-              destination: button
-              weight: 11
-              plugin: views_row
-              source: view_node
       query:
         type: views_query
         options:

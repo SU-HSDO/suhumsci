@@ -1,3 +1,11 @@
+@use '../variables/fonts' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/links' as *;
+
 .hb-testimonial {
   &__wrapper {
     padding: hb-calculate-rems(40px) hb-calculate-rems(24px);
@@ -9,25 +17,25 @@
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      border-color: var(--palette--primary);
+      border-color: color('primary');
 
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-        border-color: var(--palette--primary);
+        border-color: color('primary');
       }
     }
 
     @include hb-traditional {
-      border-color: var(--palette--secondary);
+      border-color: color('secondary');
 
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-        border-color: var(--palette--secondary);
+        border-color: color('secondary');
       }
     }
 
     .hb-dark-pattern & {
-      border-color: var(--palette--white);
+      border-color: color('white', 'global');
     }
   }
 
@@ -44,24 +52,24 @@
     }
 
     .hb-dark-pattern & {
-      border-color: var(--palette--white);
+      border-color: color('white', 'global');
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      border-color: var(--palette--secondary);
+      border-color: color('secondary');
 
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-        border-color: var(--palette--secondary);
+        border-color: color('secondary');
       }
     }
 
     @include hb-traditional {
-      border-color: var(--palette--tertiary);
+      border-color: color('tertiary');
 
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-        border-color: var(--palette--tertiary);
+        border-color: color('tertiary');
       }
     }
 
@@ -119,50 +127,50 @@
     font-weight: hb-theme-font-weight(semibold);
 
     @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--primary);
+      color: color('primary');
 
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-        color: var(--palette--primary);
+        color: color('primary');
       }
     }
 
     @include hb-traditional {
-      color: var(--palette--secondary);
+      color: color('secondary');
 
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-        color: var(--palette--secondary);
+        color: color('secondary');
       }
 
       // Override name for the Firefinch color pairing.
       .ht-pairing-firefinch .hb-well &,
       .ht-pairing-firefinch .hs-paragraph-style--well &,
       .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
-        color: var(--palette--primary);
+        color: color('primary');
       }
     }
 
     .hb-dark-pattern & {
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
   }
 
   &__position {
     font-size: hb-calculate-rems(16px);
-    color: var(--palette--gray-dark);
+    color: color('gray-dark', 'global');
 
-    +.hb-testimonial__link {
+    + .hb-testimonial__link {
       padding-top: hb-calculate-rems(16px);
     }
 
     .hb-dark-pattern .hs-paragraph-style--well &,
     .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-      color: var(--palette--gray-dark);
+      color: color('gray-dark', 'global');
     }
 
     .hb-dark-pattern & {
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
   }
 
@@ -179,91 +187,53 @@
         &::after {
           height: hb-calculate-rems(22.5px);
         }
-
-        // Override link color and link icon for the Firefinch color pairing.
-        .ht-pairing-firefinch .hb-well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
-          color: var(--palette--tertiary);
-
-          &::after {
-            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
       }
 
       [class*='-pairing-'] .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         // make arrow and text color white for all themes
-        color: var(--palette--white);
+        color: color('white', 'global');
 
         &::after {
-          @include hb-icon-link-arrow('white');
-          background-size: 85%;
-        }
-
-        &:hover,
-        &:focus {
-          color: var(--palette--white);
-
-          &::after {
-            @include hb-icon-link-arrow('white');
-            background-size: 85%;
-          }
+          background-color: color('white', 'global');
         }
       }
 
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-        color: var(--palette--secondary);
+        color: color('secondary');
 
         @include hb-themes(('colorful', 'airy')) {
           .hc-pairing-ocean & {
-            color: var(--palette--secondary-darken-12);
+            color: color('secondary-darken-12');
           }
         }
 
         &::after {
-          @include hb-icon-link-arrow('secondary');
-          background-size: 85%;
+          background-color: color('secondary');
 
           @include hb-themes(('colorful', 'airy')) {
             .hc-pairing-ocean & {
-              @include hb-icon-link-arrow('secondary-darken-12');
-              background-size: 85%;
+              background-color: color('secondary-darken-12');
             }
           }
         }
 
         &:hover,
         &:focus {
-          color: var(--palette--secondary-darken-12);
+          color: color('secondary-darken-12');
 
           .hc-pairing-ocean & {
-            color: var(--palette--primary-dark);
-          }
-
-          .ht-pairing-warbler & {
-            color: var(--palette--secondary-darken-12);
+            color: color('primary-dark');
           }
 
           &::after {
-            @include hb-icon-link-arrow('secondary-darken-12');
-            background-size: 85%;
+            background-color: color('secondary-darken-12');
+            mask-size: 85%;
 
             @include hb-colorful {
               .hc-pairing-ocean & {
-                @include hb-icon-link-arrow('primary-dark');
-                background-size: 85%;
+                background-color: color('primary-dark');
               }
             }
           }
@@ -287,12 +257,13 @@
     width: 100%;
     margin: 0;
     font-size: hb-calculate-rems(20px);
-    line-height: hb-calculate-rems(28.4px);
-    color: var(--palette--black);
+    line-height: var(--condensed-line-height);
+    color: color('black', 'global');
+    text-wrap: balance;
 
     .hb-dark-pattern .hs-paragraph-style--well &,
     .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-      color: var(--palette--black);
+      color: color('black', 'global');
     }
 
     @include hb-traditional {

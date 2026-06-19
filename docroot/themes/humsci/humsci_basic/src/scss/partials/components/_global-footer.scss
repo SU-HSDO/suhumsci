@@ -1,20 +1,29 @@
 // Global styles for the global footer.
+
+@use '../variables/zindex' as *;
+@use '../functions/fonts' as *;
+@use '../functions/color' as *;
+@use '../functions/general' as *;
+@use '../mixins/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/layout' as *;
+
 .su-global-footer {
   @include font-smoothing;
   @include responsive-spacing('padding', 1 null);
 
   position: relative;
   z-index: $hb-z-index-global-footer;
-  background-color: color(su-brand);
-  color: color(su-link-reverse);
+  background-color: color('brand', 'su-core');
+  color: color('link-reverse', 'su-core');
 
   a {
-    color: color(su-link-reverse);
+    color: color('link-reverse', 'su-core');
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: color(su-link-reverse);
+      color: color('link-reverse', 'su-core');
       text-decoration: underline;
     }
   }
@@ -46,12 +55,13 @@
 // The Logo.
 .su-global-footer__brand {
   padding-top: hb-calculate-rems(5px);
+
   @include responsive-spacing('margin', null null -2);
   text-align: center;
 
   a {
     @include logo;
-    color: color(su-link-reverse);
+    color: color('link-reverse', 'su-core');
     font-size: hb-calculate-rems(34px);
 
     &:hover,
@@ -177,11 +187,11 @@
 // Global Footer with bright red background color.
 
 .su-global-footer--bright {
-  background-color: color(su-brand-bright);
+  background-color: color('brand-bright', 'su-core');
 }
 
 // Global Footer with soft black background color.
 
 .su-global-footer--dark {
-  background-color: color(su-bg-reverse);
+  background-color: color('background-reverse', 'su-core');
 }

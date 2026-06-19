@@ -1,0 +1,106 @@
+# .github/workflows/dependency-updates.yml
+# Automate dependency updates.
+# Runs composer update, database updates, exports configurations, generates a
+# composer.lock diff, and creates a pull request.
+name: Automated Dependency Updates
+
+on:
+  schedule:
+    # Run on Fridays at ~2:15 AM Central (7:15 UTC / CDT). Off-peak to reduce
+    # GitHub scheduler delays.
+    - cron: '15 7 * * 5'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Composer Dependencies
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:php8.3
+      options: '--network-alias drupal8ci'
+    env:
+      DRUPAL_DATABASE_NAME: drupal
+      DRUPAL_DATABASE_USERNAME: drupal
+      DRUPAL_DATABASE_PASSWORD: drupal
+      DRUPAL_DATABASE_HOST: mysql
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: drupal
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_ROOT_PASSWORD: drupal
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Set git safe directory
+        run: git config --system --add safe.directory '*'
+      - name: Set date variable
+        id: date
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+      - name: Restore Cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+      - name: Install dependencies
+        run: composer install -n
+      - name: Install Drupal site
+        run: |
+          mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;'
+          rm -rf /var/www/html
+          ln -snf $GITHUB_WORKSPACE /var/www/html
+          mkdir -p docroot/sites/default/files
+          chmod -R 777 docroot/sites/default/files/
+          drush sws:multisite:install -n
+      - name: Import configuration
+        run: drush cim -y
+      - name: Update Composer dependencies
+        run: composer update -W -n
+      - name: Update database
+        run: drush updatedb -y
+      - name: Export configuration
+        run: drush config:export -y
+      - name: Generate composer.lock diff (markdown)
+        id: lockdiff
+        run: |
+          vendor/bin/composer-lock-diff --md --from origin/${{ github.event.repository.default_branch }}:composer.lock --to composer.lock > composer-lock-diff.md
+          echo "diff<<EOF" >> $GITHUB_OUTPUT
+          cat composer-lock-diff.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          rm composer-lock-diff.md
+      - name: Get outdated direct dependencies
+        id: outdated
+        run: |
+          echo 'outdated<<EOF' >> $GITHUB_OUTPUT
+          echo '```' >> $GITHUB_OUTPUT
+          composer outdated --direct >> $GITHUB_OUTPUT
+          echo '```' >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
+          branch: automated/dependency-update-${{ steps.date.outputs.date }}-${{ github.run_id }}
+          base: ${{ github.event.repository.default_branch }}
+          title: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
+          body: |
+            This PR was created automatically by a scheduled GitHub Actions workflow to update Composer dependencies and export Drupal configuration.
+            
+            ## Composer Dependency Changes
+            ${{ steps.lockdiff.outputs.diff }}
+
+            ## Outdated Direct Composer Dependencies
+            ${{ steps.outdated.outputs.outdated }}
+          assignees: ${{ secrets.PR_ASSIGNEE || 'joegl' }}

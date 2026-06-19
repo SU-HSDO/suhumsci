@@ -18,7 +18,7 @@ interface SiteImproveInterface {
   /**
    * Get the current site ID.
    *
-   * @return int
+   * @return string|null
    *   The current site ID.
    */
   public function getCurrentSiteId(): ?string;

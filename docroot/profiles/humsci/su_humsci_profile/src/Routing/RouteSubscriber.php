@@ -56,7 +56,7 @@ class RouteSubscriber extends RouteSubscriberBase implements ContainerInjectionI
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   Module handler service.
-   * @param Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config factory service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
@@ -69,10 +69,6 @@ class RouteSubscriber extends RouteSubscriberBase implements ContainerInjectionI
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
-    if (($route = $collection->get('block.admin_display')) && $this->moduleHandler->moduleExists('block_content_permissions')) {
-      $route->setRequirement('_permission', 'administer blocks+view restricted block content');
-    }
-
     foreach ($collection as &$route) {
       if (strpos($route->getPath(), '/admin/people') === 0) {
         $route->setPath(str_replace('/admin/people', '/admin/users', $route->getPath()));
@@ -80,10 +76,6 @@ class RouteSubscriber extends RouteSubscriberBase implements ContainerInjectionI
     }
 
     $collection->get('entity.user.collection')->setDefault('_title', 'Users');
-
-    if ($route = $collection->get('stanford_ssp.create_user')) {
-      $route->setRequirement('_permission', 'add saml user');
-    }
 
     if ($route = $collection->get('publishcontent.settings')) {
       $route->setRequirement('_permission', 'administer content types');

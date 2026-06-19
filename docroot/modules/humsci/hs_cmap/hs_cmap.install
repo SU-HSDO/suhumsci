@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file
+ * Update functions for hs_cmap module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function hs_cmap_update_last_removed() {
+  return 10001;
+}
+
+/**
+ * Update field_hs_cmap_crs_course to use minimal_text_formatting format.
+ */
+function hs_cmap_update_10002(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    // Load all hs_cmap_qtr_crs paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_cmap_qtr_crs')
+      ->condition('field_hs_cmap_crs_course', NULL, 'IS NOT NULL')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+    $field_items = $paragraph->get('field_hs_cmap_crs_course');
+    foreach ($field_items as $item) {
+      $item->set('format', 'minimal_text_formatting');
+    }
+
+    $paragraph->setNewRevision(FALSE);
+    $paragraph->save();
+    $sandbox['updated']++;
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  return t('Updated %updated of %total hs_cmap_qtr_crs paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
+}
+
+/**
+ * Import minimal_text_formatting filter format from config.
+ */
+function hs_cmap_update_10003() {
+  $config_name = 'filter.format.minimal_text_formatting';
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable($config_name);
+  if ($config->isNew()) {
+    $config_storage = \Drupal::service('config.storage.sync');
+    $format_config = $config_storage->read($config_name);
+    $config->setData($format_config)->save();
+  }
+
+  return t('Imported filter format: filter.format.minimal_text_formatting.');
+}
+
+/**
+ * Grant "use text format minimal_text_formatting" permissions to roles.
+ */
+function hs_cmap_update_10004() {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  $updated_roles = [];
+  $roles = $role_storage->loadMultiple(['site_manager', 'preparer', 'contributor', 'authenticated']);
+  foreach ($roles as $role) {
+    $role->grantPermission('use text format minimal_text_formatting');
+    $role->save();
+    $updated_roles[] = $role->id();
+  }
+
+  return t('Assigned "use text format minimal_text_formatting" permissions to the following roles: %roles.', [
+    '%roles' => implode(', ', $updated_roles),
+  ]);
+}

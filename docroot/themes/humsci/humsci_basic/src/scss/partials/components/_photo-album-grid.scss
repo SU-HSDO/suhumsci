@@ -1,5 +1,14 @@
 // Photo Album Grid Colorbox Styles
 
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/decorative' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/text' as *;
+
 .stanford-gallery.paragraph--view-mode--default {
   // Grid raised cards
   .hb-raised-cards & {
@@ -29,28 +38,26 @@
 #cboxPrevious,
 #cboxNext,
 #cboxClose {
-  background: var(--palette--white);
+  background: color('white', 'global');
   width: hb-calculate-rems(44px);
-  opacity: 50%;
+  opacity: 0.5;
   transition: hb-transition(opacity);
 
   &:hover {
-    opacity: 60%;
+    opacity: 0.6;
   }
 
   &:focus {
-    opacity: 100%;
+    opacity: 1;
   }
 
   // additional focus styles for keyboard users only
   // that compliments browser default styles
   &:focus-visible {
-    opacity: 100%;
+    opacity: 1;
     outline: 5px auto -webkit-focus-ring-color; // Chrome only
   }
 }
-
-
 
 #cboxPrevious,
 #cboxNext {

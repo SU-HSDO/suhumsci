@@ -1,0 +1,208 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/variables/theme';
+@use '../../../src/scss/partials/mixins/links' as l;
+
+@include describe('Link Mixins') {
+  @include describe('hb-link() mixin') {
+    theme.$hb-current-theme: 'colorful';
+
+    @include it('sets base link styles and hover decoration color.') {
+      @include assert {
+        @include output {
+          .hb-test-link {
+            @include l.hb-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-link {
+            color: var(--color--colorful-global--black);
+            font-weight: 600;
+            text-decoration: underline;
+            text-decoration-color: var(--color--colorful-global--gray-medium);
+            transition: text-decoration-color 150ms ease-in-out;
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-link {
+            @include l.hb-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-link:hover,
+          .hb-test-link:focus {
+            color: var(--color--colorful-global--black);
+            text-decoration-color: var(--color--colorful-pairings--primary);
+          }
+        }
+      }
+    }
+  }
+
+  @include describe('hb-link--inline() mixin') {
+    @include it('sets base and hover colors using CSS variables.') {
+      @include assert {
+        @include output {
+          .hb-test-inline {
+            @include l.hb-link--inline;
+          }
+        }
+
+        @include contains {
+          .hb-test-inline {
+            color: var(--link-base-current-color);
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-inline {
+            @include l.hb-link--inline;
+          }
+        }
+
+        @include contains {
+          .hb-test-inline:hover,
+          .hb-test-inline:focus {
+            color: var(--link-base-hover-current-color);
+          }
+        }
+      }
+    }
+  }
+
+  @include describe('hb-more-link() mixin') {
+    theme.$hb-current-theme: 'traditional';
+
+    @include it('applies base styles and hover state.') {
+      @include assert {
+        @include output {
+          .hb-test-more {
+            @include l.hb-more-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-more {
+            font-size: 1.125rem;
+            text-decoration: none;
+            border: none;
+            background: none;
+            padding: 0;
+            color: var(--link-base-current-color);
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-more {
+            @include l.hb-more-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-more:hover,
+          .hb-test-more:focus {
+            color: var(--link-base-hover-current-color);
+            background-image: none;
+            background-color: transparent;
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-more {
+            @include l.hb-more-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-more:hover::after,
+          .hb-test-more:focus::after {
+            background-color: var(--link-base-hover-current-color);
+            transform: translateX(0.15625rem);
+          }
+        }
+      }
+    }
+  }
+
+  @include describe('hb-more-link() mixin sizing') {
+    @include it('sets traditional arrow sizing.') {
+      theme.$hb-current-theme: 'traditional';
+
+      @include assert {
+        @include output {
+          .hb-test-more-traditional {
+            @include l.hb-more-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-more-traditional::after {
+            height: 1.5625rem;
+            width: 1.5625rem;
+            margin-bottom: -0.4375rem;
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-more-traditional {
+            @include l.hb-more-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-more-traditional::after {
+            mask-size: 85%;
+            margin-left: 0.5rem;
+          }
+        }
+      }
+    }
+
+    @include it('sets colorful/airy arrow sizing.') {
+      theme.$hb-current-theme: 'colorful';
+
+      @include assert {
+        @include output {
+          .hb-test-more-colorful {
+            @include l.hb-more-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-more-colorful::after {
+            height: 1.1875rem;
+            width: 1.1875rem;
+            margin-bottom: -0.25rem;
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-more-colorful {
+            @include l.hb-more-link;
+          }
+        }
+
+        @include contains {
+          .hb-test-more-colorful::after {
+            mask-size: 85%;
+            margin-left: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}

@@ -722,11 +722,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              seven_admin_theme_user: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -745,60 +740,60 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_person_image: 0
-            title: 0
-            field_hs_person_title: 0
-            field_hs_person_email: 0
-            field_hs_person_telephone: 0
-            field_hs_person_office: 0
-            field_hs_person_research: 0
-            field_hs_person_student_cohort: 0
+            field_hs_person_image: '0'
+            title: '0'
+            field_hs_person_title: '0'
+            field_hs_person_email: '0'
+            field_hs_person_telephone: '0'
+            field_hs_person_office: '0'
+            field_hs_person_research: '0'
+            field_hs_person_student_cohort: '0'
           separator: ''
-          hide_empty: 0
+          hide_empty: false
           pattern: horizontal_card
           pattern_mapping:
             'views_row:field_hs_person_image':
-              destination: image
-              weight: 0
               plugin: views_row
               source: field_hs_person_image
+              destination: image
+              weight: 0
             'views_row:field_hs_person_telephone':
-              destination: description
-              weight: 1
               plugin: views_row
               source: field_hs_person_telephone
-            'views_row:field_hs_person_student_cohort':
               destination: description
-              weight: 2
+              weight: 1
+            'views_row:field_hs_person_student_cohort':
               plugin: views_row
               source: field_hs_person_student_cohort
+              destination: description
+              weight: 2
             'views_row:title':
-              destination: title
-              weight: 3
               plugin: views_row
               source: title
+              destination: title
+              weight: 3
             'views_row:field_hs_person_title':
-              destination: description
-              weight: 4
               plugin: views_row
               source: field_hs_person_title
-            'views_row:field_hs_person_email':
               destination: description
-              weight: 5
+              weight: 4
+            'views_row:field_hs_person_email':
               plugin: views_row
               source: field_hs_person_email
-            'views_row:field_hs_person_office':
               destination: description
-              weight: 6
+              weight: 5
+            'views_row:field_hs_person_office':
               plugin: views_row
               source: field_hs_person_office
-            'views_row:field_hs_person_research':
               destination: description
-              weight: 7
+              weight: 6
+            'views_row:field_hs_person_research':
               plugin: views_row
               source: field_hs_person_research
+              destination: description
+              weight: 7
       query:
         type: views_query
         options:

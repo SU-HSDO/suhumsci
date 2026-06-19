@@ -1,4 +1,16 @@
-// WYSIWYG text area styles.
+// WYSIWYG text area styles
+
+@use '../variables/general' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/text' as *;
+@use '../mixins/links' as *;
+@use '../mixins/icons' as *;
 
 // General WYSIWYG styles (all fields).
 .text-long,
@@ -8,6 +20,22 @@
   *:not([class]):last-child {
     margin-bottom: 0;
   }
+}
+
+.text-long,
+.text-with-summary,
+.views-field-body {
+  line-height: var(--normal-line-height);
+}
+
+.hb-card__description .views-field-body,
+.hb-vertical-linked-card__description .views-field-body,
+.hb-callout-box .text-long,
+.hb-table-wrap tbody,
+.hb-table-wrap .hb-table-pattern__body,
+.text-with-summary blockquote,
+.text-long blockquote {
+  line-height: var(--condensed-line-height);
 }
 
 // Flexible and private page text areas.
@@ -116,96 +144,6 @@
     }
   }
 
-  // Override default link color for the Canyon color pairing.
-  @include hb-themes(('colorful', 'airy')) {
-    .hb-well &,
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width &,
-    .hs-breakout-box {
-      .hc-pairing-canyon & {
-        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
-          color: var(--palette--primary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
-
-        // Ensure that the external link icon color is correct.
-        a.hs-external-link {
-          &::after {
-            background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::after {
-              background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'tertiary-darken-20')));
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Override links color and links with icons for the Firefinch color pairing.
-  @include hb-traditional {
-    .hb-well &,
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width &,
-    .hs-breakout-box {
-      .ht-pairing-firefinch & {
-        a.hs-more-link, a.hs-private-link, a.hs-pdf-link, a.hs-file-link {
-          color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
-
-        // Ensure that the private link icon color and more link icon color are correct.
-        a.hs-private-link {
-          &::before {
-            background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::before {
-              background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
-
-        a.hs-more-link {
-          &::after {
-            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
-
-        a.hs-secondary-button {
-          color: var(--palette--tertiary);
-          border-color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--white);
-            border-color: var(--palette--secondary);
-          }
-        }
-      }
-    }
-  }
-
   // Only in the textarea, does the well get display: table for being floated
   .hs-well,
   .pullquote {
@@ -247,14 +185,14 @@ $credits: (hs-credits, credits);
   font-size: hb-calculate-rems(20px);
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
-  color: var(--palette--gray-dark);
+  color: color('gray-dark', 'global');
 
   @include grid-media-min('lg') {
     font-size: hb-calculate-rems(22px);
   }
 
   .hb-dark-pattern & {
-    color: var(--palette--gray-light);
+    color: color('gray-light', 'global');
   }
 
   li & {
@@ -291,15 +229,15 @@ $credits: (hs-credits, credits);
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--primary);
+      color: color('primary');
 
       .hb-dark-pattern & {
-        color: var(--palette--gray-light);
+        color: color('gray-light', 'global');
       }
     }
 
     @include hb-traditional {
-      color: var(--palette--primary);
+      color: color('primary');
     }
 
     li & {
@@ -310,6 +248,18 @@ $credits: (hs-credits, credits);
 
 .hs-short-line-length {
   max-width: hb-calculate-rems(700px);
+}
+
+// When short line length is applied and the text is also centered, we need to
+// center the container itself within the text area.
+.hs-short-line-length.text-align-center {
+  margin-inline: auto;
+}
+
+// When short line length is applied and the text is also right-aligned, we need to
+// push the container itself to the right.
+.hs-short-line-length.text-align-right {
+  margin-inline: auto 0;
 }
 
 .hs-table--borderless {
@@ -399,6 +349,55 @@ $credits: (hs-credits, credits);
   }
 }
 
+.drupal-media-style-align-right,
+.drupal-media-style-align-left {
+  max-width: 100%;
+}
+
+.drupal-media-style-align-right .align-right,
+.drupal-media-style-align-center .align-center,
+.drupal-media-style-align-left .align-left {
+  max-width: 100%;
+  margin: 0;
+  float: none;
+}
+
+.drupal-media:has(article.hb-media-image) {
+  @include hb-themes(('colorful', 'airy')) {
+    margin-bottom: hb-spacing-width('sm');
+  }
+
+  @include hb-traditional {
+    margin-bottom: hb-spacing-width('xs');
+  }
+
+  figcaption {
+    @include hb-caption-credit;
+
+    font-size: 12px !important;
+    box-sizing: border-box;
+    color: color('white', 'global') !important;
+    border: none;
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / 60%) 0%,
+      rgb(0 0 0 / 60%) 60%,
+      rgb(0 0 0 / 0%) 100%
+    ) !important;
+    z-index: 1;
+  }
+}
+
+.drupal-media-style-align-center:has(.hb-media-image) figcaption {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+// Override style coming from ckeditor5 module.
+.ck.ck-content .drupal-media-style-align-center article:not(.hb-media-video) {
+  max-width: 100% !important;
+}
+
 // blockquotes
 // The text area blockquote content is placed inside of a paragraph tag.
 blockquote:nth-child(n) {
@@ -410,40 +409,10 @@ blockquote:nth-child(n) {
 }
 
 a[href*="//"].hs-external-link,
-.hs-external-link a[href*="//"] {
+.hs-external-link a[href*="//"]
+{
   @include hb-link--inline;
   @include hb-external-link-icon;
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-
-      &:hover,
-      &:focus {
-        color: var(--palette--gray-medium);
-      }
-
-      &::after {
-        @include hb-icon-background('ext-link', 'white');
-      }
-
-      &:hover::after {
-        @include hb-icon-background('ext-link', 'gray-medium');
-      }
-    }
-
-    @include hb-traditional {
-      color: var(--palette--tertiary-highlight);
-
-      &::after {
-        @include hb-icon-background('ext-link', 'tertiary-highlight');
-      }
-
-      &:hover::after {
-        @include hb-icon-background('ext-link', 'tertiary-highlight-darken-10');
-      }
-    }
-  }
 }
 
 a.hs-private-link,
@@ -451,19 +420,6 @@ a.hs-private-link,
 a.private-link,
 .private-link a {
   @include hb-link--inline;
-  color: var(--palette--secondary);
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-    }
-
-    &:hover {
-      @include hb-colorful {
-        color: var(--palette--gray-medium);
-      }
-    }
-  }
 
   &::before {
     content: '';
@@ -473,43 +429,14 @@ a.private-link,
     margin-bottom: hb-calculate-rems(-2px);
     margin-right: hb-calculate-rems(2px);
 
-    @include hb-icon-background('lock', 'secondary');
-    background-repeat: no-repeat;
-    background-size: cover;
-
-    .hb-dark-pattern & {
-      @include hb-colorful {
-        @include hb-icon-background('lock', 'white');
-      }
-
-      @include hb-traditional {
-        @include hb-icon-background('lock', 'tertiary-highlight');
-      }
-    }
+    @include hb-icon-background('lock', 'link-base', true);
+    mask-repeat: no-repeat;
+    mask-size: cover;
+    background-color: var(--link-base-current-color);
   }
 
   &:hover::before {
-    @include hb-icon-background('lock', 'tertiary-darken-20');
-
-    .hb-dark-pattern & {
-      @include hb-colorful {
-        @include hb-icon-background('lock', 'gray-medium');
-      }
-
-      @include hb-traditional {
-        @include hb-icon-background('lock', 'tertiary-highlight-darken-10');
-      }
-    }
-  }
-}
-
-.hs-mailto-link a,
-a.hs-mailto-link {
-  @include hb-fa-mailto-icon;
-
-  // The font awesome icon is hidden by default in themes, this shows it
-  .fa-mailto {
-    display: initial;
+    background-color: var(--link-base-hover-current-color);
   }
 }
 
@@ -522,6 +449,7 @@ $more-links: (hs-more-link);
   .#{$more-link} a,
   .#{$more-link} button {
     margin-bottom: hb-calculate-rems(20px);
+
     @include hb-more-link;
   }
 }
@@ -550,4 +478,21 @@ a.hs-file-link {
       font-weight: 400;
     }
   }
+}
+
+// Breakout Box
+// Adds a breakout box with background color to CKeditor font styles
+.hs-breakout-box {
+  @include hb-themes(('colorful', 'airy')) {
+    background-color: color('spotlight');
+  }
+
+  @include hb-traditional {
+    background-color: color('spotlight');
+  }
+
+  padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
+  border: 0 none;
+  width: 100%;
+  box-sizing: border-box;
 }

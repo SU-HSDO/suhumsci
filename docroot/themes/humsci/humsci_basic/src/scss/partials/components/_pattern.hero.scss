@@ -1,18 +1,18 @@
 // Note: this scss is the base of the hero, AND the carousel patterns
 // If you change something here, you will likely need to change it and override it in the carousel.scss
-.field-hs-hero-image {
-  @include hb-hero-image-field;
 
-  &::before {
-    background-color: var(--palette--primary-hero-overlay);
-  }
-}
+@use '../variables/zindex' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/heros' as *;
 
 .hb-hero-overlay {
   @include hb-hero-component;
 
   .ptype-hs-hero-image & {
-    background-color: var(--palette--primary-hero-overlay);
+    background-color: color('primary-hero-overlay');
   }
 
   &::before {
@@ -23,10 +23,15 @@
 
   &__image-wrapper {
     @include hb-hero-image-wrapper;
+
+    &::before {
+      background-color: color('primary-hero-overlay');
+    }
   }
 
   &__text {
     @include hb-hero-text;
+
     @include hb-traditional {
       text-align: center;
     }
@@ -58,5 +63,29 @@
     .field-hs-hero-link {
       @include hb-hero-link-field;
     }
+  }
+}
+
+// If the hero image only has an image, the default (when single) or the
+// slideshow_slide (when inside a slideshow) view modes is used, with
+// different templates and styles.
+.paragraph--type--hs-hero-image.paragraph--view-mode--default,
+.paragraph--type--hs-hero-image.paragraph--view-mode--slideshow-slide {
+  position: relative;
+
+  @include hb-hero-full-width($background: true);
+}
+
+// Only the default view mode has an colored overlay.
+.paragraph--type--hs-hero-image.paragraph--view-mode--default {
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    inset: 0;
+    z-index: $hb-z-index-hero1-overlay;
+
+    @include hb-hero-overlay-animation;
+    background-color: color('primary-hero-overlay');
   }
 }

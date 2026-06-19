@@ -52,8 +52,8 @@ class InstallStateCest {
     $I->canSee('Add content');
     $I->canSee('Home Page');
     $I->amOnPage('/admin/users');
-    $I->canSee('Howard');
-    $I->canSee('Lindsey');
+    $I->canSee('IT Contributor');
+    $I->canSee('IT Site Manager');
   }
 
   /**
@@ -65,7 +65,7 @@ class InstallStateCest {
   public function testContributorShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 29);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 31);
   }
 
   /**

@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
 use Drupal\hs_dashboard\Plugin\ImporterInfoInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -47,7 +48,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   /**
    * Localist config pages entity.
    *
-   * @var \Drupal\config_pages\Entity\ConfigPages
+   * @var \Drupal\config_pages\Entity\ConfigPages|null
    */
   protected $localistConfigPages;
 
@@ -84,6 +85,8 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    *   The widget manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_manager
+   *   The migration manager interface.
    */
   public function __construct(
     array $configuration,
@@ -94,12 +97,15 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
     DateFormatterInterface $date_formatter,
     WidgetPluginManager $widget_manager,
     EntityFieldManagerInterface $entity_field_manager,
+    MigrationPluginManagerInterface $migration_manager,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter, $migration_manager);
     $this->entityTypeManager = $entity_type_manager;
     $this->widgetManager = $widget_manager;
     $this->entityFieldManager = $entity_field_manager;
-    $this->localistConfigPages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
+    /** @var \Drupal\config_pages\Entity\ConfigPages|null $localist_config_pages */
+    $localist_config_pages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
+    $this->localistConfigPages = $localist_config_pages;
     $this->eventTableRows = [];
   }
 
@@ -116,6 +122,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       $container->get('date.formatter'),
       $container->get('plugin.manager.field.widget'),
       $container->get('entity_field.manager'),
+      $container->get('plugin.manager.migration'),
     );
   }
 
@@ -400,7 +407,9 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    */
   private function sortTableRows() {
     usort($this->eventTableRows, function ($a, $b) {
-      return strcasecmp($a['data'][0]['data'], $b['data'][0]['data']);
+      // These may be string objects (with placeholders), so cast to a string to
+      // determine alphabetical order.
+      return strcasecmp((string) $a['data'][0]['data'], (string) $b['data'][0]['data']);
     });
   }
 

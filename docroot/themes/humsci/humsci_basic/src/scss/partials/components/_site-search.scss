@@ -2,6 +2,14 @@
 // This was copied from Decanter and then updated to target HMTL elements in the
 // site search.
 // Source: `/node_modules/decanter/core/src/scss/components/site-search/_site-search.scss`
+
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/general' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/forms' as *;
+
 .su-site-search {
   position: relative;
 
@@ -15,7 +23,8 @@
 
   input {
     @include font-smoothing;
-    padding: hb-calculate-rems(12px) hb-calculate-rems(36px) hb-calculate-rems(10px) hb-calculate-rems(14px);
+    padding: hb-calculate-rems(12px) hb-calculate-rems(36px)
+      hb-calculate-rems(10px) hb-calculate-rems(14px);
 
     display: inline-block;
     height: hb-calculate-rems(38px);
@@ -23,12 +32,12 @@
     font-size: hb-calculate-rems(16px);
 
     &::placeholder {
-      color: var(--palette--gray-dark);
+      color: color('gray-dark', 'global');
       opacity: 1; // For Firefox
     }
   }
 
-  input[type="submit"] {
+  input[type='submit'] {
     margin-top: 0;
     margin-bottom: 0;
     margin-right: 0;

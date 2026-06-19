@@ -6,8 +6,11 @@
  */
 
 use Drupal\Core\Template\Attribute;
+use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_preprocess().
@@ -59,7 +62,6 @@ function humsci_basic_preprocess_block(&$vars) {
  * Prepares variables for the html.html.twig template.
  */
 function humsci_basic_preprocess_html(&$vars) {
-
   // Animation enhancements setting.
   $animation_enhancement = theme_get_setting('animation_toggle');
   if ($animation_enhancement) {
@@ -80,6 +82,326 @@ function humsci_basic_preprocess_html(&$vars) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-use-megamenu');
   }
+
+  $route_match = \Drupal::routeMatch();
+
+  $node = $route_match->getParameter('node');
+
+  // Add body classes for full-width / main-region spacing gap detection.
+  // Only applies to page type that use the full-width + main region layout.
+  if ($node instanceof NodeInterface && $node->bundle() == 'hs_basic_page') {
+    $is_hs_carousel_in_hs_page_hero = humsci_basic_is_hs_carousel_in_hs_page_hero($node);
+    $is_there_extra_gap_in_main_region = humsci_basic_is_there_extra_gap_in_main_region($node);
+
+    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region) {
+      $vars['attributes']['class'][] = 'there-is-extra-gap-between-hero-and-main-region';
+    }
+  }
+
+  // Preload full width region banner images (LCP)
+  if (!$node || !$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {
+    return;
+  }
+
+  $paragraph = $node->get('field_hs_page_hero')->entity;
+
+  $paragraphs_map = [
+    'hs_gradient_hero_slider' => [
+      'field' => 'field_hs_gradient_hero_slides',
+      'image_field' => 'field_hs_gradient_hero_image',
+      'style' => 'hero_with_text_large',
+    ],
+    'hs_carousel' => [
+      'field' => 'field_hs_carousel_slides',
+      'image_field' => 'field_hs_hero_image',
+      'style' => 'hero_with_text_large',
+    ],
+    'hs_banner' => [
+      'field' => 'field_hs_banner_image',
+      'image_field' => '',
+      'style' => '',
+    ],
+    'hs_hero_image' => [
+      'field' => 'field_hs_hero_image',
+      'image_field' => '',
+      'style' => 'hero_with_text_large',
+    ],
+    'hs_sptlght_slder' => [
+      'field' => 'field_hs_sptlght_sldes',
+      'image_field' => 'field_hs_spotlight_image',
+      'style' => '',
+    ],
+  ];
+
+  $bundle = $paragraph->bundle();
+
+  if (!isset($paragraphs_map[$bundle])) {
+    return;
+  }
+
+  $map = $paragraphs_map[$bundle];
+  $field_name = $map['field'];
+  $image_field = $map['image_field'];
+  $style_name = $map['style'];
+
+  if (!$paragraph->hasField($field_name) || $paragraph->get($field_name)->isEmpty()) {
+    return;
+  }
+
+  // If it’s a multi-value field (like slides), get the first referenced entity.
+  $entity = $paragraph->get($field_name)->first()->entity ?? '';
+
+  if (!$entity) {
+    return;
+  }
+
+  // Handle special case (spotlight image style dynamic
+  // based on height (tall or short) and style (classic/framed or expanded)).
+  if ($bundle === 'hs_sptlght_slder') {
+    $image_referenced = $entity->get($image_field)->entity ?? '';
+    if (
+      $image_referenced &&
+      $entity->hasField('field_hs_spotlight_style') &&
+      $entity->hasField('field_hs_spotlight_image_height')
+    ) {
+      $spotlight_style = $entity->get('field_hs_spotlight_style')->value;
+      $spotlight_height = $entity->get('field_hs_spotlight_image_height')->value;
+      $spotlight_image_styles = [
+        'framed' => [
+          'tall' => 'spotlight_framed_tall_xs_2x',
+          'short' => 'spotlight_framed_short_xs_2x',
+        ],
+        'expanded' => [
+          'tall' => 'spotlight_md_2x_892px',
+          'short' => 'spotlight_short_md_2x_892px',
+        ],
+      ];
+      $style_name = $spotlight_image_styles[$spotlight_style][$spotlight_height];
+      humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
+    }
+  }
+  elseif (
+    $bundle === 'hs_banner' &&
+    $paragraph->hasField('field_hs_banner_image_height')
+  ) {
+    $banner_height = $paragraph->get('field_hs_banner_image_height')->value;
+    $style_name = $banner_height == 'tall' ? 'hero_no_text_tall_2400px' : 'hero_no_text_3000px_';
+    humsci_basic_preload_full_width_image($entity, $style_name, $vars);
+  }
+  else {
+    $image_referenced = $image_field ? ($entity->get($image_field)->entity ?? '') : $entity;
+    if ($image_referenced) {
+      humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
+    }
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function humsci_basic_page_attachments_alter(&$attachments) {
+  // Preload fonts based on what's in info.yml.
+  $theme = \Drupal::theme()->getActiveTheme();
+  $info = $theme->getExtension()->info;
+
+  if (empty($info['preload_fonts'])) {
+    return;
+  }
+
+  $fonts = $info['preload_fonts'];
+
+  // Check if any of the font URLs are Google Fonts.
+  $has_google_fonts = array_find($fonts, function ($font) {
+    return isset($font['url']) && str_contains($font['url'], 'fonts.googleapis.com');
+  });
+
+  // Attach preconnects only once if Google Fonts are present.
+  if (!empty($has_google_fonts)) {
+    $attachments['#attached']['html_head_link'][] = [[
+      'rel' => 'preconnect',
+      'href' => 'https://fonts.googleapis.com',
+    ],
+      FALSE,
+    ];
+    $attachments['#attached']['html_head_link'][] = [[
+      'rel' => 'preconnect',
+      'href' => 'https://fonts.gstatic.com',
+      'crossorigin' => 'anonymous',
+    ],
+      FALSE,
+    ];
+  }
+
+  // Now attach preload + stylesheet for each font.
+  foreach ($info['preload_fonts'] as $font) {
+    if (empty($font['url']) || empty($font['type'])) {
+      continue;
+    }
+
+    // Preload first.
+    $attachments['#attached']['html_head_link'][] = [[
+      'rel' => 'preload',
+      'as' => $font['type'],
+      'href' => $font['url'],
+      'crossorigin' => 'anonymous',
+    ],
+      FALSE,
+    ];
+
+    // If type is style, add the stylesheet link.
+    if ($font['type'] == 'style') {
+      $attachments['#attached']['html_head_link'][] = [[
+        'rel' => 'stylesheet',
+        'href' => $font['url'],
+      ],
+        FALSE,
+      ];
+    }
+  }
+}
+
+/**
+ * Attach a hero image preload tag.
+ *
+ * @param \Drupal\media\Entity\Media $image_referenced
+ *   The media image entity.
+ * @param string $style_name
+ *   The machine name of the image style.
+ * @param array $vars
+ *   The preprocess variables array (passed by reference).
+ */
+function humsci_basic_preload_full_width_image($image_referenced, $style_name, array &$vars) {
+  if (!$image_referenced->hasField('field_media_image') || $image_referenced->get('field_media_image')->isEmpty()) {
+    return;
+  }
+
+  $file = $image_referenced->get('field_media_image')->entity;
+
+  if (!$file instanceof FileInterface) {
+    return;
+  }
+
+  $uri = $file->getFileUri();
+  $style = ImageStyle::load($style_name);
+
+  if ($style) {
+    $url = $style->buildUrl($uri);
+
+    $vars['#attached']['html_head'][] = [
+      [
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'preload',
+          'as' => 'image',
+          'fetchpriority' => 'high',
+          'href' => $url,
+          'type' => 'image/webp',
+        ],
+      ],
+      'preload_' . $style_name,
+    ];
+  }
+}
+
+/**
+ * Check if there's a Banner image(s) with text box in Page hero.
+ */
+function humsci_basic_is_hs_carousel_in_hs_page_hero(NodeInterface $node): bool {
+  if (!$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {
+    return FALSE;
+  }
+
+  $hero = $node->get('field_hs_page_hero')->first()->entity ?? '';
+
+  if (!$hero instanceof ParagraphInterface) {
+    return FALSE;
+  }
+
+  return $hero->bundle() == 'hs_carousel';
+}
+
+/**
+ * Checks if specific components appear first in the main region.
+ *
+ * - A heading in Text Area.
+ * - A Splash font or Lead font style in Text Area.
+ * - A Spotlight.
+ * - An Accordion without "Expand Button".
+ */
+function humsci_basic_is_there_extra_gap_in_main_region(NodeInterface $node): bool {
+  if (!$node->hasField('field_hs_page_components') || $node->get('field_hs_page_components')->isEmpty()) {
+    return FALSE;
+  }
+
+  $paragraph = $node->get('field_hs_page_components')->first()->entity ?? '';
+
+  if (!$paragraph instanceof ParagraphInterface) {
+    return FALSE;
+  }
+
+  $bundle = $paragraph->bundle();
+
+  if ($bundle === 'hs_text_area') {
+    if (
+      !$paragraph->hasField('field_hs_text_area') ||
+      $paragraph->get('field_hs_text_area')->isEmpty()
+    ) {
+      return FALSE;
+    }
+
+    $value = $paragraph->get('field_hs_text_area')->value;
+
+    if (empty($value)) {
+      return FALSE;
+    }
+
+    // Load HTML safely.
+    $dom = new \DOMDocument();
+
+    libxml_use_internal_errors(TRUE);
+    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $value);
+    libxml_clear_errors();
+
+    $xpath = new \DOMXPath($dom);
+
+    // Get the FIRST element inside body.
+    $first_element = $xpath->query('/html/body/*[1]')->item(0);
+
+    if (!$first_element) {
+      return FALSE;
+    }
+
+    $tag = $first_element->nodeName;
+
+    // Case 1: It's a heading.
+    if (in_array($tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
+      return TRUE;
+    }
+
+    // Case 2: It's a paragraph with specific classes.
+    if ($tag === 'p') {
+      $class_attr = $first_element->attributes->getNamedItem('class');
+
+      if (!$class_attr) {
+        return FALSE;
+      }
+
+      $classes = preg_split('/\s+/', trim($class_attr->nodeValue)) ?: [];
+
+      return in_array('hs-font-splash', $classes, TRUE) || in_array('hs-font-lead', $classes, TRUE);
+    }
+
+    return FALSE;
+  }
+  if ($bundle === 'hs_sptlght_slder') {
+    return TRUE;
+  }
+  if ($bundle === 'hs_accordion') {
+    return $paragraph->hasField('field_hs_accord_expcol') && empty($paragraph->get('field_hs_accord_expcol')->value);
+  }
+
+  // Return false if doesn't match any of the previous if.
+  return FALSE;
 }
 
 /**
@@ -104,6 +426,7 @@ function humsci_basic_preprocess_page(&$vars) {
   // Node pages are configured with layout builder so we dont need to set these
   // classes.
   $route = \Drupal::routeMatch()->getRouteName();
+
   $layout_routes = [
     'layout_builder.overrides.node.view',
     'layout_builder.defaults.node.view',
@@ -248,11 +571,15 @@ function humsci_basic_preprocess_views_view(&$variables) {
  */
 function humsci_basic_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
-  if ($paragraph->bundle() != 'hs_view') {
+  $bundle = $paragraph->bundle();
+
+  if ($bundle != 'hs_view') {
     return NULL;
   }
+
   // Get the parent entity of hs_view paragraphs.
   $parent = $paragraph->getParentEntity();
+
   // Test if the paragraph is within a collection.
   if (!($parent instanceof ParagraphInterface) || $parent->bundle() != 'hs_collection') {
     return NULL;
@@ -267,9 +594,128 @@ function humsci_basic_preprocess_paragraph(&$variables) {
 }
 
 /**
+ * Update view mode of full width image to eager load.
+ *
+ * @param array $variables
+ *   The preprocess variables array (passed by reference).
+ */
+function humsci_basic_update_view_mode_full_width_image(array &$variables) {
+  $paragraph = $variables['element']['#object'];
+
+  if (!($paragraph instanceof ParagraphInterface)) {
+    return;
+  }
+
+  $bundle = $paragraph->bundle();
+
+  $valid_bundles = [
+    'hs_gradient_hero',
+    'hs_hero_image',
+    'hs_banner',
+  ];
+
+  if (!in_array($bundle, $valid_bundles)) {
+    return;
+  }
+
+  // Handle hero_image and banner directly.
+  if (in_array($bundle, ['hs_hero_image', 'hs_banner'])) {
+    if (
+      !$paragraph->hasField('parent_field_name') ||
+      $paragraph->get('parent_field_name')->isEmpty()
+    ) {
+      return;
+    }
+
+    $parent_field_name = $paragraph->get('parent_field_name')->value;
+
+    if ($parent_field_name == 'field_hs_page_hero') {
+      $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+      // Update cache key to reflect new view mode.
+      $view_mode_cache_key = array_search('caption_credit', $variables['items'][0]['content']['#cache']['keys']);
+      if ($view_mode_cache_key !== FALSE) {
+        $variables['items'][0]['content']['#cache']['keys'][$view_mode_cache_key] = 'caption_credit_eager';
+      }
+    }
+    else {
+      _humsci_basic_update_view_mode_slides_image($paragraph, $variables);
+    }
+  }
+  else {
+    _humsci_basic_update_view_mode_slides_image($paragraph, $variables);
+  }
+
+}
+
+/**
+ * Update view mode of image in slides to eager load.
+ *
+ * @param \Drupal\paragraphs\ParagraphInterface $paragraph
+ *   The Paragraph entity being inspected.
+ * @param array $variables
+ *   The preprocess variables array (passed by reference).
+ */
+function _humsci_basic_update_view_mode_slides_image(ParagraphInterface $paragraph, array &$variables): void {
+  $parent_paragraph = $paragraph->getParentEntity();
+
+  if (
+    !$parent_paragraph instanceof ParagraphInterface ||
+    !$parent_paragraph->hasField('parent_field_name') ||
+    $parent_paragraph->get('parent_field_name')->isEmpty()
+  ) {
+    return;
+  }
+
+  $parent_field_name = $parent_paragraph->get('parent_field_name')->value;
+
+  if ($parent_field_name != 'field_hs_page_hero') {
+    return;
+  }
+
+  // Check if this paragraph is the first slide.
+  $slide_fields = ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'];
+  $slides = [];
+
+  foreach ($slide_fields as $field_name) {
+    if (
+      $parent_paragraph->hasField($field_name) &&
+      !$parent_paragraph->get($field_name)->isEmpty()
+    ) {
+      $slides = $parent_paragraph->get($field_name)->referencedEntities();
+      break;
+    }
+  }
+
+  if (empty($slides) || $slides[0]->id() !== $paragraph->id()) {
+    return;
+  }
+
+  $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+  // Update cache key to reflect new view mode.
+  $view_mode_cache_key = array_search('caption_credit', $variables['items'][0]['content']['#cache']['keys']);
+  if ($view_mode_cache_key !== FALSE) {
+    $variables['items'][0]['content']['#cache']['keys'][$view_mode_cache_key] = 'caption_credit_eager';
+  }
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function humsci_basic_preprocess_field(&$variables) {
+  if ($variables['element']['#field_name'] === 'field_media_image_caption') {
+    $variables['#attached']['library'][] = 'humsci_basic/media_caption_toggle';
+  }
+
+  if (in_array(
+    $variables['element']['#field_name'],
+    [
+      'field_hs_gradient_hero_image',
+      'field_hs_hero_image',
+      'field_hs_banner_image',
+    ]
+  )) {
+    humsci_basic_update_view_mode_full_width_image($variables);
+  }
   $wysiwyg_types = ['text_long', 'text_with_summary'];
   if (in_array($variables['field_type'], $wysiwyg_types)) {
     $variables['#attached']['library'][] = 'humsci_basic/table-wrap';
@@ -285,6 +731,7 @@ function humsci_basic_preprocess_field(&$variables) {
       }
     }
   }
+
 }
 
 /**

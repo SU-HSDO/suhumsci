@@ -14,15 +14,28 @@ use Drupal\user\Entity\User;
 /**
  * Implements hook_preprocess_node_edit_form().
  */
-function hs_admin_page_attachments(&$variables) {
-  $logged_in = \Drupal::currentUser()->isAuthenticated();
+function hs_admin_page_attachments(array &$variables): void {
+  $user = \Drupal::currentUser();
 
-  if ($logged_in) {
+  // Determine if the active theme is the configured admin theme.
+  $theme_manager = \Drupal::service('theme.manager');
+  $active_theme = $theme_manager->getActiveTheme()->getName();
+  $admin_theme = \Drupal::config('system.theme')->get('admin');
+  $is_admin_theme = ($active_theme === $admin_theme);
+
+  // Determine if current route is an "admin" route.
+  $is_admin_route = \Drupal::service('router.admin_context')->isAdminRoute();
+
+  if ($user->isAuthenticated() && ($is_admin_theme || $is_admin_route)) {
+    // Load your admin-only libraries.
     $variables['#attached']['library'][] = 'hs_admin/hs_admin';
   }
 
-  // Show shortcuts toolbar when user is logged in.
-  $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
+  if ($user->isAuthenticated()) {
+    // Show shortcuts toolbar when user is logged in.
+    $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
+    $variables['#attached']['library'][] = 'hs_admin/paragraph_bookmark_helper';
+  }
 }
 
 /**
@@ -57,7 +70,9 @@ function hs_admin_toolbar_alter(&$items) {
 function hs_admin_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
   // Disable edit/create node tabs for publish and delete (non-admin users).
   unset($data['tabs'][0]['entity.node.publish']);
-  if (!\Drupal::currentUser()->hasRole('administrator')) {
+  $uid = \Drupal::currentUser()->id();
+  $user = User::load($uid);
+  if (!$user->hasRole('administrator')) {
     unset($data['tabs'][0]['entity.node.delete_form']);
   }
 }
@@ -126,6 +141,14 @@ function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $
     '#group' => 'advanced',
     '#weight' => 100,
   ];
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function hs_admin_form_media_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Hide revision related fields on media forms.
+  $form['revision_information']['#access'] = FALSE;
 }
 
 /**
@@ -232,4 +255,40 @@ function hs_admin_field_widget_complete_menu_link_default_form_alter(array &$fie
     $field_widget_form['widget'][$key]['expanded']['#access'] = FALSE;
     break;
   }
+}
+
+/**
+ * Implements hook_paragraphs_widget_actions_alter().
+ */
+function hs_admin_paragraphs_widget_actions_alter(&$widget_actions, &$context) {
+  if (empty($context['paragraphs_entity'])) {
+    return;
+  }
+  $paragraph = $context['paragraphs_entity'];
+
+  $button = [
+    '#type' => 'html_tag',
+    '#tag' => 'button',
+    '#value' => t('Copy Bookmark'),
+    '#attributes' => [
+      'type' => 'button',
+      'class' => ['copy-bookmark-button', 'button'],
+      'data-paragraph-id' => $paragraph->id(),
+      'title' => t('Copy Bookmark'),
+      'id' => 'copy-bookmark-' . $paragraph->id(),
+    ],
+    '#weight' => 503,
+  ];
+
+  if ($paragraph->id()) {
+    $button['#attributes']['title'] = t('Copy Bookmark');
+    $button['#attributes']['data-paragraph-id'] = $paragraph->id();
+    $button['#attributes']['id'] = 'copy-bookmark-' . $paragraph->id();
+  }
+  else {
+    $button['#value'] = t('Copy Bookmark (first save the page to get a bookmark)');
+    $button['#attributes']['title'] = t('Copy Bookmark (first save the page to get a bookmark)');
+    $button['#attributes']['disabled'] = 'disabled';
+  }
+  $widget_actions['dropdown_actions']['copy_bookmark_button'] = $button;
 }

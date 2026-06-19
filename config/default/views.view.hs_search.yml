@@ -878,11 +878,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              seven_admin_theme_user: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -942,62 +937,62 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 0
+          default_field_elements: false
           inline:
-            title: 0
-            field_hs_page_components: 0
-            body: 0
-            search_api_excerpt: 0
-            field_hs_page_hero: 0
-            field_hs_event_image: 0
-            field_hs_news_image: 0
-            field_hs_person_image: 0
-            field_hs_publication_image: 0
-            field_hs_event_series_image: 0
+            title: '0'
+            field_hs_page_components: '0'
+            body: '0'
+            search_api_excerpt: '0'
+            field_hs_page_hero: '0'
+            field_hs_event_image: '0'
+            field_hs_news_image: '0'
+            field_hs_person_image: '0'
+            field_hs_publication_image: '0'
+            field_hs_event_series_image: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: horizontal_card
           pattern_mapping:
             'views_row:title':
-              destination: title
-              weight: 0
               plugin: views_row
               source: title
+              destination: title
+              weight: 0
             'views_row:field_hs_page_hero':
-              destination: image
-              weight: 1
               plugin: views_row
               source: field_hs_page_hero
-            'views_row:field_hs_event_image':
               destination: image
-              weight: 2
+              weight: 1
+            'views_row:field_hs_event_image':
               plugin: views_row
               source: field_hs_event_image
-            'views_row:field_hs_news_image':
               destination: image
-              weight: 3
+              weight: 2
+            'views_row:field_hs_news_image':
               plugin: views_row
               source: field_hs_news_image
-            'views_row:field_hs_person_image':
               destination: image
-              weight: 4
+              weight: 3
+            'views_row:field_hs_person_image':
               plugin: views_row
               source: field_hs_person_image
-            'views_row:field_hs_publication_image':
               destination: image
-              weight: 5
+              weight: 4
+            'views_row:field_hs_publication_image':
               plugin: views_row
               source: field_hs_publication_image
-            'views_row:field_hs_event_series_image':
               destination: image
-              weight: 6
+              weight: 5
+            'views_row:field_hs_event_series_image':
               plugin: views_row
               source: field_hs_event_series_image
+              destination: image
+              weight: 6
             'views_row:search_api_excerpt':
-              destination: description
-              weight: 7
               plugin: views_row
               source: search_api_excerpt
+              destination: description
+              weight: 7
       query:
         type: search_api_query
         options:

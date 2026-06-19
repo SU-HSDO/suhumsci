@@ -81,7 +81,7 @@ Before running Backstop for the first time you will need to create an `.env` fil
 #### Testing Prep
 Visual regression testing should be completed bi-weekly at the end of each sprint. To get the best results, sync your local environment against staging before running Backstop:
 
-1. Sync the dev environment with a copy of the staging database and files: `lando blt humsci:copy-colorful hs_colorful.dev,hs_traditional.dev`
+1. Sync the dev environment with a copy of the staging database and files: `ddev blt humsci:copy-colorful hs_colorful.dev,hs_traditional.dev`
 2. Update the [hs-traditional dev](https://hs-traditional-dev.stanford.edu/) site to use the Traditional theme
 3. Set the dev environment to use the sprint build branch in Acquia
 

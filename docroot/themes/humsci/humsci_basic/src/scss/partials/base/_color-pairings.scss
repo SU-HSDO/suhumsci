@@ -1,0 +1,28 @@
+@use '../variables/colors.colorful' as *;
+@use '../variables/colors.traditional' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/generate-css-vars' as *;
+
+@include hb-themes(('colorful', 'airy')) {
+  @each $pairing, $colors in $colorful-pairings-colors {
+    .hc-pairing-#{$pairing} {
+      @include generate-css-vars('colorful-pairings', $colors);
+    }
+  }
+
+  :root {
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
+  }
+}
+
+@include hb-traditional {
+  @each $pairing, $colors in $traditional-pairings-colors {
+    .ht-pairing-#{$pairing} {
+      @include generate-css-vars('traditional-pairings', $colors);
+    }
+  }
+
+  :root {
+    @include generate-css-vars('traditional-global', $traditional-global-colors);
+  }
+}

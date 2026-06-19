@@ -1,4 +1,13 @@
 // Base pager styles use by both the mini and full pagers
+
+@use '../variables/general' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../functions/color' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/buttons' as *;
+
 .js-pager__items {
   margin: hb-spacing-width() 0;
   padding: 0;
@@ -15,47 +24,22 @@
   .pager__item--last,
   .pager__item--next,
   .pager__item--previous {
+    --link-base-current-color: #{color('link-base')};
+    --link-base-hover-current-color: #{color('link-base-hover')};
+
     a {
-      color: var(--palette--secondary);
       text-decoration: none;
 
       &:focus,
       &:hover {
-        color: var(--palette--secondary);
         text-decoration: underline;
         background-image: none;
         background-color: transparent;
-
-        .hb-dark-pattern &,
-        .hb-dark-inversion .views-element-container & {
-          color: var(--palette--tertiary-highlight);
-        }
       }
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         border: none;
-        color: var(--palette--tertiary-reversed);
-      }
-
-      @include hb-colorful {
-        .hc-pairing-ocean & {
-          color: var(--palette--secondary-darken-12);
-        }
-      }
-
-      @include hb-traditional {
-        // Override link color and icon color for the Firefinch color pairing.
-        .ht-pairing-firefinch .hb-well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
-          color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
       }
     }
   }
@@ -70,6 +54,8 @@
   }
 
   &__item {
+    --link-base-current-color: #{color('gray-dark', 'global')};
+
     &:first-of-type {
       margin-left: 0;
     }
@@ -79,7 +65,6 @@
     }
 
     a {
-      color: var(--palette--gray-dark);
       display: inline-block;
       padding: hb-calculate-rems(6px) hb-calculate-rems(9px);
       border-radius: $hb-button-border-radius;
@@ -102,80 +87,44 @@
 
       &:hover,
       &:focus {
-        background-color: var(--palette--gray-medium);
+        background-color: color('gray-medium', 'global');
 
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
           background-color: transparent;
-          border-color: var(--palette--tertiary-highlight);
+          border-color: var(--link-base-hover-current-color);
         }
       }
     }
 
     &.is-active {
-      background-color: var(--palette--gray-dark);
+      --link-base-current-color: #{color('white', 'global')};
+      --link-base-hover-current-color: #{color('white', 'global')};
+
+      background-color: color('gray-dark', 'global');
       display: inline-block;
       border-radius: $hb-button-border-radius;
 
       a {
-        color: var(--palette--white);
-
         &:hover,
         &:focus {
           cursor: default;
           background-color: transparent;
         }
-
-        .hb-dark-pattern &,
-        .hb-dark-inversion .views-element-container & {
-          color: var(--palette--tertiary-highlight);
-        }
       }
     }
 
-    // Warbler color pairing override.
-    @include hb-traditional {
-      .ht-pairing-warbler & {
-        a {
-          color: var(--palette--gray-dark);
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      --link-base-current-color: #{color('link-base-dark')};
+      --link-base-hover-current-color: #{color(
+        'link-base-hover-dark'
+      )};
+    }
 
-          &:hover, &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-
-        }
-
-        .hs-button, .hs-button a,
-        .hs-button--big, .hs-button--big a {
-          &, &:hover, &:focus {
-            color: var(--palette--white);
-          }
-        }
-
-        .hs-secondary-button, .hs-secondary-button a {
-          color: var(--palette--secondary);
-
-          &:hover, &:focus {
-            color: var(--palette--white);
-          }
-        }
-
-        &.is-active {
-          a {
-            &, &:hover, &:focus {
-              color: var(--palette--white);
-            }
-          }
-        }
-
-        &--first, &--last, &--next, &--previous {
-          a {
-            &, &:hover, &:focus {
-              color: var(--palette--secondary);
-            }
-          }
-        }
-      }
+    // Buttons in infinite scroll pager.
+    a.hs-button {
+      @include hb-button;
     }
   }
 }

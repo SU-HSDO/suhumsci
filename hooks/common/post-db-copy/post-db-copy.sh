@@ -14,12 +14,11 @@ target_env="$2"
 db_name="$3"
 source_env="$4"
 
-# Prep for BLT commands.
+# Prep for commands.
 repo_root="/var/www/html/$site.$target_env"
 export PATH=$repo_root/vendor/bin:$PATH
 cd $repo_root
 
-#blt artifact:ac-hooks:post-db-copy $site $target_env $db_name $source_env --environment=$target_env -v --no-interaction -D drush.ansi=false
-blt artifact:update:drupal --site=$db_name --environment=$target_env
+drush deploy --uri=$db_name
 
 set +v

@@ -1,5 +1,5 @@
 # .github/workflows/acquia-cleanup.yml
-# Clean up stale site backups and branches on Acquia
+# Clean up old manual database backups and git branches and tags on Acquia.
 name: Acquia Cleanup
 on:
   schedule:
@@ -18,16 +18,16 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             vendor
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Clean up backups and branches
         env:
           SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}
@@ -37,8 +37,7 @@ jobs:
           git config --system --add safe.directory '*' &&
           git config --global user.email "sws-developers@lists.stanford.edu" &&
           git config --global user.name "Github Actions" &&
-          ssh-keyscan -t rsa svn-23450.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
+          ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
-          blt blt:telemetry:disable --no-interaction &&
-          blt humsci:clean-backups &&
-          blt humsci:clean-branches
+          drush sws:acquia:clean-databases --minimum-age=10368000 --app-key="$ACQUIA_KEY" --app-secret="$ACQUIA_SECRET" &&
+          drush sws:acquia:clean-git --app-key="$ACQUIA_KEY" --app-secret="$ACQUIA_SECRET" 

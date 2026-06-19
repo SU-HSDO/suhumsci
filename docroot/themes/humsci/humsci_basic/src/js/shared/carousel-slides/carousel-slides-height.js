@@ -5,7 +5,6 @@
   Drupal.behaviors.restrictHeightBehavior = {
     attach(context) {
       const slides = once('restrict-height-slides', '.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder', context);
-      // Find slick arrow from hsCarousel.
       const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
       let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
@@ -47,13 +46,6 @@
 
           // Give all textBoxes the same height
           textBoxes.forEach((textBox) => setMinHeight(textBox, maxBoxHeight));
-
-          // Give sickArrowWrapper a top that changes according
-          // to the height when resizing the window.
-          const slickArrowWrapper = slide.querySelector('.slick__arrow');
-          if (slide.classList.contains('paragraph--type--hs-carousel') && slickArrowWrapper) {
-            setMinHeight(slickArrowWrapper, maxBoxHeight);
-          }
 
           // If the textBoxes are spotlight textBoxes,
           // then give them the same height on all screen sizes

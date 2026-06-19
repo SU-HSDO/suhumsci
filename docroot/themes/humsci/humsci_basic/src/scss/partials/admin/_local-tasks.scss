@@ -2,6 +2,12 @@
 // View / Edit / Publish / Manage Display / Layout / Revisions / Devel
 // located within page content
 
+@use 'sass:color';
+@use '../variables/general' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../mixins/layout' as *;
+
 .block--local-tasks {
   @include hb-page-width;
   margin-bottom: hb-calculate-rems(40px);
@@ -11,16 +17,18 @@
     margin: hb-calculate-rems(40px) 0 0;
     padding: 0;
 
-    &__tab {
+    .tabs__tab {
       display: inline-block;
-      background-color: tint($hb-color--drupal-light, 88%);
+      background-color: color.mix(white, $hb-color--drupal-light, 88%);
       list-style-type: none;
       padding: hb-calculate-rems(8px) hb-calculate-rems(12px);
       margin-top: hb-calculate-rems(4px);
       font-size: hb-calculate-rems(15px);
       transition: hb-transition(background-color);
 
-      a {
+      a,
+      a:hover,
+      a:focus {
         color: $hb-color--drupal-black;
         text-decoration: none;
         background-image: none;
@@ -35,7 +43,7 @@
       }
 
       &:hover:not(.tabs__tab--active) {
-        background-color: tint($hb-color--drupal-light, 73%);
+        background-color: color.mix(white, $hb-color--drupal-light, 73%);
       }
     }
   }

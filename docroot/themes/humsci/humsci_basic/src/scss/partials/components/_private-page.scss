@@ -1,3 +1,8 @@
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/icons' as *;
+
 .private-page {
   .title {
     display: flex;
@@ -6,6 +11,7 @@
     &::before {
       content: '';
       display: block;
+
       @include hb-icon-background('lock', 'black');
       background-repeat: no-repeat;
       background-position: center;
@@ -95,10 +101,10 @@
 }
 
 .field-hs-priv-file-document a {
-  color: var(--palette--secondary);
+  color: color('secondary');
 
   &:hover,
   &:focus {
-    color: var(--palette--tertiary-darken-20);
+    color: color('tertiary-darken-20');
   }
 }

@@ -260,11 +260,8 @@ function _hs_layouts_make_title_the_link(&$variables) {
     $dom = new DOMDocument();
     try {
       $button = is_array($variables['button']) ? $variables['button'] : (string) $variables['button'];
-      // Get the first element index, if one exists.
       if (!empty($button['field_hs_postcard_link'][0]['#url']) && $button['field_hs_postcard_link'][0]['#url']->isRouted()) {
-        // Plain string, not a render array, so it works as an attribute value.
         $variables['href'] = $button['field_hs_postcard_link'][0]['#url']->toString();
-        // Cast — #title can be a string OR a Markup object; ->toString() fatals on a string.
         if (!empty($button['field_hs_postcard_link'][0]['#title'])) {
           $variables['link_text'] = (string) $button['field_hs_postcard_link'][0]['#title'];
         }

@@ -276,8 +276,8 @@ function _hs_layouts_make_title_the_link(&$variables) {
     $xpath = new DOMXPath($dom);
     $anchors = $xpath->query('//a');
     // If the markup is a link, grab its href and its visible text.
-    if ($anchors->length) {
-      $anchor = $anchors->item(0);
+    $anchor = $anchors->item(0);
+    if ($anchor instanceof DOMElement) {
       $variables['href'] = $anchor->getAttribute('href');
       $variables['link_text'] = trim($anchor->textContent);
     }

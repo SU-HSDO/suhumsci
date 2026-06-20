@@ -11,10 +11,40 @@ import addImageLinkEvents from './image-link-handler';
         context,
       );
 
-      // Loop through each card
       cards.forEach((card) => {
+        // Find the main link within each card
+        const { linkUrl } = card.dataset;
+
+        const imageWrapper = card.querySelector(
+          '.hb-card__img, .hb-vertical-linked-card__img',
+        );
+        const hasTitleLink = card.querySelector(
+          '.hb-vertical-linked-card__title__link, .hb-card__title a',
+        );
+
         /**
-         * Target the card image link (if present) to enhance its behavior.
+         * Wrap the image only when no title link exists
+         * and it isn't already wrapped in a link.
+         */
+        if (
+          linkUrl
+          && imageWrapper
+          && !imageWrapper.querySelector('a')
+          && !hasTitleLink
+        ) {
+          const imageLink = document.createElement('a');
+          imageLink.href = linkUrl;
+          imageLink.className = 'hb-card__img__link';
+
+          while (imageWrapper.firstChild) {
+            imageLink.appendChild(imageWrapper.firstChild);
+          }
+
+          imageWrapper.appendChild(imageLink);
+        }
+
+        /**
+         * Enhance the image link (pre-existing or just created).
          * This enables proper interaction with Drupal contextual controls
          * and caption toggles without triggering unintended navigation.
          */
@@ -23,24 +53,22 @@ import addImageLinkEvents from './image-link-handler';
         );
 
         if (cardImageLink) {
+          const image = cardImageLink.querySelector('img');
+
+          // A linked image with no alt has no accessible name — fall back to the
+          // link text passed from the template.
+          if (image && !image.getAttribute('alt') && card.dataset.linkText) {
+            image.alt = card.dataset.linkText;
+          }
+
           addImageLinkEvents(cardImageLink, drupalSettings);
         }
 
-        // Find the main link within each card
-        let mainLink = '';
-
-        // Logic for vertical card and date stacked card.
-        if (card.querySelector('.hb-card__title a')) {
-          mainLink = card.querySelector('.hb-card__title a');
-        } else {
-          mainLink = card.querySelector('.hb-vertical-linked-card__title__link');
-        }
-
-        if (!mainLink) {
+        if (!linkUrl) {
           return;
         }
 
-        addCardEvents(card, mainLink);
+        addCardEvents(card, linkUrl);
       });
     },
   };

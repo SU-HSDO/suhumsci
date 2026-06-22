@@ -1,7 +1,7 @@
 (function (Drupal, once) {
   Drupal.behaviors.viewsTableHeaders = {
     attach(context) {
-      const tables = once('views-table-headers', '.table', context);
+      const tables = once('views-table-headers', '.views-table', context);
 
       tables.forEach((table) => {
         // retrieve table column headings
@@ -27,10 +27,7 @@
                   if (!tableCells[h].querySelector('.views-table__heading')) {
                     const heading = document.createElement('span');
                     heading.className = 'views-table__heading';
-                    // hide the heading on the first column
-                    if (h === 0) {
-                      heading.classList.add('views-table__heading--hidden');
-                    }
+                    heading.setAttribute('aria-hidden', 'true');
                     heading.innerHTML = columnHeaders[h].innerHTML;
                     tableCells[h].insertAdjacentElement('afterbegin', heading);
                   }

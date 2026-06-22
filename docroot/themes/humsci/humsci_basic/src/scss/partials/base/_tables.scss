@@ -35,7 +35,7 @@
   }
 
   // Responsive behavior for Views tables
-  table {
+  .views-table {
     display: block;
 
     @include grid-media-min('md') {
@@ -43,10 +43,8 @@
     }
 
     thead {
-      display: none;
-
-      @include grid-media-min('md') {
-        display: table-header-group;
+      @include grid-media-between('xs', 'sm') {
+        @include visually-hidden;
       }
     }
 

@@ -323,7 +323,7 @@ function _hs_layouts_set_card_link(&$variables) {
     // Title already linked: reuse its href for the data attribute only —
     // don't set href, or Twig re-wraps the title and nests anchors.
     $variables['link_url'] = html_entity_decode($matches[1]);
-    $variables['link_text'] = $title_rendered;
+    $variables['link_text'] = html_entity_decode(trim(strip_tags($title_rendered)));
   }
 }
 

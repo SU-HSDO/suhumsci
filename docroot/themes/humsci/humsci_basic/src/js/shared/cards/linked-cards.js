@@ -15,9 +15,14 @@ import addImageLinkEvents from './image-link-handler';
         // Find the main link within each card
         const { linkUrl } = card.dataset;
 
+        if (!linkUrl) {
+          return;
+        }
+
         const imageWrapper = card.querySelector(
           '.hb-card__img, .hb-vertical-linked-card__img',
         );
+
         const hasTitleLink = card.querySelector(
           '.hb-vertical-linked-card__title__link, .hb-card__title a',
         );
@@ -26,15 +31,16 @@ import addImageLinkEvents from './image-link-handler';
          * Wrap the image only when no title link exists
          * and it isn't already wrapped in a link.
          */
-        if (
-          linkUrl
-          && imageWrapper
+        if (imageWrapper
           && !imageWrapper.querySelector('a')
           && !hasTitleLink
         ) {
           const imageLink = document.createElement('a');
           imageLink.href = linkUrl;
-          imageLink.className = 'hb-card__img__link';
+
+          if (card.dataset.linkText) {
+            imageLink.setAttribute('aria-label', card.dataset.linkText);
+          }
 
           while (imageWrapper.firstChild) {
             imageLink.appendChild(imageWrapper.firstChild);
@@ -48,27 +54,14 @@ import addImageLinkEvents from './image-link-handler';
          * This enables proper interaction with Drupal contextual controls
          * and caption toggles without triggering unintended navigation.
          */
-        const cardImageLink = card.querySelector(
-          '.hb-card__img a, .hb-vertical-linked-card__img a',
-        );
-
-        if (cardImageLink) {
-          const image = cardImageLink.querySelector('img');
-
-          // A linked image with no alt has no accessible name — fall back to the
-          // link text passed from the template.
-          if (image && !image.getAttribute('alt') && card.dataset.linkText) {
-            image.alt = card.dataset.linkText;
-          }
-
+        if (imageWrapper && imageWrapper.querySelector('a')) {
+          const cardImageLink = imageWrapper.querySelector('a');
           addImageLinkEvents(cardImageLink, drupalSettings);
         }
 
-        if (!linkUrl) {
-          return;
-        }
+        const linkElement = card.querySelector(`a[href="${linkUrl}"]`);
 
-        addCardEvents(card, linkUrl);
+        addCardEvents(card, linkUrl, linkElement);
       });
     },
   };

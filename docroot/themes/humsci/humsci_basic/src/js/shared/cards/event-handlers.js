@@ -1,4 +1,4 @@
-const addCardEvents = (card, linkHref) => {
+const addCardEvents = (card, linkHref, linkElement) => {
   let downTime = 0;
 
   // Add class to apply card-wide hover styles.
@@ -51,7 +51,7 @@ const addCardEvents = (card, linkHref) => {
     const upTime = Date.now();
     // If the click "duration" is less than 200ms, trigger a click.
     if (upTime - downTime < 200) {
-      window.location.assign(linkHref);
+      linkElement.click();
     }
   });
 };

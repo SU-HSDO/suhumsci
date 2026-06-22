@@ -29,6 +29,25 @@ This document describes the active branching model for the H&S application.
 - Merge the release pull request into `main` using a merge commit.
 - When the release pull request is merged into `main`, release automation creates the GitHub release and deployable Acquia artifact tag.
 
+## Profile Version in the Development Branch
+
+The version number in `docroot/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml` on the current `<major>.x` branch should always reflect the development branch as `<major>.x-dev` (e.g., `12.x-dev`). If you ever merge `main` into `<major>.x` directly, verify this value remains `<major>.x-dev` afterward.
+
+## Direct Merges to Main
+
+All code should reach `main` through the release process described in [CodeDeploy.md](CodeDeploy.md). Direct merges to `main` that bypass `<major>.x` should be rare and treated as exceptional (for example, a critical production hotfix).
+
+When a change is merged directly into `main`, it must also be applied to the current `<major>.x` branch. Use a squash merge when merging directly into `main`. The preferred way to bring the change into `<major>.x` is to cherry-pick the specific commit via a new branch and pull request:
+
+1. Create a branch off the current `<major>.x` branch.
+1. Cherry-pick the commit that was applied to `main`:
+	```bash
+	git cherry-pick <COMMIT_SHA>
+	```
+1. Push and open a pull request targeting the current `<major>.x` branch.
+
+If a bulk merge from `main` into `<major>.x` is the better option in a given situation, do that through a new branch and pull request as well. In either case, verify the profile version in `su_humsci_profile.info.yml` remains `<major>.x-dev` after the merge.
+
 ## Retired Workflow Pieces
 
 - Long-lived `<version>-release` branches are no longer used.

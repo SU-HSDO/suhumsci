@@ -137,5 +137,5 @@ ADRs in `docs/architecture/decisions/` are **immutable historical records**:
 1. If a new development tool is required by the project, add it to `docs/DevelopmentRequirements.md`
 1. If a step is unclear or potentially missing, note it explicitly with a `> **Note:**` rather than guessing
 1. Review links for accuracy — external links go stale
-1. If a new file was added under `docs/`, confirm it is linked from `README.md` in the appropriate Documentation section
+1. If a new file was added directly under `docs/` (not in a subdirectory), confirm it is linked from `README.md` in the appropriate Documentation section
 1. Update this file whenever new documentation conventions are established

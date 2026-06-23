@@ -449,11 +449,10 @@ $container-small: 576px;
   }
 
   // Styles for the collapsible caption when the hero has a text box.
-  .hb-hero-overlay:not(.hb-hero-overlay--no-text) {
+  .hb-hero-overlay {
     .hb-media-image .field-media-image-caption.collapsible-caption {
       @include hb-themes(('colorful', 'airy')) {
         padding-inline: hb-calculate-rems(12px);
-        padding-block: 3% hb-calculate-rems(32px);
         align-items: flex-start;
         text-align: left;
 
@@ -478,6 +477,14 @@ $container-small: 576px;
             max-width: 30%;
           }
         }
+      }
+    }
+  }
+
+  .hb-hero-overlay:not(.hb-hero-overlay--no-text) {
+    .hb-media-image .field-media-image-caption.collapsible-caption {
+      @include hb-themes(('colorful', 'airy')) {
+        padding-block: 3% hb-calculate-rems(32px);
       }
     }
   }

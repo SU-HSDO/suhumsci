@@ -8,6 +8,7 @@ dependencies:
     - node
     - taxonomy
     - text
+    - ui_patterns_views
     - user
 _core:
   default_config_hash: Gy5PaLdfFhtFSRqJxV-DBTF5AocKgNA2CsCNNEbvx4c
@@ -455,12 +456,43 @@ display:
           row_class: 'hb-card hb-card--horizontal hb-card__content'
           default_row_class: true
       row:
-        type: fields
+        type: ui_patterns
         options:
           default_field_elements: true
-          inline: {  }
+          inline:
+            type: '0'
+            title: '0'
+            body: '0'
           separator: ''
           hide_empty: false
+          pattern: horizontal_card
+          pattern_mapping:
+            'views_row:type':
+              plugin: views_row
+              source: type
+              destination: category
+              weight: 0
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 1
+            'views_row:body':
+              plugin: views_row
+              source: body
+              destination: description
+              weight: 2
+          variants:
+            accordion: closed
+            alert: default
+            callout_box: right
+            color_band: default
+            generic_three_column: default
+            gradient-hero: default
+            spotlight: default
+            testimonial: top
+            timeline-item: closed
+            timeline: expanded
       query:
         type: views_query
         options:

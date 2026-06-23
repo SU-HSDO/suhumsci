@@ -23,7 +23,7 @@ import addImageLinkEvents from './image-link-handler';
           '.hb-card__img, .hb-vertical-linked-card__img',
         );
 
-        const hasTitleLink = card.querySelector(
+        const titleLink = card.querySelector(
           '.hb-vertical-linked-card__title__link, .hb-card__title a',
         );
 
@@ -33,7 +33,7 @@ import addImageLinkEvents from './image-link-handler';
          */
         if (imageWrapper
           && !imageWrapper.querySelector('a')
-          && !hasTitleLink
+          && !titleLink
         ) {
           const imageLink = document.createElement('a');
           imageLink.href = linkUrl;
@@ -54,14 +54,15 @@ import addImageLinkEvents from './image-link-handler';
          * This enables proper interaction with Drupal contextual controls
          * and caption toggles without triggering unintended navigation.
          */
-        if (imageWrapper && imageWrapper.querySelector('a')) {
-          const cardImageLink = imageWrapper.querySelector('a');
-          addImageLinkEvents(cardImageLink, drupalSettings);
+        const imageLink = imageWrapper?.querySelector('a');
+        if (imageLink) {
+          addImageLinkEvents(imageLink, drupalSettings);
         }
 
-        const linkElement = card.querySelector(`a[href="${linkUrl}"]`);
-
-        addCardEvents(card, linkUrl, linkElement);
+        const linkElement = imageLink || titleLink;
+        if (linkElement) {
+          addCardEvents(card, linkUrl, linkElement);
+        }
       });
     },
   };

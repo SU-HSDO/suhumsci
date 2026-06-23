@@ -117,6 +117,14 @@ $container-small: 576px;
     .hb-media-image .field-media-image-caption.collapsible-caption {
       @include hb-themes(('colorful', 'airy')) {
         padding-block: hb-calculate-rems(6px);
+
+        @container carousel (width > #{$container-caption}) {
+          padding: 0 hb-calculate-rems(20px) hb-calculate-rems(21px);
+        }
+
+        @container carousel (width > #{$container-medium}) {
+          padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
+        }
       }
     }
   }

@@ -8,7 +8,7 @@ dependencies:
     - field.field.node.hs_project.field_hs_project_external_links
     - field.field.node.hs_project.field_hs_project_featured_image
     - field.field.node.hs_project.field_hs_project_is_active
-    - field.field.node.hs_project.field_hs_project_media
+    - field.field.node.hs_project.field_hs_project_lead
     - node.type.hs_project
   module:
     - link
@@ -43,7 +43,7 @@ content:
     third_party_settings: {  }
   field_hs_project_description:
     type: text_textarea_with_summary
-    weight: 3
+    weight: 4
     region: content
     settings:
       rows: 9
@@ -73,12 +73,13 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_hs_project_media:
-    type: media_library_widget
-    weight: 4
+  field_hs_project_lead:
+    type: string_textfield
+    weight: 3
     region: content
     settings:
-      media_types: {  }
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   path:
     type: path

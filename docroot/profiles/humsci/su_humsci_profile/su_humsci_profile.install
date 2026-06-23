@@ -130,3 +130,21 @@ function su_humsci_profile_update_11002(): string {
   }
   return t('hs_training was already in single_content_sync allowed node types.');
 }
+
+/**
+ * Enable Feeds and Feeds Tamper modules on all sites.
+ */
+function su_humsci_profile_update_11003(): string {
+  $modules = ['feeds', 'feeds_tamper'];
+  $to_install = [];
+  foreach ($modules as $module) {
+    if (!\Drupal::moduleHandler()->moduleExists($module)) {
+      $to_install[] = $module;
+    }
+  }
+  if (empty($to_install)) {
+    return t('Feeds and Feeds Tamper modules were already enabled.');
+  }
+  \Drupal::service('module_installer')->install($to_install);
+  return t('Enabled modules: @modules.', ['@modules' => implode(', ', $to_install)]);
+}

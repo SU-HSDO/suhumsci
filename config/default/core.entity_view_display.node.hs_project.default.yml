@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.hs_project.field_hs_project_external_links
     - field.field.node.hs_project.field_hs_project_featured_image
     - field.field.node.hs_project.field_hs_project_is_active
+    - field.field.node.hs_project.field_hs_project_lead
     - node.type.hs_project
     - system.menu.main
   module:
@@ -65,7 +66,7 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-            weight: 1
+            weight: 2
             additional: {  }
           04f2c0d3-9cbe-4924-82a4-c017253ffb56:
             uuid: 04f2c0d3-9cbe-4924-82a4-c017253ffb56
@@ -93,7 +94,7 @@ third_party_settings:
                     class: hb-main-body-detail-image
                   hs_field_helpers:
                     inline_contents: 0
-            weight: 2
+            weight: 3
             additional: {  }
           7aaa41b1-9935-4745-994a-ab433623ec06:
             uuid: 7aaa41b1-9935-4745-994a-ab433623ec06
@@ -120,7 +121,7 @@ third_party_settings:
                     class: hb-highlighted-label
                   hs_field_helpers:
                     inline_contents: 0
-            weight: 3
+            weight: 4
             additional: {  }
           26489ce3-a844-4bcf-b67d-59947764a43e:
             uuid: 26489ce3-a844-4bcf-b67d-59947764a43e
@@ -135,9 +136,34 @@ third_party_settings:
                 view_mode: view_mode
               formatter:
                 type: entity_reference_label
-                label: inline
+                label: hidden
                 settings:
                   link: true
+                third_party_settings:
+                  empty_fields:
+                    handler: ''
+                  field_formatter_class:
+                    class: hb-categories
+                  hs_field_helpers:
+                    inline_contents: 0
+            weight: 1
+            additional: {  }
+          4860ca64-5cf1-4b29-855a-cc7f22a97e2c:
+            uuid: 4860ca64-5cf1-4b29-855a-cc7f22a97e2c
+            region: main
+            configuration:
+              id: 'field_block:node:hs_project:field_hs_project_lead'
+              label: 'Project Lead:'
+              label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: string
+                label: inline
+                settings:
+                  link_to_entity: false
                 third_party_settings:
                   empty_fields:
                     handler: ''
@@ -145,7 +171,7 @@ third_party_settings:
                     class: hb-highlighted-label
                   hs_field_helpers:
                     inline_contents: 0
-            weight: 4
+            weight: 5
             additional: {  }
           bd25c806-d5dc-4ab4-9920-d250e52a49c5:
             uuid: bd25c806-d5dc-4ab4-9920-d250e52a49c5
@@ -169,7 +195,7 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-            weight: 5
+            weight: 6
             additional: {  }
           d78d390f-cf6d-4aa2-94fc-93a897352312:
             uuid: d78d390f-cf6d-4aa2-94fc-93a897352312
@@ -221,17 +247,14 @@ third_party_settings:
               provider: menu_block
               context_mapping: {  }
               follow: false
-              follow_parent: child
-              display_empty: false
-              label_link: false
+              follow_parent: active
+              label_link: true
               label_type: root
               level: 2
               depth: 0
               expand_all_items: true
               parent: 'main:'
-              render_parent: false
               suggestion: menu_block__main
-              hide_on_nonactive: false
             weight: 0
             additional: {  }
         third_party_settings: {  }
@@ -276,6 +299,14 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 102
+    region: content
+  field_hs_project_lead:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 105
     region: content
   links:
     settings: {  }

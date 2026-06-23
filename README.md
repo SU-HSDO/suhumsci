@@ -36,6 +36,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Decommissioning and Deleting a Site](docs/DeleteSite.md)
 - [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
 - [Patching](docs/Patching.md)
+- [Deprecating and Removing a Module](docs/ModuleUninstall.md)
 - [Codeception Tests](docs/Codeception.md)
 
 ### Migration
@@ -106,6 +107,10 @@ Acceptance testing is done using the [Codeception](https://codeception.com/) fra
 ### Sass
 
 - `npm test` — Run tests for all Sass in the project (including humsci_basic).
+
+## Reporting
+
+- `drush humsci:reports:users-by-role <ROLE> --env=prod`: Generate a CSV or JSON report of users assigned to a role across all sites. Run with `--help` for all options.
 
 ## Architecture Decision Records (ADRs)
 

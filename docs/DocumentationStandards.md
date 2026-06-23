@@ -15,6 +15,7 @@ This document defines the standards for creating and updating documentation in t
 - Use active voice
 - Use active voice especially in warnings — "Take a database backup before proceeding" not "Database backups are required"
 - Avoid filler words ("simply", "just", "easily", "very good", etc.)
+- Do not use em dashes (—). Rewrite the sentence to avoid them.
 - Avoid meta-notes written to the author (e.g., "update this before publishing") — those belong in PR descriptions or commit messages, not in committed docs
 
 ## Document Types
@@ -136,5 +137,5 @@ ADRs in `docs/architecture/decisions/` are **immutable historical records**:
 1. If a new development tool is required by the project, add it to `docs/DevelopmentRequirements.md`
 1. If a step is unclear or potentially missing, note it explicitly with a `> **Note:**` rather than guessing
 1. Review links for accuracy — external links go stale
-1. If a new file was added under `docs/`, confirm it is linked from `README.md` in the appropriate Documentation section
+1. If a new file was added directly under `docs/` (not in a subdirectory), confirm it is linked from `README.md` in the appropriate Documentation section
 1. Update this file whenever new documentation conventions are established

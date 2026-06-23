@@ -8,13 +8,9 @@ a.button {
   @include hb-button;
   font-size: hb-calculate-rems(18px);
 
-  &[data-drupal-selector^='edit-reset'] {
-    @include hb-secondary-button;
-
-    [data-bef-auto-submit] & {
-      @include hb-reset-button;
-      margin-right: 0;
-    }
+  // This is our only option for targeting the exposed filters reset button
+  &[data-drupal-selector='edit-reset'] {
+    @include hb-reset-button;
   }
 }
 

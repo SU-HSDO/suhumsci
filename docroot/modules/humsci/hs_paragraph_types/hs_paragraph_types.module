@@ -181,8 +181,10 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         ];
 
         // Keep server-side validation by adding an element_validate callback
-        // instead of relying solely on #states for the required check.
-        $element['subform']['field_title']['widget'][0]['value']['#element_validate'][] = 'hs_paragraph_types_validate_collection_title';
+        // instead of relying solely on #states for the required check. Attach it
+        // to the subform so the validator can read both the title and the title
+        // settings values directly, without walking up the parents.
+        $element['subform']['#element_validate'][] = 'hs_paragraph_types_validate_collection_title';
 
         $field_widget_form['widget'][$key] = $element;
       }
@@ -194,33 +196,17 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
  * Validation callback for collection title field.
  */
 function hs_paragraph_types_validate_collection_title(&$element, FormStateInterface $form_state, &$form) {
-  $parents = $element['#parents'];
+  $title_settings = $element['field_title_settings']['widget'][0]['value']['#value'] ?? '';
 
-  if (!$parents) {
-    return;
-  }
+  $title_element = $element['field_title']['widget'][0]['value'] ?? NULL;
 
-  // Find 'field_title' in the parents array to locate the subform boundary.
-  $field_title_pos = array_search('field_title', $parents);
-
-  if ($field_title_pos === FALSE) {
-    // Can't determine the subform path; skip validation.
-    return;
-  }
-
-  // Everything up to (but not including) 'field_title' is the subform path.
-  $subform_parents = array_slice($parents, 0, $field_title_pos);
-  $title_settings_path = array_merge($subform_parents, ['field_title_settings', 0, 'value']);
-
-  $title_settings_value = $form_state->getValue($title_settings_path);
-
-  $requires_title = in_array($title_settings_value ?? '', [
+  $requires_title = in_array($title_settings, [
     'collection_title_visible',
     'collection_title_sr_only',
   ]);
 
-  if ($requires_title && empty($element['#value'])) {
-    $form_state->setError($element, t('Title field is required.'));
+  if ($requires_title && $title_element !== NULL && empty($title_element['#value'])) {
+    $form_state->setError($title_element, t('Title field is required.'));
   }
 }
 

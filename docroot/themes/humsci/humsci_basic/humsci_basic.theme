@@ -749,46 +749,42 @@ function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
   $paragraph = $variables['paragraph'];
   $variables['has_content'] = FALSE;
 
-  foreach ($paragraph->field_hs_collection_items as $item) {
-    $entity = $item->entity;
-
-    if (!$entity) {
-      continue;
-    }
-
+  // Store referenced entities in a variable and only load once since both loops
+  // use it.
+  $items = $paragraph->field_hs_collection_items->referencedEntities();
+  // Check if any of the referenced entities are not hs_view paragraphs and skip
+  // more expensive Views checks if so.
+  foreach ($items as $entity) {
     if ($entity->bundle() !== 'hs_view') {
       $variables['has_content'] = TRUE;
-      break;
+      return;
     }
+  }
 
+  // All remaining item are hs_view paragraphs; check for content.
+  foreach ($items as $entity) {
     $view_field = $entity->field_hs_view->first();
-
     if (!$view_field) {
       continue;
     }
-
+    // Load the view and check access.
     $view = Views::getView($view_field->target_id);
-
     if (!$view || !$view->access($view_field->display_id)) {
       continue;
     }
-
+    // Check for a view title and an empty results text or handler.
     $view->setDisplay($view_field->display_id);
-
     $has_empty_handlers = !empty($view->display_handler->getHandlers('empty'));
-
     if ($view_field->show_title || $has_empty_handlers) {
       $variables['has_content'] = TRUE;
-      break;
+      return;
     }
-
+    // Execute the view to check for results.
     $view->preExecute();
-
     $view->execute();
-
     if (!empty($view->result)) {
       $variables['has_content'] = TRUE;
-      break;
+      return;
     }
   }
 }

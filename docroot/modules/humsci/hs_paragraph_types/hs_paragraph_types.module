@@ -181,9 +181,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         ];
 
         // Keep server-side validation by adding an element_validate callback
-        // instead of relying solely on #states for the required check. Attach it
-        // to the subform so the validator can read both the title and the title
-        // settings values directly, without walking up the parents.
+        // instead of relying solely on #states for the required check.
         $element['subform']['#element_validate'][] = 'hs_paragraph_types_validate_collection_title';
 
         $field_widget_form['widget'][$key] = $element;

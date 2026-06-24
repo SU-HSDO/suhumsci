@@ -752,6 +752,7 @@ function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
   // Store referenced entities in a variable and only load once since both loops
   // use it.
   $items = $paragraph->field_hs_collection_items->referencedEntities();
+
   // Check if any of the referenced entities are not hs_view paragraphs and skip
   // more expensive Views checks if so.
   foreach ($items as $entity) {
@@ -759,11 +760,9 @@ function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
       $variables['has_content'] = TRUE;
       return;
     }
-  }
 
-  // All remaining item are hs_view paragraphs; check for content.
-  foreach ($items as $entity) {
     $view_field = $entity->field_hs_view->first();
+
     if (!$view_field) {
       continue;
     }

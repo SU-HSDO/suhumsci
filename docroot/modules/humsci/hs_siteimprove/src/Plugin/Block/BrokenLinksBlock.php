@@ -182,7 +182,7 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
    */
   protected function getBrokenLinksReportUrl(): Url {
     $site_id = $this->siteImprove->getCurrentSiteId();
-    return Url::fromUri("https://my2.siteimprove.com/QualityAssurance/{$site_id}/Links/Pages/1/UnsuccessfulClicks/Desc?pageSize=100");
+    return Url::fromUri("https://my2.us.siteimprove.com/QualityAssurance/{$site_id}/Links/Pages/1/UnsuccessfulClicks/Desc?pageSize=100");
   }
 
 }

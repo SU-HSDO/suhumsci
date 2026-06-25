@@ -7,8 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ui_patterns\UiPatternsManager;
 use Drupal\ui_patterns\UiPatternsSourceManager;
-use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\Attribute\ViewsStyle;
+use Drupal\views\Plugin\views\style\StylePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

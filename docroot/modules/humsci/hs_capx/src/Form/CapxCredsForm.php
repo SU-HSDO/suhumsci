@@ -10,8 +10,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\hs_capx\Capx;
 use Drupal\key\Entity\Key;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\stanford_migrate\EventSubscriber\EventsSubscriber;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form class to set the CAPx user credentials.

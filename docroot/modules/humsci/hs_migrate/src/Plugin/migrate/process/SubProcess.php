@@ -3,8 +3,8 @@
 namespace Drupal\hs_migrate\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\migrate\process\SubProcess as OriginalSubProcess;
+use Drupal\migrate\Row;
 
 /**
  * Override Drupal Core SubProcess plugin to allow SimpleXml processor.

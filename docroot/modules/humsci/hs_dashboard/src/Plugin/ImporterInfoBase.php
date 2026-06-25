@@ -2,11 +2,11 @@
 
 namespace Drupal\hs_dashboard\Plugin;
 
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;

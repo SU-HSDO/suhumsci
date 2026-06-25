@@ -15,8 +15,8 @@ use Drupal\media\MediaInterface;
 use Drupal\tamper\Attribute\Tamper;
 use Drupal\tamper\Exception\TamperException;
 use Drupal\tamper\SourceDefinitionInterface;
-use Drupal\tamper\TamperBase;
 use Drupal\tamper\TamperableItemInterface;
+use Drupal\tamper\TamperBase;
 use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -265,9 +265,6 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
     try {
       /** @var \Drupal\media\Entity\MediaType $media_type */
       $media_type = $this->entityTypeManager->getStorage('media_type')->load('image');
-      if (!$media_type) {
-        throw new TamperException('The "image" media type does not exist on this site.');
-      }
       $source_field_name = $media_type->getSource()->getSourceFieldDefinition($media_type)->getName();
       $media = $this->entityTypeManager->getStorage('media')->create([
         'bundle' => 'image',

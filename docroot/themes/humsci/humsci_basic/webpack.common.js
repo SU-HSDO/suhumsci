@@ -35,6 +35,7 @@ const shared = {
   'table-scope': 'shared/tables/scope.js',
   'table-pattern': 'shared/tables/table-pattern.js',
   'table-wrap': 'shared/tables/wrap.js',
+  table: 'shared/tables/table.js',
   timeline: 'shared/timeline/expand-collapse-timeline.js',
 };
 

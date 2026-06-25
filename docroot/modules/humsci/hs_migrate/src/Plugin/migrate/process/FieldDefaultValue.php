@@ -2,10 +2,10 @@
 
 namespace Drupal\hs_migrate\Plugin\migrate\process;
 
-use Drupal\field\FieldConfigInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\field\FieldConfigInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;

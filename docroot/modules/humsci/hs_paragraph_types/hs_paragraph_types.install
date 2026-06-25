@@ -697,33 +697,19 @@ function hs_paragraph_types_update_10030() {
     ],
   ];
 
+  $deleted_instances = [];
+
   foreach ($fields_to_delete as $bundle => $fields) {
     foreach ($fields as $field) {
       if ($field_config = FieldConfig::loadByName('paragraph', $bundle, $field)) {
         $field_config->delete();
-        \Drupal::logger('hs_paragraph_types')->notice('Removed field instance %field_name from paragraph.%bundle.', [
-          '%field_name' => $field,
-          '%bundle' => $bundle,
-        ]);
-      }
-      if ($field_storage = FieldStorageConfig::loadByName('paragraph', $field)) {
-        // Only delete the storage if no field instances are still using it.
-        $instances = \Drupal::entityTypeManager()
-          ->getStorage('field_config')
-          ->loadByProperties(['field_storage_uuid' => $field_storage->uuid()]);
-        if (empty($instances)) {
-          $field_storage->delete();
-          \Drupal::logger('hs_paragraph_types')->notice('Removed field storage %field_name from paragraph.', [
-            '%field_name' => $field,
-          ]);
-        }
-        else {
-          \Drupal::logger('hs_paragraph_types')->notice('Skipped deleting field storage %field_name: still has %count instance(s).', [
-            '%field_name' => $field,
-            '%count' => count($instances),
-          ]);
-        }
+        $deleted_instances[] = $bundle . ':' . $field;
       }
     }
   }
+
+  return t('Deleted %count field instances: %instances.', [
+    '%count' => count($deleted_instances),
+    '%instances' => implode(', ', $deleted_instances),
+  ]);
 }

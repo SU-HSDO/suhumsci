@@ -1,0 +1,28 @@
+{%
+  set classes = [
+    'hb-card',
+    'hb-horizontal-expandable-card'
+  ]
+%}
+
+{% set summary_attributes = summary_attributes ?: create_attribute() %}
+{%- set attributes = attributes.addClass(classes) -%}
+
+<details{{attributes}}>
+	{% if introduction %}
+		<summary{{summary_attributes.addClass(summary_classes).addClass('hb-horizontal-expandable-card__summary')}}>
+			<div class="hb-horizontal-expandable-card__introduction">
+				{{ introduction }}
+			</div>
+			<div class="hb-horizontal-expandable-card__toggle">
+				<button aria-label="{{ alert_dismiss_text|default("Expand") }}" class="hb-horizontal-expandable-card__toggle-button"></button>
+			</div>
+		</summary>
+	{% endif %}
+
+	{% if details %}
+		<div class="hb-horizontal-expandable-card__details">
+			{{ details }}
+		</div>
+	{% endif %}
+</details>

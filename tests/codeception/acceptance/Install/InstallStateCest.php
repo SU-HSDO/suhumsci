@@ -65,7 +65,7 @@ class InstallStateCest {
   public function testContributorShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 31);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 33);
   }
 
   /**
@@ -77,7 +77,7 @@ class InstallStateCest {
   public function testSiteManagerShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('site_manager');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 34);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 36);
   }
 
   /**
@@ -89,7 +89,7 @@ class InstallStateCest {
   public function testDeveloperShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 36);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 38);
   }
 
   /**

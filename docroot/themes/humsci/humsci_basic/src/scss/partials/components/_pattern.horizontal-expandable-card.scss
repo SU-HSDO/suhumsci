@@ -1,0 +1,74 @@
+@use '../variables/general' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/general' as *;
+@use '../mixins/heros' as *;
+@use '../mixins/layout' as *;
+@use '../mixins/buttons' as *;
+@use '../mixins/icons' as *;
+
+.hb-horizontal-expandable-card {
+  border: 1px solid color('gray-400', 'global');
+  background-color: transparent;
+  display: block;
+}
+
+.hb-horizontal-expandable-card__summary {
+  padding: hb-calculate-rems(20px) hb-calculate-rems(24px) hb-calculate-rems(24px);
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+}
+
+.hb-horizontal-expandable-card__introduction {
+  padding-right: hb-spacing-width('xs');
+  flex-grow: 1;
+
+  .hb-card__category {
+    margin-bottom: 0.5rem;
+  }
+
+  .hb-card__title {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.hb-horizontal-expandable-card__toggle {
+  flex-shrink: 0;
+}
+
+.hb-horizontal-expandable-card__toggle-button {
+  width: hb-calculate-rems(40px);
+  height: hb-calculate-rems(40px);
+  padding: 0;
+  border: 1px solid color('gray-500', 'global');
+  background-size: hb-calculate-rems(12px);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  &[aria-expanded='false'] {
+    @include hb-icon-background('plus', 'secondary');
+  }
+
+  &[aria-expanded='true'] {
+    @include hb-icon-background('minus', 'secondary');
+  }
+}
+
+.hb-horizontal-expandable-card__details {
+  padding: 0 hb-calculate-rems(32px) hb-calculate-rems(10px);
+}
+
+@keyframes hbSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

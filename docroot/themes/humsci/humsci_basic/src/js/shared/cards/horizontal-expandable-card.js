@@ -8,43 +8,29 @@
       );
 
       cards.forEach((card) => {
-        const summary = card.querySelector('summary');
         const toggleButton = card.querySelector(
           '.hb-horizontal-expandable-card__toggle-button',
         );
 
-        if (!summary || !toggleButton) {
-          return;
-        }
+        if (!toggleButton) return;
 
-        const updateState = () => {
-          const isOpen = card.hasAttribute('open');
-          toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        };
+        // Set initial state.
+        toggleButton.setAttribute('aria-expanded', 'false');
 
-        // Set initial state
-        updateState();
-
-        // Listen for native toggle events on details element
-        card.addEventListener('toggle', updateState);
-
-        summary.addEventListener('click', (e) => {
-          if (e.target.closest('a')) {
-            return;
-          }
-
-          e.preventDefault();
-        });
-
-        // Handle the toggle button click manually
+        // Add event handler.
         toggleButton.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
 
-          if (card.hasAttribute('open')) {
-            card.removeAttribute('open');
+          // Toggle the aria-expanded attribute.
+          if (toggleButton.getAttribute('aria-expanded') === 'true') {
+            toggleButton.setAttribute('aria-expanded', 'false');
+            toggleButton.setAttribute('aria-label', 'Expand');
+            card.classList.remove('is-open');
           } else {
-            card.setAttribute('open', '');
+            toggleButton.setAttribute('aria-expanded', 'true');
+            toggleButton.setAttribute('aria-label', 'Collapse');
+            card.classList.add('is-open');
           }
         });
       });

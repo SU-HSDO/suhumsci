@@ -417,3 +417,159 @@ function hs_admin_deploy_10009(): string {
   }
   return 'Granted Project permissions to: ' . implode(', ', $summary) . '.';
 }
+
+/**
+ * Revoke Training content and taxonomy permissions from all roles.
+ *
+ * Training is not enabled by default on new sites. Permissions are removed
+ * from the role config and must also be revoked on existing sites via this
+ * deploy hook. Permissions for sites that actively use Training can be
+ * re-granted manually once the content type is enabled for that site.
+ */
+function hs_admin_deploy_10010(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  $role_permissions = [
+    'author' => [
+      'edit own hs_training content',
+    ],
+    'contributor' => [
+      'create hs_training content',
+      'edit any hs_training content',
+      'edit own hs_training content',
+      'revert hs_training revisions',
+      'view hs_training revisions',
+    ],
+    'preparer' => [
+      'create hs_training content',
+      'edit own hs_training content',
+      'view any unpublished hs_training content',
+    ],
+    'reviewer' => [
+      'view any unpublished hs_training content',
+    ],
+    'site_manager' => [
+      'create hs_training content',
+      'create terms in hs_training_audience',
+      'create terms in hs_training_name',
+      'create terms in hs_training_product',
+      'create terms in hs_training_provider',
+      'create terms in hs_training_unit',
+      'delete any hs_training content',
+      'delete own hs_training content',
+      'delete terms in hs_training_audience',
+      'delete terms in hs_training_name',
+      'delete terms in hs_training_product',
+      'delete terms in hs_training_provider',
+      'delete terms in hs_training_unit',
+      'edit any hs_training content',
+      'edit own hs_training content',
+      'edit terms in hs_training_audience',
+      'edit terms in hs_training_name',
+      'edit terms in hs_training_product',
+      'edit terms in hs_training_provider',
+      'edit terms in hs_training_unit',
+      'revert hs_training revisions',
+      'view hs_training revisions',
+    ],
+  ];
+
+  $revoked = [];
+  foreach ($role_permissions as $role_id => $permissions) {
+    $role = $role_storage->load($role_id);
+    if (!$role instanceof RoleInterface) {
+      continue;
+    }
+    $existing = $role->getPermissions();
+    $to_revoke = array_intersect($permissions, $existing);
+    if (!empty($to_revoke)) {
+      foreach ($to_revoke as $perm) {
+        $role->revokePermission($perm);
+      }
+      $role->save();
+      $revoked[$role_id] = count($to_revoke);
+    }
+  }
+
+  if (empty($revoked)) {
+    return 'No Training permissions needed revoking; roles already up to date.';
+  }
+
+  $summary = [];
+  foreach ($revoked as $role_id => $count) {
+    $summary[] = "$role_id (-$count)";
+  }
+  return 'Revoked Training permissions from: ' . implode(', ', $summary) . '.';
+}
+
+/**
+ * Revoke Project content and taxonomy permissions from all roles.
+ *
+ * Project is not enabled by default on new sites. Permissions are removed
+ * from the role config and must also be revoked on existing sites via this
+ * deploy hook. Permissions for sites that actively use Project can be
+ * re-granted manually once the content type is enabled for that site.
+ */
+function hs_admin_deploy_10011(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  $role_permissions = [
+    'author' => [
+      'edit own hs_project content',
+    ],
+    'contributor' => [
+      'create hs_project content',
+      'edit any hs_project content',
+      'edit own hs_project content',
+      'revert hs_project revisions',
+      'view hs_project revisions',
+    ],
+    'preparer' => [
+      'create hs_project content',
+      'edit own hs_project content',
+      'view any unpublished hs_project content',
+    ],
+    'reviewer' => [
+      'view any unpublished hs_project content',
+    ],
+    'site_manager' => [
+      'create hs_project content',
+      'create terms in hs_project_category',
+      'delete any hs_project content',
+      'delete own hs_project content',
+      'delete terms in hs_project_category',
+      'edit any hs_project content',
+      'edit own hs_project content',
+      'edit terms in hs_project_category',
+      'revert hs_project revisions',
+      'view hs_project revisions',
+    ],
+  ];
+
+  $revoked = [];
+  foreach ($role_permissions as $role_id => $permissions) {
+    $role = $role_storage->load($role_id);
+    if (!$role instanceof RoleInterface) {
+      continue;
+    }
+    $existing = $role->getPermissions();
+    $to_revoke = array_intersect($permissions, $existing);
+    if (!empty($to_revoke)) {
+      foreach ($to_revoke as $perm) {
+        $role->revokePermission($perm);
+      }
+      $role->save();
+      $revoked[$role_id] = count($to_revoke);
+    }
+  }
+
+  if (empty($revoked)) {
+    return 'No Project permissions needed revoking; roles already up to date.';
+  }
+
+  $summary = [];
+  foreach ($revoked as $role_id => $count) {
+    $summary[] = "$role_id (-$count)";
+  }
+  return 'Revoked Project permissions from: ' . implode(', ', $summary) . '.';
+}

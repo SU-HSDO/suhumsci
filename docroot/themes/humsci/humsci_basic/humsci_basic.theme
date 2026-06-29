@@ -755,12 +755,16 @@ function humsci_basic_preprocess_paragraph__hs_collection(&$variables) {
 
   // Check if any of the referenced entities are not hs_view paragraphs and skip
   // more expensive Views checks if so.
+  $views = [];
   foreach ($items as $entity) {
     if ($entity->bundle() !== 'hs_view') {
       $variables['has_content'] = TRUE;
       return;
     }
+    $views[] = $entity;
+  }
 
+  foreach ($views as $entity) {
     $view_field = $entity->field_hs_view->first();
 
     if (!$view_field) {

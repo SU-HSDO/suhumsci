@@ -108,6 +108,10 @@ Acceptance testing is done using the [Codeception](https://codeception.com/) fra
 
 - `npm test` — Run tests for all Sass in the project (including humsci_basic).
 
+## Reporting
+
+- `drush humsci:reports:users-by-role <ROLE> --env=prod`: Generate a CSV or JSON report of users assigned to a role across all sites. Run with `--help` for all options.
+
 ## Architecture Decision Records (ADRs)
 
 Architecture Decision Records (ADRs) are used to document important architectural decisions made in this project. The ADR process and format are explained in [0000-record-architecture-decisions.md](docs/architecture/decisions/0000-record-architecture-decisions.md). All significant architectural decisions should be documented as a new ADR in the `docs/architecture/decisions/` directory.

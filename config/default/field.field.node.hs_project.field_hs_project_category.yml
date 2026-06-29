@@ -1,0 +1,31 @@
+uuid: 26eca355-3f75-4f12-9c50-2de370af733d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_project_category
+    - node.type.hs_project
+    - taxonomy.vocabulary.hs_project_category
+  module:
+    - taxonomy
+id: node.hs_project.field_hs_project_category
+field_name: field_hs_project_category
+entity_type: node
+bundle: hs_project
+label: 'Project Category'
+description: 'Choose one or more categories from the Project Category taxonomy to organize and filter projects.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_project_category: hs_project_category
+    sort:
+      field: _none
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

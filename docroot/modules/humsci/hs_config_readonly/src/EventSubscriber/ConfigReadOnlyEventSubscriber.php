@@ -4,10 +4,10 @@ namespace Drupal\hs_config_readonly\EventSubscriber;
 
 use Drupal\config_ignore\ConfigIgnoreConfig;
 use Drupal\config_readonly\ReadOnlyFormEvent;
-use Drupal\ctools\Wizard\EntityFormWizardBase;
-use Drupal\Core\Form\ConfigFormBase;
-use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Form\ConfigFormBase;
+use Drupal\ctools\Wizard\EntityFormWizardBase;
 
 /**
  * Class ConfigReadOnlyEventSubscriber.

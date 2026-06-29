@@ -7,7 +7,10 @@ The platform uses a combination of contributed and custom modules to manage conf
 - Prevents import and export of configuration that should be editable on individual sites, such as blocks, displays, and site-specific settings (homepage, 404, analytics, permissions).
 - If a config is ignored and needs to be changed across all sites, changes must be made directly on the site or via a database update hook.
 - Exception rules allow selective import/export of configs even if a broad ignore pattern is present.
-- During config import, `config_ignore` uses the ignore rules from the codebase (`config_ignore.settings.yml` in your config export), not the current active config on the site.
+- By default, `config_ignore` reads its rules from sync storage (`config/default/config_ignore.settings.yml`) for both imports and exports. On local environments with a `config_split` that patches `config_ignore` settings, this means the local split's overrides are applied during import but silently bypassed during export, which causes local-only ignore rules to have no effect on `drush config-export`.
+- To correct this, local settings files (`local.settings.php` and `default.local.settings.php`) set `$settings['config_ignore_storage'] = 'active'`. This tells `config_ignore` to read its rules from active configuration, including any config_split patches currently applied, for both imports and exports. As a result, locally-ignored configuration (such as role permissions) is correctly excluded from exports, and the local split's intent is fully respected in both directions. This setting is only needed where the local config_split is active; CI and Tugboat do not enable the local split, so active and sync config_ignore are always identical there.
+
+> **Note:** This setting also means that during a site sync to local, `config_ignore` uses the active configuration on the site at the time of the sync. On a fresh site sync, the local split is not yet imported, so the first import uses the production ignore rules from `config/default`. Once the local split is imported, all subsequent imports and exports use the local split's rules.
 
 ## config_split
 
@@ -38,6 +41,14 @@ The platform uses a combination of contributed and custom modules to manage conf
 - For more information see the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
 
+## Deploy Hooks and Post-Config-Import Operations
+
+Some operations must run after config import has completed. For example, granting permissions tied to a new content type that is itself created by config import. `hook_update_N()` runs before config import, so those operations will fail or be rolled back if placed in an update hook.
+
+Use `hook_deploy_NAME()` (in a `MODULE.deploy.php` file) for any operation that depends on configuration existing in active storage first. `drush deploy` and `drush drupal:sync` both run `deploy:hook` automatically after config import. When running updates manually, always include `drush deploy:hook` after `drush config:import`.
+
+See [ADR 0004](architecture/decisions/0004-use-deploy-hooks-for-post-config-operations.md) for the full decision and naming conventions used in this project.
+
 ## Best Practices
 
 - Always use standard config import/export commands unless you have a specific reason to bypass `config_ignore` or `config_split`.
@@ -46,6 +57,7 @@ The platform uses a combination of contributed and custom modules to manage conf
 - For local development, `config_ignore` and `config_split` can be overridden in settings files to match the local environment.
 - Running `config-import` twice is a recommended approach. Certain configuration can require a fully completed config import before it is respected, especially with `config_split`.
 - Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these.
+- Use `hook_deploy_NAME()` for operations that depend on config import having completed (e.g., permissions for new content types, entity operations tied to new bundles).
 - If you need to allow deletion of specific config (e.g., for module uninstalls or legacy cleanup), add the appropriate prefix to the allow-list in `settings.php` as described in the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
 

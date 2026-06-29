@@ -116,3 +116,49 @@ function su_humsci_profile_update_11001(): string {
   }
   return t('hs_page_reports module was already uninstalled.');
 }
+
+/**
+ * Add hs_training content type to single_content_sync allow list.
+ */
+function su_humsci_profile_update_11002(): string {
+  $config = \Drupal::configFactory()->getEditable('single_content_sync.settings');
+  $allowed = $config->get('allowed_entity_types');
+  if (!in_array('hs_training', $allowed['node'] ?? [])) {
+    $allowed['node'][] = 'hs_training';
+    $config->set('allowed_entity_types', $allowed)->save();
+    return t('Added hs_training to single_content_sync allowed node types.');
+  }
+  return t('hs_training was already in single_content_sync allowed node types.');
+}
+
+/**
+ * Enable Feeds and Feeds Tamper modules on all sites.
+ */
+function su_humsci_profile_update_11003(): string {
+  $modules = ['feeds', 'feeds_tamper'];
+  $to_install = [];
+  foreach ($modules as $module) {
+    if (!\Drupal::moduleHandler()->moduleExists($module)) {
+      $to_install[] = $module;
+    }
+  }
+  if (empty($to_install)) {
+    return t('Feeds and Feeds Tamper modules were already enabled.');
+  }
+  \Drupal::service('module_installer')->install($to_install);
+  return t('Enabled modules: @modules.', ['@modules' => implode(', ', $to_install)]);
+}
+
+/**
+ * Add hs_project content type to single_content_sync allow list.
+ */
+function su_humsci_profile_update_11004(): string {
+  $config = \Drupal::configFactory()->getEditable('single_content_sync.settings');
+  $allowed = $config->get('allowed_entity_types');
+  if (!in_array('hs_project', $allowed['node'] ?? [])) {
+    $allowed['node'][] = 'hs_project';
+    $config->set('allowed_entity_types', $allowed)->save();
+    return t('Added hs_project to single_content_sync allowed node types.');
+  }
+  return t('hs_project was already in single_content_sync allowed node types.');
+}

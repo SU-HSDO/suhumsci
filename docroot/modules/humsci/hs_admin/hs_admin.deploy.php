@@ -573,3 +573,35 @@ function hs_admin_deploy_10011(): string {
   }
   return 'Revoked Project permissions from: ' . implode(', ', $summary) . '.';
 }
+
+/**
+ * Remove Manage Training and Manage Project shortcuts.
+ *
+ * These shortcuts point to view page displays that may not exist on a given
+ * site (the view is disabled or replaced by a custm_ clone), and Drupal does
+ * not check whether an internal path resolves before rendering a shortcut
+ * link. Access control cannot reliably hide them, so the entities are deleted.
+ * Sites that actively use Training or Project can re-add these shortcuts
+ * manually when the relevant manage content display is enabled.
+ */
+function hs_admin_deploy_10013(): string {
+  $shortcut_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+
+  $uuids = [
+    'c8b3c7b6-0bac-4b5a-92cd-8cbe24fa7a02' => 'Manage Training',
+    '77fd3a3c-6006-47db-a70b-a9379ba3d08d' => 'Manage Project',
+  ];
+
+  $deleted = [];
+  foreach ($uuids as $uuid => $label) {
+    $shortcuts = $shortcut_storage->loadByProperties(['uuid' => $uuid]);
+    if (!empty($shortcuts)) {
+      $shortcut_storage->delete($shortcuts);
+      $deleted[] = $label;
+    }
+  }
+
+  return empty($deleted)
+    ? 'Manage Training and Manage Project shortcuts not found; nothing to delete.'
+    : 'Deleted shortcuts: ' . implode(', ', $deleted) . '.';
+}

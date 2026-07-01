@@ -2,13 +2,13 @@
 
 namespace Drupal\hs_blocks\EventSubscriber;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\Core\Database\Connection;
 
 /**
  * Event Subscriber for custom H&S Blocks.

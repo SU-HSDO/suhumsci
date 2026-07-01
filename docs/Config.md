@@ -41,6 +41,14 @@ The platform uses a combination of contributed and custom modules to manage conf
 - For more information see the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
 
+## Deploy Hooks and Post-Config-Import Operations
+
+Some operations must run after config import has completed. For example, granting permissions tied to a new content type that is itself created by config import. `hook_update_N()` runs before config import, so those operations will fail or be rolled back if placed in an update hook.
+
+Use `hook_deploy_NAME()` (in a `MODULE.deploy.php` file) for any operation that depends on configuration existing in active storage first. `drush deploy` and `drush drupal:sync` both run `deploy:hook` automatically after config import. When running updates manually, always include `drush deploy:hook` after `drush config:import`.
+
+See [ADR 0004](architecture/decisions/0004-use-deploy-hooks-for-post-config-operations.md) for the full decision and naming conventions used in this project.
+
 ## Best Practices
 
 - Always use standard config import/export commands unless you have a specific reason to bypass `config_ignore` or `config_split`.
@@ -49,6 +57,7 @@ The platform uses a combination of contributed and custom modules to manage conf
 - For local development, `config_ignore` and `config_split` can be overridden in settings files to match the local environment.
 - Running `config-import` twice is a recommended approach. Certain configuration can require a fully completed config import before it is respected, especially with `config_split`.
 - Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these.
+- Use `hook_deploy_NAME()` for operations that depend on config import having completed (e.g., permissions for new content types, entity operations tied to new bundles).
 - If you need to allow deletion of specific config (e.g., for module uninstalls or legacy cleanup), add the appropriate prefix to the allow-list in `settings.php` as described in the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
 

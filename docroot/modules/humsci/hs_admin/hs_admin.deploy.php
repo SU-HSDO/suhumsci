@@ -231,3 +231,377 @@ function hs_admin_deploy_10005(): string {
   \Drupal::configFactory()->getEditable($name)->setData($data)->save();
   return "Imported updated $name from sync to active storage.";
 }
+
+/**
+ * Add Project shortcuts to their respective dropdown menus.
+ */
+function hs_admin_deploy_10006(): string {
+  $shortcut_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+
+  // Use the same UUIDs as the shortcuts in the humsci_default_content module so
+  // existing sites and fresh installs share a single, stable set of entities.
+  // Parent UUIDs reference the default "Add content" and "Manage content"
+  // shortcuts shipped by humsci_default_content.
+  $new_shortcuts = [
+    '4d2b2feb-fc9d-4908-8ebc-e18ee811f0b7' => [
+      'title' => 'Add Project',
+      'uri' => 'internal:/node/add/hs_project',
+      'weight' => 9,
+      'parent' => '3c769f63-f502-4f76-b4dd-85b7a584cd5b',
+    ],
+    '77fd3a3c-6006-47db-a70b-a9379ba3d08d' => [
+      'title' => 'Manage Project',
+      'uri' => 'internal:/admin/content/manage/project',
+      'weight' => 22,
+      'parent' => '5744f2de-74a1-448f-aac1-61983a136cdb',
+    ],
+  ];
+
+  $created = [];
+  foreach ($new_shortcuts as $uuid => $config) {
+    // Skip if a shortcut with this UUID already exists (e.g. provided by
+    // humsci_default_content during install).
+    if (!empty($shortcut_storage->loadByProperties(['uuid' => $uuid]))) {
+      continue;
+    }
+    $values = [
+      'uuid' => $uuid,
+      'shortcut_set' => 'default',
+      'title' => $config['title'],
+      'link' => ['uri' => $config['uri']],
+      'weight' => $config['weight'],
+      'parent' => $config['parent'],
+      'depth' => 1,
+    ];
+    $shortcut_storage->create($values)->save();
+    $created[] = $config['title'];
+  }
+
+  return empty($created)
+    ? 'Project shortcuts already exist, no changes made.'
+    : 'Created shortcuts: ' . implode(', ', $created);
+}
+
+/**
+ * Import hs_project display configs missing from active storage.
+ *
+ * Because config_ignore excludes core.entity_*_display.node.hs_* from
+ * drush config:import, these displays do not import automatically. This hook
+ * imitates that process manually for new and existing sites alike.
+ */
+function hs_admin_deploy_10007(): string {
+  $sync = \Drupal::service('config.storage.sync');
+  $active = \Drupal::service('config.storage');
+
+  $configs = [
+    'core.entity_form_display.node.hs_project.default',
+    'core.entity_view_display.node.hs_project.default',
+    'core.entity_view_display.node.hs_project.teaser',
+  ];
+
+  $imported = [];
+  foreach ($configs as $name) {
+    if (!$active->exists($name)) {
+      $data = $sync->read($name);
+      if ($data) {
+        $active->write($name, $data);
+        $imported[] = $name;
+      }
+    }
+  }
+
+  return empty($imported)
+    ? 'hs_project display configs already present, no changes made.'
+    : 'Imported configs: ' . implode(', ', $imported);
+}
+
+/**
+ * Ensure project display exists in the hs_manage_content view.
+ */
+function hs_admin_deploy_10008(): string {
+  $sync = \Drupal::service('config.storage.sync');
+  $active = \Drupal::service('config.storage');
+
+  $active_config = $active->read('views.view.hs_manage_content');
+  if (empty($active_config)) {
+    return 'hs_manage_content view not found in active storage.';
+  }
+
+  if (isset($active_config['display']['project'])) {
+    return 'Project display already present in hs_manage_content view.';
+  }
+
+  $sync_config = $sync->read('views.view.hs_manage_content');
+  if (empty($sync_config) || !isset($sync_config['display']['project'])) {
+    return 'Project display not found in sync config.';
+  }
+
+  $active_config['display']['project'] = $sync_config['display']['project'];
+
+  if (!in_array('node.type.hs_project', $active_config['dependencies']['config'] ?? [])) {
+    $active_config['dependencies']['config'][] = 'node.type.hs_project';
+  }
+
+  $active->write('views.view.hs_manage_content', $active_config);
+  return 'Added project display to hs_manage_content view.';
+}
+
+/**
+ * Grant Project content and taxonomy permissions to roles.
+ *
+ * Role permissions are excluded from config import/export by config_ignore
+ * (`user.role.*:permissions`), so the permission additions in the role config
+ * files do not take effect on existing sites. This deploy hook runs after
+ * config import, ensuring hs_project and its vocabulary exist first.
+ */
+function hs_admin_deploy_10009(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  $role_permissions = [
+    'author' => [
+      'edit own hs_project content',
+    ],
+    'contributor' => [
+      'create hs_project content',
+      'edit any hs_project content',
+      'edit own hs_project content',
+      'revert hs_project revisions',
+      'view hs_project revisions',
+    ],
+    'preparer' => [
+      'create hs_project content',
+      'edit own hs_project content',
+      'view any unpublished hs_project content',
+    ],
+    'reviewer' => [
+      'view any unpublished hs_project content',
+    ],
+    'site_manager' => [
+      'create hs_project content',
+      'create terms in hs_project_category',
+      'delete any hs_project content',
+      'delete own hs_project content',
+      'delete terms in hs_project_category',
+      'edit any hs_project content',
+      'edit own hs_project content',
+      'edit terms in hs_project_category',
+      'revert hs_project revisions',
+      'view hs_project revisions',
+    ],
+  ];
+
+  $granted = [];
+  foreach ($role_permissions as $role_id => $permissions) {
+    $role = $role_storage->load($role_id);
+    if (!$role instanceof RoleInterface) {
+      continue;
+    }
+    $existing = $role->getPermissions();
+    $to_grant = array_diff($permissions, $existing);
+    if (!empty($to_grant)) {
+      foreach ($to_grant as $perm) {
+        $role->grantPermission($perm);
+      }
+      $role->save();
+      $granted[$role_id] = count($to_grant);
+    }
+  }
+
+  if (empty($granted)) {
+    return 'No Project permissions needed granting; roles already up to date.';
+  }
+
+  $summary = [];
+  foreach ($granted as $role_id => $count) {
+    $summary[] = "$role_id (+$count)";
+  }
+  return 'Granted Project permissions to: ' . implode(', ', $summary) . '.';
+}
+
+/**
+ * Revoke Training content and taxonomy permissions from all roles.
+ *
+ * Training is not enabled by default on new sites. Permissions are removed
+ * from the role config and must also be revoked on existing sites via this
+ * deploy hook. Permissions for sites that actively use Training can be
+ * re-granted manually once the content type is enabled for that site.
+ */
+function hs_admin_deploy_10010(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  $role_permissions = [
+    'author' => [
+      'edit own hs_training content',
+    ],
+    'contributor' => [
+      'create hs_training content',
+      'edit any hs_training content',
+      'edit own hs_training content',
+      'revert hs_training revisions',
+      'view hs_training revisions',
+    ],
+    'preparer' => [
+      'create hs_training content',
+      'edit own hs_training content',
+      'view any unpublished hs_training content',
+    ],
+    'reviewer' => [
+      'view any unpublished hs_training content',
+    ],
+    'site_manager' => [
+      'create hs_training content',
+      'create terms in hs_training_audience',
+      'create terms in hs_training_name',
+      'create terms in hs_training_product',
+      'create terms in hs_training_provider',
+      'create terms in hs_training_unit',
+      'delete any hs_training content',
+      'delete own hs_training content',
+      'delete terms in hs_training_audience',
+      'delete terms in hs_training_name',
+      'delete terms in hs_training_product',
+      'delete terms in hs_training_provider',
+      'delete terms in hs_training_unit',
+      'edit any hs_training content',
+      'edit own hs_training content',
+      'edit terms in hs_training_audience',
+      'edit terms in hs_training_name',
+      'edit terms in hs_training_product',
+      'edit terms in hs_training_provider',
+      'edit terms in hs_training_unit',
+      'revert hs_training revisions',
+      'view hs_training revisions',
+    ],
+  ];
+
+  $revoked = [];
+  foreach ($role_permissions as $role_id => $permissions) {
+    $role = $role_storage->load($role_id);
+    if (!$role instanceof RoleInterface) {
+      continue;
+    }
+    $existing = $role->getPermissions();
+    $to_revoke = array_intersect($permissions, $existing);
+    if (!empty($to_revoke)) {
+      foreach ($to_revoke as $perm) {
+        $role->revokePermission($perm);
+      }
+      $role->save();
+      $revoked[$role_id] = count($to_revoke);
+    }
+  }
+
+  if (empty($revoked)) {
+    return 'No Training permissions needed revoking; roles already up to date.';
+  }
+
+  $summary = [];
+  foreach ($revoked as $role_id => $count) {
+    $summary[] = "$role_id (-$count)";
+  }
+  return 'Revoked Training permissions from: ' . implode(', ', $summary) . '.';
+}
+
+/**
+ * Revoke Project content and taxonomy permissions from all roles.
+ *
+ * Project is not enabled by default on new sites. Permissions are removed
+ * from the role config and must also be revoked on existing sites via this
+ * deploy hook. Permissions for sites that actively use Project can be
+ * re-granted manually once the content type is enabled for that site.
+ */
+function hs_admin_deploy_10011(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  $role_permissions = [
+    'author' => [
+      'edit own hs_project content',
+    ],
+    'contributor' => [
+      'create hs_project content',
+      'edit any hs_project content',
+      'edit own hs_project content',
+      'revert hs_project revisions',
+      'view hs_project revisions',
+    ],
+    'preparer' => [
+      'create hs_project content',
+      'edit own hs_project content',
+      'view any unpublished hs_project content',
+    ],
+    'reviewer' => [
+      'view any unpublished hs_project content',
+    ],
+    'site_manager' => [
+      'create hs_project content',
+      'create terms in hs_project_category',
+      'delete any hs_project content',
+      'delete own hs_project content',
+      'delete terms in hs_project_category',
+      'edit any hs_project content',
+      'edit own hs_project content',
+      'edit terms in hs_project_category',
+      'revert hs_project revisions',
+      'view hs_project revisions',
+    ],
+  ];
+
+  $revoked = [];
+  foreach ($role_permissions as $role_id => $permissions) {
+    $role = $role_storage->load($role_id);
+    if (!$role instanceof RoleInterface) {
+      continue;
+    }
+    $existing = $role->getPermissions();
+    $to_revoke = array_intersect($permissions, $existing);
+    if (!empty($to_revoke)) {
+      foreach ($to_revoke as $perm) {
+        $role->revokePermission($perm);
+      }
+      $role->save();
+      $revoked[$role_id] = count($to_revoke);
+    }
+  }
+
+  if (empty($revoked)) {
+    return 'No Project permissions needed revoking; roles already up to date.';
+  }
+
+  $summary = [];
+  foreach ($revoked as $role_id => $count) {
+    $summary[] = "$role_id (-$count)";
+  }
+  return 'Revoked Project permissions from: ' . implode(', ', $summary) . '.';
+}
+
+/**
+ * Remove Manage Training and Manage Project shortcuts.
+ *
+ * These shortcuts point to view page displays that may not exist on a given
+ * site (the view is disabled or replaced by a custm_ clone), and Drupal does
+ * not check whether an internal path resolves before rendering a shortcut
+ * link. Access control cannot reliably hide them, so the entities are deleted.
+ * Sites that actively use Training or Project can re-add these shortcuts
+ * manually when the relevant manage content display is enabled.
+ */
+function hs_admin_deploy_10013(): string {
+  $shortcut_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+
+  $uuids = [
+    'c8b3c7b6-0bac-4b5a-92cd-8cbe24fa7a02' => 'Manage Training',
+    '77fd3a3c-6006-47db-a70b-a9379ba3d08d' => 'Manage Project',
+  ];
+
+  $deleted = [];
+  foreach ($uuids as $uuid => $label) {
+    $shortcuts = $shortcut_storage->loadByProperties(['uuid' => $uuid]);
+    if (!empty($shortcuts)) {
+      $shortcut_storage->delete($shortcuts);
+      $deleted[] = $label;
+    }
+  }
+
+  return empty($deleted)
+    ? 'Manage Training and Manage Project shortcuts not found; nothing to delete.'
+    : 'Deleted shortcuts: ' . implode(', ', $deleted) . '.';
+}

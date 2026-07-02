@@ -1,3 +1,5 @@
+@use '../functions/general' as *;
+
 // Overrides and additions to the accordion of the HS Layouts module
 .field-hs-accordion-description {
   overflow: auto;
@@ -5,4 +7,54 @@
 
 .field-hs-accordion-summary {
   text-wrap: balance;
+}
+
+// Add animation enhancement styles to the accordions.
+.hb-has-animation-enhancements {
+  details::details-content {
+    transition: content-visibility 0.35s allow-discrete;
+    transition-behavior: allow-discrete;
+    content-visibility: hidden;
+  }
+
+  details[open]::details-content {
+    content-visibility: visible;
+  }
+
+  // Grid wrapper: collapses to 0fr when closed.
+  details .revealed-details {
+    display: grid;
+    grid-template-rows: 0fr;
+    width: 100%;
+    padding: 0;
+    opacity: 0;
+    animation: none;
+    transition:
+      grid-template-rows 0.35s ease,
+      opacity 0.35s ease;
+  }
+
+  // Grid item. Block padding is animated so it collapses with the row.
+  details .revealed-details__inner {
+    min-height: 0;
+    padding: 0 hb-calculate-rems(16px);
+    overflow: hidden;
+    transition: padding-block 0.35s ease;
+  }
+
+  details[open] .revealed-details {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  details[open] .revealed-details__inner {
+    padding-block: hb-calculate-rems(20px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    details .revealed-details,
+    details .revealed-details__inner {
+      transition: none;
+    }
+  }
 }

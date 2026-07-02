@@ -1,14 +1,8 @@
-{%
-  set classes = [
-    'hb-card',
-    'hb-horizontal-expandable-card'
-  ]
-%}
+{% set details_id = 'horizontal-expandable-card-details'|clean_unique_id %}
 
-{% set summary_attributes = summary_attributes ?: create_attribute() %}
-{%- set attributes = attributes.addClass(classes) -%}
+{% set attributes = attributes.addClass('hb-horizontal-expandable-card') %}
 
-<div {{attributes}}>
+<div {{ attributes }}>
 	<div class="hb-horizontal-expandable-card__header">
 		<div class="hb-horizontal-expandable-card__content">
 			{% if categories %}
@@ -27,15 +21,16 @@
 				</div>
 			{% endif %}
 		</div>
+
 		<div class="hb-horizontal-expandable-card__toggle">
-			<button aria-label="{{ alert_dismiss_text|default("Expand") }}" class="hb-horizontal-expandable-card__toggle-button" type="button"></button>
+			<button class="hb-horizontal-expandable-card__toggle-button" aria-expanded="false" aria-controls="{{ details_id }}" type="button">
+				<span class="visually-hidden">Expand</span>
+			</button>
 		</div>
 	</div>
 
 	{% if details %}
-		<div
-			class="hb-horizontal-expandable-card__details">
-			{# Nuevo contenedor interno necesario para la magia del Grid #}
+		<div id="{{ details_id }}" class="hb-horizontal-expandable-card__details">
 			<div class="hb-horizontal-expandable-card__details-inner">
 				{{ details }}
 			</div>

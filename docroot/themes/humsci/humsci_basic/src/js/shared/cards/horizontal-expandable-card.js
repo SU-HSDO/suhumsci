@@ -14,22 +14,21 @@
 
         if (!toggleButton) return;
 
+        const toggleText = toggleButton.querySelector('.visually-hidden');
+
         // Set initial state.
         toggleButton.setAttribute('aria-expanded', 'false');
 
         // Add event handler.
-        toggleButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
+        toggleButton.addEventListener('click', () => {
           // Toggle the aria-expanded attribute.
           if (toggleButton.getAttribute('aria-expanded') === 'true') {
             toggleButton.setAttribute('aria-expanded', 'false');
-            toggleButton.setAttribute('aria-label', 'Expand');
+            toggleText.textContent = 'Expand';
             card.classList.remove('is-open');
           } else {
             toggleButton.setAttribute('aria-expanded', 'true');
-            toggleButton.setAttribute('aria-label', 'Collapse');
+            toggleText.textContent = 'Collapse';
             card.classList.add('is-open');
           }
         });

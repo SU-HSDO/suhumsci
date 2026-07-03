@@ -3,6 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_cmap_year.field_hs_cmap_year_foo
+    - field.field.paragraph.hs_cmap_year.field_hs_cmap_year_int
     - field.field.paragraph.hs_cmap_year.field_hs_cmap_year_qtr
     - field.field.paragraph.hs_cmap_year.field_hs_cmap_year_year
     - paragraphs.paragraphs_type.hs_cmap_year
@@ -11,11 +13,26 @@ dependencies:
     - entity_reference_revisions
     - field_formatter_class
     - hs_field_helpers
+    - text
 id: paragraph.hs_cmap_year.default
 targetEntityType: paragraph
 bundle: hs_cmap_year
 mode: default
 content:
+  field_hs_cmap_year_foo:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_hs_cmap_year_int:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
   field_hs_cmap_year_qtr:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -23,7 +40,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   field_hs_cmap_year_year:
     type: entity_title_heading

@@ -4,17 +4,26 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hs_cmap.field_hs_cmap_help
+    - field.field.paragraph.hs_cmap.field_hs_cmap_intro
     - field.field.paragraph.hs_cmap.field_hs_cmap_title
     - field.field.paragraph.hs_cmap.field_hs_cmap_years
     - paragraphs.paragraphs_type.hs_cmap
   module:
     - entity_reference_revisions
     - hs_field_helpers
+    - text
 id: paragraph.hs_cmap.default
 targetEntityType: paragraph
 bundle: hs_cmap
 mode: default
 content:
+  field_hs_cmap_intro:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
   field_hs_cmap_title:
     type: entity_title_heading
     label: hidden
@@ -31,7 +40,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
 hidden:
   field_hs_cmap_help: true

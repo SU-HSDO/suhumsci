@@ -3,37 +3,43 @@
 {% set attributes = attributes.addClass('hb-horizontal-expandable-card') %}
 
 <div {{ attributes }}>
-	<div class="hb-horizontal-expandable-card__header">
-		<div class="hb-horizontal-expandable-card__content">
-			{% if categories %}
-				<div class="hb-horizontal-expandable-card__categories">
-					{{ categories }}
-				</div>
-			{% endif %}
-			{% if title %}
-				<div class="hb-horizontal-expandable-card__title">
-					{{ title }}
-				</div>
-			{% endif %}
-			{% if introduction %}
-				<div class="hb-horizontal-expandable-card__introduction">
-					{{ introduction }}
-				</div>
-			{% endif %}
-		</div>
+  <div class="hb-horizontal-expandable-card__header">
+    <div class="hb-horizontal-expandable-card__content">
+      {% if categories %}
+        <div class="hb-horizontal-expandable-card__categories">
+          {{ categories }}
+        </div>
+      {% endif %}
+      {% if title %}
+        <div class="hb-horizontal-expandable-card__title">
+          {% if title|render matches '/<\\/h\\d>/' %}
+            {{ title }}
+          {% else %}
+            <h3>{{ title }}</h3>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if introduction %}
+        <div class="hb-horizontal-expandable-card__introduction">
+          {{ introduction }}
+        </div>
+      {% endif %}
+    </div>
 
-		<div class="hb-horizontal-expandable-card__toggle">
-			<button class="hb-horizontal-expandable-card__toggle-button" aria-expanded="false" aria-controls="{{ details_id }}" type="button">
-				<span class="visually-hidden">Expand</span>
-			</button>
-		</div>
-	</div>
+    {% if details %}
+      <div class="hb-horizontal-expandable-card__toggle">
+        <button class="hb-horizontal-expandable-card__toggle-button" aria-expanded="false" aria-controls="{{ details_id }}" type="button">
+          <span class="visually-hidden">{{ 'Expand'|t }}</span>
+        </button>
+      </div>
+    {% endif %}
+  </div>
 
-	{% if details %}
-		<div id="{{ details_id }}" class="hb-horizontal-expandable-card__details">
-			<div class="hb-horizontal-expandable-card__details-inner">
-				{{ details }}
-			</div>
-		</div>
-	{% endif %}
+  {% if details %}
+    <div id="{{ details_id }}" class="hb-horizontal-expandable-card__details">
+      <div class="hb-horizontal-expandable-card__details-inner">
+        {{ details }}
+      </div>
+    </div>
+  {% endif %}
 </div>

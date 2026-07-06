@@ -53,13 +53,20 @@ $cmap-colors: (
     font-size: hb-calculate-rems(14px);
     line-height: 135%;
 
+    // Making a little smaller for footnotes
+    // to make sense with the new font size.
     ul {
       li::before {
-        // Making a little smaller for footnotes
-        // to make sense with the new font size.
         height: hb-calculate-rems(5px);
         width: hb-calculate-rems(5px);
         top: hb-calculate-rems(5px);
+      }
+    }
+
+    ol {
+      li::before {
+        font-size: hb-calculate-rems(14px);
+        top: 0;
       }
     }
   }

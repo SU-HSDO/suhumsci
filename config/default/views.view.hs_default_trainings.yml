@@ -630,7 +630,6 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
-      css_class: 'hb-raised-cards hb-raised-cards--uniform-height'
       header: {  }
       footer: {  }
       display_extenders: {  }
@@ -841,7 +840,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: Date
+          label: Date/Time
           exclude: false
           alter:
             alter_text: false
@@ -1011,6 +1010,7 @@ display:
             field_hs_training_date_range: field_hs_training_date_range
             field_hs_training_deliverymethod: field_hs_training_deliverymethod
             field_hs_training_resource_links: field_hs_training_resource_links
+            field_hs_training_name: field_hs_training_name
           default: '-1'
           info:
             title:
@@ -1040,6 +1040,13 @@ display:
               empty_column: false
               responsive: ''
             field_hs_training_resource_links:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_hs_training_name:
+              sortable: false
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
@@ -1091,13 +1098,11 @@ display:
               destination: column_4
               weight: 4
       defaults:
-        css_class: false
         pager: false
         style: false
         row: false
         fields: false
         header: false
-      css_class: ''
       display_description: 'Table of all trainings.'
       header: {  }
       display_extenders: {  }
@@ -1121,6 +1126,47 @@ display:
     position: 1
     display_options:
       fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            make_link: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         field_hs_training_name:
           id: field_hs_training_name
           table: node__field_hs_training_name
@@ -1130,34 +1176,10 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
-            text: ''
             make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -1184,59 +1206,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        view_node_1:
-          id: view_node_1
-          table: node
-          field: view_node
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          plugin_id: entity_link
-          label: ''
-          exclude: false
-          alter:
-            alter_text: true
-            text: '<a href="{{ view_node_1 }}">{{ field_hs_training_name }}</a>'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          text: ''
-          output_url_as_text: true
-          absolute: false
         field_hs_training_date_range:
           id: field_hs_training_date_range
           table: node__field_hs_training_date_range
@@ -1501,6 +1470,35 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        view_node:
+          id: view_node
+          table: node
+          field: view_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: entity_link
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            make_link: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: 'See training details'
+          output_url_as_text: false
+          absolute: false
       pager:
         type: some
         options:
@@ -1669,36 +1667,37 @@ display:
         options:
           default_field_elements: true
           inline:
-            view_node_1: '0'
+            title: '0'
             field_hs_training_name: '0'
             field_hs_training_date_range: '0'
             field_hs_training_date_range_1: '0'
             field_hs_training_date_range_2: '0'
             field_hs_training_location: '0'
             body: '0'
+            view_node: '0'
           separator: ''
           hide_empty: true
           pattern: date_stacked_vertical_card
           pattern_mapping:
-            'views_row:view_node_1':
-              plugin: views_row
-              source: view_node_1
-              destination: title
-              weight: 0
             'views_row:field_hs_training_date_range_2':
               plugin: views_row
               source: field_hs_training_date_range_2
               destination: time
-              weight: 1
+              weight: 0
             'views_row:body':
               plugin: views_row
               source: body
               destination: description
+              weight: 1
+            'views_row:view_node':
+              plugin: views_row
+              source: view_node
+              destination: button
               weight: 2
             'views_row:field_hs_training_name':
               plugin: views_row
               source: field_hs_training_name
-              destination: category
+              destination: title
               weight: 3
             'views_row:field_hs_training_date_range_1':
               plugin: views_row

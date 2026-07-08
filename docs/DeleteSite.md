@@ -48,7 +48,7 @@ Update Drush multi-sites array:
 Remove the site Drush alias YAML:
 
 ```bash
-git rm drush/sites/SITENAME.site.yml
+git rm drush/sites/<SITENAME>.site.yml
 ```
 
 Remove site alias from Lando and DDEV configuration:
@@ -71,22 +71,24 @@ Remove `-dev`, `-stage`, `-prod`, and live domains from NetDB:
 
 Remove `-dev`, `-stage`, `-prod`, and live domains from Acquia environments:
 1. Open the Acquia Cloud UI for the HumSci Gryphon application.
-2. Click on the production environment (Prod).
-3. Click on the Domain Management tab in the left-side navigation.
-4. Find the relevant domains for the site.
-5. Click the three-dot button for the relevant domains and delete them.
-6. Repeat for staging (Stage) and development (Dev) environments.
+1. Click on the production environment (Prod).
+1. Click on the Domain Management tab in the left-side navigation.
+1. Find the relevant domains for the site.
+1. Click the three-dot button for the relevant domains and delete them.
+1. Repeat for staging (Stage) and development (Dev) environments.
 
-Alternatively, use ACLI if installed:
+Alternatively, use ACLI if installed. You can target each environment by ID or by its `humscigryphon.<env>` application alias (the alias rarely changes and is easier to remember):
 
 ```bash
-# Find the app-id in drush/drush.yml under command.sws.options.app-id.
-# Use that app-id to list environment IDs.
-acli api:applications:environment-list APP_ID
-# Remove domains
-acli api:environments:domain-delete PROD_ENV_ID SITE-prod.stanford.edu
-acli api:environments:domain-delete STAGE_ENV_ID SITE-stage.stanford.edu
-acli api:environments:domain-delete DEV_ENV_ID SITE-dev.stanford.edu
+# Using environment IDs:
+acli api:environments:domain-delete <PROD_ENV_ID> <SITE>-prod.stanford.edu
+acli api:environments:domain-delete <STAGE_ENV_ID> <SITE>-stage.stanford.edu
+acli api:environments:domain-delete <DEV_ENV_ID> <SITE>-dev.stanford.edu
+
+# Using aliases:
+acli api:environments:domain-delete humscigryphon.prod <SITE>-prod.stanford.edu
+acli api:environments:domain-delete humscigryphon.test <SITE>-stage.stanford.edu
+acli api:environments:domain-delete humscigryphon.dev <SITE>-dev.stanford.edu
 ```
 
 
@@ -107,30 +109,62 @@ Create a new branch.
 Remove the site directory:
 
 ```bash
-rm -rf docroot/sites/SITE
+rm -rf docroot/sites/<SITE>
 ```
 
 Create a new PR for these changes.
 
 ### Remove the Database from Acquia
 
+Before deleting the database, create and download the latest backup, either via ACLI or the Acquia Cloud UI.
+
+**With ACLI:**
+
+Create a backup, then download it without importing it anywhere. You can target the environment by ID or by its `humscigryphon.prod` application alias (the alias rarely changes and is easier to remember):
+
+```bash
+# Using an environment ID:
+acli api:environments:database-backup-create <PROD_ENV_ID> <SITE>
+acli pull:database --no-import <PROD_ENV_ID> <SITE>
+
+# Using the humscigryphon.prod alias:
+acli api:environments:database-backup-create humscigryphon.prod <SITE>
+acli pull:database --no-import humscigryphon.prod <SITE>
+```
+
+The command prints the downloaded file's path in the system temp directory when it finishes. Move it to your backup location and rename it to a clear, dated format:
+
+```bash
+mkdir -p ~/site-backups
+mv /tmp/prod-<SITE>-db<ID>-<TIMESTAMP>.sql.gz ~/site-backups/<SITE>-prod-db-<YYYY-MM-DD>.sql.gz
+```
+
+**With the Acquia Cloud UI** (use this if ACLI isn't installed or configured):
+
 1. Open the Acquia Cloud UI for the HumSci Gryphon application.
-2. Click on the production environment (Prod).
-3. Click on the Databases tab in the left-side navigation.
-4. Find the database for the site.
-5. **Download the latest database backup first.**
-   - Rename the backup to a clear, dated format such as `SITE-prod-db-YYYY-MM-DD.sql.gz`.
-   - Upload it to a secure internal storage location as directed by your team. Refer to internal documentation for the correct location.
-6. Delete the database.
+1. Click on the production environment (Prod).
+1. Click on the Databases tab in the left-side navigation.
+1. Find the database for the site, click its three-dot button, then **Backup**.
+1. Once the backup completes, click the three-dot button again and **Download** it.
+1. Rename the downloaded backup to a clear, dated format such as `<SITE>-prod-db-<YYYY-MM-DD>.sql.gz`.
+
+> **Important:** Whichever method you used above, upload the renamed backup to a secure internal storage location as directed by your team before continuing. Refer to internal documentation for the correct location.
+
+Once the backup is confirmed, delete the database:
+
+1. Open the Acquia Cloud UI for the HumSci Gryphon application.
+1. Click on the production environment (Prod).
+1. Click on the Databases tab in the left-side navigation.
+1. Find the database for the site, click its three-dot button, then **Delete**.
 
 ### Backup Site Files
 
-Replace `SITE` with the alias of the site you are backing up.
+Replace `<SITE>` with the alias of the site you are backing up.
 
 #### Create a Local Directory
 
 ```bash
-mkdir ~/site-backups/SITE-prod-files-YYYY-MM-DD
+mkdir -p ~/site-backups/<SITE>-prod-files-<YYYY-MM-DD>
 ```
 
 #### Download Files via rsync
@@ -141,8 +175,8 @@ If the site has already been decommissioned and the current branch no longer has
 
 ```bash
 git checkout <commit-or-branch-with-site-alias>
-drush rsync @SITE.prod:%files/ ~/site-backups/SITE-prod-files-YYYY-MM-DD/files
-drush rsync @SITE.prod:%private/ ~/site-backups/SITE-prod-files-YYYY-MM-DD/files-private
+drush rsync @<SITE>.prod:%files/ ~/site-backups/<SITE>-prod-files-<YYYY-MM-DD>/files
+drush rsync @<SITE>.prod:%private/ ~/site-backups/<SITE>-prod-files-<YYYY-MM-DD>/files-private
 ```
 
 Return to your working branch after the backup is complete.
@@ -151,7 +185,7 @@ Return to your working branch after the backup is complete.
 #### Archive the Backup
 
 ```bash
-tar -czvf ~/site-backups/SITE-prod-files-YYYY-MM-DD.tar.gz ~/site-backups/SITE-prod-files-YYYY-MM-DD
+tar -czvf ~/site-backups/<SITE>-prod-files-<YYYY-MM-DD>.tar.gz ~/site-backups/<SITE>-prod-files-<YYYY-MM-DD>
 ```
 
 #### Upload and Clean Up

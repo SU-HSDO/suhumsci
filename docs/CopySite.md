@@ -16,7 +16,7 @@ See [Development Requirements](DevelopmentRequirements.md).
 
 ## Provision a New Site to Copy To
 
-If the site to be copied to does not exist, the first step is to [provision a new site](NewSite.md) to be copied to. Follow all the steps up to the deployment of the code. The profile install is unnecessary because this is not for a fresh site — the existing site will be copied over.
+If the site to be copied to does not exist, the first step is to [provision a new site](NewSite.md) to be copied to. Follow all the steps up to the deployment of the code. The profile install is unnecessary because this is not for a fresh site: the existing site will be copied over.
 
 The provision step needs to happen first and the copy cannot continue until the provisioned code is deployed.
 
@@ -30,7 +30,7 @@ In the example above, `mathematics2024` is `<SOURCE>` and `mathematics` is `<DES
 
 ### Verify DESTINATION URLs Were Provisioned
 
-Make sure the following aliases have been set up correctly in [NetDB](https://netdb.stanford.edu/) — especially the `-prod` URL — before continuing.
+Make sure the following aliases, especially the `-prod` URL, have been set up correctly in [NetDB](https://netdb.stanford.edu/) before continuing.
 
 - `<DESTINATION>-dev`
 - `<DESTINATION>-test` (the staging environment)
@@ -48,11 +48,87 @@ Check the `<DESTINATION>` site's `/admin/content` page to verify there are no re
 
 ### Create Database Backups
 
-If `<SOURCE>` is going to be shut down or re-purposed, create a backup in case it needs to be restored or referenced.
+Create a database backup of both `<SOURCE>` and `<DESTINATION>`. The `<DESTINATION>` backup is especially important because its database and files are about to be dropped and overwritten by the copy.
 
-Create a backup of `<DESTINATION>` as well, in case there is confusion during the process.
+**With ACLI:**
 
-> **Warning:** Complete both backups before proceeding. The next steps will drop and overwrite the `<DESTINATION>` database. Confirm backups exist and are readable before continuing.
+You can target the environment by ID or by its `humscigryphon.prod` application alias (the alias rarely changes and is easier to remember):
+
+```bash
+# Using an environment ID:
+acli api:environments:database-backup-create <PROD_ENV_ID> <SOURCE>
+acli api:environments:database-backup-create <PROD_ENV_ID> <DESTINATION>
+
+# Using the humscigryphon.prod alias:
+acli api:environments:database-backup-create humscigryphon.prod <SOURCE>
+acli api:environments:database-backup-create humscigryphon.prod <DESTINATION>
+```
+
+**With the Acquia Cloud UI** (use this if ACLI isn't installed or configured):
+
+1. Open the Acquia Cloud UI for the HumSci Gryphon application.
+1. Click on the production environment (Prod).
+1. Click on the Databases tab in the left-side navigation.
+1. Find the `<SOURCE>` database, click its three-dot button, then **Backup**.
+1. Repeat for the `<DESTINATION>` database.
+
+#### Download the DESTINATION Database Backup
+
+`<DESTINATION>`'s database is about to be dropped and overwritten, so download the backup just created above, rename it, and upload it to Google Drive as a safety net.
+
+**With ACLI:**
+
+Download the backup just created above, without importing it anywhere:
+
+```bash
+# Using an environment ID:
+acli pull:database --no-import <PROD_ENV_ID> <DESTINATION>
+
+# Using the humscigryphon.prod alias:
+acli pull:database --no-import humscigryphon.prod <DESTINATION>
+```
+
+The command prints the downloaded file's path in the system temp directory when it finishes. Move it to your backup location and rename it to a clear, dated format:
+
+```bash
+mkdir -p ~/site-backups
+mv /tmp/prod-<DESTINATION>-db<ID>-<TIMESTAMP>.sql.gz ~/site-backups/<DESTINATION>-prod-db-<YYYY-MM-DD>.sql.gz
+```
+
+**With the Acquia Cloud UI** (use this if ACLI isn't installed or configured):
+
+1. Open the Acquia Cloud UI for the HumSci Gryphon application.
+1. Click on the production environment (Prod).
+1. Click on the Databases tab in the left-side navigation.
+1. Find the `<DESTINATION>` database, click its three-dot button, then **Download**.
+1. Rename the downloaded backup to a clear, dated format such as `<DESTINATION>-prod-db-<YYYY-MM-DD>.sql.gz`.
+
+> **Important:** Whichever method you used above, upload the renamed backup to Google Drive before continuing.
+
+#### Back Up DESTINATION Files
+
+Create a local directory:
+
+```bash
+mkdir -p ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>
+```
+
+Download the files:
+
+```bash
+drush rsync @<DESTINATION>.prod:%files/ ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>/files
+drush rsync @<DESTINATION>.prod:%private/ ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>/files-private
+```
+
+Archive the backup:
+
+```bash
+tar -czvf ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>.tar.gz ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>
+```
+
+Upload the archive to Google Drive, then delete the local backup directory and archive.
+
+> **Warning:** Complete both the `<DESTINATION>` database and files backups before proceeding. The next steps will drop and overwrite the `<DESTINATION>` database and files. Confirm the backups are uploaded and readable before continuing.
 
 ### Copy the Source Database and Files Locally
 

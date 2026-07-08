@@ -35,6 +35,15 @@
     }
   }
 
+  .hb-card__content {
+    .hb-raised-cards--uniform-height & {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+
   @include hb-traditional {
     border: 2px solid color('secondary');
     background-color: color('white', 'global');
@@ -72,18 +81,31 @@
     }
 
     .hs-button {
-
       position: relative;
       margin-top: auto;
       margin-left: hb-calculate-rems(-24px);
       margin-right: hb-calculate-rems(-24px);
 
-      a {
+      a,
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
         @include hb-secondary-button;
 
         border-width: 0;
         border-top-width: 2px;
         width: 100%;
+      }
+
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
+        margin-right: 0;
+
+        --link-base-current-color: #{color('secondary')};
+        --link-base-hover-current-color: #{color('white', 'global')};
+
+        &:focus {
+          --link-base-hover-current-color: #{color('secondary')};
+        }
       }
     }
 
@@ -114,13 +136,6 @@
         hb-calculate-rems(35px)
         color-mix(in srgb, color('black', 'global') 10%, transparent);
       background-color: color('white', 'global');
-
-      .hb-raised-cards--uniform-height & {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-      }
 
       .hb-raised-cards & {
         padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
@@ -174,11 +189,26 @@
       }
     }
 
-    .hs-button a {
-      padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
-        hb-calculate-rems(6px);
-      background-color: color('primary');
-      border-color: color('primary');
+    .hs-button {
+      display: flex;
+      flex-direction: column;
+      gap: hb-calculate-rems(4px);
+
+      a {
+        padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
+          hb-calculate-rems(6px);
+        background-color: color('primary');
+        border-color: color('primary');
+      }
+
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
+        margin-right: 0;
+        color: color('white', 'global');
+
+        --link-base-current-color: #{color('white', 'global')};
+        --link-base-hover-current-color: #{color('white', 'global')};
+      }
     }
   }
 }

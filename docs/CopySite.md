@@ -178,11 +178,13 @@ Drop the existing `<DESTINATION>` database:
 drush @<DESTINATION>.prod sql-drop -y
 ```
 
-Push the `<SOURCE>` database to `<DESTINATION>`:
+Push the `<SOURCE>` database to `<DESTINATION>`. Piping a large file through `sql-cli` is slow because Drush stays in the data path; connect directly with `sql:connect` instead:
 
 ```bash
-drush @<DESTINATION>.prod sql-cli < ~/site-copies/<SOURCE>-<DESTINATION>-transfer/<SOURCE>.sql
+$(drush @<DESTINATION>.prod sql:connect) < ~/site-copies/<SOURCE>-<DESTINATION>-transfer/<SOURCE>.sql
 ```
+
+> **Note:** `sql:connect` prints the database credentials as part of the connection command. Avoid running this in a context where the command line is logged or visible to others.
 
 Push the `<SOURCE>` files and private files to `<DESTINATION>`:
 
@@ -204,12 +206,18 @@ Rebuild the cache on `<DESTINATION>`:
 drush @<DESTINATION>.prod cr
 ```
 
-Clear Varnish via the Acquia UI or ACLI:
+Clear Varnish via the Acquia UI or ACLI. You can target the environment by ID or by its `humscigryphon.prod` application alias (the alias rarely changes and is easier to remember):
 
 ```bash
-acli api:environments:domain-clear-caches <APP_UUID> <DESTINATION>.stanford.edu
-acli api:environments:domain-clear-caches <APP_UUID> <DESTINATION>-prod.stanford.edu
-acli api:environments:domain-clear-caches <APP_UUID> <SOURCE>-prod.stanford.edu
+# Using an environment ID:
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <DESTINATION>.stanford.edu
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <DESTINATION>-prod.stanford.edu
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <SOURCE>-prod.stanford.edu
+
+# Using the humscigryphon.prod alias:
+acli api:environments:domain-clear-caches humscigryphon.prod <DESTINATION>.stanford.edu
+acli api:environments:domain-clear-caches humscigryphon.prod <DESTINATION>-prod.stanford.edu
+acli api:environments:domain-clear-caches humscigryphon.prod <SOURCE>-prod.stanford.edu
 ```
 
 > **Note:** You may also need to clear the Akamai CDN cache if the site does not update.
@@ -275,15 +283,20 @@ Check for an existing entry pointing the live URL to `<SOURCE>` (e.g., `$sites['
   $sites['<LIVEURL>.stanford.edu'] = '<DESTINATION>';
   ```
 
-Save the file, then rebuild caches and clear Varnish:
+Save the file, then rebuild caches and clear Varnish. You can target the environment by ID or by its `humscigryphon.prod` application alias:
 
 ```bash
 drush @<DESTINATION>.prod cr
 ```
 
 ```bash
-acli api:environments:domain-clear-caches <APP_UUID> <LIVEURL>.stanford.edu
-acli api:environments:domain-clear-caches <APP_UUID> <DESTINATION>-prod.stanford.edu
+# Using an environment ID:
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <LIVEURL>.stanford.edu
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <DESTINATION>-prod.stanford.edu
+
+# Using the humscigryphon.prod alias:
+acli api:environments:domain-clear-caches humscigryphon.prod <LIVEURL>.stanford.edu
+acli api:environments:domain-clear-caches humscigryphon.prod <DESTINATION>-prod.stanford.edu
 ```
 
 Open the live URL and verify the site loads from `<DESTINATION>`. Check the Status Report page at `/admin/reports/status` and confirm the Stanford Site Alias line shows `<DESTINATION>`, not `<SOURCE>`.

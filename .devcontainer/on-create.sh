@@ -7,10 +7,16 @@ echo "=== Installing dependencies ==="
 # Install nvm and source it in this script. theme-get-command.sh has its own
 # nvm detection, but relying on it alone was not reliable, so install and
 # activate the .nvmrc version here too, before anything else needs node.
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash
+# install.sh's final step chmods nvm-exec, which is not something we use
+# directly (we only source nvm.sh) and can fail on its own in this container.
+# Do not let that be fatal here; instead verify nvm.sh itself was produced.
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash || true
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+if [ ! -s "$NVM_DIR/nvm.sh" ]; then
+  echo "nvm installation failed: $NVM_DIR/nvm.sh not found" >&2
+  exit 1
+fi
+. "$NVM_DIR/nvm.sh"
 nvm install
 nvm use
 

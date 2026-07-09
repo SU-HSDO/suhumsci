@@ -4,8 +4,21 @@ set -e
 
 echo "=== Installing dependencies ==="
 
+# Install nvm and source it in this script. theme-get-command.sh has its own
+# nvm detection, but relying on it alone was not reliable, so install and
+# activate the .nvmrc version here too, before anything else needs node.
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+nvm install
+nvm use
+
 # Install Composer dependencies
 composer install -n
+
+# Build theme CSS/JS. Not committed to the repo, so this must run explicitly.
+composer build-theme
 
 # Copy Codespaces drush configuration
 cp .devcontainer/drush.yml drush/local.drush.yml
@@ -13,7 +26,8 @@ cp .devcontainer/drush.yml drush/local.drush.yml
 # Generate multisite settings
 drush sws:multisite:settings
 
-# Update drush URI to the Codespaces URL
+# Update drush URI to the Codespaces URL. drush/drush.yml declares this file
+# as a merged config source for every drush invocation from this repo.
 sed -i "s|uri:.*$|uri: https://$CODESPACE_NAME-80.app.github.dev|" docroot/sites/default/local.drush.yml
 
 # Install default site only

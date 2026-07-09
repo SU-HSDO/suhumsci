@@ -2,7 +2,9 @@
 
 set -e
 
-ADMIN_LOGIN=$(drush @default.local uli --no-browser)
+code docs/CodespacesWorkflow.md
+
+ADMIN_LOGIN=$(drush @default.local uli --no-browser --uri="https://${CODESPACE_NAME}-80.app.github.dev")
 
 echo ""
 echo "=== Setup complete ==="

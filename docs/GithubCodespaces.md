@@ -14,7 +14,7 @@ Codespaces enables developers and non-developers to work on the site without ins
 
 ### Container Setup
 
-`.devcontainer/devcontainer.json` specifies the container image, port forwarding, and the `onCreateCommand`/`postStartCommand` hooks that drive initialization.
+`.devcontainer/devcontainer.json` specifies the container image, port forwarding, and the `onCreateCommand`/`postAttachCommand` hooks that drive initialization.
 
 ### Services
 
@@ -26,8 +26,8 @@ Codespaces enables developers and non-developers to work on the site without ins
 
 ### Initialization
 
-- `.devcontainer/on-create.sh` runs once, at codespace creation. It installs Composer dependencies, generates multisite settings, installs the default site, configures Apache, and rebuilds the cache. It never runs again, including on resume, so it does not fetch new commits, run database updates, or import configuration.
-- `.devcontainer/post-start.sh` runs every time the codespace starts, including on resume. It generates and displays the admin login link.
+- `.devcontainer/on-create.sh` runs once, at codespace creation. It installs `nvm` (letting `hooks/common/theme/theme-get-command.sh`'s own detection install the exact Node version from `.nvmrc`), installs Composer dependencies, builds theme CSS/JS (not committed to the repo), generates multisite settings, installs the default site, configures Apache, and rebuilds the cache. It never runs again, including on resume, so it does not fetch new commits, run database updates, or import configuration.
+- `.devcontainer/post-attach.sh` runs every time a client attaches, including on resume. It opens the workflow guide and generates and displays the admin login link. This runs later than `postStartCommand` would, after the client is actually connected, so its output is visible rather than only landing in the creation log.
 
 ## Maintenance
 
@@ -36,11 +36,11 @@ When maintaining Codespaces support:
 - The SWS drush commands generate site-specific settings during `drush sws:multisite:settings`. Database name follows the `<db-name>_<site-name>` pattern from `.devcontainer/drush.yml`, so `docker-compose.yml`'s `MYSQL_DATABASE` must match.
 - Update `.devcontainer/on-create.sh` if the site installation command changes.
 - The `CODESPACE_NAME` environment variable is set automatically by GitHub Codespaces and used to construct the site URL.
-- `.devcontainer/devcontainer.json`'s `customizations.codespaces.openFiles` opens `docs/CodespacesWorkflow.md` automatically on codespace creation. `customizations.vscode.settings["workbench.editorAssociations"]` defaults all markdown files to the rendered preview editor, so it opens rendered rather than as raw source. Update the `openFiles` path if that document moves or is renamed.
+- `.devcontainer/post-attach.sh` (wired to `postAttachCommand`) opens `docs/CodespacesWorkflow.md` using the `code` CLI available inside the container. `customizations.vscode.settings["workbench.editorAssociations"]` defaults markdown files to the rendered preview editor, so it opens rendered rather than as raw source. An earlier attempt used `customizations.codespaces.openFiles` instead, but that mechanism did not consistently respect the editor association; `postAttachCommand` was used instead because it opens the file through the same code path as manually opening a file, which does respect it. Update the path in `post-attach.sh` if that document moves or is renamed.
 - Do not hardcode versions in documentation. Reference the source files (`docker-compose.yml`, `composer.json`, etc.) instead.
 
 ## Troubleshooting
 
 - **Site returns a 500 or 404 error:** Check that the Apache document root and virtual host configuration in `.devcontainer/on-create.sh` still match the container image's default Apache setup. This can break if the base image (`pookmish/drupal8ci` in `docker-compose.yml`) changes its Apache configuration.
-- **CSS or JS looks broken or unstyled after a rebuild:** Confirm `.devcontainer/on-create.sh` still runs `drush @default.local cr` and the file-permission fix for `docroot/sites/default/files` as its last steps.
+- **CSS or JS 404s or looks broken or unstyled:** Theme assets are not committed to the repo and must be built explicitly. Confirm `.devcontainer/on-create.sh` still installs `nvm` and sources it before `composer build-theme` runs, and still runs `drush @default.local cr` and the file-permission fix for `docroot/sites/default/files` as its last steps.
 - For end-user issues (login link, basic CSS problems), see the [GitHub Codespaces Workflow](CodespacesWorkflow.md) guide.

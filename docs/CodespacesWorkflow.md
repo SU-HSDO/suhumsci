@@ -17,7 +17,7 @@ Most codespaces are launched to tweak configuration on an existing pull request:
 
 This document opens automatically in a rendered preview tab once the codespace loads. The environment starts in a few minutes. Once initialization completes, the terminal displays the site URL and an admin login link. If your browser supports pop-ups from GitHub, the login link opens automatically; otherwise copy it from the terminal and paste it into your browser.
 
-> **Note:** The admin login link expires after a short time. If it stops working, generate a fresh one by running `drush @default.local uli` in the terminal.
+> **Note:** The admin login link expires after a short time. If it stops working, run `drush @default.local uli` in the terminal to generate a new one. The output uses `http://default` as a placeholder domain, which does not work if you click or paste it directly. Instead, copy everything after `default` (starting with `/user/reset/...`) and paste it onto the end of your actual site URL.
 
 > **Note:** The site you see in a codespace is a single generic site, not one of the platform's individual department sites. Configuration changes you export here still apply correctly regardless of which site a pull request is about.
 
@@ -86,5 +86,5 @@ To restart:
 ## Troubleshooting
 
 - **CSS or JS looks broken or unstyled:** Run `drush @default.local cr` to rebuild the cache.
-- **Login link does not work:** Generate a fresh one with `drush @default.local uli`.
+- **Login link does not work:** Generate a fresh one with `drush @default.local uli`, then copy everything after `default` in the output and paste it onto the end of your actual site URL (see the note under Launch a Codespace).
 - **Anything else:** See the [GitHub Codespaces](GithubCodespaces.md) developer guide.

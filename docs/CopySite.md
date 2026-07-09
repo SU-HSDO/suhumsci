@@ -44,7 +44,7 @@ If the provision was not done correctly or the URLs are not set up, correct thos
 
 Before starting, notify the H&S web team and/or site owner that there will be brief downtime and they should refrain from editing the site until the copy is complete. Any edits made to the site after the database is copied down locally will not be transferred.
 
-### Create Database Backups
+### Back Up the SOURCE and DESTINATION Databases
 
 Create a database backup of both `<SOURCE>` and `<DESTINATION>`. The `<DESTINATION>` backup is especially important because its database and files are about to be dropped and overwritten by the copy.
 
@@ -90,7 +90,7 @@ The command prints the downloaded file's path in the system temp directory when 
 
 ```bash
 mkdir -p ~/site-backups
-mv /tmp/prod-<DESTINATION>-db<ID>-<TIMESTAMP>.sql.gz ~/site-backups/<DESTINATION>-prod-db-<YYYY-MM-DD>.sql.gz
+mv <FILEPATH> ~/site-backups/<DESTINATION>-prod-db-<YYYY-MM-DD>.sql.gz
 ```
 
 **With the Acquia Cloud UI** (use this if ACLI isn't installed or configured):
@@ -103,7 +103,7 @@ mv /tmp/prod-<DESTINATION>-db<ID>-<TIMESTAMP>.sql.gz ~/site-backups/<DESTINATION
 
 > **Important:** Whichever method you used above, upload the renamed backup to Google Drive before continuing.
 
-#### Back Up DESTINATION Files
+### Back Up DESTINATION Files
 
 Create a local directory:
 
@@ -315,12 +315,6 @@ drush @<DESTINATION>.prod cr
 ```
 
 Verify the canonical redirect is working by opening `https://<DESTINATION>-prod.stanford.edu/?foo` in an incognito window and confirming it redirects to `https://<LIVEURL>.stanford.edu/?foo`.
-
-Rebuild the cache:
-
-```bash
-drush @<DESTINATION>.prod cr
-```
 
 ### Update Live Domain Pointing in sites.php
 

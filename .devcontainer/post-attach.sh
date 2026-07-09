@@ -17,7 +17,9 @@ echo ""
 echo "Next: See docs/CodespacesWorkflow.md for workflow instructions"
 echo ""
 
-# Open the login link in the client browser automatically, when available
+# Open the plain site URL automatically, when available. Not the login link
+# itself: on this site that redirects through SSO (PingFederate) and lands on
+# an ugly, unusable URL. The real login link is printed above to copy/paste.
 if [ -n "$BROWSER" ]; then
-  "$BROWSER" "$ADMIN_LOGIN" 2>/dev/null || true
+  "$BROWSER" "https://${CODESPACE_NAME}-80.app.github.dev" 2>/dev/null || true
 fi

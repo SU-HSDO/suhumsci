@@ -44,8 +44,6 @@ If the provision was not done correctly or the URLs are not set up, correct thos
 
 Before starting, notify the H&S web team and/or site owner that there will be brief downtime and they should refrain from editing the site until the copy is complete. Any edits made to the site after the database is copied down locally will not be transferred.
 
-Check the `<DESTINATION>` site's `/admin/content` page to verify there are no recent edits that would be overwritten, and `/admin/users` to verify there are no active editors.
-
 ### Create Database Backups
 
 Create a database backup of both `<SOURCE>` and `<DESTINATION>`. The `<DESTINATION>` backup is especially important because its database and files are about to be dropped and overwritten by the copy.
@@ -110,7 +108,8 @@ mv /tmp/prod-<DESTINATION>-db<ID>-<TIMESTAMP>.sql.gz ~/site-backups/<DESTINATION
 Create a local directory:
 
 ```bash
-mkdir -p ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>
+mkdir -p ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>/files
+mkdir -p ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>/files-private
 ```
 
 Download the files:
@@ -131,6 +130,8 @@ Upload the archive to Google Drive, then delete the local backup directory and a
 > **Warning:** Complete both the `<DESTINATION>` database and files backups before proceeding. The next steps will drop and overwrite the `<DESTINATION>` database and files. Confirm the backups are uploaded and readable before continuing.
 
 ### Copy the Source Database and Files Locally
+
+Check the `<SOURCE>` site's `/admin/content` page to verify there are no recent edits, and `/admin/users` to verify there are no active editors. Do this now rather than earlier, since the backup steps above can take a long time and an earlier check may be stale by this point. Any edits made to `<SOURCE>` after this point will not be transferred, since the database dump below captures a snapshot at this moment.
 
 Create a working directory in your local environment. Using a consistent parent directory is recommended.
 

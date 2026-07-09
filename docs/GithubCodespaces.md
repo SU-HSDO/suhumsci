@@ -14,7 +14,7 @@ Codespaces enables developers and non-developers to work on the site without ins
 
 ### Container Setup
 
-`.devcontainer/devcontainer.json` specifies the container image, port forwarding, and the `onCreateCommand`/`postCreateCommand` hooks that drive initialization.
+`.devcontainer/devcontainer.json` specifies the container image, port forwarding, and the `onCreateCommand`/`postStartCommand` hooks that drive initialization.
 
 ### Services
 
@@ -26,8 +26,8 @@ Codespaces enables developers and non-developers to work on the site without ins
 
 ### Initialization
 
-- `.devcontainer/on-create.sh` runs once on codespace creation. It installs Composer dependencies, generates multisite settings, installs the default site, configures Apache, and rebuilds the cache.
-- `.devcontainer/post-create.sh` runs after creation on every start. It generates and displays the admin login link.
+- `.devcontainer/on-create.sh` runs once, at codespace creation. It installs Composer dependencies, generates multisite settings, installs the default site, configures Apache, and rebuilds the cache. It never runs again, including on resume, so it does not fetch new commits, run database updates, or import configuration.
+- `.devcontainer/post-start.sh` runs every time the codespace starts, including on resume. It generates and displays the admin login link.
 
 ## Maintenance
 

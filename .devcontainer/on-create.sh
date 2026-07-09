@@ -16,11 +16,6 @@ drush sws:multisite:settings
 # Update drush URI to the Codespaces URL
 sed -i "s|uri:.*$|uri: https://$CODESPACE_NAME-80.app.github.dev|" docroot/sites/default/local.drush.yml
 
-# Generate encryption key for REAL_AES_ENCRYPTION
-if [ -z "$REAL_AES_ENCRYPTION" ]; then
-  export REAL_AES_ENCRYPTION=$(head -c 32 /dev/urandom | base64)
-fi
-
 # Install default site only
 echo "=== Installing default site ==="
 drush sws:multisite:install -n --site=default

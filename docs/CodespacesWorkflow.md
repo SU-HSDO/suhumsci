@@ -68,7 +68,7 @@ Go to GitHub in your browser. You will see a prompt to create a Pull Request. Cl
 
 ## Stop and Restart
 
-Your site persists across stops and restarts. To stop:
+Your site, its database, and any uncommitted changes all persist across stops and restarts, exactly as you left them. To stop:
 
 1. Click the Codespaces menu (bottom left).
 1. Click "Stop current Codespace".
@@ -80,6 +80,8 @@ To restart:
 1. Find your codespace and click "Resume".
 
 > **Note:** When you delete a codespace, the database is deleted. Configuration changes already committed to git are preserved.
+
+> **Important:** Resuming a codespace does not pick up changes made to the branch elsewhere in the meantime, for example new commits from a developer. If you know the branch has moved on since you last used this codespace, create a new codespace on that branch instead of resuming this one.
 
 ## Troubleshooting
 

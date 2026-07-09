@@ -2,7 +2,7 @@
 
 set -e
 
-ADMIN_LOGIN=$(drush @default.local uli)
+ADMIN_LOGIN=$(drush @default.local uli --no-browser)
 
 echo ""
 echo "=== Setup complete ==="
@@ -12,5 +12,10 @@ echo ""
 echo "Admin login link:"
 echo "$ADMIN_LOGIN"
 echo ""
-echo "Next: See .devcontainer/QUICKSTART.md for workflow instructions"
+echo "Next: See docs/CodespacesWorkflow.md for workflow instructions"
 echo ""
+
+# Open the login link in the client browser automatically, when available
+if [ -n "$BROWSER" ]; then
+  "$BROWSER" "$ADMIN_LOGIN" 2>/dev/null || true
+fi

@@ -31,6 +31,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 
 ### Process Guides
 
+- [GitHub Codespaces Workflow](docs/CodespacesWorkflow.md)
 - [Release and Code Deployment](docs/CodeDeploy.md)
 - [Site Launch](docs/Launch.md)
 - [Provisioning a New Site](docs/NewSite.md)
@@ -60,8 +61,8 @@ You can run the site on GitHub Codespaces, DDEV, Lando, or bare metal.
 
 GitHub Codespaces provides a cloud-based development environment with all dependencies pre-installed. This is the fastest way to get started.
 
-* [Follow the Codespaces Quick Start guide](.devcontainer/QUICKSTART.md).
-* [Read the developer guide](docs/GithubCodespaces.md) for configuration and troubleshooting.
+* [Follow the GitHub Codespaces Workflow guide](docs/CodespacesWorkflow.md) to launch a codespace and push changes.
+* [Read the GitHub Codespaces guide](docs/GithubCodespaces.md) for configuration and maintenance details.
 
 ### Setup on DDEV or Lando
 * [Follow the DDEV instructions](.ddev/DDEV-README.md).

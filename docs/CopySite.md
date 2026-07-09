@@ -16,7 +16,7 @@ See [Development Requirements](DevelopmentRequirements.md).
 
 ## Provision a New Site to Copy To
 
-If the site to be copied to does not exist, the first step is to [provision a new site](NewSite.md) to be copied to. Follow all the steps up to the deployment of the code. The profile install is unnecessary because this is not for a fresh site — the existing site will be copied over.
+If the site to be copied to does not exist, the first step is to [provision a new site](NewSite.md) to be copied to. Follow all the steps up to the deployment of the code. The profile install is unnecessary because this is not for a fresh site: the existing site will be copied over.
 
 The provision step needs to happen first and the copy cannot continue until the provisioned code is deployed.
 
@@ -30,7 +30,7 @@ In the example above, `mathematics2024` is `<SOURCE>` and `mathematics` is `<DES
 
 ### Verify DESTINATION URLs Were Provisioned
 
-Make sure the following aliases have been set up correctly in [NetDB](https://netdb.stanford.edu/) — especially the `-prod` URL — before continuing.
+Make sure the following aliases, especially the `-prod` URL, have been set up correctly in [NetDB](https://netdb.stanford.edu/) before continuing.
 
 - `<DESTINATION>-dev`
 - `<DESTINATION>-test` (the staging environment)
@@ -44,17 +44,94 @@ If the provision was not done correctly or the URLs are not set up, correct thos
 
 Before starting, notify the H&S web team and/or site owner that there will be brief downtime and they should refrain from editing the site until the copy is complete. Any edits made to the site after the database is copied down locally will not be transferred.
 
-Check the `<DESTINATION>` site's `/admin/content` page to verify there are no recent edits that would be overwritten, and `/admin/users` to verify there are no active editors.
+### Back Up the SOURCE and DESTINATION Databases
 
-### Create Database Backups
+Create a database backup of both `<SOURCE>` and `<DESTINATION>`. The `<DESTINATION>` backup is especially important because its database and files are about to be dropped and overwritten by the copy.
 
-If `<SOURCE>` is going to be shut down or re-purposed, create a backup in case it needs to be restored or referenced.
+**With ACLI:**
 
-Create a backup of `<DESTINATION>` as well, in case there is confusion during the process.
+You can target the environment by ID or by its `humscigryphon.prod` application alias (the alias rarely changes and is easier to remember):
 
-> **Warning:** Complete both backups before proceeding. The next steps will drop and overwrite the `<DESTINATION>` database. Confirm backups exist and are readable before continuing.
+```bash
+# Using an environment ID:
+acli api:environments:database-backup-create <PROD_ENV_ID> <SOURCE>
+acli api:environments:database-backup-create <PROD_ENV_ID> <DESTINATION>
+
+# Using the humscigryphon.prod alias:
+acli api:environments:database-backup-create humscigryphon.prod <SOURCE>
+acli api:environments:database-backup-create humscigryphon.prod <DESTINATION>
+```
+
+**With the Acquia Cloud UI** (use this if ACLI isn't installed or configured):
+
+1. Open the Acquia Cloud UI for the HumSci Gryphon application.
+1. Click on the production environment (Prod).
+1. Click on the Databases tab in the left-side navigation.
+1. Find the `<SOURCE>` database, click its three-dot button, then **Backup**.
+1. Repeat for the `<DESTINATION>` database.
+
+#### Download the DESTINATION Database Backup
+
+`<DESTINATION>`'s database is about to be dropped and overwritten, so download the backup just created above, rename it, and upload it to Google Drive as a safety net.
+
+**With ACLI:**
+
+Download the backup just created above, without importing it anywhere:
+
+```bash
+# Using an environment ID:
+acli pull:database --no-import <PROD_ENV_ID> <DESTINATION>
+
+# Using the humscigryphon.prod alias:
+acli pull:database --no-import humscigryphon.prod <DESTINATION>
+```
+
+The command prints the downloaded file's path in the system temp directory when it finishes. Move it to your backup location and rename it to a clear, dated format:
+
+```bash
+mkdir -p ~/site-backups
+mv <FILEPATH> ~/site-backups/<DESTINATION>-prod-db-<YYYY-MM-DD>.sql.gz
+```
+
+**With the Acquia Cloud UI** (use this if ACLI isn't installed or configured):
+
+1. Open the Acquia Cloud UI for the HumSci Gryphon application.
+1. Click on the production environment (Prod).
+1. Click on the Databases tab in the left-side navigation.
+1. Find the `<DESTINATION>` database, click its three-dot button, then **Download**.
+1. Rename the downloaded backup to a clear, dated format such as `<DESTINATION>-prod-db-<YYYY-MM-DD>.sql.gz`.
+
+> **Important:** Whichever method you used above, upload the renamed backup to Google Drive before continuing.
+
+### Back Up DESTINATION Files
+
+Create a local directory:
+
+```bash
+mkdir -p ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>/files
+mkdir -p ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>/files-private
+```
+
+Download the files:
+
+```bash
+drush rsync @<DESTINATION>.prod:%files/ ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>/files
+drush rsync @<DESTINATION>.prod:%private/ ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>/files-private
+```
+
+Archive the backup:
+
+```bash
+tar -czvf ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>.tar.gz ~/site-backups/<DESTINATION>-prod-files-<YYYY-MM-DD>
+```
+
+Upload the archive to Google Drive, then delete the local backup directory and archive.
+
+> **Warning:** Complete both the `<DESTINATION>` database and files backups before proceeding. The next steps will drop and overwrite the `<DESTINATION>` database and files. Confirm the backups are uploaded and readable before continuing.
 
 ### Copy the Source Database and Files Locally
+
+Check the `<SOURCE>` site's `/admin/content` page to verify there are no recent edits, and `/admin/users` to verify there are no active editors. Do this now rather than earlier, since the backup steps above can take a long time and an earlier check may be stale by this point. Any edits made to `<SOURCE>` after this point will not be transferred, since the database dump below captures a snapshot at this moment.
 
 Create a working directory in your local environment. Using a consistent parent directory is recommended.
 
@@ -102,11 +179,13 @@ Drop the existing `<DESTINATION>` database:
 drush @<DESTINATION>.prod sql-drop -y
 ```
 
-Push the `<SOURCE>` database to `<DESTINATION>`:
+Push the `<SOURCE>` database to `<DESTINATION>`. Piping a large file through `sql-cli` is slow because Drush stays in the data path; connect directly with `sql:connect` instead:
 
 ```bash
-drush @<DESTINATION>.prod sql-cli < ~/site-copies/<SOURCE>-<DESTINATION>-transfer/<SOURCE>.sql
+$(drush @<DESTINATION>.prod sql:connect) < ~/site-copies/<SOURCE>-<DESTINATION>-transfer/<SOURCE>.sql
 ```
+
+> **Note:** `sql:connect` prints the database credentials as part of the connection command. Avoid running this in a context where the command line is logged or visible to others.
 
 Push the `<SOURCE>` files and private files to `<DESTINATION>`:
 
@@ -128,12 +207,18 @@ Rebuild the cache on `<DESTINATION>`:
 drush @<DESTINATION>.prod cr
 ```
 
-Clear Varnish via the Acquia UI or ACLI:
+Clear Varnish via the Acquia UI or ACLI. You can target the environment by ID or by its `humscigryphon.prod` application alias (the alias rarely changes and is easier to remember):
 
 ```bash
-acli api:environments:domain-clear-caches <APP_UUID> <DESTINATION>.stanford.edu
-acli api:environments:domain-clear-caches <APP_UUID> <DESTINATION>-prod.stanford.edu
-acli api:environments:domain-clear-caches <APP_UUID> <SOURCE>-prod.stanford.edu
+# Using an environment ID:
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <DESTINATION>.stanford.edu
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <DESTINATION>-prod.stanford.edu
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <SOURCE>-prod.stanford.edu
+
+# Using the humscigryphon.prod alias:
+acli api:environments:domain-clear-caches humscigryphon.prod <DESTINATION>.stanford.edu
+acli api:environments:domain-clear-caches humscigryphon.prod <DESTINATION>-prod.stanford.edu
+acli api:environments:domain-clear-caches humscigryphon.prod <SOURCE>-prod.stanford.edu
 ```
 
 > **Note:** You may also need to clear the Akamai CDN cache if the site does not update.
@@ -199,15 +284,20 @@ Check for an existing entry pointing the live URL to `<SOURCE>` (e.g., `$sites['
   $sites['<LIVEURL>.stanford.edu'] = '<DESTINATION>';
   ```
 
-Save the file, then rebuild caches and clear Varnish:
+Save the file, then rebuild caches and clear Varnish. You can target the environment by ID or by its `humscigryphon.prod` application alias:
 
 ```bash
 drush @<DESTINATION>.prod cr
 ```
 
 ```bash
-acli api:environments:domain-clear-caches <APP_UUID> <LIVEURL>.stanford.edu
-acli api:environments:domain-clear-caches <APP_UUID> <DESTINATION>-prod.stanford.edu
+# Using an environment ID:
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <LIVEURL>.stanford.edu
+acli api:environments:domain-clear-caches <PROD_ENV_ID> <DESTINATION>-prod.stanford.edu
+
+# Using the humscigryphon.prod alias:
+acli api:environments:domain-clear-caches humscigryphon.prod <LIVEURL>.stanford.edu
+acli api:environments:domain-clear-caches humscigryphon.prod <DESTINATION>-prod.stanford.edu
 ```
 
 Open the live URL and verify the site loads from `<DESTINATION>`. Check the Status Report page at `/admin/reports/status` and confirm the Stanford Site Alias line shows `<DESTINATION>`, not `<SOURCE>`.
@@ -225,12 +315,6 @@ drush @<DESTINATION>.prod cr
 ```
 
 Verify the canonical redirect is working by opening `https://<DESTINATION>-prod.stanford.edu/?foo` in an incognito window and confirming it redirects to `https://<LIVEURL>.stanford.edu/?foo`.
-
-Rebuild the cache:
-
-```bash
-drush @<DESTINATION>.prod cr
-```
 
 ### Update Live Domain Pointing in sites.php
 

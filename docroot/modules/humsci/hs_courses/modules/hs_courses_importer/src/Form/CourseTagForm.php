@@ -2,10 +2,10 @@
 
 namespace Drupal\hs_courses_importer\Form;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Database\Connection;
 
 /**
  * Course Tagging configuration form.

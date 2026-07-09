@@ -89,7 +89,7 @@ class InstallStateCest {
   public function testDeveloperShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 34);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 36);
   }
 
   /**

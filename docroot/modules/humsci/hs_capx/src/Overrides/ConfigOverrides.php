@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_capx\Overrides;
 
-use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
@@ -10,6 +9,7 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\encrypt\Exception\EncryptException;
 use Drupal\key\Entity\Key;
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 

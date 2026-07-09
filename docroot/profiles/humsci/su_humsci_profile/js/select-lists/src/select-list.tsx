@@ -357,6 +357,7 @@ const SelectList = ({
           borderRadius: '5px',
           textAlign: 'left',
           minHeight: '40px',
+          paddingInline: !optionChosen && multiple ? '10px' : '16px',
         }}
       >
         <span
@@ -377,9 +378,9 @@ const SelectList = ({
               </span>
             );
           })()}
-          {!optionChosen && !multiple && (
+          {!optionChosen && (
             <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
-              Any
+              {multiple ? 'Choose one or more options' : 'Any'}
             </span>
           )}
 

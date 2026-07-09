@@ -5,6 +5,8 @@
  * Update functions for hs_paragraph_types module.
  */
 
+use Drupal\field\Entity\FieldConfig;
+
 /**
  * Implements hook_update_last_removed().
  */
@@ -648,4 +650,65 @@ function hs_paragraph_types_update_10029(&$sandbox) {
       '%total' => $sandbox['total'],
     ]);
   }
+}
+
+/**
+ * Removes legacy paragraph fields.
+ */
+function hs_paragraph_types_update_10030() {
+  $fields_to_delete = [
+    'hs_spotlight' => [
+      'field_hs_spotlight_bg',
+      'field_hs_spotlight_image_align',
+      'field_hs_spotlight_height',
+      'field_spotlight_style',
+    ],
+    'hs_testimonial' => [
+      'field_hs_testimonial_quote_align',
+    ],
+    'hs_banner' => [
+      'field_hs_banner_height',
+    ],
+    'hs_callout_box' => [
+      'field_hs_callout_box_align',
+      'field_hs_callout_style',
+    ],
+    'hs_gradient_hero' => [
+      'field_hs_gradient_hero_align',
+    ],
+    'hs_clr_bnd' => [
+      'field_hs_clr_bnd_bgc',
+      'field_hs_clr_bnd_wdth',
+    ],
+    'hs_accordion' => [
+      'field_accordion_style',
+    ],
+    'hs_collection' => [
+      'field_bg_color',
+      'field_bg_color_width',
+    ],
+    'hs_priv_collection' => [
+      'field_bg_color',
+      'field_bg_color_width',
+    ],
+    'stanford_gallery' => [
+      'field_photoalbum_style',
+    ],
+  ];
+
+  $deleted_instances = [];
+
+  foreach ($fields_to_delete as $bundle => $fields) {
+    foreach ($fields as $field) {
+      if ($field_config = FieldConfig::loadByName('paragraph', $bundle, $field)) {
+        $field_config->delete();
+        $deleted_instances[] = $bundle . ':' . $field;
+      }
+    }
+  }
+
+  return t('Deleted %count field instances: %instances.', [
+    '%count' => count($deleted_instances),
+    '%instances' => implode(', ', $deleted_instances),
+  ]);
 }

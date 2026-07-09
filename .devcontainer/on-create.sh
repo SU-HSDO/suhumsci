@@ -4,19 +4,15 @@ set -e
 
 echo "=== Installing dependencies ==="
 
-# Install nvm and source it in this script. theme-get-command.sh has its own
-# nvm detection, but relying on it alone was not reliable, so install and
-# activate the .nvmrc version here too, before anything else needs node.
-# install.sh's final step chmods nvm-exec, which is not something we use
-# directly (we only source nvm.sh) and can fail on its own in this container.
-# Do not let that be fatal here; instead verify nvm.sh itself was produced.
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash || true
-export NVM_DIR="$HOME/.nvm"
-if [ ! -s "$NVM_DIR/nvm.sh" ]; then
-  echo "nvm installation failed: $NVM_DIR/nvm.sh not found" >&2
-  exit 1
+# nvm is installed by the node devcontainer feature (devcontainer.json), in a
+# shared, group-writable location, and already installs and aliases the
+# version pinned there as default, regardless of which user attaches. Source
+# it here, and re-run `nvm install` (reads .nvmrc) in case the feature's
+# pinned version and .nvmrc have drifted out of sync since.
+export NVM_DIR="/usr/local/share/nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
 fi
-. "$NVM_DIR/nvm.sh"
 nvm install
 nvm use
 

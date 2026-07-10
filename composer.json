@@ -61,10 +61,9 @@
         "drupal/ckeditor5_plugin_pack": "^1.4",
         "drupal/color": "^2.0",
         "drupal/color_field": "^3.0",
-        "drupal/colorbox": "2.1.4",
+        "drupal/colorbox": "~2.1.5",
         "drupal/components": "^3.0",
         "drupal/conditional_fields": "^4.0@alpha",
-        "drupal/config_filter": "^1.0",
         "drupal/config_ignore": "^3.0",
         "drupal/config_pages_overrides": "^3.0",
         "drupal/config_readonly": "^1.0",
@@ -73,13 +72,13 @@
         "drupal/confirm_leave": "^1.0@beta",
         "drupal/content_access": "^2.0",
         "drupal/content_access_simple": "^1.0@beta",
-        "drupal/core": "~11.2.0",
-        "drupal/core-composer-scaffold": "~11.2.0",
-        "drupal/core-recommended": "~11.2.0",
+        "drupal/core": "~11.3.0",
+        "drupal/core-composer-scaffold": "~11.3.0",
+        "drupal/core-recommended": "~11.3.0",
         "drupal/cshs": "^4.0",
         "drupal/dashboard": "^2.0",
         "drupal/default_content": "^2.0",
-        "drupal/diff": "^1.0",
+        "drupal/diff": "^2.1",
         "drupal/display_field_copy": "^2.1",
         "drupal/domain_301_redirect": "^2.0",
         "drupal/draggableviews": "^2.0",
@@ -103,8 +102,8 @@
         "drupal/field_group": "^4.0",
         "drupal/field_permissions": "^1.1",
         "drupal/fontawesome": "^3.0",
-        "drupal/gin": "^4.0.2",
-        "drupal/gin_toolbar": "^2.0",
+        "drupal/gin": "^5.0",
+        "drupal/gin_toolbar": "^3.0",
         "drupal/google_analytics": "^4.0",
         "drupal/hal": "^2.0",
         "drupal/hook_event_dispatcher": "^4.0@alpha",
@@ -198,7 +197,7 @@
         "su-sws/sws-drush-commands": "1.x-dev"
     },
     "require-dev": {
-        "drupal/core-dev": "~11.2.0",
+        "drupal/core-dev": "~11.3.0",
         "drupal/upgrade_status": "^4.0",
         "phpspec/prophecy-phpunit": "^2.0",
         "su-sws/drupal-dev": "^11"
@@ -211,7 +210,13 @@
     "config": {
         "sort-packages": true,
         "discard-changes": true,
-        "allow-plugins": true
+        "allow-plugins": true,
+        "policy": {
+            "advisories": {
+                "block": false,
+                "audit": "report"
+            }
+        }
     },
     "scripts": {
         "build-theme": [

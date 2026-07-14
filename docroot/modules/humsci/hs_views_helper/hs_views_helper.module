@@ -124,7 +124,7 @@ function hs_views_helper_form_views_exposed_form_alter(&$form, FormStateInterfac
  * This replicates the standard taxonomy term canonical page title handling by
  * \Drupal\stanford_fields\Hook\StanfordFieldsHooks::preprocessPage().
  */
-function hs_views_helper_views_pre_render(ViewExecutable $view) {
+function hs_views_helper_views_pre_render(ViewExecutable $view) : void {
   if ($view->id() === 'hs_default_taxonomy_term' && !empty($view->args[0])) {
     $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($view->args[0]);
     if ($term instanceof TermInterface) {

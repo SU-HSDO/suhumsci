@@ -2,7 +2,7 @@
   {% set attributes = attributes.setAttribute('open', 'open') %}
 {% endif %}
 
-<details{{ attributes }}>
+<details{{ attributes.addClass('hs-accordion') }}>
   {%- if title -%}
     <summary{{ summary_attributes.addClass(summary_classes) }}>
       <{{ heading_level}} class="field-hs-accordion-summary">
@@ -11,14 +11,17 @@
     </summary>
   {%- endif -%}
   <div class="revealed-details">
-    {{ description }}
+    {# Wrapper enables the grid height animation (see _pattern.accordion.scss). #}
+    <div class="revealed-details__inner">
+      {{ description }}
 
-    {%- if children -%}
-      <div class="children">
-        {{ children }}
-      </div>
-    {%- endif -%}
+      {%- if children -%}
+        <div class="children">
+          {{ children }}
+        </div>
+      {%- endif -%}
 
-    {{ value }}
+      {{ value }}
+    </div>
   </div>
 </details>

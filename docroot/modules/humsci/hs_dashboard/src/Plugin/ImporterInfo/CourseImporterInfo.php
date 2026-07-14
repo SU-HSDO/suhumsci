@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
-use Drupal\Core\GeneratedLink;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\GeneratedLink;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;

@@ -358,7 +358,8 @@ function hs_layouts_preprocess_pattern_hero_text_overlay(&$variables) {
   }
   // Change the image style based on the current theme.
   $current_theme = \Drupal::config('system.theme')->get('default');
-  if ($current_theme === 'humsci_traditional') {
+  if ($current_theme === 'humsci_traditional' && isset($variables['image']['field_hs_hero_image'][0])) {
     $variables['image']['field_hs_hero_image'][0]['#stanford_media_image_style'] = 'banner_text_box_traditional';
+    $variables['image']['field_hs_hero_image'][0]['#cache']['keys'][] = 'image_style:banner_text_box_traditional';
   }
 }

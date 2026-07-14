@@ -712,3 +712,18 @@ function hs_paragraph_types_update_10030() {
     '%instances' => implode(', ', $deleted_instances),
   ]);
 }
+
+/**
+ * Removes the hero image "hero_with_overlay" view display.
+ */
+function hs_paragraph_types_update_10031() {
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
+  $display = $storage->load('paragraph.hs_hero_image.hero_with_overlay');
+
+  if (!$display) {
+    return t('The hero_with_overlay view display does not exist.');
+  }
+
+  $display->delete();
+  return t('Deleted the hero_with_overlay view display.');
+}

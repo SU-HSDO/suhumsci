@@ -16,6 +16,15 @@ $container-small: hb-calculate-rems(576px);
     overflow-wrap: anywhere;
   }
 
+  .hb-card__content {
+    .hb-raised-cards--uniform-height & {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+
   @include hb-traditional {
     border: 2px solid color('secondary');
 
@@ -75,17 +84,30 @@ $container-small: hb-calculate-rems(576px);
     }
 
     .hs-button {
-
       position: relative;
       margin-top: auto;
       margin-inline: hb-calculate-rems(-20px);
 
-      a {
+      a,
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
         @include hb-secondary-button;
 
         border-width: 0;
         border-top-width: 2px;
         width: 100%;
+      }
+
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
+        margin-right: 0;
+
+        --link-base-current-color: #{color('secondary')};
+        --link-base-hover-current-color: #{color('white', 'global')};
+
+        &:focus {
+          --link-base-hover-current-color: #{color('secondary')};
+        }
       }
 
       @container card (width > #{$container-small}) {
@@ -152,20 +174,38 @@ $container-small: hb-calculate-rems(576px);
       margin-block: hb-calculate-rems(8px) auto;
     }
 
-    .hs-button a {
-      border-color: color('primary');
-      background-color: color('primary');
-      margin-block: hb-calculate-rems(24px) hb-calculate-rems(2px);
+    .hs-button {
+      display: flex;
+      flex-direction: column;
+      gap: hb-calculate-rems(4px);
 
-      &:hover,
-      &:focus,
-      &.is-focused {
-        background-color: color('primary-dark');
-        border-color: color('primary-dark');
-      }
+      margin-block: hb-calculate-rems(24px) hb-calculate-rems(2px);
 
       @container card (width > #{$container-small}) {
         margin-block: hb-calculate-rems(20px) hb-calculate-rems(4px);
+      }
+
+      a {
+        padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
+          hb-calculate-rems(6px);
+        background-color: color('primary');
+        border-color: color('primary');
+
+        &:hover,
+        &:focus,
+        &.is-focused {
+          background-color: color('primary-dark');
+          border-color: color('primary-dark');
+        }
+      }
+
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
+        margin-right: 0;
+        color: color('white', 'global');
+
+        --link-base-current-color: #{color('white', 'global')};
+        --link-base-hover-current-color: #{color('white', 'global')};
       }
     }
   }

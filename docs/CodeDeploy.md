@@ -1,6 +1,6 @@
 # H&S Code Release and Deployment Guide
 
-This document outlines the release and deployment workflow for the H&S application.
+This document outlines the release and deployment workflow for the HSDP application.
 
 ## Overview
 - Releases follow [SEMVER](https://semver.org/) conventions: major, minor, patch.

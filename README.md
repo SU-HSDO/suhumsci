@@ -26,6 +26,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Configuration Management](docs/Config.md)
 - [Development Requirements](docs/DevelopmentRequirements.md)
 - [Documentation Standards](docs/DocumentationStandards.md)
+- [Module Evaluation](docs/ModuleEvaluation.md)
 
 ### Process Guides
 
@@ -35,6 +36,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Copying a Site](docs/CopySite.md)
 - [Decommissioning and Deleting a Site](docs/DeleteSite.md)
 - [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
+- [Dependency Update Review](docs/DependencyUpdateReview.md)
 - [Patching](docs/Patching.md)
 - [Deprecating and Removing a Module](docs/ModuleUninstall.md)
 - [Codeception Tests](docs/Codeception.md)

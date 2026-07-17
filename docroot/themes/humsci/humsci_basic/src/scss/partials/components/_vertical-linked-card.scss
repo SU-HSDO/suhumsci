@@ -45,19 +45,15 @@ $container-small: hb-calculate-rems(576px);
   overflow: hidden;
 
   @include hb-themes(('colorful', 'airy')) {
-    margin-inline-start: hb-calculate-rems(12px);
+    margin-inline-start: hb-calculate-rems(28px);
 
     @container card (width > #{$container-small}) {
-      margin-inline-start: hb-calculate-rems(40px);
+      margin-inline-start: hb-calculate-rems(30px);
     }
 
     &:has(+ .hb-vertical-linked-card__title) {
       margin-block-end: hb-calculate-rems(-28px);
     }
-  }
-
-  @include hb-traditional {
-    margin-inline: hb-calculate-rems(24px);
   }
 
   img {
@@ -88,9 +84,9 @@ $container-small: hb-calculate-rems(576px);
   transition: hb-transition(background-color);
 
   @include hb-themes(('colorful', 'airy')) {
-    padding: hb-calculate-rems(16px);
+    padding: hb-calculate-rems(18px);
     margin-block: 0;
-    margin-inline-end: hb-calculate-rems(10px);
+    margin-inline-end: hb-calculate-rems(18px);
     background-color: color('secondary');
 
     &::after {
@@ -98,53 +94,82 @@ $container-small: hb-calculate-rems(576px);
       display: block;
       position: absolute;
       height: calc(100% - #{hb-calculate-rems(28px)});
-      width: calc(100% - #{hb-calculate-rems(2px)});
+      width: calc(100% - #{hb-calculate-rems(10px)});
       top: hb-calculate-rems(28px);
-      right: hb-calculate-rems(-10px);
+      right: hb-calculate-rems(-18px);
       z-index: -1;
       background-color: color('primary-dark');
 
       @container card (width > #{$container-small}) {
-        width: calc(100% - #{hb-calculate-rems(16px)});
-        right: hb-calculate-rems(-24px);
+        width: calc(100% - #{hb-calculate-rems(10px)});
+        right: hb-calculate-rems(-20px);
       }
     }
 
-    &:not(:has(+ .hb-vertical-linked-card__description))::after {
-      height: calc(100% - #{hb-calculate-rems(8px)});
+    &:not(:has(+ .hb-vertical-linked-card__description)) {
+      margin-block-end: hb-calculate-rems(28px);
+
+      &::after {
+        height: 100%;
+      }
     }
 
     @container card (width > #{$container-small}) {
-      padding: hb-calculate-rems(16px) hb-calculate-rems(20px)
-        hb-calculate-rems(16px) hb-calculate-rems(24px);
-      margin-inline-end: hb-calculate-rems(24px);
+      padding: hb-calculate-rems(20px);
+      margin-inline-end: hb-calculate-rems(20px);
     }
   }
 
   @include hb-traditional {
-    padding: hb-calculate-rems(12px) hb-calculate-rems(16px);
+    padding: hb-calculate-rems(16px);
     color: color('white', 'global');
     background-color: color('primary');
     margin: 0;
-
-    @container card (width > #{$container-small}) {
-      padding: hb-calculate-rems(16px) hb-calculate-rems(20px);
-    }
   }
 }
 
 .hb-vertical-linked-card__title__link {
   color: var(--link-base-current-color);
-  text-decoration-thickness: 5%;
-  text-underline-offset: 10%;
+  text-decoration: none;
 
   &:hover, &:focus {
     color: var(--link-base-hover-current-color);
-    text-decoration-thickness: 9%;
+
+    @include hb-traditional {
+      text-decoration: underline;
+    }
   }
 
   &:focus-visible {
     outline-color: color('white', 'global');
+  }
+
+  &::after {
+    content: '';
+    display: inline-block;
+    position: relative;
+    height: hb-calculate-rems(14px);
+
+    @include hb-icon-link-arrow('white');
+
+    @include hb-themes(('airy', 'colorful')) {
+      width: hb-calculate-rems(27.5px);
+      mask-size: 60%;
+    }
+
+    @include hb-traditional {
+      width: hb-calculate-rems(33px);
+      mask-size: auto;
+    }
+
+    mask-position: 6px;
+    transition: hb-transition(mask-position);
+  }
+
+  .hb-vertical-linked-card:hover &::after,
+  .hb-vertical-linked-card:focus &::after,
+  .hb-vertical-linked-card.is-focused &::after {
+    mask-position: 12px;
   }
 }
 
@@ -156,14 +181,14 @@ $container-small: hb-calculate-rems(576px);
   background-color: color('primary-dark');
 
   @include hb-themes(('airy', 'colorful')) {
-    padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
-      hb-calculate-rems(24px);
-    margin-inline-start: hb-calculate-rems(12px);
+    padding: hb-calculate-rems(20px) hb-calculate-rems(18px)
+      hb-calculate-rems(28px);
+    margin-inline-start: hb-calculate-rems(28px);
 
     @container card (width > #{$container-small}) {
-      padding: hb-calculate-rems(16px) hb-calculate-rems(32px)
-        hb-calculate-rems(32px);
-      margin-inline-start: hb-calculate-rems(40px);
+      padding: hb-calculate-rems(20px) hb-calculate-rems(20px)
+        hb-calculate-rems(28px);
+      margin-inline-start: hb-calculate-rems(30px);
     }
 
     // For those scenarios that a breakout box or hs-well style is being used in a WYSIWYG.
@@ -174,13 +199,22 @@ $container-small: hb-calculate-rems(576px);
   }
 
   @include hb-traditional {
-    margin-inline: hb-calculate-rems(10px);
-    padding: hb-calculate-rems(12px) hb-calculate-rems(20px);
+    padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
+      hb-calculate-rems(28px);
     background-color: color('tertiary-reversed');
 
     @container card (width > #{$container-small}) {
       padding: hb-calculate-rems(16px) hb-calculate-rems(32px);
     }
+  }
+}
+
+// Colorful: image and description don't have a margin on the left
+// when the title is absent.
+.hb-vertical-linked-card:not(:has(.hb-vertical-linked-card__title)) {
+  .hb-vertical-linked-card__img,
+  .hb-vertical-linked-card__description {
+    margin-inline-start: 0;
   }
 }
 
@@ -213,7 +247,9 @@ $container-small: hb-calculate-rems(576px);
     }
 
     .hb-vertical-linked-card__title__link {
-      text-decoration-thickness: 9%;
+      @include hb-traditional {
+        text-decoration: underline;
+      }
     }
 
     .hb-vertical-linked-card__img {

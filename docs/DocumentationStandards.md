@@ -1,6 +1,6 @@
 # Documentation Standards
 
-This document defines the standards for creating and updating documentation in this repository. It applies to `README.md` and everything in `docs/` (except `docs/Codeception.md` unless specifically requested). It is a living document — update it whenever conventions change.
+This document defines the standards for creating and updating documentation in this repository. It applies to `README.md` and everything in `docs/`. It is a living document — update it whenever conventions change.
 
 ## Project Context
 

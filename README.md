@@ -39,7 +39,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Dependency Update Review](docs/DependencyUpdateReview.md)
 - [Patching](docs/Patching.md)
 - [Deprecating and Removing a Module](docs/ModuleUninstall.md)
-- [Codeception Tests](docs/Codeception.md)
+- [Testing](docs/Testing.md)
 
 ### Migration
 
@@ -98,13 +98,7 @@ The build process automatically detects whether to run inside DDEV or Lando. To 
 
 ## Testing
 
-### Codeception
-
-Acceptance testing is done using the [Codeception](https://codeception.com/) framework.
-
-- `drush sws:codeception` — Run all acceptance tests.
-- `drush sws:codeception --group=<GROUP_NAME>` — Run tests annotated with the specified group. This is the most effective method to run a single test.
-- [List of current tests](docs/Codeception.md)
+See [Testing](docs/Testing.md) for how to run the PHPUnit and Codeception suites, and a list of current Codeception tests.
 
 ### Sass
 

@@ -210,7 +210,7 @@ Run the PHPUnit and Codeception test suites locally rather than waiting for CI t
 drush sws:source:tests:phpunit
 ```
 
-See [Codeception](Codeception.md) for running the Codeception suite, which also runs in CI.
+See [Testing](Testing.md) for more on the PHPUnit configuration and running the Codeception suite, which also runs in CI.
 
 ## Share Callouts With the H&S Web Team Early
 

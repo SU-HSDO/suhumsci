@@ -190,6 +190,8 @@ For each warning, decide whether it's actionable or can be safely ignored, and c
 
 > **Note:** Expect `/admin/reports/updates` to mostly repeat what you already found during contrib module review. Still worth a quick check in case anything was missed, but don't expect new information here.
 
+> **Note:** This manual pass and the test suite (see [Run the Test Suite](#run-the-test-suite) below) catch different things. Some issues surface here first; others only show up once the test suite runs.
+
 ## Site Sync and Additional QA
 
 Sync a live site locally and review status and logs for upgrade issues:
@@ -199,6 +201,16 @@ drush drupal:sync --site=<SITENAME>
 ```
 
 Log in, click through key pages and admin routes, and review `/admin/reports/dblog` for errors. This does not need to be an exhaustive QA pass; additional QA happens once the upgrade reaches the dev or staging environment.
+
+## Run the Test Suite
+
+Run the PHPUnit and Codeception test suites locally rather than waiting for CI to surface failures. A core upgrade can shift test behavior in ways unrelated to your own code changes (a new minimum PHPUnit version, a changed core API a test happens to exercise), so budget time to investigate and resolve failures as part of the upgrade rather than treating a green CI run as a given.
+
+```bash
+drush sws:source:tests:phpunit
+```
+
+See [Codeception](Codeception.md) for running the Codeception suite, which also runs in CI.
 
 ## Share Callouts With the H&S Web Team Early
 

@@ -30,7 +30,6 @@ function hs_paragraph_types_deploy_10001(array &$sandbox): string {
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
     $sandbox['updated'] = 0;
-    $sandbox['system_theme'] = \Drupal::config('system.theme')->get('default');
   }
 
   $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
@@ -51,27 +50,14 @@ function hs_paragraph_types_deploy_10001(array &$sandbox): string {
     $layout = 'vertical';
     $vertical_style = 'plain';
 
-    if ($display == 'default') {
-      if ($sandbox['system_theme'] == 'humsci_colorful') {
-        $parent = $paragraph->getParentEntity();
-        if (
-          $parent &&
-          in_array($parent->bundle(), ['hs_collection', 'hs_priv_collection']) &&
-          $parent->hasField('field_raised_cards') &&
-          $parent->get('field_raised_cards')->value
-        ) {
-          $vertical_style = 'accent';
-        }
-      }
-    }
-    elseif ($display == 'preview') {
+    if ($display == 'preview') {
       $layout = 'horizontal';
     }
     elseif ($display == 'token') {
-      $vertical_style = 'two-color';
+      $vertical_style = 'vertical-linked';
     }
     elseif ($display == 'vertical_button_card') {
-      $vertical_style = 'stacked';
+      $vertical_style = 'vertical-button';
     }
 
     $paragraph->set('field_hs_postcard_layout', $layout);

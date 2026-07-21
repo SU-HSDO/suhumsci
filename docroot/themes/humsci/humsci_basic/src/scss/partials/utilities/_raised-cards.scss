@@ -137,6 +137,10 @@ $container-medium: hb-calculate-rems(768px);
   }
 
   .hb-card--horizontal {
+    @include hb-traditional {
+      padding: hb-calculate-rems(20px);
+    }
+
     .hb-card__content {
       // Padding for horizontal cards without image.
       @include hb-themes(('colorful', 'airy')) {
@@ -144,15 +148,6 @@ $container-medium: hb-calculate-rems(768px);
 
         @container card (width > #{$container-small}) {
           padding: hb-calculate-rems(24px);
-        }
-      }
-
-      // TODO
-      @include hb-traditional {
-        padding-inline: hb-calculate-rems(24px);
-
-        @container card (width > #{$container-small}) {
-          padding-inline: hb-calculate-rems(32px);
         }
       }
     }
@@ -247,18 +242,23 @@ $container-medium: hb-calculate-rems(768px);
 
   .hb-vertical-card,
   .hb-card--date-stacked {
-    .hb-card__content {
-      // TODO - confikrm this works for traditional.
-      padding: hb-calculate-rems(18px);
-
-      @container card (width > #{$container-small}) {
-        padding: hb-spacing-width('xs')
-      }
-    }
-
     @include hb-colorful {
       border-bottom: 3px solid;
       border-color: color('secondary');
+    }
+
+    @include hb-traditional {
+      padding: hb-calculate-rems(20px);
+    }
+
+    .hb-card__content {
+      @include hb-themes(('airy', 'colorful')) {
+        padding: hb-calculate-rems(18px);
+
+        @container card (width > #{$container-small}) {
+          padding: hb-spacing-width('xs')
+        }
+      }
     }
   }
 }

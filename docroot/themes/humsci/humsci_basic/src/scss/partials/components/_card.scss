@@ -292,8 +292,16 @@ $container-medium: hb-calculate-rems(768px);
   word-break: normal;
   overflow-wrap: anywhere;
 
-  &:not(:last-child) {
-    margin-block-end: hb-calculate-rems(6px);
+  @include hb-themes(('airy', 'colorful')) {
+    &:not(:last-child) {
+      margin-bottom: hb-spacing-width('xs');
+    }
+  }
+
+  @include hb-traditional {
+    &:not(:last-child) {
+      margin-bottom: hb-calculate-rems(10px);
+    }
   }
 }
 
@@ -324,7 +332,7 @@ $container-medium: hb-calculate-rems(768px);
 .hb-card__description {
   .views-field:not(:last-child) {
     display: block;
-    margin-block-end: hb-calculate-rems(6px);
+    margin-block-end: hb-spacing-width('xxs');
   }
 }
 
@@ -353,12 +361,16 @@ $container-medium: hb-calculate-rems(768px);
     }
   }
 
-  &:not(:last-child) {
-    margin-block-end: hb-calculate-rems(6px);
+  @include hb-themes(('airy', 'colorful')) {
+    &:not(:last-child) {
+      margin-bottom: hb-spacing-width('xxs');
+    }
   }
 
-  .hb-card--date-stacked & {
-    margin-block: hb-calculate-rems(12px) hb-calculate-rems(10px);
+  @include hb-traditional {
+    &:not(:last-child) {
+      margin-bottom: hb-spacing-width('xxxs');
+    }
   }
 
   // date stacked vertical UI pattern item
@@ -496,7 +508,7 @@ $container-medium: hb-calculate-rems(768px);
   font-size: hb-calculate-rems(14px);
 
   &:not(:last-child) {
-    margin-block-end: hb-calculate-rems(10px);
+    margin-block-end: hb-calculate-rems(16px);
   }
 
   @include grid-media-min('md') {
@@ -524,7 +536,7 @@ $container-medium: hb-calculate-rems(768px);
   }
 
   &:not(:last-child) {
-    margin-block-end: hb-calculate-rems(10px);
+    margin-block-end: hb-spacing-width('xxs');
   }
 
   .views-label {
@@ -533,17 +545,6 @@ $container-medium: hb-calculate-rems(768px);
     margin-inline-end: hb-calculate-rems(6px);
   }
 }
-
-.hb-card__sbcontent,
-.hb-card__location,
-.hb-card__highlighted {
-  .hb-card--date-stacked & {
-    &:has(+ .hb-card__description) {
-      margin-block-end: hb-calculate-rems(12px);
-    }
-  }
-}
-
 
 .hb-card__date-tile {
   text-align: center;
@@ -579,12 +580,12 @@ $container-medium: hb-calculate-rems(768px);
     min-width: hb-calculate-rems(100px);
     background-color: color('white', 'global');
     padding: 0;
-    top: hb-calculate-rems(10px);
-    left: hb-calculate-rems(10px);
+    top: 0;
+    left: 0;
 
     @container card (width > #{$container-small}) {
-      top: hb-calculate-rems(16px);
-      left: hb-calculate-rems(16px);
+      top: 0;
+      left: 0;
     }
   }
 
@@ -654,5 +655,5 @@ $container-medium: hb-calculate-rems(768px);
 }
 
 .hb-card__author {
-  margin-block-end: hb-calculate-rems(6px);
+  margin-block-end: hb-spacing-width('xxxs');
 }

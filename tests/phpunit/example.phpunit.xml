@@ -1,92 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
+<!-- TODO set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
 <!-- PHPUnit expects functional tests to be run with either a privileged user
  or your current system user. See core/tests/README.md and
  https://www.drupal.org/node/2116263 for details.
 -->
-<phpunit
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  bootstrap="tests/bootstrap.php"
-  colors="true"
-  beStrictAboutTestsThatDoNotTestAnything="true"
-  beStrictAboutOutputDuringTests="true"
-  beStrictAboutChangesToGlobalState="true"
-  failOnRisky="true"
-  failOnWarning="true"
-  displayDetailsOnTestsThatTriggerErrors="true"
-  displayDetailsOnTestsThatTriggerWarnings="true"
-  displayDetailsOnTestsThatTriggerDeprecations="false"
-  cacheResult="false"
-  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
-  cacheDirectory=".phpunit.cache"
->
-  <source ignoreSuppressionOfDeprecations="true">
-    <include>
-      <directory>../modules/custom</directory>
-      <directory>../profiles/custom</directory>
-    </include>
-    <exclude>
-      <directory suffix="Test.php">../modules/custom/*</directory>
-      <directory suffix="Test.php">../modules/profiles/*</directory>
-      <directory suffix="TestBase.php">../modules/custom/*</directory>
-      <directory suffix="TestBase.php">../modules/profiles/*</directory>
-      <directory suffix=".post_update.php">../modules/custom/*</directory>
-      <directory suffix=".post_update.php">../profiles/*</directory>
-      <directory suffix=".deploy.php">../modules/custom/*</directory>
-      <directory suffix=".deploy.php">../profiles/*</directory>
-      <directory>../modules/custom/*/tests</directory>
-      <directory>../modules/custom/*/*/tests</directory>
-      <directory>../modules/custom/*/*/*/tests</directory>
-      <directory>../modules/custom/*/*/*/*/tests</directory>
-      <directory>../modules/custom/*/*/*/*/*/tests</directory>
-      <directory>../modules/custom/*/*/*/*/*/*/tests</directory>
-      <directory>../profiles/*/*/tests</directory>
-      <directory>../profiles/*/*/*/tests</directory>
-      <directory>../profiles/*/*/*/*/tests</directory>
-      <directory>../profiles/*/*/*/*/*/tests</directory>
-    </exclude>
-  </source>
-  <!-- set printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter" once
-   https://youtrack.jetbrains.com/issue/WI-24808 is resolved. Drupal provides a
-   result printer that links to the html output results for functional tests.
-   Unfortunately, this breaks the output of PHPStorm's PHPUnit runner. However, if
-   using the command line you can add
-   - -printer="\Drupal\Tests\Listeners\HtmlOutputPrinter" to use it (note there
-   should be no spaces between the hyphens).
-  -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerDeprecations="false"
+         cacheResult="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         cacheDirectory=".phpunit.cache">
   <php>
-    <!-- Set error reporting to E_ALL. -->
+    <!-- 
+      Set error reporting to E_ALL
+      HSDP NOTE: Core is set to 32767. E_DEPRECATED is 8192. 32767 - 8192 = 24575. 
+      Don't include E_DEPRECATED in error_reporting.
+    -->
     <ini name="error_reporting" value="24575"/>
     <!-- Do not limit the amount of memory tests take to run. -->
     <ini name="memory_limit" value="-1"/>
     <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
-    <env name="SIMPLETEST_BASE_URL" value="${project.local.uri}"/>
-    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
+    <env name="SIMPLETEST_BASE_URL" value="localhost"/>
+    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix 
+      HSDP NOTE: The variables below are replaced with locally configured
+      database values when running tests with sws-drush-commands.
+    -->
     <env name="SIMPLETEST_DB" value="mysql://${drupal.db.username}:${drupal.db.password}@${drupal.db.host}/${drupal.db.database}"/>
-    <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/docrootroot/sites/simpletest/browser_output -->
-    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="${docroot}/sites/simpletest"/>
-    <!-- To enable deprecation testing change `weak_vendors` to `max[self]=0`. -->
+    <!-- By default, browser tests will output links that use the base URL set
+     in SIMPLETEST_BASE_URL. However, if your SIMPLETEST_BASE_URL is an internal
+     path (such as may be the case in a virtual or Docker-based environment),
+     you can set the base URL used in the browser test output links to something
+     reachable from your host machine here. This will allow you to follow them
+     directly and view the output. 
+     HSDP NOTE: We do not currently use BROWSERTEST in our testing suite.
+    -->
+    <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
+    <!-- The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
+      the behavior of the deprecation tests.
+      Drupal core's testing framework is setting this variable to its defaults.
+      Projects with their own requirements need to manage this variable
+      explicitly.
+      HSDP NOTE: Disabled.
+    -->
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
-    <!-- Example for changing the driver class for mink tests MINK_DRIVER_CLASS value: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver' -->
-    <!-- Example for changing the driver args to mink tests MINK_DRIVER_ARGS value: '["http://127.0.0.1:8510"]' -->
-    <!-- Example for changing the driver args to phantomjs tests MINK_DRIVER_ARGS_PHANTOMJS value: '["http://127.0.0.1:8510"]' -->
-    <!-- Example for changing the driver args to docrootdriver tests MINK_DRIVER_ARGS_docrootDRIVER value: '["firefox", null, "http://localhost:4444/wd/hub"]' -->
+    <!-- Deprecation errors can be selectively ignored by specifying a file of
+      regular expression patterns for exclusion.
+      Uncomment the line below to specify a custom deprecations ignore file.
+      NOTE: it may be required to specify the full path to the file to run tests
+      correctly.
+    -->
+    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="ignoreFile=.deprecation-ignore.txt"/> -->
+    <!-- Example for changing the driver class for mink tests MINK_DRIVER_CLASS value: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver' 
+      HSDP NOTE: We do not use Drupal functional javascript tests. None of the MINK configuration is applicable.
+    -->
+    <env name="MINK_DRIVER_CLASS" value=""/>
+    <!-- Example for changing the driver args to mink tests MINK_DRIVER_ARGS value: '["http://127.0.0.1:8510"]' 
+    -->
+    <env name="MINK_DRIVER_ARGS" value=""/>
+    <!-- Example for changing the driver args to webdriver tests MINK_DRIVER_ARGS_WEBDRIVER value: '["chrome", { "goog:chromeOptions": { "w3c": false } }, "http://localhost:4444/wd/hub"]' For using the Firefox browser, replace "chrome" with "firefox" -->
+    <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=""/>
   </php>
+  <extensions>
+    <!-- HSDP NOTE: We do not use Drupal functional javascript tests. None of 
+    the extensions configuration is relevant -->
+    <!-- Functional tests HTML output logging. -->
+    <bootstrap class="Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger">
+      <!-- The directory where the browser output will be stored. If a relative
+        path is specified, it will be relative to the current working directory
+        of the process running the PHPUnit CLI. In CI environments, this can be
+        overridden by the value set for the "BROWSERTEST_OUTPUT_DIRECTORY"
+        environment variable.
+      -->
+      <parameter name="outputDirectory" value="sites/simpletest/browser_output"/>
+      <!-- By default browser tests print the individual links in the test run
+        report. To avoid overcrowding the output in CI environments, you can
+        set the "verbose" parameter or the "BROWSERTEST_OUTPUT_VERBOSE"
+        environment variable to "false". In GitLabCI, the output is saved
+        anyway as an artifact that can be browsed or downloaded from Gitlab.
+      -->
+      <parameter name="verbose" value="true"/>
+    </bootstrap>
+    <!-- Debug dump() printer. -->
+    <bootstrap class="Drupal\TestTools\Extension\Dump\DebugDump">
+      <parameter name="colors" value="true"/>
+      <parameter name="printCaller" value="true"/>
+    </bootstrap>
+  </extensions>
   <testsuites>
-    <testsuite name="unit">
-      <file>./tests/TestSuites/UnitTestSuite.php</file>
-    </testsuite>
-    <testsuite name="kernel">
-      <file>./tests/TestSuites/KernelTestSuite.php</file>
-    </testsuite>
-    <testsuite name="functional">
-      <file>./tests/TestSuites/FunctionalTestSuite.php</file>
-    </testsuite>
-    <testsuite name="nonfunctional">
-      <file>./tests/TestSuites/UnitTestSuite.php</file>
-      <file>./tests/TestSuites/KernelTestSuite.php</file>
-    </testsuite>
     <testsuite name="stanford">
+      <directory>../profiles/humsci</directory>
       <directory>../modules/humsci</directory>
     </testsuite>
   </testsuites>

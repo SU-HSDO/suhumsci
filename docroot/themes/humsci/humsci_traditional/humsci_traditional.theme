@@ -5,28 +5,31 @@
  * Functions to support theming in the HumSci Traditional theme.
  */
 
+use Drupal\Core\Extension\ThemeSettingsProvider;
+
 /**
  * Prepares variables for the html.html.twig template.
  */
 function humsci_traditional_preprocess_html(&$vars) {
+  $theme_settings = \Drupal::service(ThemeSettingsProvider::class);
 
   // Theme color pairing setting to set the way the Traditional theme will
   // appear.
-  $color_pairing = theme_get_setting('theme_color_pairing');
+  $color_pairing = $theme_settings->getSetting('theme_color_pairing');
   if ($color_pairing) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('ht-pairing-' . $color_pairing);
   }
 
   // Font family swap for Traditional theme.
-  $font_family = theme_get_setting('humsci_font_family');
+  $font_family = $theme_settings->getSetting('humsci_font_family');
   if ($font_family) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-font-' . $font_family);
   }
 
   // Dark Inversion Variants.
-  $div = theme_get_setting('dark_inversion_variant_classname');
+  $div = $theme_settings->getSetting('dark_inversion_variant_classname');
   if ($div) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-dark-inversion');
@@ -45,14 +48,16 @@ function humsci_traditional_preprocess_block__we_megamenu(array &$vars) {
  * Implements hook_preprocess_page().
  */
 function humsci_traditional_preprocess_page(&$vars) {
+  $theme_settings = \Drupal::service(ThemeSettingsProvider::class);
+
   // Variant setting for the local footer.
-  $lfv = theme_get_setting('local_footer_variant_classname');
+  $lfv = $theme_settings->getSetting('local_footer_variant_classname');
   if ($lfv) {
     $vars['local_footer_variant_classname'] = 'hb-' . $lfv . '-pattern';
   }
 
   // Variant setting for the local masthead.
-  $lmv = theme_get_setting('local_masthead_variant_classname');
+  $lmv = $theme_settings->getSetting('local_masthead_variant_classname');
   if ($lmv) {
     $vars['local_masthead_variant_classname'] = 'hb-' . $lmv . '-pattern';
   }

@@ -3,6 +3,7 @@
 namespace Drupal\humsci_events_listeners\EventSubscriber;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\core_event_dispatcher\BlockHookEvents;
 use Drupal\core_event_dispatcher\Event\Block\BlockAccessEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,6 +22,13 @@ class BlockEvents implements EventSubscriberInterface {
   protected $currentRequest;
 
   /**
+   * The theme settings provider.
+   *
+   * @var \Drupal\Core\Extension\ThemeSettingsProvider
+   */
+  protected $themeSettings;
+
+  /**
    * {@inheritDoc}
    */
   public static function getSubscribedEvents() {
@@ -34,9 +42,12 @@ class BlockEvents implements EventSubscriberInterface {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   Request stack service object.
+   * @param \Drupal\Core\Extension\ThemeSettingsProvider $theme_settings
+   *   The theme settings provider.
    */
-  public function __construct(RequestStack $requestStack) {
+  public function __construct(RequestStack $requestStack, ThemeSettingsProvider $theme_settings) {
     $this->currentRequest = $requestStack->getCurrentRequest();
+    $this->themeSettings = $theme_settings;
   }
 
   /**
@@ -47,7 +58,7 @@ class BlockEvents implements EventSubscriberInterface {
    */
   public function blockAccess(BlockAccessEvent $event) {
     if ($event->getBlock()->getPluginId() == 'we_megamenu_block:main') {
-      $event->addAccessResult(AccessResult::forbiddenIf(!theme_get_setting('megamenu_toggle')));
+      $event->addAccessResult(AccessResult::forbiddenIf(!$this->themeSettings->getSetting('megamenu_toggle')));
     }
 
     // Disable the page title block on 404 page IF the page is a node. Nodes

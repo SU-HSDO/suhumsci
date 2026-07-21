@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Template\Attribute;
 use Drupal\paragraphs\ParagraphInterface;
 
@@ -38,7 +39,7 @@ function su_humsci_gin_admin_preprocess(&$variables, $hook) {
     return;
   }
   $theme = \Drupal::config('system.theme')->get('default');
-  $color_pairing = theme_get_setting('theme_color_pairing', $theme);
+  $color_pairing = \Drupal::service(ThemeSettingsProvider::class)->getSetting('theme_color_pairing', $theme);
   $prefix = [
     'humsci_traditional' => 'ht',
     'humsci_colorful' => 'hc',
@@ -100,7 +101,7 @@ function su_humsci_gin_admin_preprocess_html(&$variables, $hook) {
   // Add classes for theme and color pairing (used by component previews and
   // style list widgets.)
   $theme = \Drupal::config('system.theme')->get('default');
-  $color_pairing = theme_get_setting('theme_color_pairing', $theme);
+  $color_pairing = \Drupal::service(ThemeSettingsProvider::class)->getSetting('theme_color_pairing', $theme);
   $prefix = [
     'humsci_traditional' => 'ht',
     'humsci_colorful' => 'hc',

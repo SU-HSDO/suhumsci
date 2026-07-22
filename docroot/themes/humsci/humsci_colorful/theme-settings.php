@@ -5,6 +5,7 @@
  * Provides an additional config form for theme settings.
  */
 
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Form\FormStateInterface;
 
 // Set theme name to use in the key values.
@@ -16,6 +17,8 @@ $theme_name = \Drupal::theme()->getActiveTheme()->getName();
  * Form override for theme settings.
  */
 function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStateInterface $form_state) {
+  $theme_settings = \Drupal::service(ThemeSettingsProvider::class);
+
   // Colorful theme color pairing setting theme_color_pairing.
   $form['options_settings']['humsci_colorful_color_pairing'] = [
     '#type' => 'fieldset',
@@ -33,7 +36,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
       'canyon' => t('Canyon'),
       'cliff' => t('Cliff'),
     ],
-    '#default_value' => theme_get_setting('theme_color_pairing'),
+    '#default_value' => $theme_settings->getSetting('theme_color_pairing'),
   ];
 
   // Local Masthead.
@@ -49,7 +52,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
       'default' => t('- Default -'),
       'dark' => t('Dark'),
     ],
-    '#default_value' => theme_get_setting('local_masthead_variant_classname'),
+    '#default_value' => $theme_settings->getSetting('local_masthead_variant_classname'),
   ];
 
   // Local Footer.
@@ -65,7 +68,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
       'default' => t('- Default -'),
       'dark' => t('Dark'),
     ],
-    '#default_value' => theme_get_setting('local_footer_variant_classname'),
+    '#default_value' => $theme_settings->getSetting('local_footer_variant_classname'),
   ];
 
   // Dark Inversion Variant Setting:
@@ -77,7 +80,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
   $form['options_settings']['humsci_colorful_dark_inversion']['dark_inversion_variant_classname'] = [
     '#type' => 'checkbox',
     '#title' => t('Use Dark Inversion'),
-    '#default_value' => theme_get_setting('dark_inversion_variant_classname'),
+    '#default_value' => $theme_settings->getSetting('dark_inversion_variant_classname'),
     '#description' => t('This enables/disables the dark inversion variant of the site.'),
   ];
 }

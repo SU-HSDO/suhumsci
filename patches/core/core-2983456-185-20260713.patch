@@ -1,0 +1,850 @@
+diff --git a/core/modules/media/config/optional/system.action.media_update_metadata.yml b/core/modules/media/config/optional/system.action.media_update_metadata.yml
+new file mode 100644
+index 00000000000..e31298e4082
+--- /dev/null
++++ b/core/modules/media/config/optional/system.action.media_update_metadata.yml
+@@ -0,0 +1,10 @@
++langcode: en
++status: true
++dependencies:
++  module:
++    - media
++id: media_update_metadata
++label: 'Update metadata'
++type: media
++plugin: media_update_metadata
++configuration: {  }
+diff --git a/core/modules/media/config/schema/media.actions.schema.yml b/core/modules/media/config/schema/media.actions.schema.yml
+new file mode 100644
+index 00000000000..03684717b76
+--- /dev/null
++++ b/core/modules/media/config/schema/media.actions.schema.yml
+@@ -0,0 +1,3 @@
++action.configuration.media_update_metadata:
++  type: action_configuration_default
++  label: 'Update metadata'
+diff --git a/core/modules/media/media.links.contextual.yml b/core/modules/media/media.links.contextual.yml
+index 1945ef5001f..cf919f396c4 100644
+--- a/core/modules/media/media.links.contextual.yml
++++ b/core/modules/media/media.links.contextual.yml
+@@ -3,6 +3,12 @@ entity.media.edit_form:
+   group: media
+   title: Edit
+ 
++media.update_metadata:
++  route_name: media.update_metadata
++  group: media
++  title: 'Update metadata'
++  weight: 5
++
+ entity.media.delete_form:
+   route_name: entity.media.delete_form
+   group: media
+diff --git a/core/modules/media/media.post_update.php b/core/modules/media/media.post_update.php
+index 1c56319bfe8..4796521c46d 100644
+--- a/core/modules/media/media.post_update.php
++++ b/core/modules/media/media.post_update.php
+@@ -5,6 +5,8 @@
+  * Post update functions for Media.
+  */
+ 
++use Drupal\system\Entity\Action;
++
+ /**
+  * Implements hook_removed_post_updates().
+  */
+@@ -27,3 +29,18 @@ function media_removed_post_updates(): array {
+ function media_post_update_media_author_views_filter_update(): void {
+   // Empty update function to clear the Views data cache.
+ }
++
++/**
++ * Install the 'Update metadata' action.
++ */
++function media_post_update_install_update_metadata_action(): void {
++  if (!Action::load('media_update_metadata')) {
++    Action::create([
++      'id' => 'media_update_metadata',
++      'label' => 'Update metadata',
++      'type' => 'media',
++      'plugin' => 'media_update_metadata',
++    ])
++      ->save();
++  }
++}
+diff --git a/core/modules/media/media.routing.yml b/core/modules/media/media.routing.yml
+index 6a04b5446b3..d489392ebac 100644
+--- a/core/modules/media/media.routing.yml
++++ b/core/modules/media/media.routing.yml
+@@ -1,3 +1,11 @@
++media.update_metadata:
++  path: '/media/{media}/update-metadata'
++  defaults:
++    _controller: '\Drupal\media\Controller\UpdateMetadataController::updateMetadata'
++  requirements:
++    _entity_access: 'media.update'
++    _csrf_token: 'TRUE'
++
+ media.oembed_iframe:
+   path: '/media/oembed'
+   defaults:
+diff --git a/core/modules/media/src/Controller/UpdateMetadataController.php b/core/modules/media/src/Controller/UpdateMetadataController.php
+new file mode 100644
+index 00000000000..1209da9338c
+--- /dev/null
++++ b/core/modules/media/src/Controller/UpdateMetadataController.php
+@@ -0,0 +1,47 @@
++<?php
++
++namespace Drupal\media\Controller;
++
++use Drupal\Core\Controller\ControllerBase;
++use Drupal\Core\GeneratedUrl;
++use Drupal\Core\Url;
++use Drupal\media\MediaInterface;
++use Symfony\Component\HttpFoundation\RedirectResponse;
++
++/**
++ * Controller that triggers metadata updates on a given media item.
++ *
++ * @internal
++ *   Controllers are internal.
++ */
++class UpdateMetadataController extends ControllerBase {
++
++  /**
++   * Updates metadata on a media entity and reloads the page.
++   *
++   * @param \Drupal\media\MediaInterface $media
++   *   The media item for which to update metadata.
++   *
++   * @return \Symfony\Component\HttpFoundation\RedirectResponse
++   *   A redirect response to return the user to the page they were on.
++   */
++  public function updateMetadata(MediaInterface $media) {
++    $media->enforceMetadataUpdate();
++    $this->entityTypeManager()->getStorage('media')->save($media);
++    $this->messenger()->addStatus($this->t('Updated metadata on media item %label', [
++      '%label' => $media->label(),
++    ]));
++    return new RedirectResponse($this->reloadPage());
++  }
++
++  /**
++   * Reloads the previous page or return to the media overview.
++   */
++  protected function reloadPage(): string|GeneratedUrl {
++    if ($destination = $this->getRedirectDestination()->get()) {
++      return $destination;
++    }
++    return Url::fromRoute('entity.media.collection')->toString();
++  }
++
++}
+diff --git a/core/modules/media/src/Entity/Media.php b/core/modules/media/src/Entity/Media.php
+index d7d991c02a9..5f530de7284 100644
+--- a/core/modules/media/src/Entity/Media.php
++++ b/core/modules/media/src/Entity/Media.php
+@@ -111,6 +111,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
+   use EntityOwnerTrait;
+   use StringTranslationTrait;
+ 
++  /**
++   * Force media item metadata update.
++   *
++   * @var bool
++   */
++  protected $forceMetadataUpdate = FALSE;
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -176,10 +183,14 @@ public function getSource() {
+    *   https://www.drupal.org/node/2878119
+    */
+   protected function updateThumbnail($from_queue = FALSE) {
+-    $this->thumbnail->target_id = $this->loadThumbnail($this->getThumbnailUri($from_queue))->id();
++    $thumbnail_uri = $this->getThumbnailUri($from_queue);
++    $this->thumbnail->target_id = $this->loadThumbnail($thumbnail_uri)->id();
+     $this->thumbnail->width = $this->getThumbnailWidth($from_queue);
+     $this->thumbnail->height = $this->getThumbnailHeight($from_queue);
+ 
++    // Flush related image styles.
++    image_path_flush($thumbnail_uri);
++
+     // Set the thumbnail alt.
+     $media_source = $this->getSource();
+     $plugin_definition = $media_source->getPluginDefinition();
+@@ -275,7 +286,7 @@ protected function getThumbnailUri($from_queue) {
+     if ($thumbnails_queued && $this->isNew()) {
+       return $this->getDefaultThumbnailUri();
+     }
+-    elseif ($thumbnails_queued && !$from_queue) {
++    elseif ($thumbnails_queued && !$from_queue && !$this->forceMetadataUpdate) {
+       return $this->get('thumbnail')->entity->getFileUri();
+     }
+ 
+@@ -362,8 +373,8 @@ protected function hasSourceFieldChanged() {
+    */
+   protected function shouldUpdateThumbnail($is_new = FALSE) {
+     // Update thumbnail if we don't have a thumbnail yet or when the source
+-    // field value changes.
+-    return !$this->get('thumbnail')->entity || $is_new || $this->hasSourceFieldChanged();
++    // field value changed or when it was enforced.
++    return $is_new || $this->forceMetadataUpdate || !$this->get('thumbnail')->entity || $this->hasSourceFieldChanged();
+   }
+ 
+   /**
+@@ -443,51 +454,86 @@ public function prepareSave() {
+       );
+     }
+ 
+-    $media_source = $this->getSource();
+-    foreach ($this->translations as $langcode => $data) {
+-      if ($this->hasTranslation($langcode)) {
+-        $translation = $this->getTranslation($langcode);
+-        // Try to set fields provided by the media source and mapped in
+-        // media type config.
+-        $original = $this->getOriginal();
+-        foreach ($translation->bundle->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
+-          if (!$translation->hasField($entity_field_name)) {
+-            continue;
+-          }
+-          $set_metadata = FALSE;
+-          // Only save value in the entity if the field is empty, or if the
+-          // source field changed from one non-empty value to another non-empty
+-          // value.
+-          // 1st scenario: field is empty, safely store metadata there.
+-          if ($translation->get($entity_field_name)->isEmpty()) {
+-            $set_metadata = TRUE;
+-          }
+-          else {
+-            // 2nd scenario: field is not empty, but the source field has
+-            // changed between two non-empty values.
+-            $original_source_field_empty = ($original instanceof MediaInterface) && $media_source->getSourceFieldValue($original) === NULL;
+-            $new_source_field_empty = $media_source->getSourceFieldValue($translation) === NULL;
+-            if (!$original_source_field_empty &&
+-                !$new_source_field_empty &&
+-                $translation->hasSourceFieldChanged()) {
+-              $set_metadata = TRUE;
+-            }
+-          }
+-          if ($set_metadata) {
+-            $translation->set($entity_field_name, $media_source->getMetadata($translation, $metadata_attribute_name));
+-          }
+-        }
++    foreach (array_keys($this->getTranslationLanguages()) as $langcode) {
++      $translation = $this->getTranslation($langcode);
+ 
+-        // Try to set a default name for this media item if no name is provided.
+-        if ($translation->get('name')->isEmpty()) {
+-          $translation->setName($translation->getName());
+-        }
++      // Set fields provided by the media source and mapped in the media type
++      // config.
++      $this->updateMappedMetadata($translation, $this->forceMetadataUpdate);
++
++      // Try to set a default name for this media item if no name is provided.
++      if ($translation->get('name')->isEmpty()) {
++        $translation->setName($translation->getName());
++      }
++
++      // Set thumbnail.
++      if ($translation->shouldUpdateThumbnail($this->isNew())) {
++        $translation->updateThumbnail();
++      }
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function enforceMetadataUpdate() {
++    $this->forceMetadataUpdate = TRUE;
++
++    return $this;
++  }
+ 
+-        // Set thumbnail.
+-        if ($translation->shouldUpdateThumbnail($this->isNew())) {
+-          $translation->updateThumbnail();
++  /**
++   * {@inheritdoc}
++   */
++  public function isMetadataUpdateEnforced() {
++    return $this->forceMetadataUpdate;
++  }
++
++  /**
++   * Maps metadata values into entity field values.
++   *
++   * @param \Drupal\media\MediaInterface $translation
++   *   The media translation we are updating.
++   * @param bool $overwrite_existing
++   *   (optional) If TRUE, metadata values will always be copied into mapped
++   *   field values. If FALSE, values will be copied only if the mapped field is
++   *   empty or if the media source field changed. Defaults to FALSE.
++   */
++  protected function updateMappedMetadata(MediaInterface $translation, $overwrite_existing = FALSE): void {
++    $media_source = $this->getSource();
++    $original = $this->getOriginal();
++    foreach ($translation->bundle->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
++      if (!$translation->hasField($entity_field_name)) {
++        continue;
++      }
++      $set_metadata = FALSE;
++      // Populate the field value in one of these scenarios:
++      // - The caller asked for it explicitly.
++      // - The entity field is empty.
++      // - The source field changed from one non-empty value to another
++      //   non-empty value.
++      if ($overwrite_existing) {
++        // 1st scenario: explicitly set the metadata.
++        $set_metadata = TRUE;
++      }
++      elseif ($translation->get($entity_field_name)->isEmpty()) {
++        // 2nd scenario: field is empty, safely store metadata there.
++        $set_metadata = TRUE;
++      }
++      else {
++        // 3rd scenario: field is not empty, but the source field has
++        // changed between two non-empty values.
++        $original_source_field_empty = ($original instanceof MediaInterface) && $media_source->getSourceFieldValue($original) === NULL;
++        $new_source_field_empty = $media_source->getSourceFieldValue($translation) === NULL;
++        if (!$original_source_field_empty &&
++          !$new_source_field_empty &&
++          $translation->hasSourceFieldChanged()) {
++          $set_metadata = TRUE;
+         }
+       }
++      if ($set_metadata) {
++        $translation->set($entity_field_name, $media_source->getMetadata($translation, $metadata_attribute_name));
++      }
+     }
+   }
+ 
+diff --git a/core/modules/media/src/MediaInterface.php b/core/modules/media/src/MediaInterface.php
+index 3aeaef56ab2..97dfe3dc78c 100644
+--- a/core/modules/media/src/MediaInterface.php
++++ b/core/modules/media/src/MediaInterface.php
+@@ -64,4 +64,19 @@ public function setCreatedTime($timestamp);
+    */
+   public function getSource();
+ 
++  /**
++   * Force metadata update in prepareSave().
++   *
++   * @return $this
++   */
++  public function enforceMetadataUpdate();
++
++  /**
++   * Check whether the metadata update is enforced or not.
++   *
++   * @return bool
++   *   TRUE if the metadata update is enforced, FALSE if it's not.
++   */
++  public function isMetadataUpdateEnforced();
++
+ }
+diff --git a/core/modules/media/src/MediaListBuilder.php b/core/modules/media/src/MediaListBuilder.php
+index 44ae6a8b7cc..8ae20207977 100644
+--- a/core/modules/media/src/MediaListBuilder.php
++++ b/core/modules/media/src/MediaListBuilder.php
+@@ -2,6 +2,7 @@
+ 
+ namespace Drupal\media;
+ 
++use Drupal\Core\Cache\CacheableMetadata;
+ use Drupal\Core\Datetime\DateFormatterInterface;
+ use Drupal\Core\Entity\EntityInterface;
+ use Drupal\Core\Entity\EntityListBuilder;
+@@ -9,6 +10,7 @@
+ use Drupal\Core\Entity\EntityTypeInterface;
+ use Drupal\Core\Language\LanguageManagerInterface;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
++use Drupal\Core\Url;
+ 
+ /**
+  * Provides a listing of media items.
+@@ -159,4 +161,21 @@ protected function getEntityIds() {
+     return $query->execute();
+   }
+ 
++  /**
++   * {@inheritdoc}
++   */
++  protected function getDefaultOperations(EntityInterface $entity, ?CacheableMetadata $cacheability = NULL): array {
++    $operations = parent::getDefaultOperations($entity, $cacheability);
++    if ($entity->access('update')) {
++      $operations['update_metadata'] = [
++        'title' => $this->t('Update metadata'),
++        'url' => $this->ensureDestination(new Url('media.update_metadata', [
++          'media' => $entity->id(),
++        ])),
++        'weight' => 150,
++      ];
++    }
++    return $operations;
++  }
++
+ }
+diff --git a/core/modules/media/src/Plugin/Action/UpdateMetadataAction.php b/core/modules/media/src/Plugin/Action/UpdateMetadataAction.php
+new file mode 100644
+index 00000000000..daaf4fd45bf
+--- /dev/null
++++ b/core/modules/media/src/Plugin/Action/UpdateMetadataAction.php
+@@ -0,0 +1,78 @@
++<?php
++
++namespace Drupal\media\Plugin\Action;
++
++use Drupal\Core\Action\ActionBase;
++use Drupal\Core\Action\Attribute\Action;
++use Drupal\Core\Entity\EntityStorageInterface;
++use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++use Drupal\Core\Session\AccountInterface;
++use Drupal\Core\StringTranslation\TranslatableMarkup;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++/**
++ * Updates metadata (including the thumbnail) of a media entity.
++ */
++#[Action(
++  id: 'media_update_metadata',
++  label: new TranslatableMarkup('Update metadata'),
++)]
++class UpdateMetadataAction extends ActionBase implements ContainerFactoryPluginInterface {
++
++  /**
++   * The media entity storage.
++   *
++   * @var \Drupal\Core\Entity\EntityStorageInterface
++   */
++  protected $mediaStorage;
++
++  /**
++   * Creates a new UpdateMetadataAction plugin instance.
++   *
++   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
++   *   The entity storage.
++   * @param array $configuration
++   *   The plugin configuration array.
++   * @param string $plugin_id
++   *   The plugin_id for the plugin instance.
++   * @param mixed $plugin_definition
++   *   The plugin implementation definition.
++   */
++  public function __construct(EntityStorageInterface $entity_storage, array $configuration, $plugin_id, $plugin_definition) {
++    parent::__construct($configuration, $plugin_id, $plugin_definition);
++    $this->mediaStorage = $entity_storage;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
++    return new static(
++      $container->get('entity_type.manager')->getStorage('media'),
++      $configuration,
++      $plugin_id,
++      $plugin_definition
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function execute($entity = NULL): void {
++    if ($entity) {
++      /** @var \Drupal\media\MediaInterface $entity */
++      $entity->enforceMetadataUpdate();
++      $this->mediaStorage->save($entity);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
++    /** @var \Drupal\Core\Entity\EntityInterface $object */
++    $result = $object->access('update', $account, TRUE);
++    return $return_as_object ? $result : $result->isAllowed();
++  }
++
++}
+diff --git a/core/modules/media/src/Plugin/media/Source/OEmbed.php b/core/modules/media/src/Plugin/media/Source/OEmbed.php
+index 83b4e849986..64870ae428b 100644
+--- a/core/modules/media/src/Plugin/media/Source/OEmbed.php
++++ b/core/modules/media/src/Plugin/media/Source/OEmbed.php
+@@ -260,7 +260,7 @@ public function getMetadata(MediaInterface $media, $name) {
+         return parent::getMetadata($media, 'default_name');
+ 
+       case 'thumbnail_uri':
+-        return $this->getLocalThumbnailUri($resource, $media) ?: parent::getMetadata($media, 'thumbnail_uri');
++        return $this->getLocalThumbnailUri($resource, $media, $media->isMetadataUpdateEnforced()) ?: parent::getMetadata($media, 'thumbnail_uri');
+ 
+       case 'type':
+         return $resource->getType();
+@@ -400,6 +400,8 @@ public function defaultConfiguration() {
+    *   The oEmbed resource.
+    * @param \Drupal\media\MediaInterface $media
+    *   The media entity that contains the resource.
++   * @param bool $forceUpdate
++   *   TRUE if the thumbnail should be updated even if it already exists.
+    *
+    * @return string|null
+    *   The local thumbnail URI, or NULL if it could not be downloaded, or if the
+@@ -410,7 +412,7 @@ public function defaultConfiguration() {
+    * toggle-able. See https://www.drupal.org/project/drupal/issues/2962751 for
+    * more information.
+    */
+-  protected function getLocalThumbnailUri(Resource $resource, MediaInterface $media) {
++  protected function getLocalThumbnailUri(Resource $resource, MediaInterface $media, $forceUpdate = FALSE) {
+     $token_data = ['date' => $media->getCreatedTime()];
+ 
+     // If there is no remote thumbnail, there's nothing for us to fetch here.
+@@ -446,9 +448,12 @@ protected function getLocalThumbnailUri(Resource $resource, MediaInterface $medi
+     // regardless of its extension, return its URI.
+     $remote_thumbnail_url = $remote_thumbnail_url->toString();
+     $hash = Crypt::hashBase64($remote_thumbnail_url);
+-    $files = $this->fileSystem->scanDirectory($directory, "/^$hash\..*/");
+-    if (count($files) > 0) {
+-      return reset($files)->uri;
++
++    if ($forceUpdate === FALSE) {
++      $files = $this->fileSystem->scanDirectory($directory, "/^$hash\..*/");
++      if (count($files) > 0) {
++        return reset($files)->uri;
++      }
+     }
+ 
+     // The local thumbnail doesn't exist yet, so we need to download it.
+diff --git a/core/modules/media/tests/src/Functional/MediaBulkFormTest.php b/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
+index 10da4c44cab..be9ae04eed2 100644
+--- a/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
++++ b/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
+@@ -76,12 +76,14 @@ public function testBulkForm(): void {
+ 
+     // Check the operations are accessible to the logged in user.
+     $this->drupalGet('test-media-bulk-form');
+-    // Current available actions: Delete, Save, Publish, Unpublish.
++    // Current available actions: Delete, Save, Publish, Unpublish, Update
++    // Metadata.
+     $available_actions = [
+       'media_delete_action',
+       'media_publish_action',
+       'media_save_action',
+       'media_unpublish_action',
++      'media_update_metadata',
+     ];
+     foreach ($available_actions as $action_name) {
+       $assert_session->optionExists('action', $action_name);
+diff --git a/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php b/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
+index 304181d98b4..883001da212 100644
+--- a/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
++++ b/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
+@@ -157,6 +157,9 @@ public function testMediaOverviewPage(): void {
+     $assert_session->linkByHrefExists('/media/' . $media1->id() . '/edit');
+     $assert_session->elementExists('css', 'td.views-field-operations li a:contains("Delete")', $row1);
+     $assert_session->linkByHrefExists('/media/' . $media1->id() . '/delete');
++    $update_metadata_link1 = $assert_session->elementExists('css', 'td.views-field-operations li a:contains("Update metadata")', $row1);
++    $this->assertSame('Update metadata', $update_metadata_link1->getText());
++    $assert_session->linkByHrefExists('/media/' . $media1->id() . '/update-metadata');
+ 
+     // Make sure the role save below properly invalidates cache tags.
+     $this->refreshVariables();
+diff --git a/core/modules/media/tests/src/Functional/MediaUpdateMetadataControllerTest.php b/core/modules/media/tests/src/Functional/MediaUpdateMetadataControllerTest.php
+new file mode 100644
+index 00000000000..8ea5cd57b1d
+--- /dev/null
++++ b/core/modules/media/tests/src/Functional/MediaUpdateMetadataControllerTest.php
+@@ -0,0 +1,81 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Tests\media\Functional;
++
++use Drupal\file\Entity\File as FileEntity;
++use Drupal\media\Entity\Media;
++use Drupal\media\Plugin\media\Source\File;
++use PHPUnit\Framework\Attributes\Group;
++use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
++
++/**
++ * Tests the media "Update Metadata" controller.
++ */
++#[Group('media')]
++#[RunTestsInSeparateProcesses]
++class MediaUpdateMetadataControllerTest extends MediaFunctionalTestBase {
++
++  /**
++   * {@inheritdoc}
++   */
++  protected $defaultTheme = 'stark';
++
++  /**
++   * Test that by going to the update metadata page, we update the metadata.
++   */
++  public function testUpdateMetadataController(): void {
++    $assert_session = $this->assertSession();
++
++    $media_type = $this->createMediaType('file');
++    $source_plugin = $media_type->getSource();
++
++    // Initially the "name" metadata is the filename.
++    $file = FileEntity::create([
++      'uri' => 'public://foo.txt',
++      'uid' => 1,
++    ]);
++    $file->setPermanent();
++    $file->save();
++
++    /** @var \Drupal\media\MediaInterface $media */
++    $media = Media::create([
++      'bundle' => $media_type->id(),
++      'uid' => 1,
++      'field_media_file' => [
++        'target_id' => $file->id(),
++      ],
++    ]);
++    $media->save();
++
++    $name_metadata = $source_plugin->getMetadata($media, File::METADATA_ATTRIBUTE_NAME);
++    $this->assertSame('foo.txt', $name_metadata);
++
++    // Rename the file, simulating a remote metadata change.
++    $file_id = $source_plugin->getSourceFieldValue($media);
++    /** @var \Drupal\file\FileInterface $file */
++    $file = $this->container->get('entity_type.manager')
++      ->getStorage('file')
++      ->load($file_id);
++    $file->setFilename('bar.txt');
++    $file->save();
++
++    // Go to the update metadata page and verify the controller triggered an
++    // update.
++    $media_id = $media->id();
++    $site_base_path = base_path();
++
++    $this->drupalGet("/admin/content/media");
++    $this->assertSession()->elementExists(
++      'xpath',
++      "//ul[contains(@class, dropbutton)]/li/a[starts-with(@href, '{$site_base_path}media/{$media_id}/update-metadata')]"
++    )->click();
++
++    $assert_session->statusCodeEquals(200);
++
++    $name_metadata = $source_plugin->getMetadata($media, File::METADATA_ATTRIBUTE_NAME);
++    $this->assertSame('bar.txt', $name_metadata);
++  }
++
++}
+diff --git a/core/modules/media/tests/src/FunctionalJavascript/MediaContextualLinksTest.php b/core/modules/media/tests/src/FunctionalJavascript/MediaContextualLinksTest.php
+new file mode 100644
+index 00000000000..94f6f7956a5
+--- /dev/null
++++ b/core/modules/media/tests/src/FunctionalJavascript/MediaContextualLinksTest.php
+@@ -0,0 +1,88 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Tests\media\FunctionalJavascript;
++
++use Drupal\media\Entity\Media;
++use PHPUnit\Framework\Attributes\Group;
++use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
++
++/**
++ * Tests views contextual links on media items.
++ */
++#[Group('media')]
++#[RunTestsInSeparateProcesses]
++class MediaContextualLinksTest extends MediaJavascriptTestBase {
++
++  /**
++   * {@inheritdoc}
++   */
++  protected static $modules = [
++    'contextual',
++  ];
++
++  /**
++   * {@inheritdoc}
++   */
++  protected $defaultTheme = 'stark';
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setUp(): void {
++    parent::setUp();
++
++    // This test is going to test the display, so we need the standalone URL.
++    \Drupal::configFactory()
++      ->getEditable('media.settings')
++      ->set('standalone_url', TRUE)
++      ->save();
++
++    $this->container->get('router.builder')->rebuild();
++  }
++
++  /**
++   * Tests contextual links.
++   */
++  public function testMediaContextualLinks(): void {
++    // Create a media type.
++    $mediaType = $this->createMediaType('test');
++
++    // Create a media item.
++    $media = Media::create([
++      'bundle' => $mediaType->id(),
++      'name' => 'Unnamed',
++    ]);
++    $media->save();
++
++    $user = $this->drupalCreateUser([
++      'administer media',
++      'access contextual links',
++      'view media',
++    ]);
++    $this->drupalLogin($user);
++
++    $this->drupalGet('media/' . $media->id());
++
++    // Contextual links are populated by javascript after the page is loaded.
++    // Wait until they are on the page, click on the pencil so we make sure they
++    // are visible, and then we can assert their contents.
++    $this->assertSession()->waitForElement('css', 'div[data-contextual-id] ul.contextual-links');
++    $this->getSession()->executeScript("jQuery('.contextual .trigger').toggleClass('visually-hidden');");
++    $this->cssSelect('.contextual button')[0]->press();
++
++    // The contextual links container is there.
++    $this->assertSession()->elementAttributeContains('css', 'div[data-contextual-id]', 'data-contextual-id', 'media:media=' . $media->id() . ':');
++
++    // The "Edit" link is there.
++    $this->assertSession()->elementTextContains('css', 'ul.contextual-links li:first-child a', 'Edit');
++
++    // The "Update metadata" link is there.
++    $this->assertSession()->elementTextContains('css', 'ul.contextual-links li:nth-child(2) a', 'Update metadata');
++
++    // The "Delete" link is there.
++    $this->assertSession()->elementTextContains('css', 'ul.contextual-links li:nth-child(3) a', 'Delete');
++  }
++
++}
+diff --git a/core/modules/media/tests/src/Kernel/MediaUpdateMetadataTest.php b/core/modules/media/tests/src/Kernel/MediaUpdateMetadataTest.php
+new file mode 100644
+index 00000000000..91316a18e74
+--- /dev/null
++++ b/core/modules/media/tests/src/Kernel/MediaUpdateMetadataTest.php
+@@ -0,0 +1,47 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Tests\media\Kernel;
++
++use Drupal\media\Plugin\media\Source\File;
++use PHPUnit\Framework\Attributes\Group;
++use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
++
++/**
++ * Tests the update metadata method on Media entities.
++ */
++#[Group('media')]
++#[RunTestsInSeparateProcesses]
++class MediaUpdateMetadataTest extends MediaKernelTestBase {
++
++  /**
++   * Tests the update metadata operation.
++   */
++  public function testUpdateMetadata(): void {
++    $media_type = $this->createMediaType('file');
++    $source_plugin = $media_type->getSource();
++
++    // Initially the "name" metadata is the filename.
++    $media = $this->generateMedia('foo.txt', $media_type);
++    $media->save();
++    $name_metadata = $source_plugin->getMetadata($media, File::METADATA_ATTRIBUTE_NAME);
++    $this->assertSame('foo.txt', $name_metadata);
++
++    // Rename the file, simulating a remote metadata change.
++    $file_id = $source_plugin->getSourceFieldValue($media);
++    /** @var \Drupal\file\FileInterface $file */
++    $file = $this->container->get('entity_type.manager')
++      ->getStorage('file')
++      ->load($file_id);
++    $file->setFilename('bar.txt');
++    $file->save();
++
++    // Update metadata, we should now pick the new name.
++    $media->enforceMetadataUpdate()->save();
++
++    $name_metadata = $source_plugin->getMetadata($media, File::METADATA_ATTRIBUTE_NAME);
++    $this->assertSame('bar.txt', $name_metadata);
++  }
++
++}
+diff --git a/core/recipes/audio_media_type/recipe.yml b/core/recipes/audio_media_type/recipe.yml
+index 196a2c4501c..5ca561aa25d 100644
+--- a/core/recipes/audio_media_type/recipe.yml
++++ b/core/recipes/audio_media_type/recipe.yml
+@@ -25,6 +25,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.thumbnail
+diff --git a/core/recipes/document_media_type/recipe.yml b/core/recipes/document_media_type/recipe.yml
+index 44dd72715ba..8c8453c60a1 100644
+--- a/core/recipes/document_media_type/recipe.yml
++++ b/core/recipes/document_media_type/recipe.yml
+@@ -23,6 +23,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.thumbnail
+diff --git a/core/recipes/image_media_type/recipe.yml b/core/recipes/image_media_type/recipe.yml
+index d516854f836..84493bd5f58 100644
+--- a/core/recipes/image_media_type/recipe.yml
++++ b/core/recipes/image_media_type/recipe.yml
+@@ -23,6 +23,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.medium
+diff --git a/core/recipes/local_video_media_type/recipe.yml b/core/recipes/local_video_media_type/recipe.yml
+index 270be6e5631..da77a70f83a 100644
+--- a/core/recipes/local_video_media_type/recipe.yml
++++ b/core/recipes/local_video_media_type/recipe.yml
+@@ -23,6 +23,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.thumbnail
+diff --git a/core/recipes/remote_video_media_type/recipe.yml b/core/recipes/remote_video_media_type/recipe.yml
+index 3ab591c7f95..22b4af582ed 100644
+--- a/core/recipes/remote_video_media_type/recipe.yml
++++ b/core/recipes/remote_video_media_type/recipe.yml
+@@ -21,6 +21,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.medium

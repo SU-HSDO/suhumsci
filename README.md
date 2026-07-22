@@ -9,7 +9,7 @@ Note the following properties of this project:
 * Production release branch: `main`
 * Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-<SPRINT_NUMBER>`
 * Development branching convention: branch off the current major development branch
-* Local environment: DDEV, Lando or bare metal LAMP
+* Development environments: GitHub Codespaces, DDEV, Lando, or bare metal LAMP
 * Local drush alias: `@<SITE_ALIAS>.local`
 * Local site URL: `http://<SITE_ALIAS>.suhumsci.loc`
 
@@ -26,18 +26,22 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Configuration Management](docs/Config.md)
 - [Development Requirements](docs/DevelopmentRequirements.md)
 - [Documentation Standards](docs/DocumentationStandards.md)
+- [GitHub Codespaces](docs/GithubCodespaces.md)
+- [Module Evaluation](docs/ModuleEvaluation.md)
 
 ### Process Guides
 
+- [GitHub Codespaces Workflow](docs/CodespacesWorkflow.md)
 - [Release and Code Deployment](docs/CodeDeploy.md)
 - [Site Launch](docs/Launch.md)
 - [Provisioning a New Site](docs/NewSite.md)
 - [Copying a Site](docs/CopySite.md)
 - [Decommissioning and Deleting a Site](docs/DeleteSite.md)
 - [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
+- [Dependency Update Review](docs/DependencyUpdateReview.md)
 - [Patching](docs/Patching.md)
 - [Deprecating and Removing a Module](docs/ModuleUninstall.md)
-- [Codeception Tests](docs/Codeception.md)
+- [Testing](docs/Testing.md)
 
 ### Migration
 
@@ -51,7 +55,14 @@ See [Development Requirements](docs/DevelopmentRequirements.md).
 
 ## Local Setup and Installation
 
-You can run the site on DDEV, Lando, or bare metal.
+You can run the site on GitHub Codespaces, DDEV, Lando, or bare metal.
+
+### Setup on GitHub Codespaces
+
+GitHub Codespaces provides a cloud-based development environment with all dependencies pre-installed. This is the fastest way to get started.
+
+* [Follow the GitHub Codespaces Workflow guide](docs/CodespacesWorkflow.md) to launch a codespace and push changes.
+* [Read the GitHub Codespaces guide](docs/GithubCodespaces.md) for configuration and maintenance details.
 
 ### Setup on DDEV or Lando
 * [Follow the DDEV instructions](.ddev/DDEV-README.md).
@@ -96,13 +107,7 @@ The build process automatically detects whether to run inside DDEV or Lando. To 
 
 ## Testing
 
-### Codeception
-
-Acceptance testing is done using the [Codeception](https://codeception.com/) framework.
-
-- `drush sws:codeception` — Run all acceptance tests.
-- `drush sws:codeception --group=<GROUP_NAME>` — Run tests annotated with the specified group. This is the most effective method to run a single test.
-- [List of current tests](docs/Codeception.md)
+See [Testing](docs/Testing.md) for how to run the PHPUnit and Codeception suites, and a list of current Codeception tests.
 
 ### Sass
 

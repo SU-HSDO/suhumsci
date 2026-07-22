@@ -57,6 +57,8 @@ class DateTest extends KernelTestBase {
     'hs_actions',
     'field',
     'datetime',
+    'views',
+    'views_bulk_operations',
   ];
 
   /**

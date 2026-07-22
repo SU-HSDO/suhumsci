@@ -146,14 +146,6 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
    * @throws \Drupal\tamper\Exception\TamperException
    */
   public function tamper($data, ?TamperableItemInterface $item = NULL) {
-    // media_duplicate_validation fires on media insert and will block saves for
-    // any image it considers a duplicate, causing imports to fail.
-    if ($this->moduleHandler->moduleExists('media_duplicate_validation')) {
-      $message = 'UrlToMedia tamper plugin cannot run with media_duplicate_validation module enabled. Please disable the module before running migrations.';
-      $this->loggerFactory->get('hs_migrate')->error($message);
-      throw new TamperException($message);
-    }
-
     if (empty($data)) {
       return NULL;
     }

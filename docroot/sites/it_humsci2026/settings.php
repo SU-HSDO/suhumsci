@@ -24,18 +24,18 @@
  * 'sites/default' will be used.
  *
  * For example, for a fictitious site installed at
- * https://www.drupal.org:8080/my-site/test/, the 'settings.php' file is searched
+ * https://www.drupal.org:8080/mysite/test/, the 'settings.php' file is searched
  * for in the following directories:
  *
- * - sites/8080.www.drupal.org.my-site.test
- * - sites/www.drupal.org.my-site.test
- * - sites/drupal.org.my-site.test
- * - sites/org.my-site.test
+ * - sites/8080.www.drupal.org.mysite.test
+ * - sites/www.drupal.org.mysite.test
+ * - sites/drupal.org.mysite.test
+ * - sites/org.mysite.test
  *
- * - sites/8080.www.drupal.org.my-site
- * - sites/www.drupal.org.my-site
- * - sites/drupal.org.my-site
- * - sites/org.my-site
+ * - sites/8080.www.drupal.org.mysite
+ * - sites/www.drupal.org.mysite
+ * - sites/drupal.org.mysite
+ * - sites/org.mysite
  *
  * - sites/8080.www.drupal.org
  * - sites/www.drupal.org
@@ -46,8 +46,8 @@
  *
  * Note that if you are installing on a non-standard port number, prefix the
  * hostname with that number. For example,
- * https://www.drupal.org:8080/my-site/test/ could be loaded from
- * sites/8080.www.drupal.org.my-site.test/.
+ * https://www.drupal.org:8080/mysite/test/ could be loaded from
+ * sites/8080.www.drupal.org.mysite.test/.
  *
  * @see example.sites.php
  * @see \Drupal\Core\DrupalKernel::getSitePath()
@@ -67,19 +67,19 @@
  * during the same request.
  *
  * One example of the simplest connection array is shown below. To use the
- * sample settings, copy and uncomment the code below and paste it after the
- * $databases declaration. You will need to replace the database username and
- * password and possibly the host and port with the appropriate credentials for
- * your database system.
+ * sample settings, copy and uncomment the code below between the @code and
+ * @endcode lines and paste it after the $databases declaration. You will need
+ * to replace the database username and password and possibly the host and port
+ * with the appropriate credentials for your database system.
  *
  * The next section describes how to customize the $databases array for more
  * specific needs.
  *
  * @code
  * $databases['default']['default'] = [
- *   'database' => 'database_name',
- *   'username' => 'sql_username',
- *   'password' => 'sql_password',
+ *   'database' => 'databasename',
+ *   'username' => 'sqlusername',
+ *   'password' => 'sqlpassword',
  *   'host' => 'localhost',
  *   'port' => '3306',
  *   'driver' => 'mysql',
@@ -138,31 +138,49 @@ $databases = [];
  * request as needed.  The fourth line creates a new database with a name of
  * "extra".
  *
- * For MySQL, MariaDB or equivalent databases the 'isolation_level' option can
- * be set. The recommended transaction isolation level for Drupal sites is
- * 'READ COMMITTED'. The 'REPEATABLE READ' option is supported but can result
- * in deadlocks, the other two options are 'READ UNCOMMITTED' and 'SERIALIZABLE'.
- * They are available but not supported; use them at your own risk. For more
- * info:
- * https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html
+ * You can optionally set prefixes for some or all database table names
+ * by using the 'prefix' setting. If a prefix is specified, the table
+ * name will be prepended with its value. Be sure to use valid database
+ * characters only, usually alphanumeric and underscore. If no prefixes
+ * are desired, leave it as an empty string ''.
  *
- * On your settings.php, change the isolation level:
- * @code
- * $databases['default']['default']['init_commands'] = [
- *   'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
- * ];
- * @endcode
- *
- * You can optionally set a prefix for all database table names by using the
- * 'prefix' setting. If a prefix is specified, the table name will be prepended
- * with its value. Be sure to use valid database characters only, usually
- * alphanumeric and underscore. If no prefix is desired, do not set the 'prefix'
- * key or set its value to an empty string ''.
- *
- * For example, to have all database table prefixed with 'main_', set:
+ * To have all database names prefixed, set 'prefix' as a string:
  * @code
  *   'prefix' => 'main_',
  * @endcode
+ *
+ * Per-table prefixes are deprecated as of Drupal 8.2, and will be removed in
+ * Drupal 9.0. After that, only a single prefix for all tables will be
+ * supported.
+ *
+ * To provide prefixes for specific tables, set 'prefix' as an array.
+ * The array's keys are the table names and the values are the prefixes.
+ * The 'default' element is mandatory and holds the prefix for any tables
+ * not specified elsewhere in the array. Example:
+ * @code
+ *   'prefix' => [
+ *     'default'   => 'main_',
+ *     'users'     => 'shared_',
+ *     'sessions'  => 'shared_',
+ *     'role'      => 'shared_',
+ *     'authmap'   => 'shared_',
+ *   ],
+ * @endcode
+ * You can also use a reference to a schema/database as a prefix. This may be
+ * useful if your Drupal installation exists in a schema that is not the default
+ * or you want to access several databases from the same code base at the same
+ * time.
+ * Example:
+ * @code
+ *   'prefix' => [
+ *     'default'   => 'main.',
+ *     'users'     => 'shared.',
+ *     'sessions'  => 'shared.',
+ *     'role'      => 'shared.',
+ *     'authmap'   => 'shared.',
+ *   ];
+ * @endcode
+ * NOTE: MySQL and SQLite's definition of a schema is a database.
  *
  * Advanced users can add or override initial commands to execute when
  * connecting to the database server, as well as PDO connection settings. For
@@ -181,21 +199,21 @@ $databases = [];
  *
  * WARNING: The above defaults are designed for database portability. Changing
  * them may cause unexpected behavior, including potential data loss. See
- * https://www.drupal.org/docs/8/api/database-api/database-configuration for
- * more information on these defaults and the potential issues.
+ * https://www.drupal.org/developing/api/database/configuration for more
+ * information on these defaults and the potential issues.
  *
  * More details can be found in the constructor methods for each driver:
- * - \Drupal\mysql\Driver\Database\mysql\Connection::__construct()
- * - \Drupal\pgsql\Driver\Database\pgsql\Connection::__construct()
- * - \Drupal\sqlite\Driver\Database\sqlite\Connection::__construct()
+ * - \Drupal\Core\Database\Driver\mysql\Connection::__construct()
+ * - \Drupal\Core\Database\Driver\pgsql\Connection::__construct()
+ * - \Drupal\Core\Database\Driver\sqlite\Connection::__construct()
  *
  * Sample Database configuration format for PostgreSQL (pgsql):
  * @code
  *   $databases['default']['default'] = [
  *     'driver' => 'pgsql',
- *     'database' => 'database_name',
- *     'username' => 'sql_username',
- *     'password' => 'sql_password',
+ *     'database' => 'databasename',
+ *     'username' => 'sqlusername',
+ *     'password' => 'sqlpassword',
  *     'host' => 'localhost',
  *     'prefix' => '',
  *   ];
@@ -205,7 +223,7 @@ $databases = [];
  * @code
  *   $databases['default']['default'] = [
  *     'driver' => 'sqlite',
- *     'database' => '/path/to/database_filename',
+ *     'database' => '/path/to/databasefilename',
  *   ];
  * @endcode
  *
@@ -215,32 +233,11 @@ $databases = [];
  *     'driver' => 'my_driver',
  *     'namespace' => 'Drupal\my_module\Driver\Database\my_driver',
  *     'autoload' => 'modules/my_module/src/Driver/Database/my_driver/',
- *     'database' => 'database_name',
- *     'username' => 'sql_username',
- *     'password' => 'sql_password',
+ *     'database' => 'databasename',
+ *     'username' => 'sqlusername',
+ *     'password' => 'sqlpassword',
  *     'host' => 'localhost',
  *     'prefix' => '',
- *   ];
- * @endcode
- *
- * Sample Database configuration format for a driver that is extending another
- * database driver.
- * @code
- *   $databases['default']['default'] = [
- *     'driver' => 'my_driver',
- *     'namespace' => 'Drupal\my_module\Driver\Database\my_driver',
- *     'autoload' => 'modules/my_module/src/Driver/Database/my_driver/',
- *     'database' => 'database_name',
- *     'username' => 'sql_username',
- *     'password' => 'sql_password',
- *     'host' => 'localhost',
- *     'prefix' => '',
- *     'dependencies' => [
- *       'parent_module' => [
- *         'namespace' => 'Drupal\parent_module',
- *         'autoload' => 'core/modules/parent_module/src/',
- *       ],
- *     ],
  *   ];
  * @endcode
  */
@@ -277,8 +274,7 @@ $databases = [];
  * variable has the same value on each server.
  *
  * For enhanced security, you may set this variable to the contents of a file
- * outside your document root, and vary the value across environments (like
- * production and development); you should also ensure that this file is not
+ * outside your document root; you should also ensure that this file is not
  * stored with backups of your database.
  *
  * Example:
@@ -312,7 +308,7 @@ $settings['hash_salt'] = '';
 $settings['update_free_access'] = FALSE;
 
 /**
- * Fallback to HTTP for Update Status and for fetching security advisories.
+ * Fallback to HTTP for Update Manager and for fetching security advisories.
  *
  * If your site fails to connect to updates.drupal.org over HTTPS (either when
  * fetching data on available updates, or when fetching the feed of critical
@@ -355,13 +351,14 @@ $settings['update_free_access'] = FALSE;
  * security, or encryption benefits. In an environment where Drupal
  * is behind a reverse proxy, the real IP address of the client should
  * be determined such that the correct client IP address is available
- * to Drupal's logging and access management systems. In the most simple
- * scenario, the proxy server will add an X-Forwarded-For header to the request
- * that contains the client IP address. However, HTTP headers are vulnerable to
- * spoofing, where a malicious client could bypass restrictions by setting the
- * X-Forwarded-For header directly. Therefore, Drupal's proxy configuration
- * requires the IP addresses of all remote proxies to be specified in
- * $settings['reverse_proxy_addresses'] to work correctly.
+ * to Drupal's logging, statistics, and access management systems. In
+ * the most simple scenario, the proxy server will add an
+ * X-Forwarded-For header to the request that contains the client IP
+ * address. However, HTTP headers are vulnerable to spoofing, where a
+ * malicious client could bypass restrictions by setting the
+ * X-Forwarded-For header directly. Therefore, Drupal's proxy
+ * configuration requires the IP addresses of all remote proxies to be
+ * specified in $settings['reverse_proxy_addresses'] to work correctly.
  *
  * Enable this setting to get Drupal to determine the client IP from the
  * X-Forwarded-For header. If you are unsure about this setting, do not have a
@@ -379,13 +376,10 @@ $settings['update_free_access'] = FALSE;
 # $settings['reverse_proxy'] = TRUE;
 
 /**
- * Reverse proxy addresses.
- *
- * Specify every reverse proxy IP address in your environment, as an array of
- * IPv4/IPv6 addresses or subnets in CIDR notation. This setting is required if
- * $settings['reverse_proxy'] is TRUE.
+ * Specify every reverse proxy IP address in your environment.
+ * This setting is required if $settings['reverse_proxy'] is TRUE.
  */
-# $settings['reverse_proxy_addresses'] = ['a.b.c.d', 'e.f.g.h/24', ...];
+# $settings['reverse_proxy_addresses'] = ['a.b.c.d', ...];
 
 /**
  * Reverse proxy trusted headers.
@@ -476,21 +470,36 @@ $settings['update_free_access'] = FALSE;
 # $settings['class_loader_auto_detect'] = FALSE;
 
 /**
+ * Authorized file system operations:
+ *
+ * The Update Manager module included with Drupal provides a mechanism for
+ * site administrators to securely install missing updates for the site
+ * directly through the web user interface. On securely-configured servers,
+ * the Update manager will require the administrator to provide SSH or FTP
+ * credentials before allowing the installation to proceed; this allows the
+ * site to update the new files as the user who owns all the Drupal files,
+ * instead of as the user the webserver is running as. On servers where the
+ * webserver user is itself the owner of the Drupal files, the administrator
+ * will not be prompted for SSH or FTP credentials (note that these server
+ * setups are common on shared hosting, but are inherently insecure).
+ *
+ * Some sites might wish to disable the above functionality, and only update
+ * the code directly via SSH or FTP themselves. This setting completely
+ * disables all functionality related to these authorized file operations.
+ *
+ * @see https://www.drupal.org/node/244924
+ *
+ * Remove the leading hash signs to disable.
+ */
+# $settings['allow_authorize_operations'] = FALSE;
+
+/**
  * Default mode for directories and files written by Drupal.
  *
  * Value should be in PHP Octal Notation, with leading zero.
  */
 # $settings['file_chmod_directory'] = 0775;
 # $settings['file_chmod_file'] = 0664;
-
-/**
- * Optimized assets path:
- *
- * A local file system path where optimized assets will be stored. This directory
- * must exist and be writable by Drupal. This directory must be relative to
- * the Drupal installation directory and be accessible over the web.
- */
-# $settings['file_assets_path'] = 'sites/default/files';
 
 /**
  * Public file base URL:
@@ -513,65 +522,6 @@ $settings['update_free_access'] = FALSE;
  * the Drupal installation directory and be accessible over the web.
  */
 # $settings['file_public_path'] = 'sites/default/files';
-
-/**
- * Additional public file schemes:
- *
- * Public schemes are URI schemes that allow download access to all users for
- * all files within that scheme.
- *
- * The "public" scheme is always public, and the "private" scheme is always
- * private, but other schemes, such as "https", "s3", "example", or others,
- * can be either public or private depending on the site. By default, they're
- * private, and access to individual files is controlled via
- * hook_file_download().
- *
- * Typically, if a scheme should be public, a module makes it public by
- * implementing hook_file_download(), and granting access to all users for all
- * files. This could be either the same module that provides the stream wrapper
- * for the scheme, or a different module that decides to make the scheme
- * public. However, in cases where a site needs to make a scheme public, but
- * is unable to add code in a module to do so, the scheme may be added to this
- * variable, the result of which is that system_file_download() grants public
- * access to all files within that scheme.
- */
-# $settings['file_additional_public_schemes'] = ['example'];
-
-/**
- * File schemes whose paths should not be normalized:
- *
- * Normally, Drupal normalizes '/./' and '/../' segments in file URIs in order
- * to prevent unintended file access. For example, 'private://css/../image.png'
- * is normalized to 'private://image.png' before checking access to the file.
- *
- * On Windows, Drupal also replaces '\' with '/' in URIs for the local
- * filesystem.
- *
- * If file URIs with one or more scheme should not be normalized like this, then
- * list the schemes here. For example, if 'porcelain://china/./plate.png' should
- * not be normalized to 'porcelain://china/plate.png', then add 'porcelain' to
- * this array. In this case, make sure that the module providing the 'porcelain'
- * scheme does not allow unintended file access when using '/../' to move up the
- * directory tree.
- */
-# $settings['file_sa_core_2023_005_schemes'] = ['porcelain'];
-
-/**
- * Configuration for phpinfo() admin status report.
- *
- * Drupal's admin UI includes a report at admin/reports/status/php which shows
- * the output of phpinfo(). The full output can contain sensitive information
- * so by default Drupal removes some sections.
- *
- * This behavior can be configured by setting this variable to a different
- * value corresponding to the flags parameter of phpinfo().
- *
- * If you need to expose more information in the report - for example to debug a
- * problem - consider doing so temporarily.
- *
- * @see https://www.php.net/manual/function.phpinfo.php
- */
-# $settings['sa_core_2023_004_phpinfo_flags'] = ~ (INFO_VARIABLES | INFO_ENVIRONMENT);
 
 /**
  * Private file path:
@@ -602,18 +552,6 @@ $settings['update_free_access'] = FALSE;
 # $settings['file_temp_path'] = '/tmp';
 
 /**
- * Automatically create an Apache HTTP .htaccess file in writable directories.
- *
- * This setting can be disabled if you are not using Apache HTTP server, or if
- * you have a web server configuration that protects the various writable file
- * directories.
- *
- * @see \Drupal\Component\FileSecurity\FileSecurity::writeHtaccess()
- * @see https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/securing-file-permissions-and-ownership
- */
-# $settings['auto_create_htaccess'] = FALSE;
-
-/**
  * Session write interval:
  *
  * Set the minimum interval between each session write to database.
@@ -634,8 +572,8 @@ $settings['update_free_access'] = FALSE;
  * any added language. (eg locale_custom_strings_de for german).
  */
 # $settings['locale_custom_strings_en'][''] = [
-#   'Home' => 'Front page',
-#   'Last run @time ago' => 'Last run was done @time ago',
+#   'forum'      => 'Discussion board',
+#   '@count min' => '@count minutes',
 # ];
 
 /**
@@ -648,7 +586,7 @@ $settings['update_free_access'] = FALSE;
  *
  * Note: This setting does not apply to installation and update pages.
  */
-# $settings['maintenance_theme'] = 'claro';
+# $settings['maintenance_theme'] = 'bartik';
 
 /**
  * PHP settings:
@@ -672,6 +610,21 @@ $settings['update_free_access'] = FALSE;
  */
 # ini_set('pcre.backtrack_limit', 200000);
 # ini_set('pcre.recursion_limit', 200000);
+
+/**
+ * Add Permissions-Policy header to disable Google FLoC.
+ *
+ * By default, Drupal sends the 'Permissions-Policy: interest-cohort=()' header
+ * to disable Google's Federated Learning of Cohorts feature, introduced in
+ * Chrome 89.
+ *
+ * See https://en.wikipedia.org/wiki/Federated_Learning_of_Cohorts for more
+ * information about FLoC.
+ *
+ * If you don't wish to disable FLoC in Chrome, you can set this value
+ * to FALSE.
+ */
+# $settings['block_interest_cohort'] = TRUE;
 
 /**
  * Configuration overrides.
@@ -699,9 +652,36 @@ $settings['update_free_access'] = FALSE;
 # $config['user.settings']['anonymous'] = 'Visitor';
 
 /**
+ * Fast 404 pages:
+ *
+ * Drupal can generate fully themed 404 pages. However, some of these responses
+ * are for images or other resource files that are not displayed to the user.
+ * This can waste bandwidth, and also generate server load.
+ *
+ * The options below return a simple, fast 404 page for URLs matching a
+ * specific pattern:
+ * - $config['system.performance']['fast_404']['exclude_paths']: A regular
+ *   expression to match paths to exclude, such as images generated by image
+ *   styles, or dynamically-resized images. The default pattern provided below
+ *   also excludes the private file system. If you need to add more paths, you
+ *   can add '|path' to the expression.
+ * - $config['system.performance']['fast_404']['paths']: A regular expression to
+ *   match paths that should return a simple 404 page, rather than the fully
+ *   themed 404 page. If you don't have any aliases ending in htm or html you
+ *   can add '|s?html?' to the expression.
+ * - $config['system.performance']['fast_404']['html']: The html to return for
+ *   simple 404 pages.
+ *
+ * Remove the leading hash signs if you would like to alter this functionality.
+ */
+# $config['system.performance']['fast_404']['exclude_paths'] = '/\/(?:styles)|(?:system\/files)\//';
+# $config['system.performance']['fast_404']['paths'] = '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
+# $config['system.performance']['fast_404']['html'] = '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
+
+/**
  * Load services definition file.
  */
-$settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
+# $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
 
 /**
  * Override the default service container class.
@@ -711,6 +691,15 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * to test a service container that throws an exception.
  */
 # $settings['container_base_class'] = '\Drupal\Core\DependencyInjection\Container';
+
+/**
+ * Override the default yaml parser class.
+ *
+ * Provide a fully qualified class name here if you would like to provide an
+ * alternate implementation YAML parser. The class must implement the
+ * \Drupal\Component\Serialization\SerializationInterface interface.
+ */
+# $settings['yaml_parser_class'] = NULL;
 
 /**
  * Trusted host configuration.
@@ -747,10 +736,7 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * @endcode
  * will allow the site to run off of all variants of example.com and
  * example.org, with all subdomains included.
- *
- * @see https://www.drupal.org/docs/installing-drupal/trusted-host-settings
  */
-# $settings['trusted_host_patterns'] = [];
 
 /**
  * The default list of directories that will be ignored by Drupal's file API.
@@ -800,66 +786,6 @@ $settings['entity_update_backup'] = TRUE;
 $settings['migrate_node_migrate_type_classic'] = FALSE;
 
 /**
- * The default settings for migration sources.
- *
- * These settings are used as the default settings on the Credential form at
- * /upgrade/credentials.
- *
- * - migrate_source_version - The version of the source database. This can be
- *   '6' or '7'. Defaults to '7'.
- * - migrate_source_connection - The key in the $databases array for the source
- *   site.
- * - migrate_file_public_path - The location of the source Drupal 6 or Drupal 7
- *   public files. This can be a local file directory containing the source
- *   Drupal 6 or Drupal 7 site (e.g /var/www/docroot), or the site address
- *   (e.g http://example.com).
- * - migrate_file_private_path - The location of the source Drupal 7 private
- *   files. This can be a local file directory containing the source Drupal 7
- *   site (e.g /var/www/docroot), or empty to use the same value as Public
- *   files directory.
- *
- * Sample configuration for a drupal 6 source site with the source files in a
- * local directory.
- *
- * @code
- * $settings['migrate_source_version'] = '6';
- * $settings['migrate_source_connection'] = 'migrate';
- * $settings['migrate_file_public_path'] = '/var/www/drupal6';
- * @endcode
- *
- * Sample configuration for a drupal 7 source site with public source files on
- * the source site and the private files in a local directory.
- *
- * @code
- * $settings['migrate_source_version'] = '7';
- * $settings['migrate_source_connection'] = 'migrate';
- * $settings['migrate_file_public_path'] = 'https://drupal7.com';
- * $settings['migrate_file_private_path'] = '/var/www/drupal7';
- * @endcode
- */
-# $settings['migrate_source_connection'] = '';
-# $settings['migrate_source_version'] = '';
-# $settings['migrate_file_public_path'] = '';
-# $settings['migrate_file_private_path'] = '';
-
-/**
- * Media oEmbed discovery trusted host configuration.
- *
- * The oEmbed spec allows for provider/resource discovery by fetching a URL. The
- * patterns here restrict which domains Drupal will make a request to for oEmbed
- * discovery.
- *
- * For example:
- * @code
- * $settings['media_oembed_discovery_trusted_host_patterns'] = [
- *   '^www\.example\.com$',
- * ];
- * @endcode
- * will allow the site to make oEmbed discovery requests to www.example.com.
- */
-# $settings['media_oembed_discovery_trusted_host_patterns'] = [];
-
-/**
  * Load local development override configuration, if available.
  *
  * Create a settings.local.php file to override variables on secondary (staging,
@@ -876,3 +802,11 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
+
+/**
+ * IMPORTANT.
+ *
+ * Include sws-drush-commands sws.settings.php with required scaffolding for
+ * Acquia projects.
+ */
+require DRUPAL_ROOT . '/../drush/Commands/contrib/sws-drush-commands/settings/sws.settings.php';

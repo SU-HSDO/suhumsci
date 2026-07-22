@@ -4,14 +4,15 @@ This document defines the standards for creating and updating documentation in t
 
 ## Project Context
 
-- The primary audience for operational documentation is experienced Drupal developers on the H&S team
+- By default, assume the reader is competent with the tool they're directly using (git, drush, the Drupal admin UI) but has no background in what's happening underneath it. Explain the exact steps and values needed to complete the task; don't explain how the underlying tool or technology works
+- If a document states its intended audience near the top (e.g., an `> **Audience:**` callout), write to that stated audience instead of the default assumption above
 - The primary operational stakeholders are the **H&S web team** — use this term when documentation refers to site owners, editors, or operational contacts (e.g., "Notify the H&S web team and/or site owner")
 - Use **HSDP** when referring to the codebase, application, or multi-site platform itself (e.g., "the HSDP application", "the HSDP codebase"). Do not use "the H&S application" or other variants. "H&S" (Humanities and Sciences) refers to the school and its team, not the software.
 - `DocumentationStandards.md` also serves as AI context for Claude Code in this repository — keep it accurate and up to date
 
 ## Language and Tone
 
-- Use clear, direct language targeted at experienced Drupal developers
+- Use clear, direct language, matched to the document's audience (see Project Context)
 - Address the reader as "you" — avoid "we" in instructional content
 - Use active voice
 - Use active voice especially in warnings — "Take a database backup before proceeding" not "Database backups are required"
@@ -23,8 +24,8 @@ This document defines the standards for creating and updating documentation in t
 
 Documentation in this repo falls into two categories. Structure each accordingly:
 
-- **Conceptual / reference docs** (`BranchingStrategy.md`, `CodingStandards.md`, `Config.md`, `DevelopmentRequirements.md`) — meant to be read once for understanding. Prose is appropriate. Organize by concept.
-- **Process guides / operational checklists** (`CodeDeploy.md`, `Launch.md`, `NewSite.md`, `DeleteSite.md`, `DrupalCoreUpgrades.md`, `Patching.md`) — developers return to these during active work. Headers must be scannable. Steps must be discrete. Minimize prose between steps.
+- **Conceptual / reference docs** (`BranchingStrategy.md`, `CodingStandards.md`, `Config.md`, `DevelopmentRequirements.md`, `GithubCodespaces.md`) — meant to be read once for understanding. Prose is appropriate. Organize by concept.
+- **Process guides / operational checklists** (`CodeDeploy.md`, `Launch.md`, `NewSite.md`, `DeleteSite.md`, `DrupalCoreUpgrades.md`, `Patching.md`, `CodespacesWorkflow.md`) — readers return to these during active work. Headers must be scannable. Steps must be discrete. Minimize prose between steps.
 
 ## Formatting Rules
 
@@ -47,6 +48,7 @@ Use blockquote callouts for notes, warnings, and tips. Choose the appropriate ty
 - `> **Important:**` — something easy to miss that affects correctness
 - `> **Warning:**` — risk of data loss, security issue, or hard-to-reverse action
 - `> **Tip:**` — optional guidance that improves efficiency
+- `> **Audience:**` — states who a document is written for, when it differs from the default competency assumption in Project Context. Place it immediately after the H1 title
 
 Do not use emoji-prefixed bullets (`:warning:`, `:bulb:`, etc.) as callouts.
 
@@ -78,6 +80,7 @@ This applies consistently: `<SITENAME>`, `<ISSUE_NUMBER>`, `<YYYYMMDD>`, `<MAJOR
 - **No internal Confluence, Atlassian, or Jira URLs** — this is a public repository
 - **No vendor-specific internal identifiers** (internal channel names, internal project keys, etc.)
 - **No credentials, tokens, API keys, or secrets** — always use `<PLACEHOLDER>` syntax in examples
+- **No hardcoded tool or library versions** - versions change frequently and make documentation stale. Reference the source of truth instead (composer.json, Dockerfile, .nvmrc, .devcontainer/devcontainer.json, etc.) or describe services generically ("the configured PHP version") without specific version numbers
 
 ## Security and Public Repo
 

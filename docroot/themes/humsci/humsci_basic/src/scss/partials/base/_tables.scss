@@ -1,6 +1,10 @@
+@use '../variables/general' as *;
 @use '../functions/general' as *;
 @use '../functions/color' as *;
 @use '../mixins/tables' as *;
+@use '../mixins/breakpoints' as *;
+@use '../functions/fonts' as *;
+@use '../mixins/general' as *;
 
 .hb-table-wrap {
   margin: auto;
@@ -27,6 +31,79 @@
     .field-content,
     td {
       color: color('black', 'global');
+    }
+  }
+
+  // Responsive behavior for Views tables
+  .views-table {
+    display: block;
+
+    @include grid-media-min('md') {
+      display: table;
+    }
+
+    thead {
+      @include grid-media-between('xs', 'sm') {
+        @include visually-hidden;
+      }
+    }
+
+    tbody {
+      display: block;
+
+      @include grid-media-min('md') {
+        display: table-row-group;
+      }
+    }
+
+    tr {
+      display: block;
+      padding-bottom: hb-calculate-rems(14px);
+
+      @include grid-media-min('md') {
+        display: table-row;
+      }
+
+      &::before {
+        content: '';
+        display: block;
+        height: hb-calculate-rems(11px);
+        background-color: color('primary');
+
+        @include grid-media-min('md') {
+          display: none;
+        }
+      }
+    }
+
+    td {
+      display: block;
+      border: 0 none;
+
+      @include grid-media-min('md') {
+        display: table-cell;
+        border: $hb-thin-border;
+        border-color: color('gray-medium', 'global');
+      }
+    }
+  }
+
+  // Injected column label — mirrors .hb-table-row__heading
+  .views-table__heading {
+    display: block;
+    margin: 0 0 hb-calculate-rems(4px);
+
+    // Adding font styles here to ensure the injected heading
+    // text matches the styles, even if the table data
+    // font styles are overridden by an utility class.
+    font-size: hb-calculate-rems(13px);
+    font-weight: hb-theme-font-weight(bold);
+    text-transform: uppercase;
+    text-align: left;
+
+    @include grid-media-min('sm') {
+      font-size: hb-calculate-rems(16px);
+      margin: 0 0 hb-calculate-rems(6px);
     }
   }
 }

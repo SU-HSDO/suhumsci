@@ -68,6 +68,8 @@ To restart:
 
 > **Important:** Resuming a codespace does not pick up changes made to the branch elsewhere in the meantime, for example new commits from a developer. If you know the branch has moved on since you last used this codespace, create a new codespace on that branch instead of resuming this one.
 
+> **Note:** Codespaces usage counts against your personal GitHub account's free monthly usage limit, not against a shared or team budget. If you use up that limit, GitHub blocks you from creating or resuming codespaces until the limit resets the next month, unless you have separately configured a spending limit to pay for additional usage. Stop your codespace when you are done for the day to avoid using up your limit unnecessarily.
+
 ## Troubleshooting
 
 - **CSS or JS looks broken or unstyled:** Run `drush @default.local cr` to rebuild the cache.

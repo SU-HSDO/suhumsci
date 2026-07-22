@@ -50,7 +50,7 @@ ln -s /workspaces/suhumsci /var/www/html
 
 # Set file permissions for Drupal files directory
 chown -R www-data:www-data docroot/sites/default/files
-chmod -R 755 docroot/sites/default/files
+chmod -R 775 docroot/sites/default/files
 
 # Rebuild cache so aggregated CSS/JS is regenerated against the final settings
 drush @default.local cr

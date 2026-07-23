@@ -10,8 +10,24 @@
 @use '../mixins/icons' as *;
 @use '../mixins/buttons' as *;
 @use '../mixins/heros' as *;
+@use '../mixins/generate-css-vars' as *;
+@use '../mixins/swiper' as *;
+
+$container-xlarge: 1200px;
+$container-large: 992px;
+$container-caption: 650px;
+$container-medium: 769px;
+$container-small: 576px;
 
 .paragraph--type--hs-carousel {
+  @include swiper-container;
+  @include swiper-pagination;
+  @include swiper-arrows;
+
+  position: relative;
+  container-name: carousel;
+  container-type: inline-size;
+
   .hb-hero-overlay__image-wrapper::before {
     display: none;
   }
@@ -21,778 +37,464 @@
     box-sizing: border-box;
   }
 
-  @include hb-hero-full-width;
-
+  // Styles for the slide element.
   .hb-hero-overlay {
-    display: block;
-
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
-      padding: hb-spacing-width() 0 hb-spacing-width() 8%;
+
+      background-color: color('banner-background');
+      padding-inline: hb-calculate-rems(6px);
+      padding-bottom: hb-calculate-rems(8px);
       min-height: auto;
+      height: auto;
 
-      @include grid-media-min('md') {
-        padding: 0;
-        display: grid;
-        grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
-        grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
-        min-height: 60vh;
+      @container carousel (width > #{$container-small}) {
+        padding-inline: hb-calculate-rems(10px);
+        padding-bottom: hb-calculate-rems(10px);
       }
 
-      @include grid-media-min('xl') {
-        grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: hb-calculate-rems(32px) hb-calculate-rems(48px);
+        padding-bottom: 0;
       }
 
-      // Offset background color pseudo element
+      @container carousel (width > #{$container-xlarge}) {
+        padding-inline: 0;
+      }
+
       &::before {
-        background-color: color('gray-light', 'global');
-        z-index: $hb-z-index-hero1-background;
+        display: none;
+      }
+    }
 
-        @include grid-media-min('md') {
-          position: unset;
-          padding: hb-spacing-width() 0 hb-spacing-width() 10%;
-          grid-column: 1 / 5;
-          grid-row: 1 / 6;
+    @include hb-traditional {
+      min-height: hb-calculate-rems(350px);
+
+      @container carousel (width > #{$container-medium}) {
+        min-height: hb-calculate-rems(495px);
+      }
+
+      &::before {
+        animation: traditionalHeroOverlay;
+      }
+    }
+
+    // Styles for the collapsible caption when the hero has a text box.
+    .hb-media-image .field-media-image-caption.collapsible-caption {
+      @include hb-themes(('colorful', 'airy')) {
+        padding-inline: hb-calculate-rems(12px);
+        padding-block: 3% hb-calculate-rems(32px);
+        align-items: flex-start;
+        text-align: left;
+
+        @container carousel (width > #{$container-caption}) {
+          padding: 0 hb-calculate-rems(20px) hb-calculate-rems(21px);
+          align-items: flex-end;
+          text-align: right;
+        }
+
+        @container carousel (width > #{$container-medium}) {
+          padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
+        }
+
+        .toggle-caption__content {
+          max-width: 85%;
+
+          @container carousel (width > #{$container-caption}) {
+            max-width: 20%;
+          }
+
+          @container carousel (width > #{$container-large}) {
+            max-width: 30%;
+          }
         }
       }
+    }
+  }
 
-      // Secondary color block pseudo element that shows up in the grid
-      &::after {
-        content: '';
-        display: block;
-        height: 100%;
-        z-index: $hb-z-index-hero1-overlay;
-        background-color: color('secondary');
+  // Styles for when the hero has no text content.
+  .hb-hero-overlay--no-text {
+    .hb-media-image .field-media-image-caption.collapsible-caption {
+      @include hb-themes(('colorful', 'airy')) {
+        padding-block: hb-calculate-rems(6px);
 
-        @include grid-media-min('md') {
-          grid-column: 1 / 2;
-          grid-row: 3 / 4;
+        @container carousel (width > #{$container-caption}) {
+          padding: 0 hb-calculate-rems(20px) hb-calculate-rems(21px);
+        }
+
+        @container carousel (width > #{$container-medium}) {
+          padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
+        }
+      }
+    }
+  }
+
+  // Styles for the wrapper.
+  .hb-hero-overlay__inner {
+    width: 100%;
+    margin: auto;
+    display: initial;
+    max-width: $container-xlarge;
+
+    @include hb-themes(('colorful', 'airy')) {
+      position: relative;
+    }
+
+    @include hb-traditional {
+      padding-inline: hb-calculate-rems(32px);
+      padding-block: hb-calculate-rems(48px);
+
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: hb-calculate-rems(48px);
+        padding-block: 0;
+      }
+    }
+  }
+
+  // Styles for the image container.
+  .hb-hero-overlay__image-wrapper {
+    @include hb-themes(('colorful', 'airy')) {
+      padding-inline: hb-calculate-rems(4px);
+      padding-block: hb-calculate-rems(10px);
+      position: relative;
+      height: auto;
+      top: 0;
+
+      @container carousel (width > #{$container-small}) {
+        padding-inline: hb-calculate-rems(10px);
+        padding-block: hb-calculate-rems(16px);
+      }
+
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: hb-calculate-rems(72px) 0;
+        padding-block: 0;
+        margin-left: auto;
+      }
+
+      @container carousel (width > #{$container-large}) {
+        padding-inline: hb-calculate-rems(268px) 0;
+      }
+
+      @container carousel (width > #{$container-xlarge}) {
+        padding-inline: hb-calculate-rems(308px) 0;
+      }
+
+      img {
+        object-fit: cover;
+        height: auto;
+
+        &.animate {
+
+          /* stylelint-disable max-nesting-depth */
+          .hb-has-animation-enhancements & {
+            animation-name: colorfulHeroImage;
+          }
+
+          /* stylelint-enable max-nesting-depth */
+        }
+
+        @include hb-themes(('colorful', 'airy')) {
+          max-height: hb-calculate-rems(490px);
+          aspect-ratio: 1.82;
+
+          @container carousel (width > #{$container-small}) {
+            aspect-ratio: 1.80;
+          }
+
+          @container carousel (width > #{$container-medium}) {
+            aspect-ratio: 1.82;
+          }
         }
       }
     }
 
     @include hb-traditional {
-      // hb-hero-overlay
-      display: flex;
-      min-height: hb-calculate-rems(320px);
+      left: 0;
+      top: 0;
+    }
+  }
 
-      &::before {
-        animation: traditionalHeroOverlay;
+  // When the hero has no text overlay, center the image by reducing the
+  // asymmetric padding to symmetric padding on both sides.
+  .hb-hero-overlay--no-text .hb-hero-overlay__image-wrapper {
+    @include hb-themes(('colorful', 'airy')) {
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: calc(hb-calculate-rems(72px) / 2);
+      }
+
+      @container carousel (width > #{$container-large}) {
+        padding-inline: calc(hb-calculate-rems(268px) / 2);
+      }
+
+      @container carousel (width > #{$container-xlarge}) {
+        padding-inline: calc(hb-calculate-rems(308px) / 2);
+      }
+    }
+  }
+
+  // Styles for the text container.
+  .hb-hero-overlay__text {
+    padding: hb-calculate-rems(10px) hb-calculate-rems(16px) hb-calculate-rems(16px);
+
+    // Override hb-page-width width.
+    min-height: auto !important;
+
+    @container carousel (width > #{$container-medium}) {
+      padding-inline: hb-calculate-rems(24px);
+      padding-bottom: hb-calculate-rems(24px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      background-color: color('black', 'global');
+
+      // Override hb-page-width width.
+      width: calc(100% - hb-calculate-rems(24px)) !important;
+      max-width: 100% !important;
+      margin: hb-calculate-rems(-34px) auto 0 !important;
+      transform: none;
+
+      @container carousel (width > #{$container-small}) {
+        // Override hb-page-width width.
+        width: calc(100% - hb-calculate-rems(42px)) !important;
+      }
+
+      @container carousel (width > #{$container-caption}) {
+        // Override hb-page-width width.
+        width: calc(100% - hb-calculate-rems(64px)) !important;
+        max-width: hb-calculate-rems(450px) !important;
+        margin: 0 !important;
+        position: absolute;
+        left: hb-calculate-rems(16px);
+        bottom: 0;
+      }
+
+      @container carousel (width > #{$container-medium}) {
+        // Override hb-page-width width.
+        max-width: hb-calculate-rems(515px) !important;
+        margin-block: auto !important;
+        width: 100% !important;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        top: 0;
+      }
+
+      @container carousel (width > #{$container-xlarge}) {
+        padding-block: hb-calculate-rems(20px) hb-calculate-rems(32px);
+        padding-inline: hb-calculate-rems(32px);
+      }
+
+      &.animate {
+        .hb-has-animation-enhancements.js & {
+          opacity: 1;
+          animation-duration: 2000ms;
+          animation-name: colorfulHeroText;
+        }
+      }
+    }
+
+    @include hb-traditional {
+      background-color: color-mix(in srgb, color('black', 'global') 70%, transparent);
+
+      // Override hb-page-width max-width.
+      max-width: hb-calculate-rems(450px) !important;
+
+      // Override hb-page-width margin.
+      margin: auto 0 !important;
+
+      // Override pattern-hero width.
+      width: 100% !important;
+      text-align: left;
+
+      @container carousel (width > #{$container-medium}) {
+        // Override hb-page-width width.
+        max-width: hb-calculate-rems(520px) !important;
+      }
+
+      &.animate {
+        .hb-has-animation-enhancements.js & {
+          opacity: 1;
+          animation-duration: 1700ms;
+          animation-name: traditionalHeroText;
+        }
+      }
+    }
+
+
+    h2 {
+      @include hb-heading-2;
+
+      padding-bottom: hb-calculate-rems(2px);
+      margin: 0;
+    }
+
+    h2,
+    .field-hs-hero-body {
+      width: auto;
+
+      @include grid-media-min('sm') {
+        width: auto;
       }
 
       @include grid-media-min('md') {
-        min-height: hb-calculate-rems(420px);
+        width: auto;
+      }
+
+      @include grid-media-min('lg') {
+        width: auto;
       }
     }
 
-    &__image-wrapper {
+    // Styles for the body.
+    .field-hs-hero-body {
+      display: inline-block;
+      margin: 0;
+
       @include hb-themes(('colorful', 'airy')) {
-        position: relative;
-
-        @include grid-media-min('md') {
-          // This will make sure that the image fills the entire area
-          display: flex;
-          margin-top: 0;
-          grid-column: 3 / 6;
-          grid-row: 2 / 5;
-          padding-top: 0;
-        }
-
-        // On mobile, make the secondary color box out of pseudo element,
-        // then on 'md' breakpoint, it becomes part of the grid
-        &::before {
-          @include pseudo-background-box('secondary', 50%, 8.75%);
-
-          display: block;
-          bottom: 0;
-          left: -8.75%;
-          top: initial;
-          opacity: 1;
-
-          @include grid-media-min('md') {
-            display: none;
-          }
-        }
-
-        img {
-          min-height: 35vh;
-          max-height: 35vh;
-          object-fit: cover;
-
-          @include grid-media-min('md') {
-            max-height: 55vh;
-            min-height: 55vh;
-          }
-
-          &.animate {
-            /* stylelint-disable max-nesting-depth */
-            .hb-has-animation-enhancements & {
-              animation-name: colorfulHeroImage;
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-        }
-
-        .hb-media-image .field-media-image-caption.collapsible-caption.is-open {
-          .toggle-caption__content {
-            @include hb-themes(('colorful', 'airy')) {
-              @include grid-media-min('md') {
-                max-width: 25%;
-              }
-
-              @include grid-media-min('lg') {
-                max-width: 30%;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    &__text {
-      @include hb-themes(('colorful', 'airy')) {
-        background-color: color('primary-hero-overlay');
-        padding: calc(#{hb-calculate-rems(64px)} / 2)
-          calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
-        position: relative;
-        width: auto !important;
-        margin: 0 !important;
-        transform: none;
-        top: 0;
-        left: 0;
-
-        @include grid-media-min('md') {
-          grid-column: 2 / 4;
-          grid-row: 4 / 7;
-          padding: hb-calculate-rems(64px) hb-spacing-width() hb-spacing-width();
-          width: auto !important;
-        }
-
-        @include grid-media-min('lg') {
-          width: auto !important;
-        }
-
-        // Line decoration pseudo element
-        &::after {
-          top: hb-calculate-rems(24px);
-
-          @include hb-colorful-text-bar('tertiary-reversed');
-
-          @include grid-media-min('md') {
-            top: hb-calculate-rems(56px);
-          }
-        }
-
-        &.animate {
-          .hb-has-animation-enhancements.js & {
-            opacity: 1;
-            animation-duration: 2000ms;
-            animation-name: colorfulHeroText;
-          }
-        }
-
-        h2 {
-          @include hb-heading-4;
-          margin: hb-spacing-width('xs') 0;
-
-          @include grid-media-min('lg') {
-            @include hb-heading-3;
-            margin: hb-spacing-width('sm') 0;
-          }
-        }
-
-        h2,
-        .field-hs-hero-body {
-          width: auto;
-
-          @include grid-media-min('sm') {
-            width: auto;
-          }
-
-          @include grid-media-min('md') {
-            width: auto;
-          }
-
-          @include grid-media-min('lg') {
-            width: auto;
-          }
-        }
-
-        p {
-          margin-top: hb-spacing-width('xs');
-
-          @include grid-media-min('lg') {
-            margin-top: hb-spacing-width('sm');
-          }
+        @container carousel (width > #{$container-small}) {
+          padding-block: hb-calculate-rems(2px) hb-calculate-rems(4px);
         }
       }
 
       @include hb-traditional {
-        background-color: color('primary-hero-overlay');
-        position: relative;
-        margin: hb-spacing-width() 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-        align-self: stretch;
-        text-align: left;
-        left: hb-spacing-width('md');
-        transform: translateX(0) translateY(0);
+        padding-block: hb-calculate-rems(4px) hb-calculate-rems(10px);
+      }
 
-        @include grid-media-min('sm') {
-          bottom: 25%;
+      @container carousel (width > #{$container-medium}) {
+        padding-block: hb-calculate-rems(6px) hb-calculate-rems(12px);
+      }
+    }
+
+    // Styles for the link.
+    .field-hs-hero-link {
+      @include hb-themes(('colorful', 'airy')) {
+        padding-block: hb-calculate-rems(6px) hb-calculate-rems(2px);
+
+        @container carousel (width > #{$container-small}) {
+          padding-block: hb-calculate-rems(12px) hb-calculate-rems(2px);
         }
+      }
 
-        @include grid-media-min('md') {
-          padding: hb-calculate-rems(50px) 0;
-          left: hb-spacing-width();
-          width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+      @include hb-traditional {
+        padding-block: hb-calculate-rems(4px) hb-calculate-rems(2px);
+
+        @container carousel (width > #{$container-medium}) {
+          padding-block: hb-calculate-rems(12px) hb-calculate-rems(2px);
         }
+      }
 
-        @include grid-media-min('lg') {
-          width: 43% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+      a {
+        padding: hb-calculate-rems(4px) hb-calculate-rems(24px) hb-calculate-rems(6px);
+        margin: 0;
 
-          .hb-three-column--two-sidebar & {
-            width: calc(
-              100% -
-                (2 * #{hb-calculate-rems(hb-spacing-width('default', false))})
-            ) !important;
-          }
-        }
-
-        @include grid-media-min('xl') {
-          width: 48% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-          margin: hb-calculate-rems(52px) 0 !important;
-        }
-
-        @include grid-media-min('2xl') {
-          width: hb-calculate-rems(
-            650px
-          ) !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-        }
-
-        &.animate {
-          .hb-has-animation-enhancements.js & {
-            opacity: 1;
-            animation-duration: 1700ms;
-            animation-name: traditionalHeroText;
-          }
-        }
-
-        h2 {
-          width: auto;
-          margin: 0 hb-spacing-width();
-
-          @include grid-media-min('lg') {
-            margin: 0 hb-calculate-rems(50px);
-          }
-
-          .hb-three-column--two-sidebar & {
-            /* stylelint-disable max-nesting-depth */
-            @include grid-media-min('lg') {
-              margin: 0 hb-spacing-width();
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-        }
-
-        .field-hs-hero-body {
-          margin: hb-spacing-width('xxs') hb-spacing-width() 0;
-          width: auto;
-
-          @include grid-media-min('md') {
-            width: calc(100% - #{hb-calculate-rems(100px)});
-            margin: hb-spacing-width('sm') hb-spacing-width() 0;
-          }
-
-          @include grid-media-min('lg') {
-            margin: hb-spacing-width('sm') hb-calculate-rems(50px) 0;
-          }
-
-          .hb-three-column--two-sidebar & {
-            /* stylelint-disable max-nesting-depth */
-            @include grid-media-min('lg') {
-              margin: hb-spacing-width('sm') hb-spacing-width() 0;
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-        }
-
-        .field-hs-hero-link {
-          margin: 0 hb-spacing-width();
-
-          @include grid-media-min('md') {
-            width: calc(90% - #{hb-calculate-rems(64px)});
-          }
-
-          @include grid-media-min('lg') {
-            margin: 0 hb-calculate-rems(50px);
-            width: calc(85% - #{hb-calculate-rems(140px)});
-          }
-
-          @include grid-media-min('xl') {
-            width: calc(80% - #{hb-calculate-rems(140px)});
-          }
-
-          .hb-three-column--one-sidebar & {
-            /* stylelint-disable max-nesting-depth */
-            @include grid-media-min('lg') {
-              width: calc(95% - #{hb-calculate-rems(140px)});
-            }
-
-            @include grid-media-min('xl') {
-              width: calc(90% - #{hb-calculate-rems(140px)});
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-
-          .hb-three-column--two-sidebar & {
-            /* stylelint-disable max-nesting-depth */
-            @include grid-media-min('lg') {
-              width: calc(100% - #{hb-calculate-rems(64px)});
-              margin: 0 hb-spacing-width();
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-        }
-
-        .field-hs-hero-link a {
-          max-width: unset;
+        @include hb-themes(('colorful', 'airy')) {
+          border-color: color('white', 'global');
+          color: color('white', 'global');
         }
       }
     }
   }
 
-  // Styles for swiper slider.
-  .swiper-container {
-    margin: 0;
-
-    .hb-hero-overlay__text {
+  // Styles for swiper slider pagination.
+  .swiper-pagination {
+    .hs-full-width & {
       @include hb-themes(('colorful', 'airy')) {
-        padding-bottom: hb-calculate-rems(60px);
-
-        @include grid-media-min('md') {
-          padding-bottom: hb-calculate-rems(65px);
-        }
-      }
-
-      @include hb-traditional {
-        padding-bottom: hb-calculate-rems(75px);
-
-        @include grid-media-min('md') {
-          padding-bottom: hb-calculate-rems(80px);
-        }
+        bottom: hb-calculate-rems(16px);
       }
     }
 
-    .swiper-pagination {
-      @include visually-hidden;
-
-      @include hb-themes(('airy', 'colorful')) {
-        @include grid-media-min('md') {
-          inset: auto
-            calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)})
-            hb-spacing-width() auto;
-          margin: 0 0 hb-calculate-rems(10px);
-
-          .hb-three-column--one-sidebar &,
-          .hb-three-column--two-sidebar & {
-            bottom: 0;
-          }
-        }
-
-        // swiper pagination do not display until this breakpoint
-        @media (min-width: 890px) {
-          display: flex;
-          clip-path: inherit;
-          height: auto;
-          width: auto;
-          position: absolute;
-          overflow: visible;
-        }
-
-        @include grid-media-min('lg') {
-          .hb-three-column--two-sidebar & {
-            @include visually-hidden;
-          }
-        }
-
-        @include grid-media-min('xl') {
-          right: calc(
-            50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
-          ); // move it past the swiper arrows and their padding
-        }
-      }
-
-      @include hb-traditional {
-        // swiper pagination do not display until the medium breakpoint
-        // default positioning styles are applied to the full width hero
-        // main content styles are applied by targeting the sidebar classes
-        // even though the sidebars do not display until the next breakpoint,
-        // the classes exist for styling
-        @include grid-media-min('md') {
-          clip-path: inherit;
-          height: auto;
-          width: auto;
-          position: absolute;
-          overflow: visible;
-          inset: auto calc(50% + #{hb-calculate-rems(77px)})
-            hb-calculate-rems(61px) auto;
-
-          .hb-three-column--one-sidebar &,
-          .hb-three-column--two-sidebar & {
-            bottom: hb-calculate-rems(31px);
-          }
-        }
-
-        // the sidebar(s) appear at this breakpoint
-        @include grid-media-min('lg') {
-          right: calc(
-            57% + #{hb-calculate-rems(80px)}
-          ); // move it past the swiper arrows
-
-          .hb-three-column--one-sidebar & {
-            right: calc(57% + #{hb-calculate-rems(84px)});
-          }
-
-          .hb-three-column--two-sidebar & {
-            right: hb-calculate-rems(130px); // move it past the swiper arrows
-          }
-        }
-
-        @include grid-media-min('xl') {
-          right: calc(63% - #{hb-calculate-rems(60px)});
-          bottom: hb-calculate-rems(85px);
-
-          .hb-three-column--one-sidebar & {
-            right: calc(57% + #{hb-calculate-rems(36px)});
-            bottom: hb-calculate-rems(53px);
-          }
-
-          .hb-three-column--two-sidebar & {
-            right: hb-calculate-rems(130px);
-            bottom: hb-calculate-rems(53px);
-          }
-        }
-
-        @include grid-media-min('2xl') {
-          right: calc(
-            (100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)}
-          );
-
-          .hb-three-column--one-sidebar & {
-            right: calc(
-              (100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)}
-            );
-            bottom: hb-calculate-rems(53px);
-          }
-        }
-      }
-
-      .swiper-pagination-bullet {
-        font-size: 0;
-        padding-top: hb-calculate-rems(5px);
-        background: unset;
-        position: relative;
-        width: hb-calculate-rems(31px);
-        height: hb-calculate-rems(45.7px);
-        margin: 0;
-        opacity: 1;
-
-        &::before {
-          color: color('white', 'global');
-          content: '';
-
-          @include hb-icon-type($type: 'ellipse-border', $color: 'gray-light');
-          height: hb-calculate-rems(11px);
-          width: hb-calculate-rems(11px);
-          display: block;
-          margin: 0 hb-calculate-rems(10px);
-          border-radius: 50%;
-
-          // Use box shadow property to improve visual accessibiity of swiper pagination.
-          @include hb-themes(('airy', 'colorful')) {
-            $light-shadow: color('gray-light', 'global');
-            $dark-shadow: color('black', 'global');
-
-            // For modern browsers
-            $accent-shadow: color('secondary');
-
-            box-shadow:
-              inset hb-calculate-rems(-2px) 0 $light-shadow,
-              0 hb-calculate-rems(-2px) 0 $accent-shadow,
-              0 0 0 hb-calculate-rems(2px) $dark-shadow;
-          }
-
-          @include hb-traditional {
-            $light-shadow: color('gray-light', 'global');
-            $dark-shadow: color('black', 'global');
-
-            // For modern browsers
-            $accent-shadow: color('secondary');
-
-            box-shadow:
-              inset hb-calculate-rems(-2px) 0 $light-shadow,
-              0 hb-calculate-rems(-2px) 0 $accent-shadow,
-              0 0 0 hb-calculate-rems(2px) $dark-shadow;
-          }
-        }
-
-        &:hover::before,
-        &:focus::before,
-        &.swiper-pagination-bullet-active::before {
-          @include hb-icon-type($type: 'ellipse', $color: 'gray-light');
-        }
-      }
+    :not(.hs-full-width).hb-three-column--no-sidebar &,
+    .hb-three-column--one-sidebar &,
+    .hb-three-column--two-sidebar & {
+      bottom: hb-calculate-rems(-8px);
+      position: relative;
     }
 
-    .swiper-button-prev,
-    .swiper-button-next {
-      position: absolute;
-      width: hb-calculate-rems(25px);
-      height: hb-calculate-rems(40px);
-
-      svg {
-        display: none;
-      }
-
-      &:not(.swiper-button-lock) {
-        display: block;
-      }
-
-      @include hb-themes(('airy')) {
-        bottom: calc(#{hb-spacing-width()} * 2);
-
-        .hb-three-column--one-sidebar &,
-        .hb-three-column--two-sidebar & {
-          bottom: hb-calculate-rems(48px);
-        }
-
-        @include grid-media-min('md') {
-          bottom: hb-spacing-width();
-
-          /* stylelint-disable max-nesting-depth */
-          .hb-three-column--one-sidebar &,
-          .hb-three-column--two-sidebar & {
-            bottom: 0;
-          }
-          /* stylelint-enable max-nesting-depth */
-        }
-      }
-
-      @include hb-colorful {
-        bottom: hb-calculate-rems(60px);
-
-        .hb-three-column--one-sidebar &,
-        .hb-three-column--two-sidebar & {
-          bottom: hb-calculate-rems(48px);
-        }
-
-        @include grid-media-min('md') {
-          bottom: hb-calculate-rems(47px);
-
-          /* stylelint-disable max-nesting-depth */
-          .hb-three-column--one-sidebar &,
-          .hb-three-column--two-sidebar & {
-            bottom: 0;
-          }
-          /* stylelint-enable max-nesting-depth */
-        }
-
-        .hs-full-width & {
-          bottom: hb-calculate-rems(110px);
-
-          @include grid-media-min('md') {
-            bottom: hb-calculate-rems(47px);
-          }
-        }
-      }
-
-      @include hb-traditional {
-        bottom: hb-calculate-rems(30px);
-
-        @include grid-media-min('md') {
-          margin: hb-calculate-rems(18px) 0;
-          bottom: hb-calculate-rems(25px);
-        }
-
-        @include grid-media-min('xl') {
-          bottom: hb-calculate-rems(46px);
-        }
-
-        .hs-full-width & {
-          bottom: hb-calculate-rems(78px);
-
-          @include grid-media-min('md') {
-            bottom: hb-calculate-rems(54px);
-          }
-
-          @include grid-media-min('xl') {
-            bottom: hb-calculate-rems(78px);
-          }
-        }
-      }
+    // Update size of the buttons to respect the minimum size required for accessibility (24px).
+    .swiper-pagination-bullet {
+      width: hb-calculate-rems(24px);
+      height: hb-calculate-rems(24px);
+      padding: 0;
+      background-color: transparent;
 
       &::before {
         content: '';
-        display: inline-block;
-        background-repeat: no-repeat;
-        background-position: left;
-        background-size: 85%;
-        height: hb-calculate-rems(25px);
-        width: hb-calculate-rems(25px);
-        transition: hb-transition(transform);
+        display: block;
+        width: 100%;
+        height: hb-calculate-rems(4px);
+        background-color: transparent;
+        outline: 1px solid color('secondary');
+        margin-top: hb-calculate-rems(10px);
 
-        @include hb-themes(('airy', 'colorful')) {
-          @include hb-icon-background('arrow-right-box-shadow', 'gray-light');
-          filter: drop-shadow(
-            hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
-              color('black', 'global')
-          );
-        }
-
-        @include hb-traditional {
-          mask-repeat: no-repeat;
-
-          @include hb-icon-background(
-            'arrow-right-long-box-shadow',
-            'gray-light',
-            true
-          );
-          filter: drop-shadow(
-            hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
-              color('black', 'global')
-          );
+        @include hb-themes(('colorful', 'airy')) {
+          border-radius: hb-calculate-rems(5px);
         }
       }
 
       &:hover,
       &:focus {
-        cursor: pointer;
-      }
-    }
+        background-color: transparent;
+        transform: none;
 
-    .swiper-button-prev {
-      transform: rotate(180deg);
-      transform: scaleX(-1);
-      left: auto;
-      top: auto;
-
-      @include hb-themes(('airy', 'colorful')) {
-        margin-block: 0 hb-calculate-rems(15px);
-        right: calc(
-          #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-        ); // move it past the swiper next arrow
-
-        @include grid-media-min('md') {
-          right: calc(
-            40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-          ); // move it past the swiper next arrow
-        }
-
-        @include grid-media-min('xl') {
-          right: calc(
-            50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-          ); // move it past the swiper next arrow
+        &::before {
+          transform: scale(0.9);
+          background-color: color('secondary');
         }
       }
 
-      @include hb-traditional {
-        right: calc(
-          #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
-        ); // move it past the swiper next arrow
+      &.swiper-pagination-bullet-active {
+        background-color: transparent;
 
-        @include grid-media-min('md') {
-          right: auto;
-          left: calc(
-            53% - #{hb-calculate-rems(85px)}
-          ); // move it past the swiper next arrow
-        }
-
-        @include grid-media-min('lg') {
-          left: calc(
-            45% - #{hb-calculate-rems(85px)}
-          ); // move it past the swiper arrows
-
-          /* stylelint-disable max-nesting-depth */
-          .hb-three-column--two-sidebar & {
-            left: inherit;
-            right: calc(
-              #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
-            ); // move it past the swiper arrows
-          }
-          /* stylelint-enable max-nesting-depth */
-        }
-
-        @include grid-media-min('xl') {
-          left: calc(
-            50% - #{hb-calculate-rems(85px)}
-          ); // move it past the swiper arrows
-        }
-
-        @include grid-media-min('2xl') {
-          left: calc(
-            #{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}
-          ); // move it past the swiper arrows
-
-          .field-hs-collection-items.item-per-row--2 & {
-            left: calc(100% - #{hb-calculate-rems(88px)});
-          }
-        }
-      }
-    }
-
-    .swiper-button-next {
-      left: auto;
-      top: auto;
-
-      @include hb-themes(('airy', 'colorful')) {
-        margin-block: 0 hb-calculate-rems(15.5px);
-        right: 25px;
-
-        @include grid-media-min('md') {
-          right: calc(40% + #{hb-calculate-rems(25px)});
-        }
-
-        @include grid-media-min('xl') {
-          right: calc(50% + 25px);
-        }
-      }
-
-      @include hb-traditional {
-        right: hb-calculate-rems(40px);
-
-        @include grid-media-min('md') {
-          right: auto;
-          left: calc(53% - #{hb-calculate-rems(40px)});
-        }
-
-        @include grid-media-min('lg') {
-          left: calc(
-            45% - #{hb-calculate-rems(40px)}
-          ); // move it past the swiper arrows
-
-          /* stylelint-disable max-nesting-depth */
-          .hb-three-column--two-sidebar & {
-            left: inherit;
-            right: hb-calculate-rems(50px); // move it past the swiper arrows
-          }
-          /* stylelint-enable max-nesting-depth */
-        }
-
-        @include grid-media-min('xl') {
-          left: calc(
-            50% - #{hb-calculate-rems(40px)}
-          ); // move it past the swiper arrows
-        }
-
-        @include grid-media-min('2xl') {
-          left: calc(
-            #{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}
-          ); // move it past the swiper arrows
-
-          .field-hs-collection-items.item-per-row--2 & {
-            left: calc(100% - #{hb-calculate-rems(43px)});
-          }
+        &::before {
+          background-color: color('secondary');
         }
       }
     }
   }
+
+  // Fix slider arrows at the top so they don't move with height changes.
+  .swiper-button-next {
+    @include hb-traditional {
+      top: hb-calculate-rems(188px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      top: hb-calculate-rems(204px);
+    }
+  }
+
+  .swiper-button-prev {
+    @include hb-traditional {
+      top: hb-calculate-rems(84px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      top: hb-calculate-rems(100px);
+    }
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    @include grid-media-min('md') {
+      @include hb-traditional {
+        top: calc(50% - #{hb-calculate-rems(76px)});
+        bottom: unset;
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        top: calc(50% - #{hb-calculate-rems(62px)});
+        bottom: unset;
+      }
+
+      // styles specific to the main content area are applied by targeting
+      // the sidebar classes. We can use these classes to move the swiper bullets.
+      :not(.hs-full-width).hb-three-column--no-sidebar &,
+      .hb-three-column--one-sidebar &,
+      .hb-three-column--two-sidebar & {
+        top: calc(50% - #{hb-calculate-rems(46px)});
+        bottom: unset;
+      }
+    }
+  }
+
 }

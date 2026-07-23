@@ -15,9 +15,9 @@ services:
     aliases:
       - hs-colorful
       - hs-traditional
-      - english
-      - history
-      - west
+      - statistics
+      - biologyvirtualshowcase
+      - biocapstoneshowcase
 
     # A set of commands to run while building this service
     commands:
@@ -53,26 +53,26 @@ services:
         - drush @hs_traditional.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
         - drush @hs_traditional.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
-        # Sync to english, english database & files, does not create a user.
-        - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @english.local sql-sanitize --no-interaction --ansi
-        - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
-        - drush @english.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-        - drush @english.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+        # Sync to statistics, statistics database & files and create user.
+        - drush sql-sync @statistics.prod @statistics.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush @statistics.local sql-sanitize --no-interaction --ansi
+        - drush rsync @statistics.prod:%files @statistics.local:%files --ansi --no-interaction
+        - drush @statistics.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+        - drush @statistics.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
-        # Sync to history, history database & files, does not create a user.
-        - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @history.local sql-sanitize --no-interaction --ansi
-        - drush rsync @history.prod:%files @history.local:%files --ansi --no-interaction
-        - drush @history.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-        - drush @history.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+        # Sync to biologyvirtualshowcase, biologyvirtualshowcase database & files and create user.
+        - drush sql-sync @biologyvirtualshowcase.prod @biologyvirtualshowcase.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush @biologyvirtualshowcase.local sql-sanitize --no-interaction --ansi
+        - drush rsync @biologyvirtualshowcase.prod:%files @biologyvirtualshowcase.local:%files --ansi --no-interaction
+        - drush @biologyvirtualshowcase.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+        - drush @biologyvirtualshowcase.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
-        # Sync to west, west database & files, does not create a user.
-        - drush sql-sync @west.prod @west.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @west.local sql-sanitize --no-interaction --ansi
-        - drush rsync @west.prod:%files @west.local:%files --ansi --no-interaction
-        - drush @west.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-        - drush @west.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+        # Sync to biocapstoneshowcase, biocapstoneshowcase database & files and create user.
+        - drush sql-sync @biocapstoneshowcase.prod @biocapstoneshowcase.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush @biocapstoneshowcase.local sql-sanitize --no-interaction --ansi
+        - drush rsync @biocapstoneshowcase.prod:%files @biocapstoneshowcase.local:%files --ansi --no-interaction
+        - drush @biocapstoneshowcase.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+        - drush @biocapstoneshowcase.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
@@ -85,14 +85,14 @@ services:
         - drush @hs_traditional.local cr
         - drush @hs_traditional.local deploy
 
-        - drush @english.local cr
-        - drush @english.local deploy
+        - drush @statistics.local cr
+        - drush @statistics.local deploy
 
-        - drush @history.local cr
-        - drush @history.local deploy
+        - drush @biologyvirtualshowcase.local cr
+        - drush @biologyvirtualshowcase.local deploy
 
-        - drush @west.local cr
-        - drush @west.local deploy
+        - drush @biocapstoneshowcase.local cr
+        - drush @biocapstoneshowcase.local deploy
 
         # Build frontend assets. Prevent Puppeteer from downloading chrome because it's not needed here.
         - PUPPETEER_SKIP_DOWNLOAD=true npm run theme-build

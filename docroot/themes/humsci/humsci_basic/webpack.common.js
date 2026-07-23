@@ -38,6 +38,7 @@ const shared = {
   'table-wrap': 'shared/tables/wrap.js',
   table: 'shared/tables/table.js',
   timeline: 'shared/timeline/expand-collapse-timeline.js',
+  'views-exposed-form': 'shared/views/views-exposed-form.js',
 };
 
 // Colorful and traditional theme specific JS files.

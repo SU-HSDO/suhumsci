@@ -6,9 +6,9 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
@@ -143,6 +143,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
           continue;
         }
         $element = $field_widget_form['widget'][$key];
+
         if (
           empty($element['#paragraph_type']) ||
           !in_array($element['#paragraph_type'], ['hs_collection', 'hs_priv_collection']) ||
@@ -151,6 +152,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         ) {
           continue;
         }
+
         // Build title settings name for this component.
         $title_settings_name = '';
         foreach ($element['subform']['field_title_settings']['widget']['#field_parents'] as $delta) {
@@ -177,9 +179,42 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
           'required' => [$header_conditions],
           'visible' => [$header_conditions],
         ];
+
+        // Keep server-side validation by adding an element_validate callback
+        // instead of relying solely on #states for the required check.
+        $element['subform']['#element_validate'][] = 'hs_paragraph_types_validate_collection_title';
+
         $field_widget_form['widget'][$key] = $element;
       }
       break;
+  }
+}
+
+/**
+ * Validation callback for collection title field.
+ */
+function hs_paragraph_types_validate_collection_title(&$element, FormStateInterface $form_state, &$form) {
+  // $element is the subform; #parents points at its value subtree.
+  // Read from the value tree so this works whether the paragraph is
+  // open or collapsed (collapsed paragraphs don't render field widgets,
+  // so their #value isn't on the render tree).
+  $values = $form_state->getValue($element['#parents']) ?? [];
+  $title_settings = $values['field_title_settings'][0]['value'] ?? '';
+  $requires_title = in_array($title_settings, [
+    'collection_title_visible',
+    'collection_title_sr_only',
+  ]);
+
+  if (!$requires_title) {
+    return;
+  }
+
+  $title_value = $values['field_title'][0]['value'] ?? '';
+  if ($title_value === '') {
+    // setError still needs a render element to decorate; fall back to the
+    // subform itself if the title widget isn't built (collapsed state).
+    $title_element = $element['field_title']['widget'][0]['value'] ?? $element;
+    $form_state->setError($title_element, t('Title field is required.'));
   }
 }
 
@@ -242,8 +277,8 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
       // Base vertical cards view mode is 'default', but there are other
       // possible options, based on $style value.
       $alt_vertical_viewmodes = [
-        'stacked' => 'vertical_button_card',
-        'two-color' => 'token',
+        'vertical-button' => 'vertical_button_card',
+        'vertical-linked' => 'token',
       ];
 
       if ($layout === 'vertical' && array_key_exists($style, $alt_vertical_viewmodes)) {

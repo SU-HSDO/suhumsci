@@ -21,6 +21,7 @@ const shared = {
   'equal-height-grid': 'shared/equal-height-grid/index.js',
   'linked-cards': 'shared/cards/linked-cards.js',
   'structured-card': 'shared/cards/structured-card.js',
+  'horizontal-expandable-card': 'shared/cards/horizontal-expandable-card.js',
   'main-content-fallback':
     'shared/main-content-fallback/main-content-fallback.js',
   'video-with-caption': 'shared/media/video-with-caption.js',
@@ -35,6 +36,7 @@ const shared = {
   'table-scope': 'shared/tables/scope.js',
   'table-pattern': 'shared/tables/table-pattern.js',
   'table-wrap': 'shared/tables/wrap.js',
+  table: 'shared/tables/table.js',
   timeline: 'shared/timeline/expand-collapse-timeline.js',
 };
 

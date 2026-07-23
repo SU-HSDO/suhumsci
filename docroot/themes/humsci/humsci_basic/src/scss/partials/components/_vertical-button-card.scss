@@ -16,71 +16,58 @@ $container-small: hb-calculate-rems(576px);
     overflow-wrap: anywhere;
   }
 
+  .hb-card__title:only-child {
+    margin: 0;
+  }
+
+  .hb-card__content {
+    .hb-raised-cards--uniform-height & {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+
   @include hb-traditional {
     border: 2px solid color('secondary');
 
-    .hb-card__title,
-    .hb-card__description {
-      margin-block-end: hb-calculate-rems(20px);
-
-      @container card (width > #{$container-small}) {
-        margin-block-end: hb-calculate-rems(24px);
-      }
+    .hb-card__title {
+      margin-block-end: hb-calculate-rems(16px);
     }
 
     .hb-card__graphics {
-      padding: hb-calculate-rems(10px) hb-calculate-rems(10px) 0;
-
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(16px) hb-calculate-rems(16px) 0;
-      }
+      padding: hb-calculate-rems(24px) hb-spacing-width('sm') 0;
+      margin-block-end: hb-calculate-rems(32px);
     }
 
     .hb-card__content {
-      padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+      padding: hb-calculate-rems(32px) hb-spacing-width('sm');
       flex-grow: 1;
 
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(24px) hb-calculate-rems(32px) 0;
-      }
+      &:has(.hs-button) {
+        padding-block-end: 0;
 
-      &:has(.hb-card__description) {
-        .hb-card__title {
-          margin-block-end: hb-calculate-rems(6px);
-
-          @container card (width > #{$container-small}) {
-            margin-block-end: hb-calculate-rems(6px);
-          }
+        .hb-card__description {
+          margin-block-end: hb-calculate-rems(16px);
         }
       }
     }
 
     &:has(.hb-card__graphics) {
       .hb-card__content {
-        padding-block-start: hb-calculate-rems(16px);
-
-        @container card (width > #{$container-small}) {
-          padding-block-start: hb-calculate-rems(24px);
-        }
-      }
-
-      .hb-card__title,
-      .hb-card__description {
-        margin-block-end: hb-calculate-rems(16px);
-
-        @container card (width > #{$container-small}) {
-          margin-block-end: hb-calculate-rems(24px);
-        }
+        padding-block-start: 0;
       }
     }
 
     .hs-button {
-
       position: relative;
       margin-top: auto;
-      margin-inline: hb-calculate-rems(-20px);
+      margin-inline: hb-calculate-rems(-24px);
 
-      a {
+      a,
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
         @include hb-secondary-button;
 
         border-width: 0;
@@ -88,8 +75,16 @@ $container-small: hb-calculate-rems(576px);
         width: 100%;
       }
 
-      @container card (width > #{$container-small}) {
-        margin-inline: hb-calculate-rems(-32px);
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
+        margin-right: 0;
+
+        --link-base-current-color: #{color('secondary')};
+        --link-base-hover-current-color: #{color('white', 'global')};
+
+        &:focus {
+          --link-base-hover-current-color: #{color('secondary')};
+        }
       }
     }
   }
@@ -100,29 +95,23 @@ $container-small: hb-calculate-rems(576px);
     .hb-card__graphics {
       &,
       .hb-raised-cards & {
-        padding: 0 hb-calculate-rems(20px);
-        margin-block-end: hb-calculate-rems(-48px);
-
-        @container card (width > #{$container-small}) {
-          padding-inline: hb-calculate-rems(32px);
-        }
+        padding: 0 hb-calculate-rems(36px);
+        margin-block-end: hb-calculate-rems(-40px);
       }
     }
 
     .hb-card__title {
-      margin-block: hb-calculate-rems(2px) 0;
-
-      @container card (width > #{$container-small}) {
-        margin-block-start: hb-calculate-rems(6px);
-      }
+      margin-block-end: 0;
+      color: color('secondary');
     }
 
     .hb-card__content {
-      padding: hb-calculate-rems(24px);
+      padding: hb-calculate-rems(18px);
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px)
         hb-calculate-rems(35px)
         color-mix(in srgb, color('black', 'global') 10%, transparent);
       background-color: color('white', 'global');
+      border: 2px solid color('tertiary-highlight');
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
@@ -131,7 +120,7 @@ $container-small: hb-calculate-rems(576px);
 
 
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(24px) hb-calculate-rems(32px) hb-calculate-rems(32px);
+        padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
       }
 
       .hb-raised-cards--uniform-height & {
@@ -142,6 +131,12 @@ $container-small: hb-calculate-rems(576px);
       }
     }
 
+    &:has(.hb-card__description) {
+      .hb-card__title {
+        margin-block-end: hb-calculate-rems(16px);
+      }
+    }
+
     &:has(.hb-card__graphics) {
       .hb-card__content {
         padding-top: hb-calculate-rems(64px);
@@ -149,23 +144,37 @@ $container-small: hb-calculate-rems(576px);
     }
 
     .hb-card__description {
-      margin-block: hb-calculate-rems(8px) auto;
+      margin-block: 0 auto;
     }
 
-    .hs-button a {
-      border-color: color('primary');
-      background-color: color('primary');
-      margin-block: hb-calculate-rems(24px) hb-calculate-rems(2px);
+    .hs-button {
+      display: flex;
+      flex-direction: column;
+      gap: hb-calculate-rems(4px);
 
-      &:hover,
-      &:focus,
-      &.is-focused {
-        background-color: color('primary-dark');
-        border-color: color('primary-dark');
+      margin-block-start: hb-calculate-rems(24px);
+
+      a {
+        padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
+          hb-calculate-rems(6px);
+        background-color: color('primary');
+        border-color: color('primary');
+
+        &:hover,
+        &:focus,
+        &.is-focused {
+          background-color: color('primary-dark');
+          border-color: color('primary-dark');
+        }
       }
 
-      @container card (width > #{$container-small}) {
-        margin-block: hb-calculate-rems(20px) hb-calculate-rems(4px);
+      a[href*="//"].hs-external-link,
+      .hs-external-link a[href*="//"] {
+        margin-right: 0;
+        color: color('white', 'global');
+
+        --link-base-current-color: #{color('white', 'global')};
+        --link-base-hover-current-color: #{color('white', 'global')};
       }
     }
   }

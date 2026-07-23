@@ -6,6 +6,7 @@ This document defines the standards for creating and updating documentation in t
 
 - The primary audience for operational documentation is experienced Drupal developers on the H&S team
 - The primary operational stakeholders are the **H&S web team** — use this term when documentation refers to site owners, editors, or operational contacts (e.g., "Notify the H&S web team and/or site owner")
+- Use **HSDP** when referring to the codebase, application, or multi-site platform itself (e.g., "the HSDP application", "the HSDP codebase"). Do not use "the H&S application" or other variants. "H&S" (Humanities and Sciences) refers to the school and its team, not the software.
 - `DocumentationStandards.md` also serves as AI context for Claude Code in this repository — keep it accurate and up to date
 
 ## Language and Tone
@@ -15,7 +16,7 @@ This document defines the standards for creating and updating documentation in t
 - Use active voice
 - Use active voice especially in warnings — "Take a database backup before proceeding" not "Database backups are required"
 - Avoid filler words ("simply", "just", "easily", "very good", etc.)
-- Do not use em dashes (—). Rewrite the sentence to avoid them.
+- Do not use em dashes (—). Rewrite the sentence to avoid them. `DocumentationStandards.md` itself is exempt from this rule: it is primarily read and written by AI tooling to enforce these standards, and em dashes are fine here for density.
 - Avoid meta-notes written to the author (e.g., "update this before publishing") — those belong in PR descriptions or commit messages, not in committed docs
 
 ## Document Types
@@ -36,6 +37,7 @@ Documentation in this repo falls into two categories. Structure each accordingly
 - **No `$` prompt prefix in bash code blocks** — it prevents copying commands directly
 - Use `1.` for every item in a numbered list — Markdown auto-increments, so manual tracking is unnecessary and error-prone
 - No trailing commas in enumerations: `(foo, bar, etc.)` not `(foo, bar, etc.,)`
+- Headings use Title Case: capitalize each major word (e.g., "Remove Domains from NetDB", not "Remove domains from netdb")
 
 ## Callout Style
 
@@ -121,6 +123,19 @@ Acquia's internal name for the staging environment is "test". In all documentati
 - PHPCS binary: `vendor/bin/phpcs`
 - PHPCBF binary: `vendor/bin/phpcbf`
 
+## ACLI Command Placeholders
+
+- Use `<APP_ID>` for the Acquia application identifier and `<ENV_ID>` (or `<PROD_ENV_ID>`, `<STAGE_ENV_ID>`, `<DEV_ENV_ID>`) for environment identifiers.
+- Application and environment aliases (e.g., `humscigryphon`, `humscigryphon.prod`) rarely change. Pair the ID-placeholder version of an ACLI command with a second example using the real alias, and note that the alias rarely changes:
+  ```bash
+  # Using an environment ID:
+  acli api:environments:domain-delete <PROD_ENV_ID> <SITE>-prod.stanford.edu
+
+  # Using the humscigryphon.prod alias (the alias rarely changes and is easier to remember):
+  acli api:environments:domain-delete humscigryphon.prod <SITE>-prod.stanford.edu
+  ```
+- Do not add real-value examples for placeholders that identify a specific site or other data (e.g., `<SITE>`), especially in destructive commands (delete, drop, etc.). A developer could copy and run the example unmodified with damaging results.
+
 ## Architecture Decision Records (ADRs)
 
 ADRs in `docs/architecture/decisions/` are **immutable historical records**:
@@ -137,5 +152,5 @@ ADRs in `docs/architecture/decisions/` are **immutable historical records**:
 1. If a new development tool is required by the project, add it to `docs/DevelopmentRequirements.md`
 1. If a step is unclear or potentially missing, note it explicitly with a `> **Note:**` rather than guessing
 1. Review links for accuracy — external links go stale
-1. If a new file was added under `docs/`, confirm it is linked from `README.md` in the appropriate Documentation section
+1. If a new file was added directly under `docs/` (not in a subdirectory), confirm it is linked from `README.md` in the appropriate Documentation section
 1. Update this file whenever new documentation conventions are established

@@ -1,8 +1,6 @@
 services:
-
   # What to call the service hosting the site.
   suhumsci:
-
     # Use PHP 8 with Apache
     image: pookmish/drupal8ci:tugboat
 
@@ -23,7 +21,6 @@ services:
 
     # A set of commands to run while building this service
     commands:
-
       # Commands that set up the basic preview infrastructure
       init:
         # Install Node.js system-wide based on .nvmrc major version for consistent builds
@@ -46,30 +43,36 @@ services:
         - drush sql-sync @hs_colorful.prod @hs_colorful.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @hs_colorful.local sql-sanitize --no-interaction --ansi
         - drush rsync @hs_colorful.prod:%files @hs_colorful.local:%files --ansi --no-interaction
-        - drush @hs_colorful.local user:create tugboat --password=pushcar || true
-        - drush @hs_colorful.local user:role:add administrator tugboat || true
+        - drush @hs_colorful.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+        - drush @hs_colorful.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
         # Sync to hs_traditional, hs_traditional database & files and create user.
         - drush sql-sync @hs_traditional.prod @hs_traditional.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @hs_traditional.local sql-sanitize --no-interaction --ansi
         - drush rsync @hs_traditional.prod:%files @hs_traditional.local:%files --ansi --no-interaction
-        - drush @hs_traditional.local user:create tugboat --password=pushcar || true
-        - drush @hs_traditional.local user:role:add administrator tugboat || true
+        - drush @hs_traditional.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+        - drush @hs_traditional.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
         # Sync to english, english database & files, does not create a user.
         - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @english.local sql-sanitize --no-interaction --ansi
         - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
+        - drush @english.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+        - drush @english.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
         # Sync to history, history database & files, does not create a user.
         - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @history.local sql-sanitize --no-interaction --ansi
         - drush rsync @history.prod:%files @history.local:%files --ansi --no-interaction
+        - drush @history.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+        - drush @history.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
         # Sync to west, west database & files, does not create a user.
         - drush sql-sync @west.prod @west.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @west.local sql-sanitize --no-interaction --ansi
         - drush rsync @west.prod:%files @west.local:%files --ansi --no-interaction
+        - drush @west.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+        - drush @west.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
@@ -91,8 +94,8 @@ services:
         - drush @west.local cr
         - drush @west.local deploy
 
-        # Build frontend assets.
-        - npm run theme-build
+        # Build frontend assets. Prevent Puppeteer from downloading chrome because it's not needed here.
+        - PUPPETEER_SKIP_DOWNLOAD=true npm run theme-build
 
     # Collection of urls to compare visual results.
     urls:
@@ -108,6 +111,14 @@ services:
         - /components/hero-images-main-region/banner-images-text-box
         - /components/hero-images-full-width-region-and-main-region/tall-spotlights-classic
         - /components/text-area-typography
+        - /components/collections/collections-postcards/vertical-cards
+        - /components/collections/collections-postcards/horizontal-cards
+        - /components/collections/collections-postcards/vertical-linked-cards
+        - /components/collections/collections-postcards/vertical-button-cards
+        - /components/collections/collections-postcards/vertical-cards/vertical-cards-raised-cards-uniform
+        - /components/collections/collections-postcards/horizontal-cards/horizontal-cards-raised-cards-uniform
+        - /components/collections/collections-postcards/vertical-linked-cards/vertical-linked-cards-uniform
+        - /components/collections/collections-postcards/vertical-button-cards-0/vertical-button-cards-0
       hs-traditional:
         - /
         - /mixed-pages/mixed-page-raised-cards
@@ -120,10 +131,18 @@ services:
         - /components/hero-images-main-region/banner-images-text-box
         - /components/hero-images-full-width-region-and-main-region/tall-spotlights-classic
         - /components/text-area-typography
+        - /test-empty-view-collection
+        - /components/collections-0/collections-postcards/vertical-cards
+        - /components/collections-0/collections-postcards/horizontal-cards
+        - /components/collections-0/collections-postcards/vertical-linked-cards
+        - /components/collections-0/collections-postcards/vertical-button-cards
+        - /components/collections-0/collections-postcards/vertical-cards/vertical-cards-raised-cards-uniform
+        - /components/collections-0/collections-postcards/horizontal-cards/horizontal-cards-raised-cards
+        - /components/collections-0/collections-postcards/vertical-linked-cards/vertical-linked-cards-uniform
+        - /components/collections-0/collections-postcards/vertical-button-cards/vertical-button-cards-uniform
   # What to call the service hosting MySQL. This name also acts as the
   # hostname to access the service by from the php service.
   mysql:
-
     # Use the latest available 8.x version of MySQL
     image: tugboatqa/mysql:8
     commands:

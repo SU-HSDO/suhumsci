@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * hs_siteimprove.install
+ */
+
+/**
+ * Refresh the cached SiteImprove site ID.
+ */
+function hs_siteimprove_update_10001(): string {
+  /** @var \Drupal\hs_siteimprove\SiteImprove $site_improve */
+  $site_improve = \Drupal::service('hs_siteimprove.connector');
+  $site_id = $site_improve->getCurrentSiteId(TRUE);
+
+  if (!$site_id) {
+    \Drupal::logger('hs_siteimprove')->warning('Could not retrieve SiteImprove site ID. Check the API settings at /admin/config/services/siteimprove.');
+    return t('SiteImprove site ID not refreshed. Check the API settings at /admin/config/services/siteimprove.')->render();
+  }
+
+  return t('SiteImprove site ID refreshed: @id.', ['@id' => $site_id])->render();
+}

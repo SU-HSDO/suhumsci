@@ -1,12 +1,44 @@
 # .github/workflows/content-stage.yml
 # Copies the databases from production sites to staging sites.
+# Runs biweekly on prod release weeks (Tuesday nights).
+# Set the PROD_WEEK_REFERENCE_MONDAY repository variable to the Monday of the
+# current prod release week (YYYY-MM-DD). Days 0–6 after that Monday (and every
+# 14 days thereafter) are prod weeks; days 7–13 are off weeks. Update this
+# variable whenever the release cadence shifts. workflow_dispatch always runs.
 name: Content Staging
 on:
   schedule:
     - cron: '0 0 * * 3'
   workflow_dispatch:
 jobs:
-  Copy-Prod-Database-Down:
+  check-schedule:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check if this is a prod release week
+        id: check
+        run: |
+          REFERENCE_MONDAY="${{ vars.PROD_WEEK_REFERENCE_MONDAY }}"
+          if [ -z "$REFERENCE_MONDAY" ]; then
+            echo "PROD_WEEK_REFERENCE_MONDAY is not set — skipping biweekly check and running"
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          REF_EPOCH=$(date -d "$REFERENCE_MONDAY" +%s)
+          NOW_EPOCH=$(date +%s)
+          DAYS_SINCE=$(( (NOW_EPOCH - REF_EPOCH) / 86400 ))
+          DAY_IN_CYCLE=$(( DAYS_SINCE % 14 ))
+          if [ "$DAY_IN_CYCLE" -lt 7 ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            echo "Prod release week: day $DAY_IN_CYCLE of cycle (ref Monday: $REFERENCE_MONDAY)"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping: day $DAY_IN_CYCLE of cycle (ref Monday: $REFERENCE_MONDAY) — off week"
+          fi
+  copy-prod-to-stage:
+    needs: check-schedule
+    if: needs.check-schedule.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     container:
       image: pookmish/drupal8ci:php8.3

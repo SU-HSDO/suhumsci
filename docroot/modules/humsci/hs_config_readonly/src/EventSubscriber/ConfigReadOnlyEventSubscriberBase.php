@@ -4,11 +4,11 @@ namespace Drupal\hs_config_readonly\EventSubscriber;
 
 use Drupal\config_readonly\ConfigReadonlyWhitelistTrait;
 use Drupal\config_readonly\ReadOnlyFormEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class ConfigReadonlyEventSubscriberBase.

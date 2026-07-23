@@ -303,3 +303,24 @@ form[data-has-imported-fields] .ck.ck-editor__main>.ck-read-only {
 .media-library-item .media-library-item__preview.media-library-item__preview--video img {
   display: block;
 }
+
+/* Temporary fix for tagify regression. */
+/* Remove once drupal/tagify next released is deployed. */
+.tagify__dropdown__item--active {
+  color: var(--gin-color-button-text);
+}
+
+/* Make Media Library Take more space on small screen sizes */
+@media (max-width: 767px) {
+  .ui-dialog {
+    .ui-dialog-title {
+      margin: 0;
+    }
+
+    .ui-dialog-content {
+      max-height: 500px !important;
+      height: 100% !important;
+    }
+  }
+}
+

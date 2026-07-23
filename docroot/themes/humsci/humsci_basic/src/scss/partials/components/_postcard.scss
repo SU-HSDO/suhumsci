@@ -8,6 +8,13 @@
 $container-small: hb-calculate-rems(576px);
 
 .ptype-hs-postcard {
+  // Override the hb-card styles so that they display correctly within paragraph postcard components.
+  .hb-card__title {
+    @include hb-traditional {
+      margin-block-end: hb-spacing-width('xxxs');
+    }
+  }
+
   // Image in horizontal card spans to 6 cols (out of 12).
   .hb-card--horizontal:has(.hb-card__graphics) {
     .hb-card__wrapper {
@@ -54,4 +61,18 @@ $container-small: hb-calculate-rems(576px);
 
 .field-hs-postcard-body {
   @include hb-description;
+
+  @include hb-themes(('colorful', 'airy')) {
+    margin-block-end: hb-spacing-width('xs');
+  }
+
+  @include hb-traditional {
+    margin-block-end: hb-spacing-width('xxxs');
+  }
+
+  .hb-vertical-button-card &,
+  .hb-vertical-linked-card & {
+    margin-block-end: 0;
+  }
 }
+

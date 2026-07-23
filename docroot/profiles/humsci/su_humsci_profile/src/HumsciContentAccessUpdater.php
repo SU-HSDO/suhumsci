@@ -2,8 +2,8 @@
 
 namespace Drupal\su_humsci_profile;
 
-use Drupal\node\NodeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\NodeInterface;
 
 /**
  * Service for updating content access settings.

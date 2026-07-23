@@ -30,35 +30,9 @@ $container-medium: hb-calculate-rems(768px);
   flex-direction: column;
   container-type: inline-size;
   container-name: card;
-
-  &.hb-vertical-card--accent {
-    @include hb-themes(('colorful', 'airy')) {
-      border-bottom: hb-calculate-rems(4px) solid color('secondary');
-    }
-
-    @include hb-traditional {
-      border-bottom: hb-calculate-rems(2px) solid color('secondary');
-    }
-  }
 }
 
 .hb-card--horizontal:has(.hb-card__graphics) {
-  @include hb-themes(('colorful', 'airy')) {
-    padding: hb-calculate-rems(10px);
-  }
-
-  @include hb-traditional {
-    padding: hb-calculate-rems(10px);
-
-    @container card (width > #{$container-small}) {
-      padding: hb-calculate-rems(12px);
-    }
-
-    @container card (width > #{$container-medium}) {
-      padding: hb-calculate-rems(16px);
-    }
-  }
-
   .hb-card__wrapper {
     display: grid;
     grid-template-columns: auto;
@@ -70,7 +44,7 @@ $container-medium: hb-calculate-rems(768px);
       'b';
 
     @container card (width > #{$container-small}) {
-      align-items: center;
+      align-items: start;
 
       grid-template-columns: repeat(12, 1fr);
       grid-template-rows: auto;
@@ -94,14 +68,18 @@ $container-medium: hb-calculate-rems(768px);
 .hb-card__graphics {
   position: relative;
 
-  .hb-vertical-card &,
-  .hb-card--date-stacked & {
-    @include hb-traditional {
-      padding: hb-calculate-rems(10px) hb-calculate-rems(10px) 0;
+  @include hb-themes(('colorful', 'airy')) {
+    margin-block-end: hb-spacing-width('xs');
+  }
 
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(16px) hb-calculate-rems(16px) 0;
-      }
+  @include hb-traditional {
+    margin-block-end: hb-spacing-width('xxxs');
+  }
+
+  .hb-card--horizontal &,
+  .hb-card--horizontal-date-stacked & {
+    @container card (width > #{$container-medium}) {
+      margin-block-end: 0;
     }
   }
 
@@ -174,135 +152,51 @@ $container-medium: hb-calculate-rems(768px);
   .hb-media-image {
     margin: 0;
   }
+
+  .hb-caption-credit-image {
+    display: block;
+  }
 }
 
 .hb-card__content {
-  .hb-vertical-card &,
-  .hb-card--date-stacked & {
-    @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px) 0
-        hb-calculate-rems(24px);
-
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(20px) 0
-          hb-calculate-rems(32px);
-      }
-    }
-
-    @include hb-traditional {
-      padding: hb-calculate-rems(12px) hb-calculate-rems(10px)
-        hb-calculate-rems(22px);
-
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(16px);
-      }
-    }
-  }
-
-  .hb-vertical-card.hb-card--no-image &,
-  .hb-card--date-stacked.hb-card--no-image & {
-    @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px) 0
-        hb-calculate-rems(24px);
-
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(24px) 0
-          hb-calculate-rems(32px);
-      }
-    }
-
-    @include hb-traditional {
-      padding: hb-calculate-rems(16px) 0
-        hb-calculate-rems(20px);
-
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(20px) 0
-          hb-calculate-rems(24px);
-      }
-    }
-  }
-
-  .hb-card.hb-vertical-card--accent & {
-    @include hb-traditional {
-      padding-block-end: hb-calculate-rems(24px);
-
-      @container card (width > #{$container-small}) {
-        padding-block-end: hb-calculate-rems(24px);
-      }
-    }
-  }
-
-  .hb-card.hb-vertical-card--accent.hb-card--no-image & {
-    @include hb-traditional {
-      padding-block-end: hb-calculate-rems(24px);
-
-      @container card (width > #{$container-small}) {
-        padding-block-end: hb-calculate-rems(32px);
-      }
-    }
-  }
-
   .hb-card--horizontal & {
     grid-area: b;
 
     // Padding for horizontal cards without image.
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px) 0
-        hb-calculate-rems(24px);
-
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(24px) 0
-          hb-calculate-rems(32px);
-      }
+      padding: 0;
     }
 
     @include hb-traditional {
-      padding: hb-calculate-rems(16px) 0
-        hb-calculate-rems(20px);
-
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(20px) 0
-          hb-calculate-rems(24px);
-      }
+      padding: 0;
     }
   }
 
   // Padding for horizontal cards with image.
   .hb-card--horizontal:has(.hb-card__graphics) & {
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(16px) 0
-        hb-calculate-rems(24px);
-
-    }
-
-    @include hb-traditional {
-      padding: hb-calculate-rems(16px) 0
-        hb-calculate-rems(12px);
+      padding: 0;
     }
   }
 
   .hb-card--horizontal--left:has(.hb-card__graphics) & {
     @include hb-themes(('colorful', 'airy')) {
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
-          hb-calculate-rems(20px) hb-calculate-rems(12px);
+        padding: 0 0 0 hb-calculate-rems(12px);
       }
 
       @container card (width > #{$container-medium}) {
-        padding: hb-calculate-rems(20px) hb-calculate-rems(32px)
-          hb-calculate-rems(20px) hb-calculate-rems(20px);
+        padding: 0 0 0 hb-calculate-rems(20px);
       }
     }
 
     @include hb-traditional {
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(10px) 0 hb-calculate-rems(10px)
-          hb-calculate-rems(20px);
+        padding: 0 0 0 hb-calculate-rems(20px);
       }
 
       @container card (width > #{$container-medium}) {
-        padding: hb-calculate-rems(8px) 0 hb-calculate-rems(8px)
-          hb-calculate-rems(32px);
+        padding: 0 0 0 hb-calculate-rems(32px);
       }
     }
   }
@@ -310,35 +204,39 @@ $container-medium: hb-calculate-rems(768px);
   .hb-card--horizontal--right:has(.hb-card__graphics) & {
     @include hb-themes(('colorful', 'airy')) {
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(16px) hb-calculate-rems(12px)
-          hb-calculate-rems(20px) hb-calculate-rems(24px);
+        padding: 0 hb-calculate-rems(12px) 0 0;
       }
 
       @container card (width > #{$container-medium}) {
-        padding: hb-calculate-rems(20px) hb-calculate-rems(20px)
-          hb-calculate-rems(20px) hb-calculate-rems(32px);
+        padding: 0 hb-calculate-rems(20px) 0 0;
       }
     }
 
     @include hb-traditional {
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(10px) hb-calculate-rems(20px)
-          hb-calculate-rems(10px) 0;
+        padding: 0 hb-calculate-rems(20px) 0 0;
       }
 
       @container card (width > #{$container-medium}) {
-        padding: hb-calculate-rems(8px) hb-calculate-rems(32px)
-          hb-calculate-rems(8px) 0;
+        padding: 0 hb-calculate-rems(32px) 0 0;
       }
     }
   }
 }
 
 .hb-card__title {
-  margin-block: 0 hb-calculate-rems(6px);
+  margin-block-start: 0;
 
-  &:only-child {
-    margin: 0;
+  @include hb-themes(('airy', 'colorful')) {
+    margin-block-end: hb-spacing-width('xs');
+
+    @container card (width > #{$container-medium}) {
+      margin-block-end: hb-spacing-width('sm');
+    }
+  }
+
+  @include hb-traditional {
+    margin-block-end: hb-spacing-width('xxs');
   }
 
   h2,
@@ -367,7 +265,7 @@ $container-medium: hb-calculate-rems(768px);
   a:not([class]) {
     font-size: unset;
     font-weight: hb-theme-font-weight(semibold);
-    text-decoration-color: color('gray-600', 'global');
+    text-decoration-color: color('gray-medium', 'global');
     text-decoration-thickness: 5%;
     text-underline-offset: 10%;
 
@@ -394,8 +292,16 @@ $container-medium: hb-calculate-rems(768px);
   word-break: normal;
   overflow-wrap: anywhere;
 
-  &:not(:last-child) {
-    margin-block-end: hb-calculate-rems(6px);
+  @include hb-themes(('airy', 'colorful')) {
+    &:not(:last-child) {
+      margin-bottom: hb-spacing-width('xs');
+    }
+  }
+
+  @include hb-traditional {
+    &:not(:last-child) {
+      margin-bottom: hb-calculate-rems(10px);
+    }
   }
 }
 
@@ -405,26 +311,18 @@ $container-medium: hb-calculate-rems(768px);
   width: 100%; // large area to click
   position: relative;
 
-  .hb-card--horizontal & {
-    @include hb-themes(('colorful', 'airy')) {
-      padding-block-start: hb-calculate-rems(10px);
-    }
-
-    @include hb-traditional {
-      padding-block-start: hb-calculate-rems(6px);
-
-      @container card (width > #{$container-small}) {
-        padding-block-start: hb-calculate-rems(10px);
-      }
-    }
-  }
-
   .views-field {
     width: 100%;
   }
 
   a {
-    @include hb-more-link;
+    @include hb-traditional {
+      @include hb-more-link;
+    }
+
+    @include hb-themes(('airy', 'colorful')) {
+      @include hb-card-arrow-link;
+    }
   }
 }
 
@@ -434,7 +332,7 @@ $container-medium: hb-calculate-rems(768px);
 .hb-card__description {
   .views-field:not(:last-child) {
     display: block;
-    margin-block-end: hb-calculate-rems(6px);
+    margin-block-end: hb-spacing-width('xxs');
   }
 }
 
@@ -463,12 +361,16 @@ $container-medium: hb-calculate-rems(768px);
     }
   }
 
-  &:not(:last-child) {
-    margin-block-end: hb-calculate-rems(6px);
+  @include hb-themes(('airy', 'colorful')) {
+    &:not(:last-child) {
+      margin-bottom: hb-spacing-width('xxs');
+    }
   }
 
-  .hb-card--date-stacked & {
-    margin-block: hb-calculate-rems(12px) hb-calculate-rems(10px);
+  @include hb-traditional {
+    &:not(:last-child) {
+      margin-bottom: hb-spacing-width('xxxs');
+    }
   }
 
   // date stacked vertical UI pattern item
@@ -606,7 +508,7 @@ $container-medium: hb-calculate-rems(768px);
   font-size: hb-calculate-rems(14px);
 
   &:not(:last-child) {
-    margin-block-end: hb-calculate-rems(10px);
+    margin-block-end: hb-calculate-rems(16px);
   }
 
   @include grid-media-min('md') {
@@ -634,7 +536,7 @@ $container-medium: hb-calculate-rems(768px);
   }
 
   &:not(:last-child) {
-    margin-block-end: hb-calculate-rems(10px);
+    margin-block-end: hb-spacing-width('xxs');
   }
 
   .views-label {
@@ -643,17 +545,6 @@ $container-medium: hb-calculate-rems(768px);
     margin-inline-end: hb-calculate-rems(6px);
   }
 }
-
-.hb-card__sbcontent,
-.hb-card__location,
-.hb-card__highlighted {
-  .hb-card--date-stacked & {
-    &:has(+ .hb-card__description) {
-      margin-block-end: hb-calculate-rems(12px);
-    }
-  }
-}
-
 
 .hb-card__date-tile {
   text-align: center;
@@ -689,12 +580,12 @@ $container-medium: hb-calculate-rems(768px);
     min-width: hb-calculate-rems(100px);
     background-color: color('white', 'global');
     padding: 0;
-    top: hb-calculate-rems(10px);
-    left: hb-calculate-rems(10px);
+    top: 0;
+    left: 0;
 
     @container card (width > #{$container-small}) {
-      top: hb-calculate-rems(16px);
-      left: hb-calculate-rems(16px);
+      top: 0;
+      left: 0;
     }
   }
 
@@ -764,5 +655,5 @@ $container-medium: hb-calculate-rems(768px);
 }
 
 .hb-card__author {
-  margin-block-end: hb-calculate-rems(6px);
+  margin-block-end: hb-spacing-width('xxxs');
 }

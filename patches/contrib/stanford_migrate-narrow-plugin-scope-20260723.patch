@@ -1,0 +1,45 @@
+diff --git a/src/StanfordMigrate.php b/src/StanfordMigrate.php
+index b26c501..a849a10 100644
+--- a/src/StanfordMigrate.php
++++ b/src/StanfordMigrate.php
+@@ -157,7 +157,7 @@ class StanfordMigrate implements StanfordMigrateInterface {
+       return $migrations;
+     }
+ 
+-    $matched_migrations = $this->migrationPluginManager->createInstances([]);
++    $matched_migrations = $this->migrationPluginManager->createInstances(array_keys($this->getMigrationEntities()));
+     // Do not return any migrations which fail to meet requirements.
+     foreach ($matched_migrations as $id => $migration) {
+       $source_plugin = $migration->getSourcePlugin();
+@@ -202,7 +202,7 @@ class StanfordMigrate implements StanfordMigrateInterface {
+     if ($cache = $this->cache->get($cacheKey)) {
+       return $cache->data;
+     }
+-    $migrations = $this->migrationPluginManager->createInstances([]);
++    $migrations = $this->migrationPluginManager->createInstances(array_keys($this->getMigrationEntities()));
+ 
+     $entity_id = $entity->getEntityType()->get('entity_keys')['id'];
+     $entityMigration = NULL;
+@@ -280,4 +280,22 @@ class StanfordMigrate implements StanfordMigrateInterface {
+     }
+   }
+ 
++  /**
++   * Get the enabled migration config entities.
++   *
++   * Migration plugins are discovered from every module's migrations/
++   * directory regardless of whether this site has ever configured or
++   * enabled them, so limiting to config entities avoids checking
++   * requirements on, and logging errors about, dormant plugins (e.g.
++   * contrib-bundled D6/D7 upgrade-path migrations) that this site never
++   * opted into.
++   *
++   * @return \Drupal\migrate_plus\Entity\MigrationInterface[]
++   *   Keyed array of enabled migration entities.
++   */
++  protected function getMigrationEntities(): array {
++    $storage = $this->entityTypeManager->getStorage('migration');
++    return $storage->loadByProperties(['status' => 1]);
++  }
++
+ }

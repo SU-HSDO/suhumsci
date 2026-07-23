@@ -260,9 +260,11 @@ function _hs_layouts_make_title_the_link(&$variables) {
     $dom = new DOMDocument();
     try {
       $button = is_array($variables['button']) ? $variables['button'] : (string) $variables['button'];
-      // Get the first element index, if one exists.
       if (!empty($button['field_hs_postcard_link'][0]['#url']) && $button['field_hs_postcard_link'][0]['#url']->isRouted()) {
-        $variables['href'] = ['#markup' => $button['field_hs_postcard_link'][0]['#url']->toString()];
+        $variables['href'] = $button['field_hs_postcard_link'][0]['#url']->toString();
+        if (!empty($button['field_hs_postcard_link'][0]['#title'])) {
+          $variables['link_text'] = (string) $button['field_hs_postcard_link'][0]['#title'];
+        }
       }
       else {
         $dom->loadHTML($renderer->renderInIsolation($button));
@@ -272,22 +274,56 @@ function _hs_layouts_make_title_the_link(&$variables) {
       return;
     }
     $xpath = new DOMXPath($dom);
-    $links = $xpath->query('//a/@href');
-    // If the markup is a link, grab the href attribute.
-    if ($links->length) {
-      $variables['href'] = $links->item(0)->nodeValue;
+    $anchors = $xpath->query('//a');
+    // If the markup is a link, grab its href and its visible text.
+    $anchor = $anchors->item(0);
+    if ($anchor instanceof DOMElement) {
+      $variables['href'] = $anchor->getAttribute('href');
+      $variables['link_text'] = trim($anchor->textContent);
     }
     else {
-      // First check if variables is already set from route url, otherwise
-      // the markup is just a string with the url, we can use that.
       $variables['href'] = $variables['href'] ?? htmlspecialchars_decode(trim(strip_tags($renderer->renderInIsolation($variables['button']))));
     }
+
+    $variables['link_url'] = $variables['href'];
   }
 
   if (!empty($variables['title'])) {
     $title = is_array($variables['title']) ? $renderer->renderInIsolation($variables['title']) : (string) $variables['title'];
     $title_markup = trim(strip_tags($title));
     $variables['title'] = $title_markup !== '' ? ['#markup' => $title_markup] : NULL;
+  }
+}
+
+/**
+ * Resolves the card link for both layout and Views contexts.
+ */
+function _hs_layouts_set_card_link(&$variables) {
+  $context = $variables['context'];
+  if ($context->isOfType('layout')) {
+    // Paragraphs: build the link from the button and link the title.
+    _hs_layouts_make_title_the_link($variables);
+    return;
+  }
+
+  // Views: the title may already be linked.
+  $renderer = \Drupal::service('renderer');
+  $title_rendered = is_array($variables['title'])
+    ? $renderer->renderInIsolation($variables['title'])
+    : $variables['title'];
+
+  if (is_null($title_rendered) || strpos($title_rendered, '<a') === FALSE) {
+    $original_title = $variables['title'];
+    // Title isn't linked: get the link from the button.
+    _hs_layouts_make_title_the_link($variables);
+    // Restore original title, because it was overridden above.
+    $variables['title'] = $original_title;
+  }
+  elseif (preg_match('/href="([^"]+)"/', $title_rendered, $matches)) {
+    // Title already linked: reuse its href for the data attribute only —
+    // don't set href, or Twig re-wraps the title and nests anchors.
+    $variables['link_url'] = html_entity_decode($matches[1]);
+    $variables['link_text'] = html_entity_decode(trim(strip_tags($title_rendered)));
   }
 }
 
@@ -302,38 +338,12 @@ function hs_layouts_preprocess_pattern_vertical_link_card(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function hs_layouts_preprocess_pattern_vertical_card(&$variables) {
-  $context = $variables['context'];
-  if ($context->isOfType('layout')) {
-    // Functionality for paragraphs.
-    _hs_layouts_make_title_the_link($variables);
-  }
-  else {
-    // Functionality for Views.
-    $renderer = \Drupal::service('renderer');
-    $title_rendered = is_array($variables['title']) ? $renderer->renderInIsolation($variables['title']) : $variables['title'];
-
-    if (is_null($title_rendered) || strpos($title_rendered, '<a') === FALSE) {
-      $original_title = $variables['title'];
-      // If the title is not linked, get the link from the button.
-      _hs_layouts_make_title_the_link($variables);
-      // Restore original title, because it was overriden above.
-      $variables['title'] = $original_title;
-    }
-  }
+  _hs_layouts_set_card_link($variables);
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
 function hs_layouts_preprocess_pattern_date_stacked_vertical_card(&$variables) {
-  $renderer = \Drupal::service('renderer');
-  $title_rendered = is_array($variables['title']) ? $renderer->renderInIsolation($variables['title']) : $variables['title'];
-
-  if (strpos($title_rendered, '<a') === FALSE) {
-    $original_title = $variables['title'];
-    // If the title is not linked, get the link from the button.
-    _hs_layouts_make_title_the_link($variables);
-    // Restore original title, because it was overriden above.
-    $variables['title'] = $original_title;
-  }
+  _hs_layouts_set_card_link($variables);
 }

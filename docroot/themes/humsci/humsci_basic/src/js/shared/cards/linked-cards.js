@@ -11,39 +11,58 @@ import addImageLinkEvents from './image-link-handler';
         context,
       );
 
-      // Loop through each card
       cards.forEach((card) => {
-        /**
-         * Target the card image link (if present) to enhance its behavior.
-         * This enables proper interaction with Drupal contextual controls
-         * and caption toggles without triggering unintended navigation.
-         */
-        const cardImageLink = card.querySelector(
-          '.hb-card__img a, .hb-vertical-linked-card__img a',
-        );
-
-        if (cardImageLink) {
-          addImageLinkEvents(cardImageLink, drupalSettings);
-        }
-
         // Find the main link within each card
-        let mainLink = '';
+        const { linkUrl } = card.dataset;
 
-        // Logic for vertical card and date stacked card.
-        if (card.querySelector('.hb-card__title a')) {
-          mainLink = card.querySelector('.hb-card__title a');
-          // Logic for vertical linked card.
-        } else {
-          mainLink = card.querySelector(
-            '.hb-vertical-linked-card__title__link',
-          );
-        }
-
-        if (!mainLink) {
+        if (!linkUrl) {
           return;
         }
 
-        addCardEvents(card, mainLink);
+        const imageWrapper = card.querySelector(
+          '.hb-card__img, .hb-vertical-linked-card__img',
+        );
+
+        const titleLink = card.querySelector(
+          '.hb-vertical-linked-card__title__link, .hb-card__title a',
+        );
+
+        /**
+         * Wrap the image only when no title link exists
+         * and it isn't already wrapped in a link.
+         */
+        if (imageWrapper
+          && !imageWrapper.querySelector('a')
+          && !titleLink
+        ) {
+          const imageLink = document.createElement('a');
+          imageLink.href = linkUrl;
+
+          if (card.dataset.linkText) {
+            imageLink.setAttribute('aria-label', card.dataset.linkText);
+          }
+
+          while (imageWrapper.firstChild) {
+            imageLink.appendChild(imageWrapper.firstChild);
+          }
+
+          imageWrapper.appendChild(imageLink);
+        }
+
+        /**
+         * Enhance the image link (pre-existing or just created).
+         * This enables proper interaction with Drupal contextual controls
+         * and caption toggles without triggering unintended navigation.
+         */
+        const imageLink = imageWrapper?.querySelector('a');
+        if (imageLink) {
+          addImageLinkEvents(imageLink, drupalSettings);
+        }
+
+        const linkElement = imageLink || titleLink;
+        if (linkElement) {
+          addCardEvents(card, linkUrl, linkElement);
+        }
       });
     },
   };

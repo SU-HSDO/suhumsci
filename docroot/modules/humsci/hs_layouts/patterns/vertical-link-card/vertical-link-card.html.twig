@@ -1,5 +1,13 @@
 {% set attributes = attributes.addClass('hb-vertical-linked-card') %}
 
+{% if link_url %}
+  {% set attributes = attributes.setAttribute('data-link-url', link_url) %}
+{% endif %}
+
+{% if link_text %}
+  {% set attributes = attributes.setAttribute('data-link-text', link_text) %}
+{% endif %}
+
 <div{{ attributes }}>
   {% if image %}
     <div class="hb-vertical-linked-card__img">

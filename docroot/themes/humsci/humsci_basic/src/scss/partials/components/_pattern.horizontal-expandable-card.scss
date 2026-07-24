@@ -11,7 +11,7 @@
 }
 
 .hb-horizontal-expandable-card__header {
-  padding: hb-calculate-rems(20px) hb-calculate-rems(24px);
+  padding: hb-calculate-rems(20px) hb-calculate-rems(20px) hb-calculate-rems(24px) hb-calculate-rems(20px);
   justify-content: space-between;
   align-items: center;
   display: flex;
@@ -124,6 +124,11 @@
   display: flex;
   flex-direction: column;
   gap: hb-calculate-rems(16px);
-  padding: 0 hb-calculate-rems(30px) hb-calculate-rems(32px);
+  padding-inline: hb-calculate-rems(30px);
   overflow: hidden;
+  min-height: 0;
+
+  > :last-child {
+    margin-bottom: hb-calculate-rems(32px);
+  }
 }

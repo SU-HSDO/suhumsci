@@ -144,45 +144,24 @@ $container-medium: hb-calculate-rems(768px);
     .hb-card__content {
       // Padding for horizontal cards without image.
       @include hb-themes(('colorful', 'airy')) {
-        padding: hb-calculate-rems(18px);
-
-        @container card (width > #{$container-small}) {
-          padding: hb-calculate-rems(24px);
-        }
+        padding: hb-calculate-rems(24px);
       }
     }
 
     &:has(.hb-card__graphics) {
-      .hb-card__content {
-        @include hb-themes(('colorful', 'airy')) {
-          padding-inline: hb-calculate-rems(18px);
-        }
-
-        @include hb-traditional {
-          padding-inline: hb-calculate-rems(4px);
-        }
-      }
-
       &.hb-card--horizontal--left {
         .hb-card__content {
           @include hb-themes(('colorful', 'airy')) {
             @container card (width > #{$container-small}) {
-              padding-inline: hb-calculate-rems(12px) hb-calculate-rems(18px);
-            }
-
-            @container card (width > #{$container-medium}) {
-              padding-inline: hb-calculate-rems(20px) hb-calculate-rems(24px);
+              padding-inline: hb-calculate-rems(12px) hb-calculate-rems(24px);
             }
           }
+        }
 
-          // TODO
-          @include hb-traditional {
+        .hb-card__graphics {
+          @include hb-themes(('airy', 'colorful')) {
             @container card (width > #{$container-small}) {
-              padding-inline: hb-calculate-rems(20px) 0;
-            }
-
-            @container card (width > #{$container-medium}) {
-              padding-inline: hb-calculate-rems(32px) 0;
+              padding-inline: 0 hb-calculate-rems(12px);
             }
           }
         }
@@ -192,22 +171,15 @@ $container-medium: hb-calculate-rems(768px);
         .hb-card__content {
           @include hb-themes(('colorful', 'airy')) {
             @container card (width > #{$container-small}) {
-              padding-inline: hb-calculate-rems(18px) hb-calculate-rems(12px);
-            }
-
-            @container card (width > #{$container-medium}) {
-              padding-inline: hb-calculate-rems(24px) hb-calculate-rems(20px);
+              padding-inline: hb-calculate-rems(24px) hb-calculate-rems(12px);
             }
           }
+        }
 
-          // TODO
-          @include hb-traditional {
+        .hb-card__graphics {
+          @include hb-themes(('airy', 'colorful')) {
             @container card (width > #{$container-small}) {
-              padding-inline: 0 hb-calculate-rems(20px);
-            }
-
-            @container card (width > #{$container-medium}) {
-              padding-inline: 0 hb-calculate-rems(32px);
+              padding-inline: hb-calculate-rems(12px) 0;
             }
           }
         }

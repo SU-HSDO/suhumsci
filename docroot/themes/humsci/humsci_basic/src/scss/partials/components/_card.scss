@@ -343,7 +343,7 @@ $container-medium: hb-calculate-rems(768px);
     flex-wrap: wrap;
   }
 
-  @include grid-media-min('sm') {
+  @container card (width > #{$container-small}) {
     display: flex;
 
     // from grid--col 3 and above we'll display block
@@ -392,7 +392,7 @@ $container-medium: hb-calculate-rems(768px);
 
     // Adds a "pipe" after each field
     &::after {
-      @include grid-media-min('sm') {
+      @container card (width > #{$container-small}) {
         content: '';
         margin: 0 hb-calculate-rems(8px);
         border-left: $hb-thin-border;
@@ -582,11 +582,6 @@ $container-medium: hb-calculate-rems(768px);
     padding: 0;
     top: 0;
     left: 0;
-
-    @container card (width > #{$container-small}) {
-      top: 0;
-      left: 0;
-    }
   }
 
   &:only-child {

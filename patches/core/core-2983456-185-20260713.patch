@@ -1,8 +1,8 @@
-diff --git a/core/modules/media/config/install/system.action.media_update_metadata.yml b/core/modules/media/config/install/system.action.media_update_metadata.yml
+diff --git a/core/modules/media/config/optional/system.action.media_update_metadata.yml b/core/modules/media/config/optional/system.action.media_update_metadata.yml
 new file mode 100644
 index 00000000000..e31298e4082
 --- /dev/null
-+++ b/core/modules/media/config/install/system.action.media_update_metadata.yml
++++ b/core/modules/media/config/optional/system.action.media_update_metadata.yml
 @@ -0,0 +1,10 @@
 +langcode: en
 +status: true
@@ -41,7 +41,7 @@ index 1945ef5001f..cf919f396c4 100644
    route_name: entity.media.delete_form
    group: media
 diff --git a/core/modules/media/media.post_update.php b/core/modules/media/media.post_update.php
-index 1c56319bfe8..973772656df 100644
+index 1c56319bfe8..4796521c46d 100644
 --- a/core/modules/media/media.post_update.php
 +++ b/core/modules/media/media.post_update.php
 @@ -5,6 +5,8 @@
@@ -61,7 +61,7 @@ index 1c56319bfe8..973772656df 100644
 +/**
 + * Install the 'Update metadata' action.
 + */
-+function media_post_update_install_update_metadata_action() {
++function media_post_update_install_update_metadata_action(): void {
 +  if (!Action::load('media_update_metadata')) {
 +    Action::create([
 +      'id' => 'media_update_metadata',
@@ -90,15 +90,16 @@ index 6a04b5446b3..d489392ebac 100644
    defaults:
 diff --git a/core/modules/media/src/Controller/UpdateMetadataController.php b/core/modules/media/src/Controller/UpdateMetadataController.php
 new file mode 100644
-index 00000000000..d04ec11c9a6
+index 00000000000..1209da9338c
 --- /dev/null
 +++ b/core/modules/media/src/Controller/UpdateMetadataController.php
-@@ -0,0 +1,46 @@
+@@ -0,0 +1,47 @@
 +<?php
 +
 +namespace Drupal\media\Controller;
 +
 +use Drupal\Core\Controller\ControllerBase;
++use Drupal\Core\GeneratedUrl;
 +use Drupal\Core\Url;
 +use Drupal\media\MediaInterface;
 +use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -132,7 +133,7 @@ index 00000000000..d04ec11c9a6
 +  /**
 +   * Reloads the previous page or return to the media overview.
 +   */
-+  protected function reloadPage() {
++  protected function reloadPage(): string|GeneratedUrl {
 +    if ($destination = $this->getRedirectDestination()->get()) {
 +      return $destination;
 +    }
@@ -141,10 +142,10 @@ index 00000000000..d04ec11c9a6
 +
 +}
 diff --git a/core/modules/media/src/Entity/Media.php b/core/modules/media/src/Entity/Media.php
-index 4c612cdca17..b3c1757d3f3 100644
+index d7d991c02a9..5f530de7284 100644
 --- a/core/modules/media/src/Entity/Media.php
 +++ b/core/modules/media/src/Entity/Media.php
-@@ -107,6 +107,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
+@@ -111,6 +111,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    use EntityOwnerTrait;
    use StringTranslationTrait;
  
@@ -158,7 +159,7 @@ index 4c612cdca17..b3c1757d3f3 100644
    /**
     * {@inheritdoc}
     */
-@@ -172,10 +179,14 @@ public function getSource() {
+@@ -176,10 +183,14 @@ public function getSource() {
     *   https://www.drupal.org/node/2878119
     */
    protected function updateThumbnail($from_queue = FALSE) {
@@ -174,7 +175,7 @@ index 4c612cdca17..b3c1757d3f3 100644
      // Set the thumbnail alt.
      $media_source = $this->getSource();
      $plugin_definition = $media_source->getPluginDefinition();
-@@ -271,7 +282,7 @@ protected function getThumbnailUri($from_queue) {
+@@ -275,7 +286,7 @@ protected function getThumbnailUri($from_queue) {
      if ($thumbnails_queued && $this->isNew()) {
        return $this->getDefaultThumbnailUri();
      }
@@ -183,7 +184,7 @@ index 4c612cdca17..b3c1757d3f3 100644
        return $this->get('thumbnail')->entity->getFileUri();
      }
  
-@@ -358,8 +369,8 @@ protected function hasSourceFieldChanged() {
+@@ -362,8 +373,8 @@ protected function hasSourceFieldChanged() {
     */
    protected function shouldUpdateThumbnail($is_new = FALSE) {
      // Update thumbnail if we don't have a thumbnail yet or when the source
@@ -194,13 +195,51 @@ index 4c612cdca17..b3c1757d3f3 100644
    }
  
    /**
-@@ -439,29 +450,64 @@ public function prepareSave() {
+@@ -443,51 +454,86 @@ public function prepareSave() {
        );
      }
  
+-    $media_source = $this->getSource();
+-    foreach ($this->translations as $langcode => $data) {
+-      if ($this->hasTranslation($langcode)) {
+-        $translation = $this->getTranslation($langcode);
+-        // Try to set fields provided by the media source and mapped in
+-        // media type config.
+-        $original = $this->getOriginal();
+-        foreach ($translation->bundle->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
+-          if (!$translation->hasField($entity_field_name)) {
+-            continue;
+-          }
+-          $set_metadata = FALSE;
+-          // Only save value in the entity if the field is empty, or if the
+-          // source field changed from one non-empty value to another non-empty
+-          // value.
+-          // 1st scenario: field is empty, safely store metadata there.
+-          if ($translation->get($entity_field_name)->isEmpty()) {
+-            $set_metadata = TRUE;
+-          }
+-          else {
+-            // 2nd scenario: field is not empty, but the source field has
+-            // changed between two non-empty values.
+-            $original_source_field_empty = ($original instanceof MediaInterface) && $media_source->getSourceFieldValue($original) === NULL;
+-            $new_source_field_empty = $media_source->getSourceFieldValue($translation) === NULL;
+-            if (!$original_source_field_empty &&
+-                !$new_source_field_empty &&
+-                $translation->hasSourceFieldChanged()) {
+-              $set_metadata = TRUE;
+-            }
+-          }
+-          if ($set_metadata) {
+-            $translation->set($entity_field_name, $media_source->getMetadata($translation, $metadata_attribute_name));
+-          }
+-        }
 +    foreach (array_keys($this->getTranslationLanguages()) as $langcode) {
 +      $translation = $this->getTranslation($langcode);
-+
+ 
+-        // Try to set a default name for this media item if no name is provided.
+-        if ($translation->get('name')->isEmpty()) {
+-          $translation->setName($translation->getName());
+-        }
 +      // Set fields provided by the media source and mapped in the media type
 +      // config.
 +      $this->updateMappedMetadata($translation, $this->forceMetadataUpdate);
@@ -225,7 +264,10 @@ index 4c612cdca17..b3c1757d3f3 100644
 +
 +    return $this;
 +  }
-+
+ 
+-        // Set thumbnail.
+-        if ($translation->shouldUpdateThumbnail($this->isNew())) {
+-          $translation->updateThumbnail();
 +  /**
 +   * {@inheritdoc}
 +   */
@@ -243,43 +285,44 @@ index 4c612cdca17..b3c1757d3f3 100644
 +   *   field values. If FALSE, values will be copied only if the mapped field is
 +   *   empty or if the media source field changed. Defaults to FALSE.
 +   */
-+  protected function updateMappedMetadata(MediaInterface $translation, $overwrite_existing = FALSE) {
-     $media_source = $this->getSource();
--    foreach ($this->translations as $langcode => $data) {
--      if ($this->hasTranslation($langcode)) {
--        $translation = $this->getTranslation($langcode);
--        // Try to set fields provided by the media source and mapped in
--        // media type config.
--        foreach ($translation->bundle->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
--          // Only save value in the entity if the field is empty or if the
--          // source field changed.
--          if ($translation->hasField($entity_field_name) && ($translation->get($entity_field_name)->isEmpty() || $translation->hasSourceFieldChanged())) {
--            $translation->set($entity_field_name, $media_source->getMetadata($translation, $metadata_attribute_name));
--          }
--        }
++  protected function updateMappedMetadata(MediaInterface $translation, $overwrite_existing = FALSE): void {
++    $media_source = $this->getSource();
++    $original = $this->getOriginal();
 +    foreach ($translation->bundle->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
 +      if (!$translation->hasField($entity_field_name)) {
 +        continue;
 +      }
- 
--        // Try to set a default name for this media item if no name is provided.
--        if ($translation->get('name')->isEmpty()) {
--          $translation->setName($translation->getName());
--        }
--
--        // Set thumbnail.
--        if ($translation->shouldUpdateThumbnail($this->isNew())) {
--          $translation->updateThumbnail();
--        }
++      $set_metadata = FALSE;
 +      // Populate the field value in one of these scenarios:
-+      // - The caller of this function asked for it explicitly.
++      // - The caller asked for it explicitly.
 +      // - The entity field is empty.
-+      // - The media source field has changed.
-+      if ($overwrite_existing || $translation->get($entity_field_name)->isEmpty() || $translation->hasSourceFieldChanged()) {
-+        $translation->set($entity_field_name, $media_source->getMetadata($translation, $metadata_attribute_name));
++      // - The source field changed from one non-empty value to another
++      //   non-empty value.
++      if ($overwrite_existing) {
++        // 1st scenario: explicitly set the metadata.
++        $set_metadata = TRUE;
++      }
++      elseif ($translation->get($entity_field_name)->isEmpty()) {
++        // 2nd scenario: field is empty, safely store metadata there.
++        $set_metadata = TRUE;
++      }
++      else {
++        // 3rd scenario: field is not empty, but the source field has
++        // changed between two non-empty values.
++        $original_source_field_empty = ($original instanceof MediaInterface) && $media_source->getSourceFieldValue($original) === NULL;
++        $new_source_field_empty = $media_source->getSourceFieldValue($translation) === NULL;
++        if (!$original_source_field_empty &&
++          !$new_source_field_empty &&
++          $translation->hasSourceFieldChanged()) {
++          $set_metadata = TRUE;
+         }
        }
++      if ($set_metadata) {
++        $translation->set($entity_field_name, $media_source->getMetadata($translation, $metadata_attribute_name));
++      }
      }
    }
+ 
 diff --git a/core/modules/media/src/MediaInterface.php b/core/modules/media/src/MediaInterface.php
 index 3aeaef56ab2..97dfe3dc78c 100644
 --- a/core/modules/media/src/MediaInterface.php
@@ -305,10 +348,18 @@ index 3aeaef56ab2..97dfe3dc78c 100644
 +
  }
 diff --git a/core/modules/media/src/MediaListBuilder.php b/core/modules/media/src/MediaListBuilder.php
-index 44ae6a8b7cc..1b5afbf2942 100644
+index 44ae6a8b7cc..8ae20207977 100644
 --- a/core/modules/media/src/MediaListBuilder.php
 +++ b/core/modules/media/src/MediaListBuilder.php
-@@ -9,6 +9,7 @@
+@@ -2,6 +2,7 @@
+ 
+ namespace Drupal\media;
+ 
++use Drupal\Core\Cache\CacheableMetadata;
+ use Drupal\Core\Datetime\DateFormatterInterface;
+ use Drupal\Core\Entity\EntityInterface;
+ use Drupal\Core\Entity\EntityListBuilder;
+@@ -9,6 +10,7 @@
  use Drupal\Core\Entity\EntityTypeInterface;
  use Drupal\Core\Language\LanguageManagerInterface;
  use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -316,18 +367,18 @@ index 44ae6a8b7cc..1b5afbf2942 100644
  
  /**
   * Provides a listing of media items.
-@@ -159,4 +160,21 @@ protected function getEntityIds() {
+@@ -159,4 +161,21 @@ protected function getEntityIds() {
      return $query->execute();
    }
  
 +  /**
 +   * {@inheritdoc}
 +   */
-+  protected function getDefaultOperations(EntityInterface $entity) {
-+    $operations = parent::getDefaultOperations($entity);
++  protected function getDefaultOperations(EntityInterface $entity, ?CacheableMetadata $cacheability = NULL): array {
++    $operations = parent::getDefaultOperations($entity, $cacheability);
 +    if ($entity->access('update')) {
 +      $operations['update_metadata'] = [
-+        'title' => t('Update metadata'),
++        'title' => $this->t('Update metadata'),
 +        'url' => $this->ensureDestination(new Url('media.update_metadata', [
 +          'media' => $entity->id(),
 +        ])),
@@ -340,28 +391,29 @@ index 44ae6a8b7cc..1b5afbf2942 100644
  }
 diff --git a/core/modules/media/src/Plugin/Action/UpdateMetadataAction.php b/core/modules/media/src/Plugin/Action/UpdateMetadataAction.php
 new file mode 100644
-index 00000000000..d2381f0288c
+index 00000000000..daaf4fd45bf
 --- /dev/null
 +++ b/core/modules/media/src/Plugin/Action/UpdateMetadataAction.php
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,78 @@
 +<?php
 +
 +namespace Drupal\media\Plugin\Action;
 +
 +use Drupal\Core\Action\ActionBase;
++use Drupal\Core\Action\Attribute\Action;
 +use Drupal\Core\Entity\EntityStorageInterface;
 +use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 +use Drupal\Core\Session\AccountInterface;
++use Drupal\Core\StringTranslation\TranslatableMarkup;
 +use Symfony\Component\DependencyInjection\ContainerInterface;
 +
 +/**
 + * Updates metadata (including the thumbnail) of a media entity.
-+ *
-+ * @Action(
-+ *   id = "media_update_metadata",
-+ *   action_label = @Translation("Update metadata")
-+ * )
 + */
++#[Action(
++  id: 'media_update_metadata',
++  label: new TranslatableMarkup('Update metadata'),
++)]
 +class UpdateMetadataAction extends ActionBase implements ContainerFactoryPluginInterface {
 +
 +  /**
@@ -403,7 +455,7 @@ index 00000000000..d2381f0288c
 +  /**
 +   * {@inheritdoc}
 +   */
-+  public function execute($entity = NULL) {
++  public function execute($entity = NULL): void {
 +    if ($entity) {
 +      /** @var \Drupal\media\MediaInterface $entity */
 +      $entity->enforceMetadataUpdate();
@@ -422,10 +474,10 @@ index 00000000000..d2381f0288c
 +
 +}
 diff --git a/core/modules/media/src/Plugin/media/Source/OEmbed.php b/core/modules/media/src/Plugin/media/Source/OEmbed.php
-index 9cb2d7974f3..abcc18ddd12 100644
+index 83b4e849986..64870ae428b 100644
 --- a/core/modules/media/src/Plugin/media/Source/OEmbed.php
 +++ b/core/modules/media/src/Plugin/media/Source/OEmbed.php
-@@ -258,7 +258,7 @@ public function getMetadata(MediaInterface $media, $name) {
+@@ -260,7 +260,7 @@ public function getMetadata(MediaInterface $media, $name) {
          return parent::getMetadata($media, 'default_name');
  
        case 'thumbnail_uri':
@@ -434,7 +486,7 @@ index 9cb2d7974f3..abcc18ddd12 100644
  
        case 'type':
          return $resource->getType();
-@@ -390,6 +390,8 @@ public function defaultConfiguration() {
+@@ -400,6 +400,8 @@ public function defaultConfiguration() {
     *   The oEmbed resource.
     * @param \Drupal\media\MediaInterface $media
     *   The media entity that contains the resource.
@@ -443,7 +495,7 @@ index 9cb2d7974f3..abcc18ddd12 100644
     *
     * @return string|null
     *   The local thumbnail URI, or NULL if it could not be downloaded, or if the
-@@ -400,7 +402,7 @@ public function defaultConfiguration() {
+@@ -410,7 +412,7 @@ public function defaultConfiguration() {
     * toggle-able. See https://www.drupal.org/project/drupal/issues/2962751 for
     * more information.
     */
@@ -452,7 +504,7 @@ index 9cb2d7974f3..abcc18ddd12 100644
      $token_data = ['date' => $media->getCreatedTime()];
  
      // If there is no remote thumbnail, there's nothing for us to fetch here.
-@@ -436,9 +438,12 @@ protected function getLocalThumbnailUri(Resource $resource, MediaInterface $medi
+@@ -446,9 +448,12 @@ protected function getLocalThumbnailUri(Resource $resource, MediaInterface $medi
      // regardless of its extension, return its URI.
      $remote_thumbnail_url = $remote_thumbnail_url->toString();
      $hash = Crypt::hashBase64($remote_thumbnail_url);
@@ -469,10 +521,10 @@ index 9cb2d7974f3..abcc18ddd12 100644
  
      // The local thumbnail doesn't exist yet, so we need to download it.
 diff --git a/core/modules/media/tests/src/Functional/MediaBulkFormTest.php b/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
-index f73160dfd2c..8743adc0170 100644
+index 10da4c44cab..be9ae04eed2 100644
 --- a/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
 +++ b/core/modules/media/tests/src/Functional/MediaBulkFormTest.php
-@@ -74,12 +74,14 @@ public function testBulkForm(): void {
+@@ -76,12 +76,14 @@ public function testBulkForm(): void {
  
      // Check the operations are accessible to the logged in user.
      $this->drupalGet('test-media-bulk-form');
@@ -489,10 +541,10 @@ index f73160dfd2c..8743adc0170 100644
      foreach ($available_actions as $action_name) {
        $assert_session->optionExists('action', $action_name);
 diff --git a/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php b/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
-index 285bb8f4abf..ba12c951919 100644
+index 304181d98b4..883001da212 100644
 --- a/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
 +++ b/core/modules/media/tests/src/Functional/MediaOverviewPageTest.php
-@@ -155,6 +155,9 @@ public function testMediaOverviewPage(): void {
+@@ -157,6 +157,9 @@ public function testMediaOverviewPage(): void {
      $assert_session->linkByHrefExists('/media/' . $media1->id() . '/edit');
      $assert_session->elementExists('css', 'td.views-field-operations li a:contains("Delete")', $row1);
      $assert_session->linkByHrefExists('/media/' . $media1->id() . '/delete');
@@ -504,10 +556,10 @@ index 285bb8f4abf..ba12c951919 100644
      $this->refreshVariables();
 diff --git a/core/modules/media/tests/src/Functional/MediaUpdateMetadataControllerTest.php b/core/modules/media/tests/src/Functional/MediaUpdateMetadataControllerTest.php
 new file mode 100644
-index 00000000000..220b5c5cee1
+index 00000000000..8ea5cd57b1d
 --- /dev/null
 +++ b/core/modules/media/tests/src/Functional/MediaUpdateMetadataControllerTest.php
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,81 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -517,12 +569,14 @@ index 00000000000..220b5c5cee1
 +use Drupal\file\Entity\File as FileEntity;
 +use Drupal\media\Entity\Media;
 +use Drupal\media\Plugin\media\Source\File;
++use PHPUnit\Framework\Attributes\Group;
++use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 +
 +/**
 + * Tests the media "Update Metadata" controller.
-+ *
-+ * @group media
 + */
++#[Group('media')]
++#[RunTestsInSeparateProcesses]
 +class MediaUpdateMetadataControllerTest extends MediaFunctionalTestBase {
 +
 +  /**
@@ -533,7 +587,7 @@ index 00000000000..220b5c5cee1
 +  /**
 +   * Test that by going to the update metadata page, we update the metadata.
 +   */
-+  public function testUpdateMetadataController() {
++  public function testUpdateMetadataController(): void {
 +    $assert_session = $this->assertSession();
 +
 +    $media_type = $this->createMediaType('file');
@@ -589,10 +643,10 @@ index 00000000000..220b5c5cee1
 +}
 diff --git a/core/modules/media/tests/src/FunctionalJavascript/MediaContextualLinksTest.php b/core/modules/media/tests/src/FunctionalJavascript/MediaContextualLinksTest.php
 new file mode 100644
-index 00000000000..03bb15eb237
+index 00000000000..94f6f7956a5
 --- /dev/null
 +++ b/core/modules/media/tests/src/FunctionalJavascript/MediaContextualLinksTest.php
-@@ -0,0 +1,86 @@
+@@ -0,0 +1,88 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -600,12 +654,14 @@ index 00000000000..03bb15eb237
 +namespace Drupal\Tests\media\FunctionalJavascript;
 +
 +use Drupal\media\Entity\Media;
++use PHPUnit\Framework\Attributes\Group;
++use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 +
 +/**
 + * Tests views contextual links on media items.
-+ *
-+ * @group media
 + */
++#[Group('media')]
++#[RunTestsInSeparateProcesses]
 +class MediaContextualLinksTest extends MediaJavascriptTestBase {
 +
 +  /**
@@ -630,7 +686,7 @@ index 00000000000..03bb15eb237
 +    \Drupal::configFactory()
 +      ->getEditable('media.settings')
 +      ->set('standalone_url', TRUE)
-+      ->save(TRUE);
++      ->save();
 +
 +    $this->container->get('router.builder')->rebuild();
 +  }
@@ -638,7 +694,7 @@ index 00000000000..03bb15eb237
 +  /**
 +   * Tests contextual links.
 +   */
-+  public function testMediaContextualLinks() {
++  public function testMediaContextualLinks(): void {
 +    // Create a media type.
 +    $mediaType = $this->createMediaType('test');
 +
@@ -681,10 +737,10 @@ index 00000000000..03bb15eb237
 +}
 diff --git a/core/modules/media/tests/src/Kernel/MediaUpdateMetadataTest.php b/core/modules/media/tests/src/Kernel/MediaUpdateMetadataTest.php
 new file mode 100644
-index 00000000000..ffff76e7ff7
+index 00000000000..91316a18e74
 --- /dev/null
 +++ b/core/modules/media/tests/src/Kernel/MediaUpdateMetadataTest.php
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,47 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -692,18 +748,20 @@ index 00000000000..ffff76e7ff7
 +namespace Drupal\Tests\media\Kernel;
 +
 +use Drupal\media\Plugin\media\Source\File;
++use PHPUnit\Framework\Attributes\Group;
++use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 +
 +/**
 + * Tests the update metadata method on Media entities.
-+ *
-+ * @group media
 + */
++#[Group('media')]
++#[RunTestsInSeparateProcesses]
 +class MediaUpdateMetadataTest extends MediaKernelTestBase {
 +
 +  /**
 +   * Tests the update metadata operation.
 +   */
-+  public function testUpdateMetadata() {
++  public function testUpdateMetadata(): void {
 +    $media_type = $this->createMediaType('file');
 +    $source_plugin = $media_type->getSource();
 +
@@ -730,3 +788,63 @@ index 00000000000..ffff76e7ff7
 +  }
 +
 +}
+diff --git a/core/recipes/audio_media_type/recipe.yml b/core/recipes/audio_media_type/recipe.yml
+index 196a2c4501c..5ca561aa25d 100644
+--- a/core/recipes/audio_media_type/recipe.yml
++++ b/core/recipes/audio_media_type/recipe.yml
+@@ -25,6 +25,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.thumbnail
+diff --git a/core/recipes/document_media_type/recipe.yml b/core/recipes/document_media_type/recipe.yml
+index 44dd72715ba..8c8453c60a1 100644
+--- a/core/recipes/document_media_type/recipe.yml
++++ b/core/recipes/document_media_type/recipe.yml
+@@ -23,6 +23,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.thumbnail
+diff --git a/core/recipes/image_media_type/recipe.yml b/core/recipes/image_media_type/recipe.yml
+index d516854f836..84493bd5f58 100644
+--- a/core/recipes/image_media_type/recipe.yml
++++ b/core/recipes/image_media_type/recipe.yml
+@@ -23,6 +23,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.medium
+diff --git a/core/recipes/local_video_media_type/recipe.yml b/core/recipes/local_video_media_type/recipe.yml
+index 270be6e5631..da77a70f83a 100644
+--- a/core/recipes/local_video_media_type/recipe.yml
++++ b/core/recipes/local_video_media_type/recipe.yml
+@@ -23,6 +23,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.thumbnail
+diff --git a/core/recipes/remote_video_media_type/recipe.yml b/core/recipes/remote_video_media_type/recipe.yml
+index 3ab591c7f95..22b4af582ed 100644
+--- a/core/recipes/remote_video_media_type/recipe.yml
++++ b/core/recipes/remote_video_media_type/recipe.yml
+@@ -21,6 +21,7 @@ config:
+       - system.action.media_publish_action
+       - system.action.media_save_action
+       - system.action.media_unpublish_action
++      - system.action.media_update_metadata
+       - views.view.media
+     image:
+       - image.style.medium

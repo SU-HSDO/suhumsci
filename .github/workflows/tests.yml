@@ -45,7 +45,7 @@ jobs:
           git config --system --add safe.directory '*' &&
           composer install -n &&
           mkdir -p docroot/sites/simpletest &&
-          drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage
+          drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal
       - name: Save Test Results
         uses: actions/upload-artifact@v7
         if: failure()

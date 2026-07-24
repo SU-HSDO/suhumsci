@@ -1,0 +1,59 @@
+{
+  "name": "HSDP Codespace",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "web",
+  "forwardPorts": [80, 443],
+  "portsAttributes": {
+    "80": {
+      "label": "Web",
+      "onAutoForward": "notify"
+    },
+    "443": {
+      "label": "Web (HTTPS)",
+      "onAutoForward": "notify"
+    }
+  },
+  "onCreateCommand": "bash .devcontainer/on-create.sh",
+  "postAttachCommand": "bash .devcontainer/post-attach.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24.15.0"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "files.associations": {
+          "*.inc": "php",
+          "*.module": "php",
+          "*.install": "php",
+          "*.theme": "php",
+          "*.profile": "php",
+          "*.test": "php",
+          "*.php": "php",
+          "*.info": "ini"
+        },
+        "editor.rulers": [80, 120],
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "[php]": {
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true
+        },
+        "explorer.autoReveal": true,
+        "editor.quickSuggestions": {
+          "other": "off"
+        },
+        "remote.autoForwardPortsSource": "hybrid",
+        "workbench.startupEditor": "none",
+        "workbench.editorAssociations": {
+          "*.md": "vscode.markdown.preview.editor"
+        }
+      },
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "mblode.twig-language-2"
+      ]
+    }
+  }
+}

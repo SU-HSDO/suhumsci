@@ -1,0 +1,135 @@
+diff --git a/README.md b/README.md
+index c960033..8908b99 100755
+--- a/README.md
++++ b/README.md
+@@ -24,6 +24,17 @@ Configuration
+ 
+ Nothing special needed.
+ 
++Debug Mode
++---
++
++This module has a `debug_mode` setting for more verbose logging, disabled by default and only togglable via drush (not exposed on any config form):
++
++```
++drush cset stanford_migrate.settings debug_mode 1
++```
++
++Developers adding new logging to this module should consider gating it behind debug mode if it isn't actionable by default.
++
+ 
+ Troubleshooting
+ ---
+diff --git a/config/install/stanford_migrate.settings.yml b/config/install/stanford_migrate.settings.yml
+index 077dd2a..d35a599 100644
+--- a/config/install/stanford_migrate.settings.yml
++++ b/config/install/stanford_migrate.settings.yml
+@@ -1,4 +1,5 @@
+ batch_limit: 50
++debug_mode: false
+ cron_options:
+   default:
+     limit: 100
+diff --git a/config/schema/stanford_migrate.schema.yml b/config/schema/stanford_migrate.schema.yml
+index 161e68e..cedef5c 100644
+--- a/config/schema/stanford_migrate.schema.yml
++++ b/config/schema/stanford_migrate.schema.yml
+@@ -4,6 +4,9 @@ stanford_migrate.settings:
+     batch_limit:
+       type: integer
+       label: "Migration batch limit"
++    debug_mode:
++      type: boolean
++      label: "Debug mode"
+     cron_options:
+       type: sequence
+       label: "Cron Job Options"
+diff --git a/src/StanfordMigrate.php b/src/StanfordMigrate.php
+index b26c501..c281878 100644
+--- a/src/StanfordMigrate.php
++++ b/src/StanfordMigrate.php
+@@ -5,6 +5,7 @@ namespace Drupal\stanford_migrate;
+ use Drupal\Component\Datetime\TimeInterface;
+ use Drupal\Core\Cache\Cache;
+ use Drupal\Core\Cache\CacheBackendInterface;
++use Drupal\Core\Config\ConfigFactoryInterface;
+ use Drupal\Core\Entity\ContentEntityInterface;
+ use Drupal\Core\Entity\EntityInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+@@ -67,6 +68,8 @@ class StanfordMigrate implements StanfordMigrateInterface {
+    *   Logger factory.
+    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+    *   Default cache service.
++   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
++   *   Config factory service.
+    */
+   public function __construct(
+     protected EntityTypeManagerInterface $entityTypeManager,
+@@ -76,6 +79,7 @@ class StanfordMigrate implements StanfordMigrateInterface {
+     protected TranslationManager $translation,
+     LoggerChannelFactoryInterface $logger_factory,
+     protected CacheBackendInterface $cache,
++    protected ConfigFactoryInterface $configFactory,
+   ) {
+     $this->logger = $logger_factory->get('stanford_migrate');
+   }
+@@ -158,7 +162,10 @@ class StanfordMigrate implements StanfordMigrateInterface {
+     }
+ 
+     $matched_migrations = $this->migrationPluginManager->createInstances([]);
+-    // Do not return any migrations which fail to meet requirements.
++    // Do not return any migrations which fail to meet requirements. A failed
++    // requirements check here is routine, not exceptional. Only log when
++    // debug mode is explicitly enabled.
++    $debug_mode = (bool) $this->configFactory->get('stanford_migrate.settings')->get('debug_mode');
+     foreach ($matched_migrations as $id => $migration) {
+       $source_plugin = $migration->getSourcePlugin();
+       if ($source_plugin instanceof RequirementsInterface) {
+@@ -166,10 +173,12 @@ class StanfordMigrate implements StanfordMigrateInterface {
+           $source_plugin->checkRequirements();
+         }
+         catch (RequirementsException $e) {
+-          $this->logger->error('Unable to execute migration @name: @message', [
+-            '@name' => $migration->label(),
+-            '@message' => $e->getMessage(),
+-          ]);
++          if ($debug_mode) {
++            $this->logger->error('Unable to execute migration @name: @message', [
++              '@name' => $migration->label(),
++              '@message' => $e->getMessage(),
++            ]);
++          }
+           unset($matched_migrations[$id]);
+         }
+       }
+diff --git a/stanford_migrate.install b/stanford_migrate.install
+index 2f1154e..44b41ea 100644
+--- a/stanford_migrate.install
++++ b/stanford_migrate.install
+@@ -18,3 +18,13 @@ function stanford_migrate_update_8001() {
+ function stanford_migrate_update_8002() {
+   \Drupal::service('module_installer')->install(['empty_fields']);
+ }
++
++/**
++ * Set the default debug_mode setting explicitly.
++ */
++function stanford_migrate_update_8003() {
++  \Drupal::configFactory()
++    ->getEditable('stanford_migrate.settings')
++    ->set('debug_mode', FALSE)
++    ->save();
++}
+diff --git a/stanford_migrate.services.yml b/stanford_migrate.services.yml
+index 9c23787..183c8b5 100644
+--- a/stanford_migrate.services.yml
++++ b/stanford_migrate.services.yml
+@@ -3,7 +3,7 @@ services:
+     alias: stanford_migrate
+   stanford_migrate:
+     class: Drupal\stanford_migrate\StanfordMigrate
+-    arguments: [ '@entity_type.manager', '@plugin.manager.migration', '@keyvalue', '@datetime.time', '@string_translation', '@logger.factory', '@cache.default' ]
++    arguments: [ '@entity_type.manager', '@plugin.manager.migration', '@keyvalue', '@datetime.time', '@string_translation', '@logger.factory', '@cache.default', '@config.factory' ]
+   stanford_migrate.event_subscriber:
+     class: Drupal\stanford_migrate\EventSubscriber\EventsSubscriber
+     arguments: ['@entity_type.manager', '@logger.factory', '@cache.default']

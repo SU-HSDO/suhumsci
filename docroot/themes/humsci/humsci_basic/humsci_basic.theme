@@ -89,9 +89,9 @@ function humsci_basic_preprocess_html(&$vars) {
 
   $route_match = \Drupal::routeMatch();
 
+  // Add custom class when User page.
   $route_name = $route_match->getRouteName();
   if ($route_name == 'entity.user.canonical') {
-    // Add custom class when User page
     $vars['attributes']['class'][] = 'page-user';
   }
 

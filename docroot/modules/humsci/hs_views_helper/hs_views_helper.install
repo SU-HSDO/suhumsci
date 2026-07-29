@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Install/update hooks for hs_views_helper.
+ */
+
+/**
+ * Delete the taxonomy_term view.
+ */
+function hs_views_helper_update_11001() {
+  $view = \Drupal::entityTypeManager()->getStorage('view')->load('taxonomy_term');
+  if ($view) {
+    $view->delete();
+    return t('Deleted the taxonomy_term view.');
+  }
+  return t('No taxonomy_term view found to delete.');
+}

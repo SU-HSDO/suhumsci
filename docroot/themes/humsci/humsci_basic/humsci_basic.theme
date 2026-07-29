@@ -5,6 +5,7 @@
  * Functions to support theming in the HumSci Basic theme.
  */
 
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
@@ -63,22 +64,24 @@ function humsci_basic_preprocess_block(&$vars) {
  * Prepares variables for the html.html.twig template.
  */
 function humsci_basic_preprocess_html(&$vars) {
+  $theme_settings = \Drupal::service(ThemeSettingsProvider::class);
+
   // Animation enhancements setting.
-  $animation_enhancement = theme_get_setting('animation_toggle');
+  $animation_enhancement = $theme_settings->getSetting('animation_toggle');
   if ($animation_enhancement) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-has-animation-enhancements');
   }
 
   // Experimental Features setting.
-  $experimental_feature = theme_get_setting('experimental_toggle');
+  $experimental_feature = $theme_settings->getSetting('experimental_toggle');
   if ($experimental_feature) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-experimental');
   }
 
   // Mega Menu hides standard menu on desktop setting.
-  $use_megamenu = theme_get_setting('megamenu_toggle');
+  $use_megamenu = $theme_settings->getSetting('megamenu_toggle');
   if ($use_megamenu) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-use-megamenu');
@@ -409,14 +412,16 @@ function humsci_basic_is_there_extra_gap_in_main_region(NodeInterface $node): bo
  * Implements hook_preprocess_page().
  */
 function humsci_basic_preprocess_page(&$vars) {
+  $theme_settings = \Drupal::service(ThemeSettingsProvider::class);
+
   // Variant setting for the brand bar.
-  $bbv = theme_get_setting('brand_bar_variant_classname');
+  $bbv = $theme_settings->getSetting('brand_bar_variant_classname');
   if ($bbv) {
     $vars['brand_bar_variant_classname'] = 'su-brand-bar--' . $bbv;
   }
 
   // Variant setting for the global footer.
-  $gfv = theme_get_setting('global_footer_variant_classname');
+  $gfv = $theme_settings->getSetting('global_footer_variant_classname');
   if ($gfv) {
     $vars['global_footer_variant_classname'] = 'su-global-footer--' . $gfv;
   }
@@ -454,7 +459,7 @@ function humsci_basic_preprocess_page(&$vars) {
  */
 function humsci_basic_preprocess_block__system_branding_block(&$vars) {
   // Variant setting for the global lockup.
-  $vars['lockup'] = theme_get_setting('lockup');
+  $vars['lockup'] = \Drupal::service(ThemeSettingsProvider::class)->getSetting('lockup');
 }
 
 /**

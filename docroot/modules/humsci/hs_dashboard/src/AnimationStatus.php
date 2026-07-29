@@ -16,16 +16,15 @@ enum AnimationStatus: string {
   case NotSet = 'not set';
 
   /**
-   * Gets the animation status for a theme.
+   * Gets the animation status from a theme's animation_toggle setting value.
    *
-   * @param string $theme_name
-   *   The name of the theme to check.
+   * @param mixed $animation_setting
+   *   The raw value of the theme's animation_toggle setting.
    *
    * @return self
    *   The animation status.
    */
-  public static function fromTheme(string $theme_name): self {
-    $animation_setting = theme_get_setting('animation_toggle', $theme_name);
+  public static function fromSetting(mixed $animation_setting): self {
     return match ($animation_setting) {
       NULL => self::NotSet,
       TRUE, 1 => self::Enabled,

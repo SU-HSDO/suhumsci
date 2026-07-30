@@ -26,54 +26,42 @@ interface OptionProps {
   multiple?: boolean;
 }
 
-const SelectedItem = styled.span`
-  border: 1px solid #b6b1a9;
-  padding: 4px 8px;
-  margin-right: 5px;
-  border-radius: 4px;
-  white-space: nowrap;
-`;
+/** Returns the display label for a single option value, or empty string if not found. */
+const getOptionLabel = (
+  value: string,
+  options: SelectOptionDefinition<string>[],
+): string => options.find((o) => o.value === value)?.label ?? '';
 
-const renderSelectedValue = (
+/** Returns true if two string arrays contain the same values (order-independent). */
+const sameStringSet = (a: string[], b: string[]): boolean =>
+  a.length === b.length && [...a].sort().every((v, i) => v === [...b].sort()[i]);
+
+const getDisplayInfo = (
+  multiple: boolean,
   value: SelectValue<string, boolean>,
   options: SelectOptionDefinition<string>[],
-) => {
-  if (Array.isArray(value)) {
-    return value.map((item) => (
-      <SelectedItem key={item}>
-        {renderSelectedValue(item, options)}
-      </SelectedItem>
-    ));
-  }
-  const selectedOption = options.find((option) => option.value === value);
-  return selectedOption ? selectedOption.label : '';
-};
-
-const getDisplayText = (
-  multiple: boolean,
-  defaultValue: SelectValue<string, boolean>,
-  value: SelectValue<string, boolean>,
-  options: SelectOptionDefinition<string>[]
-): { text: string; isApplied: boolean } => {
+  autoSubmit: boolean,
+  defaultValue?: SelectValue<string, boolean>,
+): DisplayInfo => {
   if (multiple) {
     const current = (value as string[]) ?? [];
-    const defaultArray = (defaultValue as string[]) ?? [];
+    const committed = (defaultValue as string[]) ?? [];
     const count = current.length;
-
-    const isSame = current.length === defaultArray.length &&
-      [...current].sort().every((val, idx) => val === [...defaultArray].sort()[idx]);
-
+    const isApplied = autoSubmit || sameStringSet(current, committed);
     return {
-      text: `${count} filter${count === 1 ? '' : 's'} ${isSame ? 'applied' : 'selected'}`,
-      isApplied: isSame,
-    };
-  } else {
-    const isSame = value === defaultValue;
-    return {
-      text: isSame ? renderSelectedValue(value, options) as string : '1 filter selected',
-      isApplied: isSame,
+      text: `${count} filter${count === 1 ? '' : 's'} ${isApplied ? 'applied' : 'selected'}`,
+      isApplied,
     };
   }
+
+  const singleValue = value as string;
+  const isApplied = autoSubmit || singleValue === (defaultValue as string);
+  return {
+    text: isApplied
+      ? (singleValue === 'All' ? 'Any' : getOptionLabel(singleValue, options))
+      : '1 filter selected',
+    isApplied,
+  };
 };
 
 const StyledOption = styled.li<{
@@ -256,6 +244,7 @@ interface Props {
   value?: SelectValue<string, boolean>;
   required?: boolean;
   name: string;
+  autoSubmit?: boolean;
 }
 
 const SelectList = ({
@@ -266,6 +255,7 @@ const SelectList = ({
   required,
   defaultValue,
   name,
+  autoSubmit = true,
   ...props
 }: Props) => {
   const labelId = name;
@@ -368,19 +358,18 @@ const SelectList = ({
           }}
         >
           {optionChosen && (() => {
-            const { text, isApplied } = getDisplayText(multiple, defaultValue, value, options);
+            const { text, isApplied } = getDisplayInfo(multiple, value, options, autoSubmit, defaultValue);
             return (
-              <span style={{ overflow: 'hidden', maxWidth: 'calc(100% - 30px)', padding: '8px 5px 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                {isApplied && (
-                  <span class="select-preact__checkmark"></span>
-                )}
+              <span
+                className={`select-preact__option-label ${isApplied ? 'select-preact__checkmark' : ''}`}
+              >
                 {text}
               </span>
             );
           })()}
-          {!optionChosen && (
-            <span style={{ padding: '8px 5px 8px 0', color: '#4c4740' }}>
-              {multiple ? 'Choose one or more options' : 'Any'}
+          {!optionChosen && multiple && (
+            <span className='select-preact__option-label'>
+              Choose one or more options
             </span>
           )}
 
@@ -420,7 +409,7 @@ const SelectList = ({
           <SelectProvider value={contextValue}>
             {!required && !multiple && (
               <CustomOption
-                value=''
+                value='All'
                 rootRef={listboxRef}
                 id={`${name}-empty`}
               >
@@ -446,7 +435,7 @@ const SelectList = ({
         </ul>
       </div>
       {name && (
-        <input ref={inputRef} name={name} type="hidden" value={value ?? ''} />
+        <input ref={inputRef} name={name} type="hidden" value={value ?? ''} disabled />
       )}
     </div>
   );

@@ -27,7 +27,7 @@ class SettingsForm extends ConfigFormBase {
    *
    * @var \Drupal\user\RoleInterface[]
    */
-  private array $roles = [];
+  protected array $roles = [];
 
   /**
    * {@inheritdoc}

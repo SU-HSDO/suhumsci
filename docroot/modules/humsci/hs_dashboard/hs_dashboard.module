@@ -5,6 +5,7 @@
  * Custom functions for dashboard-related views and tasks.
  */
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
@@ -79,7 +80,7 @@ function hs_dashboard_views_data_alter(array &$data) {
 /**
  * Implements hook_entity_operation().
  */
-function hs_dashboard_entity_operation(EntityInterface $entity) {
+function hs_dashboard_entity_operation(EntityInterface $entity, CacheableMetadata $cacheability) {
   $operations = [];
   if ($entity->getEntityTypeId() == 'node') {
     $operations['revision_link'] = [

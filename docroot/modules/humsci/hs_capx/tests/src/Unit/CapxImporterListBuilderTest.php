@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\hs_capx\Unit;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -44,6 +45,7 @@ class CapxImporterListBuilderTest extends UnitTestCase {
     $entity->method('label')->willReturn('Test Entity');
     $entity->method('getOrganizations')->willReturn('BSWS');
     $entity->method('getWorkgroups')->willReturn('itservices:webservices');
+    $entity->method('access')->willReturn(AccessResult::allowed());
 
     $row = $list_builder->buildRow($entity);
     $this->assertCount(4, $row);

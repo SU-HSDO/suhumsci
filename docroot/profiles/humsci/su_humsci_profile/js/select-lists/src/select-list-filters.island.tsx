@@ -7,14 +7,17 @@ const FilterIsland = ({}) => {
   const [originalSelect, setOriginalSelect] = useState(null);
   const [label, setLabel] = useState('');
   const [selectedValues, setSelectedValues] = useState([]);
+  const [autoSubmit, setAutoSubmit] = useState(false);
 
   useEffect(() => {
     setOriginalSelect(ref.current.parentNode.querySelector('select'));
     setLabel(ref.current.parentNode.querySelector('label').textContent);
 
-    // Add the same min width of the selector to parent.
-    const parent = ref.current.parentNode;
-    parent.style.minWidth = '250px';
+    // Detect whether the closest views exposed form has BEF auto-submit.
+    const form = ref.current.closest('form, .views-exposed-form');
+    setAutoSubmit(
+      !!(form && (form.hasAttribute('data-bef-auto-submit') || form.closest('[data-bef-auto-submit]')))
+    );
 
     // Use visibility because when display none, the field isn't updated
     // sometimes after ajax.
@@ -87,6 +90,11 @@ const FilterIsland = ({}) => {
   const onSelectChange = (e, value) => {
     if (!originalSelect.getAttribute('multiple')) {
       originalSelect.value = value;
+
+      originalSelect.dispatchEvent(
+        new Event('change', { bubbles: true })
+      );
+
       return;
     }
 
@@ -94,11 +102,16 @@ const FilterIsland = ({}) => {
       option.getAttribute('value'),
     );
 
-    if (value.length === allValues.length) {
-      setSelectedValues(allValues);
-    } else {
-      setSelectedValues(value);
-    }
+    const nextValues = value.length === allValues.length ? allValues : value;
+
+    // Set the .selected property on each option (not just the attribute)
+    Array.from(originalSelect.options).forEach((option) => {
+      option.selected = nextValues.includes(option.getAttribute('value'));
+    });
+
+    originalSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+    setSelectedValues(nextValues);
   };
 
   return (
@@ -120,6 +133,7 @@ const FilterIsland = ({}) => {
               ? selectedValues
               : undefined
           }
+          autoSubmit={autoSubmit}
         />
       )}
     </div>
@@ -139,6 +153,17 @@ if (process.env.NODE_ENV === 'development') {
         try {
           contextClass = '.' + context.getAttribute('class').replace(/ /g, '.');
         } catch (e) {}
+
+        // Remove stale island instances left over from prior AJAX cycles.
+        // Without this, each AJAX re-attach accumulates extra <select> and
+        // hidden input elements in the DOM, polluting form serialization.
+        const selector = contextClass
+          ? `${contextClass} .select-preact`
+          : '.select-preact';
+        document.querySelectorAll(selector).forEach((wrapper) => {
+          const existing = wrapper.querySelector('combobox-select-list');
+          if (existing) existing.remove();
+        });
 
         const island = createIslandWebComponent(
           'combobox-select-list',

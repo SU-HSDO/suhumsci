@@ -29,11 +29,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TranslateCourseTag extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Entity Storage Service for hs_course_tag entity type.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $tagTranslation;
+  protected $entityTypeManager;
 
   /**
    * {@inheritdoc}
@@ -52,15 +52,16 @@ class TranslateCourseTag extends ProcessPluginBase implements ContainerFactoryPl
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->tagTranslation = $entity_type_manager->getStorage('hs_course_tag');
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    $tag_storage = $this->entityTypeManager->getStorage('hs_course_tag');
     /** @var \Drupal\hs_courses_importer\Entity\CourseTagInterface $tag_entity */
-    foreach ($this->tagTranslation->loadMultiple() as $tag_entity) {
+    foreach ($tag_storage->loadMultiple() as $tag_entity) {
       if ($value == $tag_entity->label()) {
         return $tag_entity->tag();
       }

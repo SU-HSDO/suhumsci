@@ -1,5 +1,5 @@
 diff --git a/core/modules/media_library/js/media_library.widget.js b/core/modules/media_library/js/media_library.widget.js
-index b9f5b8a5cb1..6205288c167 100644
+index b9f5b8a5cb17d8aaff7fa8ac863e8d3f0d15ec25..6205288c16787702fcf263f3add96b91b3e578a6 100644
 --- a/core/modules/media_library/js/media_library.widget.js
 +++ b/core/modules/media_library/js/media_library.widget.js
 @@ -72,6 +72,28 @@
@@ -32,87 +32,91 @@ index b9f5b8a5cb1..6205288c167 100644
     * Disable the open button when the user is not allowed to add more items.
     *
 diff --git a/core/modules/media_library/media_library.module b/core/modules/media_library/media_library.module
-index 0e12f031117..030cd00ebba 100644
+index 81c4f7900b6c25175245c1e0ad797df5722b32bf..aa8c8891ca6ca9da8d39fdee2ffa05e900ab9efd 100644
 --- a/core/modules/media_library/media_library.module
 +++ b/core/modules/media_library/media_library.module
-@@ -4,9 +4,19 @@
+@@ -4,13 +4,24 @@
   * @file
   */
  
 +use Drupal\Component\Utility\Html;
-+use Drupal\Component\Utility\UrlHelper;
-+use Drupal\Core\Access\AccessResult;
 +use Drupal\Core\Ajax\AjaxResponse;
 +use Drupal\Core\Ajax\CloseModalDialogCommand;
++use Drupal\Core\Ajax\InvokeCommand;
 +use Drupal\Core\Ajax\ReplaceCommand;
-+use Drupal\Core\Entity\EntityInterface;
++use Drupal\Core\Entity\EntityFormInterface;
  use Drupal\Core\Entity\Entity\EntityFormDisplay;
  use Drupal\Core\Entity\Entity\EntityViewDisplay;
 +use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
  use Drupal\Core\Form\FormStateInterface;
 +use Drupal\Core\Messenger\MessengerInterface;
- use Drupal\Core\Render\Element;
- use Drupal\Core\Template\Attribute;
++use Drupal\Core\Render\Element;
  use Drupal\image\Entity\ImageStyle;
-@@ -236,3 +246,88 @@ function _media_library_configure_view_display(MediaTypeInterface $type) {
-   ]);
-   return (bool) $display->save();
+ use Drupal\image\Plugin\Field\FieldType\ImageItem;
+ use Drupal\media\MediaTypeInterface;
+ use Drupal\media_library\Hook\MediaLibraryThemeHooks;
++use Drupal\media_library\MediaLibraryState;
++use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+ 
+ /**
+  * Prepares variables for the media library modal dialog.
+@@ -69,6 +80,106 @@ function _media_library_views_form_media_library_after_build(array $form, FormSt
+   return $form;
  }
-+
+ 
 +/**
 + * Implements hook_form_FORM_ID_alter() for media_form forms.
 + */
-+function media_library_form_media_form_alter(array &$form, FormStateInterface $form_state) {
++function media_library_form_media_form_alter(array &$form, FormStateInterface $form_state): void {
 +  // Make the media edit form work inside modal dialogs.
 +  $form_object = $form_state->getFormObject();
-+  if (is_object($form_object) && $form_object->getOperation() === 'edit') {
-+    $wrapper_format = \Drupal::request()->query->get(MainContentViewSubscriber::WRAPPER_FORMAT);
++  if (!$form_object instanceof EntityFormInterface || $form_object->getOperation() !== 'edit') {
++    return;
++  }
 +
-+    // Make sure that the media library opener is actually the 'field_widget'.
-+    // Get the request uri for the $form.
-+    $request_stack = \Drupal::service('request_stack');
-+    $currentRequest = $request_stack->getCurrentRequest();
-+    $mediaLibraryOpenerId = $currentRequest->getRequestUri();
++  try {
++    $state = MediaLibraryState::fromRequest(\Drupal::request());
++  }
++  catch (BadRequestHttpException) {
++    return;
++  }
++  catch (\InvalidArgumentException) {
++    return;
++  }
++  if ($state->getOpenerId() !== 'media_library.opener.field_widget') {
++    return;
++  }
 +
-+    // Extract and parse the 'media_library_opener_id' from the request URI.
-+    $queryString = parse_url($mediaLibraryOpenerId, PHP_URL_QUERY);
-+    parse_str($queryString ?? '', $queryParams);
-+    $mediaLibraryOpenerId = $queryParams['media_library_opener_id'] ?? NULL;
++  $wrapper_format = \Drupal::request()->query->get(MainContentViewSubscriber::WRAPPER_FORMAT);
++  if ($wrapper_format !== 'drupal_modal' && $wrapper_format !== 'drupal_ajax') {
++    return;
++  }
 +
-+    if (($wrapper_format === 'drupal_modal' || $wrapper_format === 'drupal_ajax') && $mediaLibraryOpenerId === 'media_library.opener.field_widget') {
-+      foreach (Element::children($form['actions']) as $key) {
-+        if ($key === 'submit') {
-+          // The default name is 'op', but we change it on purpose so that it is
-+          // easier to detect our modified AJAX call above.
-+          $form['actions'][$key]['#name'] = 'media_library_ajax_submit';
-+          $form['actions'][$key]['#ajax'] = [
-+            'callback' => 'media_library_media_form_ajax_submit',
-+          ];
++  foreach (Element::children($form['actions']) as $key) {
++    if ($key === 'submit') {
++      // Add an AJAX submit handler to the 'Save' button.
++      $form['actions'][$key]['#ajax'] = [
++        'callback' => '_media_library_media_form_ajax_submit',
++      ];
 +
-+          // Prevent the form that opened the modal dialog to refocus to the
-+          // 'Save' button at the bottom of the form.
-+          $form['actions'][$key]['#attributes']['data-disable-refocus'] = 'true';
++      // Prevent the form that opened the modal dialog to refocus to the
++      // 'Save' button at the bottom of the form.
++      $form['actions'][$key]['#attributes']['data-disable-refocus'] = 'true';
 +
-+          // Reattach dialog AJAX library.
-+          $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
-+
-+          // The data-drupal-selector needs to be the same between the various
-+          // AJAX requests. A bug in \Drupal\Core\Form\FormBuilder prevents that
-+          // from happening unless $form['#id'] is also the same. Normally, #id
-+          // is set to a unique HTML ID via Html::getUniqueId(), but here we
-+          // bypass that in order to work around the data-drupal-selector bug.
-+          // This is okay so long as we assume that this form only ever occurs
-+          // once on a page.
-+          // @todo: Remove once https://www.drupal.org/node/2897377 is fixed.
-+          $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
-+        }
-+        else {
-+          // We just want to allow the save action for now. Just hide other
-+          // actions like the delete action.
-+          $form['actions'][$key]['#access'] = FALSE;
-+        }
-+      }
++      // The data-drupal-selector needs to be the same between the various
++      // AJAX requests. A bug in \Drupal\Core\Form\FormBuilder prevents that
++      // from happening unless $form['#id'] is also the same. Normally, #id
++      // is set to a unique HTML ID via Html::getUniqueId(), but here we
++      // bypass that in order to work around the data-drupal-selector bug.
++      // This is okay so long as we assume that this form only ever occurs
++      // once on a page.
++      // @todo Remove once https://www.drupal.org/node/2897377 is fixed.
++      $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
++    }
++    else {
++      // We just want to allow the save action for now. Just hide other
++      // actions like the delete action.
++      $form['actions'][$key]['#access'] = FALSE;
 +    }
 +  }
 +}
@@ -122,30 +126,49 @@ index 0e12f031117..030cd00ebba 100644
 + *
 + * @ingroup form
 + */
-+function media_library_media_form_ajax_submit(array &$form, FormStateInterface $form_state) {
++function _media_library_media_form_ajax_submit(array &$form, FormStateInterface $form_state): AjaxResponse {
 +  $response = new AjaxResponse();
-+  if (!$form_state->hasAnyErrors()) {
-+    $media = $form_state->getFormObject()->getEntity();
-+    $render_array = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'media_library');
-+    $html = \Drupal::service('renderer')->render($render_array);
-+    $response->addCommand(new CloseModalDialogCommand());
-+    $response->addCommand(new ReplaceCommand('.selected-media', $html));
 +
-+    // Remove status messages when editing medias.
-+    \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_STATUS);
-+  }
-+  else {
++  if ($form_state->hasAnyErrors()) {
 +    $form['status_messages'] = [
 +      '#type' => 'status_messages',
 +      '#weight' => -1000,
 +    ];
 +    $response->addCommand(new ReplaceCommand('[data-drupal-selector="' . $form['#attributes']['data-drupal-selector'] . '"]', $form));
++
++    return $response;
 +  }
++
++  try {
++    $state = MediaLibraryState::fromRequest(\Drupal::request());
++  }
++  catch (BadRequestHttpException) {
++    return $response;
++  }
++  catch (\InvalidArgumentException) {
++    return $response;
++  }
++
++  $opener_parameters = $state->getOpenerParameters();
++  if (empty($opener_parameters['field_widget_id'])) {
++    return $response;
++  }
++
++  // Trigger the field widget to update itself and close the dialog.
++  $response->addCommand(new InvokeCommand("[data-media-library-widget-update=\"{$opener_parameters['field_widget_id']}\"]", 'trigger', ['mousedown']));
++  $response->addCommand(new CloseModalDialogCommand());
++
++  // Remove status messages when editing medias.
++  \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_STATUS);
++
 +  return $response;
 +}
 +
+ /**
+  * Submit callback for media type form.
+  */
 diff --git a/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php b/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
-index 3b36ee5e377..d9e71d33deb 100644
+index 41c028be3a12dd636643529dc7ef8afe6f3e0c5c..107708400fe07af9e03a347ffcb250f7abfcd613 100644
 --- a/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
 +++ b/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
 @@ -377,6 +377,55 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
@@ -286,10 +309,10 @@ index 3b36ee5e377..d9e71d33deb 100644
      $element['open_button'] = [
        '#type' => 'button',
 diff --git a/core/themes/claro/claro.theme b/core/themes/claro/claro.theme
-index 896a065742f..9007b0900d9 100644
+index 6c24db719baac84d6d58f52e2fab979c6e478c6b..a7049d9fc78a0b85a3126c3a39e8bb048a957fef 100644
 --- a/core/themes/claro/claro.theme
 +++ b/core/themes/claro/claro.theme
-@@ -1570,6 +1570,8 @@ function claro_preprocess_item_list__media_library_add_form_media_list(array &$v
+@@ -1452,6 +1452,8 @@ function claro_preprocess_item_list__media_library_add_form_media_list(array &$v
   * This targets each media item selected in an entity reference field.
   */
  function claro_preprocess_media_library_item__widget(array &$variables): void {
@@ -299,7 +322,7 @@ index 896a065742f..9007b0900d9 100644
    $variables['content']['remove_button']['#attributes']['class'][] = 'icon-link';
  }
 diff --git a/core/themes/claro/css/theme/media-library.css b/core/themes/claro/css/theme/media-library.css
-index a8f12da1f0b..ffa8444278f 100644
+index a8f12da1f0b5b75c8044591a05c45d8073b7d480..ffa8444278f5a367a8b1a09bc0ba68e6e9362cf7 100644
 --- a/core/themes/claro/css/theme/media-library.css
 +++ b/core/themes/claro/css/theme/media-library.css
 @@ -750,6 +750,12 @@
@@ -342,7 +365,7 @@ index a8f12da1f0b..ffa8444278f 100644
  }
  
 diff --git a/core/themes/claro/css/theme/media-library.pcss.css b/core/themes/claro/css/theme/media-library.pcss.css
-index 0ac3e4b8bbf..4c3b6297746 100644
+index 0ac3e4b8bbf19fbc0cfb92c1ec75cc7bba481bdc..4c3b62977461126316adfb5201cc1978c7518759 100644
 --- a/core/themes/claro/css/theme/media-library.pcss.css
 +++ b/core/themes/claro/css/theme/media-library.pcss.css
 @@ -696,6 +696,12 @@

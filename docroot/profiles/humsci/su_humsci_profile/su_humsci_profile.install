@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 
 /**
  * Implements hook_requirements().
@@ -20,7 +21,7 @@ function su_humsci_profile_requirements(mixed $phase) : array {
     $requirements['stanford_site_alias'] = [
       'title' => t('Stanford Site Alias'),
       'value' => $site_name,
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::Info,
     ];
   }
   return $requirements;

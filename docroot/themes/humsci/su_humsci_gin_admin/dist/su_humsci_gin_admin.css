@@ -311,15 +311,21 @@ form[data-has-imported-fields] .ck.ck-editor__main>.ck-read-only {
 }
 
 /* Make Media Library Take more space on small screen sizes */
-@media (max-width: 767px) {
-  .ui-dialog {
-    .ui-dialog-title {
-      margin: 0;
+@media (max-height: 700px) and (orientation: landscape) {
+  .ui-dialog.media-library-widget-modal {
+    display: flex;
+    flex-direction: column;
+    max-height: 90%;
+    top: 5% !important;
+
+    .ui-dialog-titlebar,
+    .ui-dialog-buttonpane {
+      flex: 0 0 auto;
     }
 
     .ui-dialog-content {
-      max-height: 500px !important;
-      height: 100% !important;
+      flex: 1 1 auto;
+      height: auto !important;
     }
   }
 }

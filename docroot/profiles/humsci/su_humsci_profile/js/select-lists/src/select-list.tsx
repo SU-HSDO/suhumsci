@@ -324,7 +324,6 @@ const SelectList = ({
       style={{
         position: 'relative',
         width: '100%',
-        minWidth: '250px',
       }}
     >
       {label && (
@@ -372,7 +371,6 @@ const SelectList = ({
               Choose one or more options
             </span>
           )}
-
           <ChevronDownIcon
             width={20}
             style={{

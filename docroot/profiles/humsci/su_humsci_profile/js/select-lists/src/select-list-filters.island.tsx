@@ -19,10 +19,6 @@ const FilterIsland = ({}) => {
       !!(form && (form.hasAttribute('data-bef-auto-submit') || form.closest('[data-bef-auto-submit]')))
     );
 
-    // Add the same min width of the selector to parent.
-    const parent = ref.current.parentNode;
-    parent.style.minWidth = '250px';
-
     // Use visibility because when display none, the field isn't updated
     // sometimes after ajax.
     const origSelect = ref.current.parentNode.querySelector('select');

@@ -31,47 +31,6 @@
     .hb-three-column--two-sidebar & {
       bottom: 0;
     }
-
-    // Update size of the buttons to respect the minimum size required for accessibility (24px).
-    .swiper-pagination-bullet {
-      width: hb-calculate-rems(24px);
-      height: hb-calculate-rems(24px);
-      padding: 0;
-      background-color: transparent;
-
-      &::before {
-        content: '';
-        display: block;
-        width: 100%;
-        height: hb-calculate-rems(4px);
-        background-color: transparent;
-        outline: 1px solid color('secondary');
-        margin-top: hb-calculate-rems(10px);
-
-        @include hb-themes(('colorful', 'airy')) {
-          border-radius: hb-calculate-rems(5px);
-        }
-      }
-
-      &:hover,
-      &:focus {
-        background-color: transparent;
-        transform: none;
-
-        &::before {
-          transform: scale(0.9);
-          background-color: color('secondary');
-        }
-      }
-
-      &.swiper-pagination-bullet-active {
-        background-color: transparent;
-
-        &::before {
-          background-color: color('secondary');
-        }
-      }
-    }
   }
 
   .swiper-button-prev {

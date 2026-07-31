@@ -99,7 +99,6 @@
     font-size: 0;
     border: none;
     cursor: pointer;
-    transition: hb-transition(opacity);
 
     @include grid-media-min('md') {
       width: hb-calculate-rems(40px);
@@ -177,41 +176,70 @@
       display: block;
       opacity: 1;
       background: unset;
-
-      background-color: color('gray', 'global');
-      padding: 0 hb-calculate-rems(22px);
-      margin: 0 hb-calculate-rems(8px);
-      transition: hb-transition(transform);
       border-radius: 0;
+      width: hb-calculate-rems(28px);
+      height: hb-calculate-rems(32px);
+      padding: hb-calculate-rems(12px) 0;
+      margin: 0 hb-calculate-rems(6px);
 
       @include hb-themes(('colorful', 'airy')) {
-        border-radius: hb-calculate-rems(5px);
-      }
-
-      &:hover {
-        transform: scale(0.9);
-
-        @include hb-traditional {
-          background-color: color('black', 'global');
+        &:first-child {
+          margin-left: hb-calculate-rems(12px);
         }
 
+        &:last-child {
+          margin-right: hb-calculate-rems(12px);
+        }
+      }
+
+      @include hb-traditional {
+        &:first-child {
+          margin-left: hb-calculate-rems(16px);
+        }
+
+        &:last-child {
+          margin-right: hb-calculate-rems(16px);
+        }
+      }
+
+      @include grid-media-min('md') {
+        margin-inline: hb-calculate-rems(8px);
+
+        &:first-child {
+          margin-left: 0;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      &::before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: hb-calculate-rems(8px);
+        outline: 1px solid color('gray-800', 'global');
+        margin-top: hb-calculate-rems(10px);
+
         @include hb-themes(('colorful', 'airy')) {
+          border-radius: hb-calculate-rems(100px);
+        }
+      }
+
+      &:hover,
+      &:focus {
+        &::before {
+          outline-color: color('secondary');
           background-color: color('secondary');
         }
       }
 
       // active button representing the slide currently on display
       &.swiper-pagination-bullet-active {
-        @include hb-traditional {
-          background-color: color('black', 'global');
-        }
-
-        @include hb-themes(('colorful', 'airy')) {
-          background-color: color('secondary');
-        }
-
-        &:hover {
-          transform: none;
+        &::before {
+          outline-color: color('gray-1000', 'global');
+          background-color: color('gray-1000', 'global');
         }
       }
     }

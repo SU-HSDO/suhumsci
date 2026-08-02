@@ -1,0 +1,61 @@
+diff --git a/core/modules/views/js/ajax_view.js b/core/modules/views/js/ajax_view.js
+index 1fbb7d1282d..bf4fd564e57 100644
+--- a/core/modules/views/js/ajax_view.js
++++ b/core/modules/views/js/ajax_view.js
+@@ -166,10 +166,45 @@
+           base: $(this).attr('id'),
+           element: this,
+         });
++
++        selfSettings.url = that.removeExposedFiltersQueryParameters(
++          selfSettings.url,
++          that.$exposed_form,
++        );
+         that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
+       });
+   };
+ 
++  /**
++   * Sanitizes the AJAX URL removing the parameters existing in the exposed form.
++   *
++   * @param {string} url
++   *   The AJAX URL.
++   * @param {jQuery} $exposedForm
++   *   The exposed form element.
++   *
++   * @return {string}
++   *   The modified AJAX URL without the query parameters existing in the exposed form.
++   */
++  Drupal.views.ajaxView.prototype.removeExposedFiltersQueryParameters =
++    function (url, $exposedForm) {
++      const urlObj = new URL(url, window.location.origin);
++      // Use copy to keep the iterator consistent.
++      const urlObjCopy = new URL(url, window.location.origin);
++      const cleanKeys = {};
++      const formData = new FormData($exposedForm.get(0));
++      Array.from(formData.keys()).forEach((key) => {
++        cleanKeys[key.split('[')[0]] = true;
++      });
++      urlObjCopy.searchParams.forEach((value, key) => {
++        if (cleanKeys[key.split('[')[0]]) {
++          urlObj.searchParams.delete(key);
++        }
++      });
++
++      return urlObj.pathname + urlObj.search;
++    };
++
+   /**
+    * @return {boolean}
+    *   If there is at least one parent with a view class return false.
+@@ -219,6 +254,10 @@
+       element: link,
+       httpMethod: 'GET',
+     });
++    selfSettings.url = this.removeExposedFiltersQueryParameters(
++      selfSettings.url,
++      this.$exposed_form,
++    );
+     this.pagerAjax = Drupal.ajax(selfSettings);
+   };
+ 

@@ -89,12 +89,6 @@ function humsci_basic_preprocess_html(&$vars) {
 
   $route_match = \Drupal::routeMatch();
 
-  // Add custom class when User page.
-  $route_name = $route_match->getRouteName();
-  if ($route_name == 'entity.user.canonical') {
-    $vars['attributes']['class'][] = 'page-user';
-  }
-
   $node = $route_match->getParameter('node');
 
   // Add body classes for full-width / main-region spacing gap detection.

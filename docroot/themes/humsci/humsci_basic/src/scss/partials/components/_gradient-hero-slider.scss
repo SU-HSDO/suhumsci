@@ -13,64 +13,10 @@
   @include swiper-container;
   @include swiper-pagination;
   @include swiper-arrows;
+
   position: relative;
 
   .hb-gradient-hero {
     margin-bottom: hb-calculate-rems(32px);
-  }
-
-  // styles specific to the main content area are applied by targeting
-  // the sidebar classes. We can use these classes to move the swiper pagination.
-  .swiper-pagination {
-    @include hb-themes(('colorful', 'airy')) {
-      bottom: hb-calculate-rems(16px);
-    }
-
-    :not(.hs-full-width).hb-three-column--no-sidebar &,
-    .hb-three-column--one-sidebar &,
-    .hb-three-column--two-sidebar & {
-      bottom: 0;
-    }
-  }
-
-  .swiper-button-prev {
-    @include hb-traditional {
-      bottom: hb-calculate-rems(220px);
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      bottom: hb-calculate-rems(236px);
-    }
-  }
-
-  .swiper-button-next {
-    @include hb-traditional {
-      bottom: hb-calculate-rems(116px);
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      bottom: hb-calculate-rems(132px);
-    }
-  }
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    @include grid-media-min('md') {
-      @include hb-traditional {
-        bottom: calc(50% - #{hb-calculate-rems(30px)});
-      }
-
-      @include hb-themes(('colorful', 'airy')) {
-        bottom: calc(50% - #{hb-calculate-rems(21px)});
-      }
-
-      // styles specific to the main content area are applied by targeting
-      // the sidebar classes. We can use these classes to move the swiper bullets.
-      :not(.hs-full-width).hb-three-column--no-sidebar &,
-      .hb-three-column--one-sidebar &,
-      .hb-three-column--two-sidebar & {
-        bottom: calc(50% - #{hb-calculate-rems(30px)});
-      }
-    }
   }
 }

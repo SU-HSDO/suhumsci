@@ -1,6 +1,7 @@
 @use '../functions/general' as *;
 @use '../functions/color' as *;
 @use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
 @use '../mixins/decorative' as *;
 @use '../mixins/icons' as *;
 
@@ -30,6 +31,7 @@ $container-medium: hb-calculate-rems(768px);
     .paragraph-item
     .hb-vertical-linked-card,
   &--uniform-height .field-hs-collection-items .paragraph-item .hb-card,
+  &--uniform-height .field-hs-collection-items .paragraph-item .hb-card--horizontal .hb-card__wrapper,
   &--uniform-height .hb-timeline,
   &--uniform-height .hb-timeline .hb-timelime__wrapper {
     height: 100%;
@@ -86,6 +88,10 @@ $container-medium: hb-calculate-rems(768px);
 
         &__graphics {
           margin: 0;
+
+          @include grid-media-min('md') {
+            align-self: stretch;
+          }
 
           img {
             height: 100%;
@@ -152,7 +158,7 @@ $container-medium: hb-calculate-rems(768px);
       &.hb-card--horizontal--left {
         .hb-card__content {
           @include hb-themes(('colorful', 'airy')) {
-            @container card (width > #{$container-small}) {
+            @include grid-media-min('md') {
               padding-inline: hb-calculate-rems(12px) hb-calculate-rems(24px);
             }
           }
@@ -160,7 +166,7 @@ $container-medium: hb-calculate-rems(768px);
 
         .hb-card__graphics {
           @include hb-themes(('airy', 'colorful')) {
-            @container card (width > #{$container-small}) {
+            @include grid-media-min('md') {
               padding-inline: 0 hb-calculate-rems(12px);
             }
           }
@@ -170,7 +176,7 @@ $container-medium: hb-calculate-rems(768px);
       &.hb-card--horizontal--right {
         .hb-card__content {
           @include hb-themes(('colorful', 'airy')) {
-            @container card (width > #{$container-small}) {
+            @include grid-media-min('md') {
               padding-inline: hb-calculate-rems(24px) hb-calculate-rems(12px);
             }
           }
@@ -178,7 +184,7 @@ $container-medium: hb-calculate-rems(768px);
 
         .hb-card__graphics {
           @include hb-themes(('airy', 'colorful')) {
-            @container card (width > #{$container-small}) {
+            @include grid-media-min('md') {
               padding-inline: hb-calculate-rems(12px) 0;
             }
           }

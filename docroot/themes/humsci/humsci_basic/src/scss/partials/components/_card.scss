@@ -36,14 +36,14 @@ $container-medium: hb-calculate-rems(768px);
   .hb-card__wrapper {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto 1fr;
 
     // stylelint-disable-next-line
     grid-template-areas:
       'a'
       'b';
 
-    @container card (width > #{$container-small}) {
+    @include grid-media-min('md') {
       align-items: start;
 
       grid-template-columns: repeat(12, 1fr);
@@ -59,7 +59,7 @@ $container-medium: hb-calculate-rems(768px);
 
 .hb-card--horizontal--right:has(.hb-card__graphics) {
   .hb-card__wrapper {
-    @container card (width > #{$container-small}) {
+    @include grid-media-min('md') {
       grid-template-areas: 'b b b b b b b a a a a a';
     }
   }
@@ -78,7 +78,7 @@ $container-medium: hb-calculate-rems(768px);
 
   .hb-card--horizontal &,
   .hb-card--horizontal-date-stacked & {
-    @container card (width > #{$container-medium}) {
+    @include grid-media-min('md') {
       margin-block-end: 0;
     }
   }
@@ -88,16 +88,28 @@ $container-medium: hb-calculate-rems(768px);
     align-self: flex-start;
 
     @include hb-themes(('colorful', 'airy')) {
-      @container card (width > #{$container-small}) {
-        padding-inline: 0 hb-calculate-rems(20px);
+      @include grid-media-min('md') {
+        padding-inline: 0 hb-calculate-rems(12px);
+      }
+    }
+
+    @include hb-traditional {
+      @include grid-media-min('md') {
+        padding-inline: 0 hb-calculate-rems(12px);
       }
     }
   }
 
   .hb-card--horizontal--right & {
     @include hb-themes(('colorful', 'airy')) {
-      @container card (width > #{$container-small}) {
-        padding-inline: hb-calculate-rems(20px) 0;
+      @include grid-media-min('md') {
+        padding-inline: hb-calculate-rems(12px) 0;
+      }
+    }
+
+    @include hb-traditional {
+      @include grid-media-min('md') {
+        padding-inline: hb-calculate-rems(12px) 0;
       }
     }
   }
@@ -181,44 +193,28 @@ $container-medium: hb-calculate-rems(768px);
 
   .hb-card--horizontal--left:has(.hb-card__graphics) & {
     @include hb-themes(('colorful', 'airy')) {
-      @container card (width > #{$container-small}) {
-        padding: 0 0 0 hb-calculate-rems(12px);
-      }
-
-      @container card (width > #{$container-medium}) {
-        padding: 0 0 0 hb-calculate-rems(20px);
+      @include grid-media-min('md') {
+        padding: 0 0 0 hb-calculate-rems(36px);
       }
     }
 
     @include hb-traditional {
-      @container card (width > #{$container-small}) {
+      @include grid-media-min('md') {
         padding: 0 0 0 hb-calculate-rems(20px);
-      }
-
-      @container card (width > #{$container-medium}) {
-        padding: 0 0 0 hb-calculate-rems(32px);
       }
     }
   }
 
   .hb-card--horizontal--right:has(.hb-card__graphics) & {
     @include hb-themes(('colorful', 'airy')) {
-      @container card (width > #{$container-small}) {
-        padding: 0 hb-calculate-rems(12px) 0 0;
-      }
-
-      @container card (width > #{$container-medium}) {
-        padding: 0 hb-calculate-rems(20px) 0 0;
+      @include grid-media-min('md') {
+        padding: 0 hb-calculate-rems(36px) 0 0;
       }
     }
 
     @include hb-traditional {
-      @container card (width > #{$container-small}) {
+      @include grid-media-min('md') {
         padding: 0 hb-calculate-rems(20px) 0 0;
-      }
-
-      @container card (width > #{$container-medium}) {
-        padding: 0 hb-calculate-rems(32px) 0 0;
       }
     }
   }

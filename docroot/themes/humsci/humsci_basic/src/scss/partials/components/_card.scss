@@ -226,7 +226,7 @@ $container-medium: hb-calculate-rems(768px);
   @include hb-themes(('airy', 'colorful')) {
     margin-block-end: hb-spacing-width('xs');
 
-    @container card (width > #{$container-medium}) {
+    @include grid-media-min('md') {
       margin-block-end: hb-spacing-width('sm');
     }
   }
@@ -339,7 +339,7 @@ $container-medium: hb-calculate-rems(768px);
     flex-wrap: wrap;
   }
 
-  @container card (width > #{$container-small}) {
+  @include grid-media-min('sm') {
     display: flex;
 
     // from grid--col 3 and above we'll display block
@@ -381,14 +381,14 @@ $container-medium: hb-calculate-rems(768px);
     &:not(:last-child) {
       margin-block-end: hb-calculate-rems(4px);
 
-      @container card (width > #{$container-small}) {
+      @include grid-media-min('sm') {
         margin-block-end: 0;
       }
     }
 
     // Adds a "pipe" after each field
     &::after {
-      @container card (width > #{$container-small}) {
+      @include grid-media-min('sm') {
         content: '';
         margin: 0 hb-calculate-rems(8px);
         border-left: $hb-thin-border;
@@ -561,7 +561,7 @@ $container-medium: hb-calculate-rems(768px);
     left: hb-calculate-rems(-10px);
     z-index: 5;
 
-    @container card (width > #{$container-small}) {
+    @include grid-media-min('sm') {
       bottom: hb-calculate-rems(22px);
       left: hb-calculate-rems(-14px);
     }
@@ -595,7 +595,7 @@ $container-medium: hb-calculate-rems(768px);
 
   .hb-card--horizontal--right & {
     @include hb-themes(('colorful', 'airy')) {
-      @container card (width > #{$container-small}) {
+      @include grid-media-min('sm') {
         left: hb-calculate-rems(6px);
       }
     }

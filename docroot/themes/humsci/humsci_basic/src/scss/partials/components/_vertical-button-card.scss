@@ -106,7 +106,7 @@ $container-small: hb-calculate-rems(576px);
     }
 
     .hb-card__content {
-      padding: hb-calculate-rems(18px);
+      padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px)
         hb-calculate-rems(35px)
         color-mix(in srgb, color('black', 'global') 10%, transparent);
@@ -118,9 +118,8 @@ $container-small: hb-calculate-rems(576px);
         background-color: color('primary-dark');
       }
 
-
-      @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
+      .field-hs-collection-items.item-per-row--4 & {
+        padding: hb-calculate-rems(18px);
       }
 
       .hb-raised-cards--uniform-height & {

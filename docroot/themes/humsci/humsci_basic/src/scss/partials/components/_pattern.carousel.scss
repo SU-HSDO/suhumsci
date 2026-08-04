@@ -396,18 +396,21 @@ $container-small: 576px;
   }
 
   // Styles for swiper slider pagination.
-  .swiper-pagination {
+  .swiper-controls-wrapper {
     .hs-full-width & {
-      @include hb-themes(('colorful', 'airy')) {
-        bottom: hb-calculate-rems(16px);
-      }
+      margin-top: 0;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
     }
+  }
 
-    :not(.hs-full-width).hb-three-column--no-sidebar &,
-    .hb-three-column--one-sidebar &,
-    .hb-three-column--two-sidebar & {
-      bottom: hb-calculate-rems(-8px);
-      position: relative;
+  .swiper-pagination {
+    @include grid-media-min('md') {
+      .hs-full-width & {
+        position: absolute;
+        bottom: 0;
+      }
     }
   }
 

@@ -16,7 +16,22 @@
 
   position: relative;
 
-  .hb-gradient-hero {
-    margin-bottom: hb-calculate-rems(32px);
+  // Styles for swiper slider pagination.
+  .swiper-controls-wrapper {
+    .hs-full-width & {
+      margin-top: 0;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  }
+
+  .swiper-pagination {
+    @include grid-media-min('md') {
+      .hs-full-width & {
+        position: absolute;
+        bottom: 0;
+      }
+    }
   }
 }

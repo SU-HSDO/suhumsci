@@ -31,6 +31,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: hb-calculate-rems(12px);
+    margin-top: hb-calculate-rems(6px);
+    position: relative;
   }
 }
 
@@ -81,8 +84,9 @@
     top: unset;
     bottom: unset;
     width: hb-calculate-rems(24px);
-    height: hb-calculate-rems(33px);
+    height: hb-calculate-rems(32px);
     padding: 0;
+    margin-block: 0;
     font-size: 0;
     border: none;
     cursor: pointer;
@@ -136,7 +140,10 @@
 
       @include grid-media-min('md') {
         background-size: hb-calculate-rems(22px) auto;
-        background-position: right;
+
+        @include hb-themes(('colorful', 'airy')) {
+          background-position: right;
+        }
       }
     }
 
@@ -163,60 +170,33 @@
   .swiper-pagination {
     display: flex;
     justify-content: center;
+    align-items: center;
     clip-path: inherit;
-    height: auto;
+    height: hb-calculate-rems(32px);
     width: auto;
     position: relative;
     bottom: unset;
     margin: 0;
     padding: 0;
+    gap: hb-calculate-rems(10px);
 
     @include grid-media-min('md') {
-      position: absolute;
       width: 100%;
-      bottom: 0;
+      height: auto;
+      gap: hb-calculate-rems(16px);
+      bottom: hb-calculate-rems(-8px);
     }
 
     .swiper-pagination-bullet {
-      display: block;
+      display: flex;
       opacity: 1;
       background: unset;
       border-radius: 0;
       width: hb-calculate-rems(28px);
-      margin: 0 hb-calculate-rems(6px);
-
-      @include hb-themes(('colorful', 'airy')) {
-        &:first-child {
-          margin-left: hb-calculate-rems(12px);
-        }
-
-        &:last-child {
-          margin-right: hb-calculate-rems(12px);
-        }
-      }
-
-      @include hb-traditional {
-        &:first-child {
-          margin-left: hb-calculate-rems(16px);
-        }
-
-        &:last-child {
-          margin-right: hb-calculate-rems(16px);
-        }
-      }
 
       @include grid-media-min('md') {
-        padding: hb-calculate-rems(12px) 0;
+        display: block;
         height: hb-calculate-rems(32px);
-        margin-inline: hb-calculate-rems(8px);
-
-        &:first-child {
-          margin-left: 0;
-        }
-
-        &:last-child {
-          margin-right: 0;
-        }
       }
 
       &::before {

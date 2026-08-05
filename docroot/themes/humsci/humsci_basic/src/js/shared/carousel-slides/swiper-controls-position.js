@@ -10,7 +10,7 @@
 
       once(
         'swiper-controls-position',
-        '.swiper-container.hs-slideshow',
+        '.swiper-container',
         context,
       ).forEach((slider) => {
         if (!slider) {

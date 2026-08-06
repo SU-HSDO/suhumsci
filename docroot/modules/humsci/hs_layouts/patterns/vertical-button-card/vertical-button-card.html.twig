@@ -1,40 +1,38 @@
 <div class="hb-card hb-vertical-button-card">
-  <div class="hb-card__content-wrapper">
-    {% if image %}
-      <div class="hb-card__graphics">
-        <div class="hb-card__img">
-          {{ image }}
+  {% if image %}
+    <div class="hb-card__graphics">
+      <div class="hb-card__img">
+        {{ image }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if title or description or button %}
+    <div class="hb-card__content">
+      {% if title %}
+        <div class="hb-card__title">
+          {% if title|render matches '/<\\/h\\d>/' %}
+            {{ title }}
+          {% else %}
+            <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
+          {% endif %}
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
 
-    {% if title or description or button %}
-      <div class="hb-card__content">
-        {% if title %}
-          <div class="hb-card__title">
-            {% if title|render matches '/<\\/h\\d>/' %}
-              {{ title }}
-            {% else %}
-              <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
-            {% endif %}
-          </div>
-        {% endif %}
+      {% if description %}
+        <div class="hb-card__description">{{ description }}</div>
+      {% endif %}
 
-        {% if description %}
-          <div class="hb-card__description">{{ description }}</div>
-        {% endif %}
-
-        {% if button %}
-          <div class="hs-button">
-            {% if button.field_hs_postcard_link %}
-              {% set link = button.field_hs_postcard_link[0] %}
-              <a href="{{ link['#url'].toString() }}" class="hb-card__link">{{ link['#title'] }}</a>
-            {% else %}
-              {{ button }}
-            {% endif %}
-          </div>
-        {% endif %}
-      </div>
-    {% endif %}
-  </div>
+      {% if button %}
+        <div class="hs-button">
+          {% if button.field_hs_postcard_link %}
+            {% set link = button.field_hs_postcard_link[0] %}
+            <a href="{{ link['#url'].toString() }}" class="hb-card__link">{{ link['#title'] }}</a>
+          {% else %}
+            {{ button }}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
 </div>

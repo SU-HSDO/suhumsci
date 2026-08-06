@@ -11,6 +11,7 @@
         const toggleButton = caption.querySelector('.toggle-caption__toggle');
         const content = caption.querySelector('.toggle-caption__content');
         const spotlight = caption.closest('.hb-spotlight--expanded');
+        const carousel = caption.closest('.paragraph--type--hs-carousel .hb-hero-overlay');
         const mobileView = window.matchMedia('(max-width: 1293px)');
         const showLabel = toggleButton?.dataset.showLabel || 'Show image caption';
         const hideLabel = toggleButton?.dataset.hideLabel || 'Hide image caption';
@@ -55,7 +56,8 @@
             // 1. It's long enough.
             // 2. Or it's inside a spotlight on a mobile viewport.
             const collapsible = height >= (isColorful ? 28 : 27)
-              || (spotlight && mobileView.matches && isColorful);
+              || (spotlight && mobileView.matches && isColorful)
+              || (carousel && mobileView.matches && isColorful);
 
             if (collapsible) {
               caption.classList.add('collapsible-caption');

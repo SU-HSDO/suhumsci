@@ -1,4 +1,5 @@
 {%- set attributes = attributes.addClass('hb-hero-overlay') -%}
+{%- set heading_tag = heading_tag|default('h2') -%}
 
 {% set text_content = overlay_text %}
 {% if overlay_text['field_hs_hero_title'] is defined and overlay_text['field_hs_hero_title'][0] is defined %}
@@ -10,14 +11,22 @@
   {% endset %}
 {% endif %}
 
+{% if text_content is empty %}
+  {% set attributes = attributes.addClass('hb-hero-overlay--no-text') -%}
+{% endif %}
+
 {% apply spaceless %}
   <div{{ attributes }}>
-    <div class="hb-hero-overlay__image-wrapper">
-      {{ image }}
-    </div>
+    <div class="hb-hero-overlay__inner">
+      <div class="hb-hero-overlay__image-wrapper">
+        {{ image }}
+      </div>
 
-    <div class="hb-hero-overlay__text">
-      {{ text_content }}
+      {% if text_content is not empty %}
+        <div class="hb-hero-overlay__text">
+          {{ text_content }}
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endapply %}

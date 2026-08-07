@@ -24,33 +24,18 @@ $container-sidebar: 880px;
     }
   }
 
-  // swiper pagination do not display in mobile
-  .swiper-pagination {
-    @include hb-themes(('colorful', 'airy')) {
-      bottom: hb-calculate-rems(38px);
-    }
-
-    @include hb-traditional {
-      bottom: hb-calculate-rems(20px);
-    }
-
-    @include grid-media-max('sm') {
-      @include visually-hidden;
-    }
-  }
-
-  &:has(.hb-spotlight--expanded) {
+  @include grid-media-min('md') {
     .swiper-pagination {
-      bottom: hb-calculate-rems(21px);
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: hb-calculate-rems(38px);
+      }
+
+      @include hb-traditional {
+        bottom: hb-calculate-rems(20px);
+      }
     }
-  }
 
-  .swiper-pagination-bullet {
-    height: hb-calculate-rems(4.5px);
-  }
-
-  &:has(.hb-spotlight--expanded):has(.field-media-image-caption) {
-    @include grid-media-min('md') {
+    &:has(.hb-spotlight--expanded):has(.field-media-image-caption) {
       @include hb-themes(('colorful', 'airy')) {
         @container spotlightslider (width < #{$container-sidebar}) {
           .swiper-button-prev,
@@ -67,26 +52,6 @@ $container-sidebar: 880px;
   @media only screen and (max-width: 767px) {
     .hb-spotlight {
       height: 100%;
-    }
-
-    .swiper-button-prev {
-      @include hb-traditional {
-        bottom: 15% !important;
-      }
-
-      @include hb-themes(('colorful', 'airy')) {
-        bottom: 25% !important;
-      }
-    }
-
-    .swiper-button-next {
-      @include hb-traditional {
-        bottom: 55% !important;
-      }
-
-      @include hb-themes(('colorful', 'airy')) {
-        bottom: 55% !important;
-      }
     }
   }
 }

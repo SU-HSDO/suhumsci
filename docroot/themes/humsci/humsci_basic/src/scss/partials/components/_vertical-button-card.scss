@@ -62,7 +62,7 @@ $container-small: hb-calculate-rems(576px);
 
     .hs-button {
       position: relative;
-      margin-top: auto;
+      margin-block-start: auto;
       margin-inline: hb-calculate-rems(-24px);
 
       a,
@@ -77,7 +77,7 @@ $container-small: hb-calculate-rems(576px);
 
       a[href*="//"].hs-external-link,
       .hs-external-link a[href*="//"] {
-        margin-right: 0;
+        margin-inline-end: 0;
 
         --link-base-current-color: #{color('secondary')};
         --link-base-hover-current-color: #{color('white', 'global')};
@@ -138,7 +138,9 @@ $container-small: hb-calculate-rems(576px);
 
     &:has(.hb-card__graphics) {
       .hb-card__content {
-        padding-top: hb-calculate-rems(62px);
+        &, .field-hs-collection-items.item-per-row--4 & {
+          padding-block-start: hb-calculate-rems(62px);
+        }
       }
     }
 
@@ -169,7 +171,7 @@ $container-small: hb-calculate-rems(576px);
 
       a[href*="//"].hs-external-link,
       .hs-external-link a[href*="//"] {
-        margin-right: 0;
+        margin-inline-end: 0;
         color: color('white', 'global');
 
         --link-base-current-color: #{color('white', 'global')};

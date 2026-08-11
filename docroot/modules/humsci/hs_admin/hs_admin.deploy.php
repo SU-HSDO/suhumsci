@@ -605,3 +605,38 @@ function hs_admin_deploy_10013(): string {
     ? 'Manage Training and Manage Project shortcuts not found; nothing to delete.'
     : 'Deleted shortcuts: ' . implode(', ', $deleted) . '.';
 }
+
+/**
+ * Ensure the Algolia search server and index ship disabled.
+ *
+ * The config_ignore module excludes the status key of both entities so each
+ * site can turn Algolia on independently. The per-key syntax has a side
+ * effect: when the configuration does not yet exist in active storage,
+ * config_ignore strips the ignored key from the imported data instead of
+ * preserving it, and Drupal's
+ * default for a config entity status is TRUE. Without this hook every existing
+ * site would enable the Algolia server and index the first time it imported
+ * this configuration. Fresh sites are unaffected because hs_algolia creates
+ * both entities from its config/install before the first import.
+ *
+ * The raw configuration is written rather than disabling the config entities,
+ * because Index::postSave() and Server::postSave() tear down tracker state and
+ * call a backend that has no credentials yet.
+ */
+function hs_admin_deploy_10014(): string {
+  $disabled = [];
+
+  foreach (['search_api.server.hs_algolia', 'search_api.index.hs_algolia'] as $name) {
+    $config = \Drupal::configFactory()->getEditable($name);
+    if ($config->isNew() || !$config->get('status')) {
+      continue;
+    }
+
+    $config->set('status', FALSE)->save();
+    $disabled[] = $name;
+  }
+
+  return empty($disabled)
+    ? 'Algolia server and index already disabled; no changes made.'
+    : 'Disabled: ' . implode(', ', $disabled) . '.';
+}

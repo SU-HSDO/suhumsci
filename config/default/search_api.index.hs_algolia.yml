@@ -1,0 +1,277 @@
+uuid: 8567e76a-ae28-4d90-8b6e-ea7472fd33d6
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.storage.node.field_hs_course_tags
+    - field.storage.node.field_hs_event_audience
+    - field.storage.node.field_hs_event_category
+    - field.storage.node.field_hs_event_date
+    - field.storage.node.field_hs_event_type
+    - field.storage.node.field_hs_news_categories
+    - field.storage.node.field_hs_news_date
+    - field.storage.node.field_hs_person_affiliation
+    - field.storage.node.field_hs_person_department
+    - field.storage.node.field_hs_person_staff_type
+    - field.storage.node.field_hs_person_student_type
+    - field.storage.node.field_hs_person_title
+    - field.storage.node.field_hs_publication_type
+    - field.storage.node.field_hs_publication_year
+    - search_api.server.hs_algolia
+  module:
+    - node
+    - taxonomy
+id: hs_algolia
+name: Algolia
+description: 'Public content pushed to Algolia. Runs alongside the database index, which continues to serve the site search page.'
+read_only: false
+field_settings:
+  changed:
+    label: Updated
+    datasource_id: 'entity:node'
+    property_path: changed
+    type: date
+    dependencies:
+      module:
+        - node
+  course_tags:
+    label: 'Course Tags'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_course_tags:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_course_tags
+      module:
+        - taxonomy
+  created:
+    label: 'Authored on'
+    datasource_id: 'entity:node'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - node
+  event_audience:
+    label: 'Event Audience'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_event_audience:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_event_audience
+      module:
+        - taxonomy
+  event_category:
+    label: 'Event Category'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_event_category:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_event_category
+      module:
+        - taxonomy
+  event_start:
+    label: 'Event Date'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_event_date:value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_hs_event_date
+  event_type:
+    label: 'Event Type'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_event_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_event_type
+      module:
+        - taxonomy
+  html:
+    label: 'Rendered HTML output'
+    property_path: rendered_item
+    type: string
+    configuration:
+      roles:
+        - anonymous
+      view_mode:
+        'entity:node':
+          hs_basic_page: search_index
+          hs_course: search_index
+          hs_event: search_index
+          hs_event_series: search_index
+          hs_news: search_index
+          hs_person: search_index
+          hs_publications: search_index
+          hs_research: search_index
+  image:
+    label: Image
+    property_path: custom_value
+    type: string
+    configuration:
+      value: '[node:field_hs_event_image:entity:field_media_image:horizontal_card_landscape_md_2x|node:field_hs_event_series_image:entity:field_media_image:horizontal_card_landscape_md_2x|node:field_hs_news_image:entity:field_media_image:horizontal_card_landscape_md_2x|node:field_hs_person_image:entity:field_media_image:horizontal_card_landscape_md_2x|node:field_hs_publication_image:entity:field_media_image:horizontal_card_landscape_md_2x]'
+  news_category:
+    label: 'News Category'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_news_categories:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_news_categories
+      module:
+        - taxonomy
+  news_date:
+    label: 'News Date'
+    datasource_id: 'entity:node'
+    property_path: field_hs_news_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_hs_news_date
+  person_affiliation:
+    label: 'Person Affiliation'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_person_affiliation:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_person_affiliation
+      module:
+        - taxonomy
+  person_department:
+    label: 'Person Department'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_person_department:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_person_department
+      module:
+        - taxonomy
+  person_staff_type:
+    label: 'Person Staff Type'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_person_staff_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_person_staff_type
+      module:
+        - taxonomy
+  person_student_type:
+    label: 'Person Student Type'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_person_student_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_person_student_type
+      module:
+        - taxonomy
+  person_title:
+    label: 'Person Title'
+    datasource_id: 'entity:node'
+    property_path: field_hs_person_title
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_person_title
+  publication_type:
+    label: 'Publication Type'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_publication_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_publication_type
+      module:
+        - taxonomy
+  publication_year:
+    label: 'Publication Year'
+    datasource_id: 'entity:node'
+    property_path: field_hs_publication_year
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_hs_publication_year
+  site_name:
+    label: 'Site Name'
+    property_path: custom_value
+    type: string
+    configuration:
+      value: '[site:name]'
+  summary:
+    label: Summary
+    property_path: custom_value
+    type: string
+    configuration:
+      value: '[node:summary]'
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
+  type:
+    label: 'Content Type'
+    property_path: custom_value
+    type: string
+    configuration:
+      value: '[node:content-type:name]'
+  url:
+    label: 'Page URL'
+    property_path: custom_value
+    type: string
+    configuration:
+      value: '[node:url:absolute]'
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - hs_basic_page
+        - hs_course
+        - hs_event
+        - hs_event_series
+        - hs_news
+        - hs_person
+        - hs_publications
+        - hs_research
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  custom_value: {  }
+  entity_status: {  }
+  html_filter:
+    weights:
+      preprocess_index: -15
+    all_fields: true
+    fields:
+      - html
+      - summary
+      - title
+    title: false
+    alt: false
+    tags: {  }
+  language_with_fallback: {  }
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  cron_limit: 50
+  delete_on_fail: true
+  index_directly: false
+  track_changes_in_references: true
+  algolia_index_name: ''
+  algolia_index_batch_deletion: '1'
+  object_id_field: uuid
+server: hs_algolia

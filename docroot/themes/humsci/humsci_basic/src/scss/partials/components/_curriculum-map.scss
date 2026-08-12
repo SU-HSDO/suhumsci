@@ -21,6 +21,11 @@ $cmap-colors: (
   > h2 {
     margin-block: 0 hb-calculate-rems(24px);
   }
+
+  // Curriculum Map Intro text.
+  .field-hs-cmap-intro {
+    margin-bottom: hb-calculate-rems(32px);
+  }
 }
 
 // Curriculum map Year component.
@@ -29,6 +34,38 @@ $cmap-colors: (
 
   > h3 {
     margin-block: 0 hb-calculate-rems(20px);
+  }
+
+  // Year Introduction text.
+  .field-hs-cmap-year-intro {
+    margin-bottom: hb-calculate-rems(36px);
+  }
+
+  // Year Footnotes.
+  .field-hs-cmap-year-footnotes {
+    border-left: 1px solid color('gray-800', 'global');
+    margin-top: hb-calculate-rems(52px);
+    padding-left: hb-calculate-rems(16px);
+    margin-left: hb-calculate-rems(26px);
+    font-size: hb-calculate-rems(16px);
+    line-height: 135%;
+
+    // Making a little smaller for footnotes
+    // to make sense with the new font size.
+    ul {
+      li::before {
+        height: hb-calculate-rems(5px);
+        width: hb-calculate-rems(5px);
+        top: hb-calculate-rems(5px);
+      }
+    }
+
+    ol {
+      li::before {
+        font-size: hb-calculate-rems(14px);
+        top: 0;
+      }
+    }
   }
 
   // Quarter grid.

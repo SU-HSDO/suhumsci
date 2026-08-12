@@ -1,0 +1,45 @@
+From a951d32bacce23236f6b63d1b9902f95947be1bb Mon Sep 17 00:00:00 2001
+From: David Hasell <49118-qdoscc@users.noreply.drupalcode.org>
+Date: Tue, 11 Mar 2025 10:10:58 +0000
+Subject: [PATCH] Fix for ArgumentCountError Too few arguments to function
+ Drupal\Core\Form\ConfigFormBase::__construct() in
+ Domain301RedirectConfigForm.php
+
+---
+ src/Form/Domain301RedirectConfigForm.php | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/Form/Domain301RedirectConfigForm.php b/src/Form/Domain301RedirectConfigForm.php
+index 4df92d2..e7f7ae6 100644
+--- a/src/Form/Domain301RedirectConfigForm.php
++++ b/src/Form/Domain301RedirectConfigForm.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\domain_301_redirect\Form;
+ 
+ use Drupal\Core\Config\ConfigFactoryInterface;
++use Drupal\Core\Config\TypedConfigManagerInterface;
+ use Drupal\Core\Datetime\DateFormatterInterface;
+ use Drupal\Core\Form\ConfigFormBase;
+ use Drupal\Core\Form\FormStateInterface;
+@@ -41,8 +42,8 @@ class Domain301RedirectConfigForm extends ConfigFormBase {
+    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+    *   The date formatter.
+    */
+-  public function __construct(ConfigFactoryInterface $config_factory, Domain301RedirectManager $domain_301_redirect_manager, DateFormatterInterface $date_formatter) {
+-    parent::__construct($config_factory);
++  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, Domain301RedirectManager $domain_301_redirect_manager, DateFormatterInterface $date_formatter) {
++    parent::__construct($config_factory, $typedConfigManager);
+     $this->redirectManager = $domain_301_redirect_manager;
+     $this->dateFormatter = $date_formatter;
+   }
+@@ -53,6 +54,7 @@ class Domain301RedirectConfigForm extends ConfigFormBase {
+   public static function create(ContainerInterface $container) {
+     return new static(
+       $container->get('config.factory'),
++      $container->get('config.typed'),
+       $container->get('domain_301_redirect.manager'),
+       $container->get('date.formatter')
+     );
+-- 
+GitLab
+

@@ -148,9 +148,6 @@ class FlexiblePageCest {
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForElementVisible('.media-library-item__preview img');
-    $I->executeJS('window.scrollTo(0,0);');
-    $I->click('#field-hs-page-components-add-more-wrapper > ul:nth-child(1) > li:nth-child(2)');
-    $I->waitForText('Display Mode');
     $I->click('Save');
 
     $I->waitForText('Demo Basic Page');

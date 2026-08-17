@@ -40,6 +40,20 @@
     margin-top: hb-calculate-rems(16px);
     position: relative;
   }
+
+  // swiper-controls-position.js groups these into .swiper-controls-wrapper
+  // on mobile, but that only happens once Drupal behaviors attach. Hide them
+  // in their pre-grouped position until then, so slower devices/connections
+  // don't show a flash of the ungrouped layout before it snaps into place.
+  // Once JS moves an element into the wrapper it's no longer a direct child
+  // of .swiper-container, so this selector stops matching and it appears.
+  @include grid-media-max('sm') {
+    .swiper-container > .swiper-button-prev,
+    .swiper-container > .swiper-button-next,
+    .swiper-container > .swiper-pagination {
+      visibility: hidden;
+    }
+  }
 }
 
 // arrows

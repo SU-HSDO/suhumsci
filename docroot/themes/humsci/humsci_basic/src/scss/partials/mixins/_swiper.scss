@@ -3,6 +3,7 @@
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
 @use '../functions/color' as *;
+@use '../mixins/general' as *;
 @use 'theme' as *;
 @use 'breakpoints' as *;
 @use 'buttons' as *;
@@ -16,11 +17,15 @@
 
   .swiper-container {
     margin: 0;
+
+    // Space below so the focus outline doesn't get cut-off.
+    padding-block-end: hb-calculate-rems(12px);
   }
 
   // Fix for single slide swiper instances, to match old slick styles.
   .swiper-container:has(.swiper-slide:first-child:last-child) {
     overflow: visible;
+    padding-block-end: 0;
 
     .swiper-wrapper {
       display: block;
@@ -32,7 +37,7 @@
     align-items: center;
     justify-content: center;
     gap: hb-calculate-rems(12px);
-    margin-top: hb-calculate-rems(6px);
+    margin-top: hb-calculate-rems(16px);
     position: relative;
   }
 }
@@ -183,7 +188,7 @@
 
     @include grid-media-max('sm') {
       &:has(.swiper-pagination-bullet:nth-child(6)) {
-        display: none;
+        @include visually-hidden;
       }
     }
 

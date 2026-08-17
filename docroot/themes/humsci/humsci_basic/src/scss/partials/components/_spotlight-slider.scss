@@ -25,16 +25,6 @@ $container-sidebar: 880px;
   }
 
   @include grid-media-min('md') {
-    .swiper-pagination {
-      @include hb-themes(('colorful', 'airy')) {
-        bottom: hb-calculate-rems(38px);
-      }
-
-      @include hb-traditional {
-        bottom: hb-calculate-rems(20px);
-      }
-    }
-
     &:has(.hb-spotlight--expanded):has(.field-media-image-caption) {
       @include hb-themes(('colorful', 'airy')) {
         @container spotlightslider (width < #{$container-sidebar}) {

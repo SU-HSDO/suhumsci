@@ -12,16 +12,21 @@
 {% endif %}
 
 {% if text_content is empty %}
-  {% set attributes = attributes.addClass('hb-hero-overlay--no-text') -%}
+	{% set attributes = attributes.addClass('hb-hero-overlay--no-text') -%}
+{% endif %}
+
+{% if image is empty %}
+	{% set attributes = attributes.addClass('hb-hero-overlay--no-image') -%}
 {% endif %}
 
 {% apply spaceless %}
   <div{{ attributes }}>
     <div class="hb-hero-overlay__inner">
-      <div class="hb-hero-overlay__image-wrapper">
-        {{ image }}
-      </div>
-
+      {% if image is not empty %}
+        <div class="hb-hero-overlay__image-wrapper">
+          {{ image }}
+        </div>
+      {% endif %}
       {% if text_content is not empty %}
         <div class="hb-hero-overlay__text">
           {{ text_content }}

@@ -142,7 +142,7 @@ $container-small: 576px;
     @include hb-themes(('colorful', 'airy')) {
       display: flex;
       flex-direction: column;
-      max-width: hb-calculate-rems(1600px);
+      max-width: hb-calculate-rems(1440px);
       padding-bottom: hb-calculate-rems(24px);
       padding-inline: hb-calculate-rems(10px);
       position: relative;
@@ -209,16 +209,13 @@ $container-small: 576px;
 
       img {
         height: auto;
-        max-height: hb-calculate-rems(490px);
         object-fit: cover;
-        aspect-ratio: 1.82;
 
-        @container carousel (width > #{$container-small}) {
-          aspect-ratio: 1.80;
-        }
-
-        @container carousel (width > #{$container-medium}) {
-          aspect-ratio: 1.82;
+        @container carousel (width > #{$container-xlarge}) {
+          min-width: hb-calculate-rems(786px);
+          max-width: hb-calculate-rems(1228px);
+          min-height: hb-calculate-rems(420px);
+          max-height: hb-calculate-rems(656px);
         }
 
         &.animate {
@@ -260,7 +257,6 @@ $container-small: 576px;
         padding: hb-calculate-rems(16px) hb-calculate-rems(24px) hb-calculate-rems(20px);
         width: calc(100% - hb-calculate-rems(128px)) !important;
         margin: hb-calculate-rems(-32px) auto 0 !important;
-        max-width: 100% !important;
       }
 
       @container carousel (width > #{$container-large}) {

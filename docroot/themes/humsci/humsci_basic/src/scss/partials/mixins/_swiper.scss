@@ -149,7 +149,13 @@
 
     // shared arrow properties
     &::before {
-      @include hb-icon-background('slider-caret', 'black');
+      @include hb-traditional {
+        @include hb-icon-background('slider-caret', 'black');
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-icon-background('slider-caret-round', 'black');
+      }
 
       content: '';
       position: absolute;
@@ -168,11 +174,17 @@
     }
 
     &:hover,
-    &:focus {
+    &:focus-visible {
       background-color: color('white', 'global');
 
       &::before {
-        @include hb-icon-background('slider-caret-bold', 'link-base');
+        @include hb-traditional {
+          @include hb-icon-background('slider-caret-bold', 'link-base');
+        }
+
+        @include hb-themes(('colorful', 'airy')) {
+          @include hb-icon-background('slider-caret-round-bold', 'link-base');
+        }
       }
     }
 

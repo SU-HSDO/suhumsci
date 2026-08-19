@@ -712,3 +712,36 @@ function hs_paragraph_types_update_10030() {
     '%instances' => implode(', ', $deleted_instances),
   ]);
 }
+
+/**
+ * Removes the obsolete "image_gallery" paragraphs behavior plugin.
+ */
+function hs_paragraph_types_update_10031() {
+  $config = \Drupal::configFactory()
+    ->getEditable('paragraphs.paragraphs_type.stanford_gallery');
+
+  if ($config->isNew() || $config->get('behavior_plugins.image_gallery') === NULL) {
+    return t('The image_gallery behavior plugin was already removed.');
+  }
+
+  // The plugin class is gone, so the paragraphs type cannot be saved through
+  // the entity API: its plugin collection would try to instantiate
+  // "image_gallery" and throw a PluginNotFoundException. Edit the raw config
+  // instead, including the module dependency the plugin was responsible for.
+  $config->clear('behavior_plugins.image_gallery');
+
+  $modules = array_values(array_diff(
+    $config->get('dependencies.module') ?: [],
+    ['hs_paragraph_types']
+  ));
+  if ($modules) {
+    $config->set('dependencies.module', $modules);
+  }
+  else {
+    $config->clear('dependencies.module');
+  }
+
+  $config->save();
+
+  return t('Removed the image_gallery behavior plugin from the stanford_gallery paragraph type.');
+}

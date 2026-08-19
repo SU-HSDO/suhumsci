@@ -15,7 +15,6 @@
 
 $container-xlarge: 1200px;
 $container-large: 992px;
-$container-caption: 650px;
 $container-medium: 769px;
 $container-small: 576px;
 
@@ -42,28 +41,20 @@ $container-small: 576px;
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
 
-      background-color: color('banner-background');
-      padding-inline: hb-calculate-rems(6px);
-      padding-bottom: hb-calculate-rems(8px);
-      min-height: auto;
       height: auto;
-
-      @container carousel (width > #{$container-small}) {
-        padding-inline: hb-calculate-rems(10px);
-        padding-bottom: hb-calculate-rems(10px);
-      }
-
-      @container carousel (width > #{$container-medium}) {
-        padding-inline: hb-calculate-rems(32px) hb-calculate-rems(48px);
-        padding-bottom: 0;
-      }
-
-      @container carousel (width > #{$container-xlarge}) {
-        padding-inline: 0;
-      }
+      min-height: auto;
 
       &::before {
-        display: none;
+        $offset: clamp(#{hb-calculate-rems(100px)}, 18cqi, #{hb-calculate-rems(200px)});
+
+        background-color: color('gray-light', 'global');
+        height: calc(100% - #{$offset});
+        top: $offset;
+
+        @container carousel (width > #{$container-xlarge}) {
+          height: 100%;
+          top: 0;
+        }
       }
     }
 
@@ -79,52 +70,65 @@ $container-small: 576px;
       }
     }
 
-    // Styles for the collapsible caption when the hero has a text box.
-    .hb-media-image .field-media-image-caption.collapsible-caption {
+    // Styles for the collapsible caption.
+    .hb-media-image .field-media-image-caption {
       @include hb-themes(('colorful', 'airy')) {
-        padding-inline: hb-calculate-rems(12px);
         padding-block: 3% hb-calculate-rems(32px);
-        align-items: flex-start;
-        text-align: left;
-
-        @container carousel (width > #{$container-caption}) {
-          padding: 0 hb-calculate-rems(20px) hb-calculate-rems(21px);
-          align-items: flex-end;
-          text-align: right;
-        }
+        padding-inline: hb-calculate-rems(8px);
+        transition: padding-block .2s ease-in-out;
 
         @container carousel (width > #{$container-medium}) {
-          padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
+          padding-block: 0 hb-calculate-rems(6px);
+        }
+
+        &.is-open {
+          padding-block: 0 hb-calculate-rems(40px);
         }
 
         .toggle-caption__content {
-          max-width: 85%;
-
-          @container carousel (width > #{$container-caption}) {
-            max-width: 20%;
-          }
-
-          @container carousel (width > #{$container-large}) {
-            max-width: 30%;
-          }
+          padding: 0;
         }
       }
     }
   }
 
-  // Styles for when the hero has no text content.
-  .hb-hero-overlay--no-text {
-    .hb-media-image .field-media-image-caption.collapsible-caption {
+  // Styles for when the hero has no image.
+  .hb-hero-overlay--no-image {
+    @include hb-themes(('colorful', 'airy')) {
+      &::before {
+        height: calc(100% - hb-calculate-rems(48px));
+        top: hb-calculate-rems(48px);
+
+        @container carousel (width > #{$container-xlarge}) {
+          height: 100%;
+          top: 0;
+        }
+      }
+    }
+
+    .hb-hero-overlay__image-wrapper {
       @include hb-themes(('colorful', 'airy')) {
-        padding-block: hb-calculate-rems(6px);
-
-        @container carousel (width > #{$container-caption}) {
-          padding: 0 hb-calculate-rems(20px) hb-calculate-rems(21px);
+        @container carousel (width > #{$container-xlarge}) {
+          margin-left: 0;
         }
+      }
+    }
 
-        @container carousel (width > #{$container-medium}) {
-          padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
-        }
+    .hb-hero-overlay__text {
+      @include hb-themes(('colorful', 'airy')) {
+        margin: 0 auto !important;
+      }
+    }
+  }
+
+  // Styles for when the hero has no text.
+  .hb-hero-overlay--no-text {
+    @include hb-themes(('colorful', 'airy')) {
+      .hb-hero-overlay__inner {
+        // Max width of the container
+        // + padding of 32px on each side
+        // + 14px on each side for the colored section = 92px extras.
+        max-width: calc($container-xlarge + hb-calculate-rems(92px));
       }
     }
   }
@@ -134,15 +138,29 @@ $container-small: 576px;
     width: 100%;
     margin: auto;
     display: initial;
-    max-width: $container-xlarge;
 
     @include hb-themes(('colorful', 'airy')) {
+      display: flex;
+      flex-direction: column;
+      max-width: hb-calculate-rems(1440px);
+      padding-bottom: hb-calculate-rems(24px);
+      padding-inline: hb-calculate-rems(10px);
       position: relative;
+
+      @container carousel (width > #{$container-medium}) {
+        padding-inline: hb-calculate-rems(16px);
+      }
+
+      @container carousel (width > #{$container-xlarge}) {
+        padding: 0 hb-calculate-rems(32px);
+        flex-direction: row-reverse;
+      }
     }
 
     @include hb-traditional {
       padding-inline: hb-calculate-rems(32px);
       padding-block: hb-calculate-rems(48px);
+      max-width: $container-xlarge;
 
       @container carousel (width > #{$container-medium}) {
         padding-inline: hb-calculate-rems(48px);
@@ -154,34 +172,51 @@ $container-small: 576px;
   // Styles for the image container.
   .hb-hero-overlay__image-wrapper {
     @include hb-themes(('colorful', 'airy')) {
-      padding-inline: hb-calculate-rems(4px);
-      padding-block: hb-calculate-rems(10px);
+      padding-inline: hb-calculate-rems(12px);
       position: relative;
-      height: auto;
-      top: 0;
 
-      @container carousel (width > #{$container-small}) {
-        padding-inline: hb-calculate-rems(10px);
-        padding-block: hb-calculate-rems(16px);
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: hb-calculate-rems(12px);
+        height: calc(100% - hb-calculate-rems(56px));
+        background-color: color('secondary');
+
+        @container carousel (width > #{$container-medium}) {
+          width: hb-calculate-rems(14px);
+        }
+      }
+
+      &::before {
+        top: hb-calculate-rems(40px);
+        left: 0;
+      }
+
+      &::after {
+        bottom: hb-calculate-rems(40px);
+        right: 0;
       }
 
       @container carousel (width > #{$container-medium}) {
-        padding-inline: hb-calculate-rems(72px) 0;
-        padding-block: 0;
-        margin-left: auto;
-      }
-
-      @container carousel (width > #{$container-large}) {
-        padding-inline: hb-calculate-rems(268px) 0;
+        padding-inline: hb-calculate-rems(14px);
       }
 
       @container carousel (width > #{$container-xlarge}) {
-        padding-inline: hb-calculate-rems(308px) 0;
+        margin-left: hb-calculate-rems(-70px);
       }
 
       img {
-        object-fit: cover;
         height: auto;
+        object-fit: cover;
+
+        @container carousel (width > #{$container-xlarge}) {
+          min-width: hb-calculate-rems(786px);
+          max-width: hb-calculate-rems(1228px);
+          min-height: hb-calculate-rems(420px);
+          max-height: hb-calculate-rems(656px);
+        }
 
         &.animate {
 
@@ -192,19 +227,6 @@ $container-small: 576px;
 
           /* stylelint-enable max-nesting-depth */
         }
-
-        @include hb-themes(('colorful', 'airy')) {
-          max-height: hb-calculate-rems(490px);
-          aspect-ratio: 1.82;
-
-          @container carousel (width > #{$container-small}) {
-            aspect-ratio: 1.80;
-          }
-
-          @container carousel (width > #{$container-medium}) {
-            aspect-ratio: 1.82;
-          }
-        }
       }
     }
 
@@ -214,74 +236,42 @@ $container-small: 576px;
     }
   }
 
-  // When the hero has no text overlay, center the image by reducing the
-  // asymmetric padding to symmetric padding on both sides.
-  .hb-hero-overlay--no-text .hb-hero-overlay__image-wrapper {
+  // Styles for the text container.
+  .hb-hero-overlay__text {
     @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(12px) hb-calculate-rems(16px) hb-calculate-rems(16px);
+      border-bottom: 4px solid color('tertiary-reversed');
+      background-color: color('banner-background');
+      justify-content: center;
+      flex-direction: column;
+      display: flex;
+
+      // Override hb-page-width width.
+      width: calc(100% - hb-calculate-rems(80px)) !important;
+      margin: hb-calculate-rems(-24px) auto 0 !important;
+      max-width: hb-calculate-rems(650px) !important;
+      min-height: auto !important;
+
       @container carousel (width > #{$container-medium}) {
-        padding-inline: calc(hb-calculate-rems(72px) / 2);
+        // Override hb-page-width width.
+        padding: hb-calculate-rems(16px) hb-calculate-rems(24px) hb-calculate-rems(20px);
+        width: calc(100% - hb-calculate-rems(128px)) !important;
+        margin: hb-calculate-rems(-32px) auto 0 !important;
       }
 
       @container carousel (width > #{$container-large}) {
-        padding-inline: calc(hb-calculate-rems(268px) / 2);
+        max-width: hb-calculate-rems(800px) !important;
       }
 
       @container carousel (width > #{$container-xlarge}) {
-        padding-inline: calc(hb-calculate-rems(308px) / 2);
-      }
-    }
-  }
+        padding: hb-calculate-rems(16px) hb-calculate-rems(24px) hb-calculate-rems(32px);
 
-  // Styles for the text container.
-  .hb-hero-overlay__text {
-    padding: hb-calculate-rems(10px) hb-calculate-rems(16px) hb-calculate-rems(16px);
-
-    // Override hb-page-width width.
-    min-height: auto !important;
-
-    @container carousel (width > #{$container-medium}) {
-      padding-inline: hb-calculate-rems(24px);
-      padding-bottom: hb-calculate-rems(24px);
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      background-color: color('black', 'global');
-
-      // Override hb-page-width width.
-      width: calc(100% - hb-calculate-rems(24px)) !important;
-      max-width: 100% !important;
-      margin: hb-calculate-rems(-34px) auto 0 !important;
-      transform: none;
-
-      @container carousel (width > #{$container-small}) {
-        // Override hb-page-width width.
-        width: calc(100% - hb-calculate-rems(42px)) !important;
-      }
-
-      @container carousel (width > #{$container-caption}) {
-        // Override hb-page-width width.
-        width: calc(100% - hb-calculate-rems(64px)) !important;
-        max-width: hb-calculate-rems(450px) !important;
-        margin: 0 !important;
-        position: absolute;
-        left: hb-calculate-rems(16px);
-        bottom: 0;
-      }
-
-      @container carousel (width > #{$container-medium}) {
-        // Override hb-page-width width.
-        max-width: hb-calculate-rems(515px) !important;
-        margin-block: auto !important;
+        // Override hb-page-width properties.
+        min-height: hb-calculate-rems(180px) !important;
+        max-width: hb-calculate-rems(470px) !important;
+        min-width: hb-calculate-rems(400px) !important;
         width: 100% !important;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        top: 0;
-      }
-
-      @container carousel (width > #{$container-xlarge}) {
-        padding-block: hb-calculate-rems(20px) hb-calculate-rems(32px);
-        padding-inline: hb-calculate-rems(32px);
+        margin: 0 !important;
       }
 
       &.animate {
@@ -294,7 +284,9 @@ $container-small: 576px;
     }
 
     @include hb-traditional {
+      padding: hb-calculate-rems(10px) hb-calculate-rems(16px) hb-calculate-rems(16px);
       background-color: color-mix(in srgb, color('black', 'global') 70%, transparent);
+      min-height: auto !important;
 
       // Override hb-page-width max-width.
       max-width: hb-calculate-rems(450px) !important;
@@ -309,6 +301,8 @@ $container-small: 576px;
       @container carousel (width > #{$container-medium}) {
         // Override hb-page-width width.
         max-width: hb-calculate-rems(520px) !important;
+        padding-block: hb-calculate-rems(16px) hb-calculate-rems(24px);
+        padding-inline: hb-calculate-rems(24px);
       }
 
       &.animate {
@@ -324,7 +318,7 @@ $container-small: 576px;
     h2 {
       @include hb-heading-2;
 
-      padding-bottom: hb-calculate-rems(2px);
+      padding-block: 0 hb-calculate-rems(2px);
       margin: 0;
     }
 
@@ -351,26 +345,32 @@ $container-small: 576px;
       margin: 0;
 
       @include hb-themes(('colorful', 'airy')) {
-        @container carousel (width > #{$container-small}) {
-          padding-block: hb-calculate-rems(2px) hb-calculate-rems(4px);
+        padding-block: hb-calculate-rems(6px) hb-calculate-rems(8px);
+
+        @container carousel (width > #{$container-xlarge}) {
+          padding-block: hb-calculate-rems(6px) hb-calculate-rems(4px);
         }
       }
 
       @include hb-traditional {
         padding-block: hb-calculate-rems(4px) hb-calculate-rems(10px);
-      }
 
-      @container carousel (width > #{$container-medium}) {
-        padding-block: hb-calculate-rems(6px) hb-calculate-rems(12px);
+        @container carousel (width > #{$container-medium}) {
+          padding-block: hb-calculate-rems(6px) hb-calculate-rems(12px);
+        }
       }
     }
 
     // Styles for the link.
     .field-hs-hero-link {
       @include hb-themes(('colorful', 'airy')) {
-        padding-block: hb-calculate-rems(6px) hb-calculate-rems(2px);
+        padding-block: hb-calculate-rems(10px);
 
-        @container carousel (width > #{$container-small}) {
+        @container carousel (width > #{$container-medium}) {
+          padding-block: hb-calculate-rems(12px);
+        }
+
+        @container carousel (width > #{$container-xlarge}) {
           padding-block: hb-calculate-rems(12px) hb-calculate-rems(2px);
         }
       }
@@ -386,11 +386,6 @@ $container-small: 576px;
       a {
         padding: hb-calculate-rems(4px) hb-calculate-rems(24px) hb-calculate-rems(6px);
         margin: 0;
-
-        @include hb-themes(('colorful', 'airy')) {
-          border-color: color('white', 'global');
-          color: color('white', 'global');
-        }
       }
     }
   }

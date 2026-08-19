@@ -19,14 +19,14 @@
           {% endif %}
         </div>
       {% endif %}
-      {% if introduction %}
+      {% if introduction|render|striptags('<img><iframe><picture><video>')|trim %}
         <div class="hb-horizontal-expandable-card__introduction">
           {{ introduction }}
         </div>
       {% endif %}
     </div>
 
-    {% if details %}
+    {% if details|render|striptags('<img><iframe><picture><video>')|trim %}
       <div class="hb-horizontal-expandable-card__toggle">
         <button class="hb-horizontal-expandable-card__toggle-button" aria-expanded="false" aria-controls="{{ details_id }}" type="button">
           <span class="visually-hidden">{{ 'Expand'|t }}</span>

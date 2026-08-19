@@ -51,13 +51,17 @@
           // Double requestAnimationFrame ensures layout is fully updated
           requestAnimationFrame(() => {
             const height = content.offsetHeight;
+            // Query container width for carousel.
+            const isCarouselStacked = carousel && carousel.clientWidth <= 1200;
 
             // Determine if this caption should be collapsible:
             // 1. It's long enough.
             // 2. Or it's inside a spotlight on a mobile viewport.
+            // 3. Or it's inside a carousel on a small container viewport
+            //    (<= 1200px = $container-xlarge). See _pattern.carousel.scss.
             const collapsible = height >= (isColorful ? 28 : 27)
               || (spotlight && mobileView.matches && isColorful)
-              || (carousel && mobileView.matches && isColorful);
+              || (carousel && isCarouselStacked && isColorful);
 
             if (collapsible) {
               caption.classList.add('collapsible-caption');

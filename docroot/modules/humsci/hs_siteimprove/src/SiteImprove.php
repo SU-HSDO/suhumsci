@@ -91,10 +91,18 @@ class SiteImprove implements SiteImproveInterface {
     }
 
     try {
-      $sites = $this->call('GET', '/sites', ['page_size' => 500]);
+      $all_sites = [];
+      $page = 1;
+      $total_pages = 1;
+      while ($page <= $total_pages && $page <= 20) {
+        $response = $this->call('GET', '/sites', ['page_size' => 1000, 'page' => $page]);
+        $all_sites = array_merge($all_sites, $response->items);
+        $total_pages = $response->total_pages ?? 1;
+        $page++;
+      }
       // Cache permanently (will be cleared with cache rebuilds)
-      $this->cache->set($cid, $sites->items, CacheBackendInterface::CACHE_PERMANENT);
-      return $sites->items;
+      $this->cache->set($cid, $all_sites, CacheBackendInterface::CACHE_PERMANENT);
+      return $all_sites;
     }
     catch (SiteImproveException $e) {
       $this->logger->error('Failed to fetch sites: @message', ['@message' => $e->getMessage()]);
@@ -278,10 +286,25 @@ class SiteImprove implements SiteImproveInterface {
   /**
    * Gets the current normalized production URL.
    *
+   * Prefers the canonical domain from domain_301_redirect settings, which is
+   * request-independent and works correctly under drush. Falls back to
+   * deriving the URL from the current request.
+   *
    * @return string
    *   The normalized production URL.
    */
   protected function getProductionUrl(): string {
+    // Prefer the canonical domain from domain_301_redirect, which is
+    // request-independent and works correctly under drush.
+    $redirect_domain = $this->config_factory
+      ->get('domain_301_redirect.settings')
+      ->get('domain');
+    if (!empty($redirect_domain)) {
+      return $this->getNormalizedUrl($redirect_domain);
+    }
+
+    // Fall back to deriving from the request URL (dev/tugboat/local/drush
+    // without domain_301_redirect configured).
     $current_url = $this->request_stack->getCurrentRequest()->getSchemeAndHttpHost();
     $production_url = $this->getNormalizedUrl($current_url);
     $environment = getenv('AH_SITE_ENVIRONMENT');
@@ -298,6 +321,10 @@ class SiteImprove implements SiteImproveInterface {
       // Handle tugboat URLs.
       $site_identifier = preg_replace('/-[^-]*$/', '', $site_identifier);
     }
+
+    // Site directories may use underscores (e.g. culture_emotion_lab) while
+    // production URLs use dashes (culture-emotion-lab). Normalize to dashes.
+    $site_identifier = str_replace('_', '-', $site_identifier);
 
     return $site_identifier . '.stanford.edu';
   }

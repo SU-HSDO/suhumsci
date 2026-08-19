@@ -58,7 +58,7 @@
             // 1. It's long enough.
             // 2. Or it's inside a spotlight on a mobile viewport.
             // 3. Or it's inside a carousel on a small container viewport
-            //    (<= 1200px = $container-large). See _pattern.carousel.scss.
+            //    (<= 1200px = $container-xlarge). See _pattern.carousel.scss.
             const collapsible = height >= (isColorful ? 28 : 27)
               || (spotlight && mobileView.matches && isColorful)
               || (carousel && isCarouselStacked && isColorful);

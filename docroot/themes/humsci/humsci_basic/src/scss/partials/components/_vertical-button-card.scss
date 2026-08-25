@@ -3,10 +3,22 @@
 @use '../mixins/theme' as *;
 @use '../mixins/buttons' as *;
 
-$container-small: hb-calculate-rems(576px);
-
 .hb-vertical-button-card {
   position: relative;
+
+  .hb-card__graphics {
+    img {
+      width: 100%;
+    }
+  }
+
+  .hb-card__title:only-child {
+    margin-bottom: 0;
+  }
+
+  .field-hs-postcard-body {
+    margin-bottom: 0;
+  }
 
   .hs-button a {
     width: 100%;
@@ -14,10 +26,13 @@ $container-small: hb-calculate-rems(576px);
     hyphens: auto;
     word-break: normal;
     overflow-wrap: anywhere;
-  }
 
-  .hb-card__title:only-child {
-    margin: 0;
+    &:hover,
+    &:focus,
+    &.is-focused {
+      background-color: color('primary-dark');
+      border-color: color('primary-dark');
+    }
   }
 
   .hb-card__content {
@@ -31,14 +46,25 @@ $container-small: hb-calculate-rems(576px);
 
   @include hb-traditional {
     border: 2px solid color('secondary');
+    background-color: color('white', 'global');
+
+    .hb-card__content-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
 
     .hb-card__title {
-      margin-block-end: hb-calculate-rems(16px);
+      margin-bottom: hb-calculate-rems(16px);
     }
 
     .hb-card__graphics {
       padding: hb-calculate-rems(24px) hb-spacing-width('sm') 0;
-      margin-block-end: hb-calculate-rems(32px);
+
+      &,
+      .hb-raised-cards & {
+        margin-bottom: hb-calculate-rems(32px);
+      }
     }
 
     .hb-card__content {
@@ -46,24 +72,19 @@ $container-small: hb-calculate-rems(576px);
       flex-grow: 1;
 
       &:has(.hs-button) {
-        padding-block-end: 0;
+        padding-bottom: 0;
 
         .hb-card__description {
-          margin-block-end: hb-calculate-rems(16px);
+          margin-bottom: hb-calculate-rems(16px);
         }
-      }
-    }
-
-    &:has(.hb-card__graphics) {
-      .hb-card__content {
-        padding-block-start: 0;
       }
     }
 
     .hs-button {
       position: relative;
-      margin-block-start: auto;
-      margin-inline: hb-calculate-rems(-24px);
+      margin-top: auto;
+      margin-left: hb-calculate-rems(-24px);
+      margin-right: hb-calculate-rems(-24px);
 
       a,
       a[href*="//"].hs-external-link,
@@ -77,7 +98,7 @@ $container-small: hb-calculate-rems(576px);
 
       a[href*="//"].hs-external-link,
       .hs-external-link a[href*="//"] {
-        margin-inline-end: 0;
+        margin-right: 0;
 
         --link-base-current-color: #{color('secondary')};
         --link-base-hover-current-color: #{color('white', 'global')};
@@ -87,65 +108,85 @@ $container-small: hb-calculate-rems(576px);
         }
       }
     }
+
+    &:has(.hb-card__graphics) {
+      .hb-card__content {
+        padding-top: 0;
+      }
+    }
   }
 
-  @include hb-themes(('colorful', 'airy')) {
-    background-color: transparent;
-
+  @include hb-colorful {
     .hb-card__graphics {
       &,
       .hb-raised-cards & {
         padding: 0 hb-calculate-rems(36px);
-        margin-block-end: hb-calculate-rems(-40px);
+        margin-bottom: hb-calculate-rems(-40px);
       }
     }
 
     .hb-card__title {
-      margin-block-end: 0;
       color: color('secondary');
     }
 
     .hb-card__content {
       padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
+      border: 2px solid color('tertiary-highlight');
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px)
         hb-calculate-rems(35px)
         color-mix(in srgb, color('black', 'global') 10%, transparent);
       background-color: color('white', 'global');
-      border: 2px solid color('tertiary-highlight');
 
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        background-color: color('primary-dark');
+      .hb-raised-cards & {
+        padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
       }
 
+      // Update padding when card is in 4 columns.
       .field-hs-collection-items.item-per-row--4 & {
         padding: hb-calculate-rems(18px);
-      }
-
-      .hb-raised-cards--uniform-height & {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-      }
-    }
-
-    &:has(.hb-card__description) {
-      .hb-card__title {
-        margin-block-end: hb-calculate-rems(16px);
       }
     }
 
     &:has(.hb-card__graphics) {
       .hb-card__content {
-        &, .field-hs-collection-items.item-per-row--4 & {
-          padding-block-start: hb-calculate-rems(62px);
+        padding-top: hb-calculate-rems(62px);
+
+        .hb-raised-cards &,
+        .field-hs-collection-items.item-per-row--4 & {
+          padding-top: hb-calculate-rems(62px);
         }
       }
     }
 
-    .hb-card__description {
-      margin-block: 0 auto;
+    .hb-card__content-wrapper {
+      .hb-raised-cards--uniform-height & {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    &:has(.hb-card__description) {
+      .hb-card__title {
+        &,
+        .hb-raised-cards & {
+          margin-bottom: hb-calculate-rems(16px);
+        }
+      }
+    }
+
+    &:has(.hs-button) {
+      .hb-card__title {
+        &,
+        .hb-raised-cards,
+        &:only-child {
+          margin-bottom: hb-calculate-rems(24px);
+        }
+      }
+
+      .hb-card__description {
+        margin-bottom: hb-calculate-rems(24px);
+      }
     }
 
     .hs-button {
@@ -153,25 +194,16 @@ $container-small: hb-calculate-rems(576px);
       flex-direction: column;
       gap: hb-calculate-rems(4px);
 
-      margin-block-start: hb-calculate-rems(24px);
-
       a {
         padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
           hb-calculate-rems(6px);
         background-color: color('primary');
         border-color: color('primary');
-
-        &:hover,
-        &:focus,
-        &.is-focused {
-          background-color: color('primary-dark');
-          border-color: color('primary-dark');
-        }
       }
 
       a[href*="//"].hs-external-link,
       .hs-external-link a[href*="//"] {
-        margin-inline-end: 0;
+        margin-right: 0;
         color: color('white', 'global');
 
         --link-base-current-color: #{color('white', 'global')};

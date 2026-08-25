@@ -3,29 +3,45 @@
 @use '../mixins/breakpoints' as *;
 @use '../mixins/text' as *;
 
-$container-small: hb-calculate-rems(576px);
-
 .hb-card--structured {
-  .hb-card__subtitle {
-    @include hb-heading-5;
+  .hb-card__img {
+    margin-bottom: hb-spacing-width('xs');
+
+    @include grid-media-min('md') {
+      margin-bottom: 0;
+    }
   }
 
-  .hb-card__subtitle,
-  .hb-card__description,
-  .hb-card__category,
-  .hb-card__columns {
-    &:not(:last-child) {
-      margin-block-end: hb-calculate-rems(12px);
-    }
-
-    .views-field {
-      margin-block-end: hb-calculate-rems(6px);
-    }
+  .hb-card__subtitle {
+    @include hb-heading-5;
+    margin-bottom: hb-spacing-width('xxxs');
   }
 
   .hb-card__category {
     .views-label {
-      margin-block-end: hb-calculate-rems(6px);
+      @include hb-themes(('airy', 'colorful')) {
+        margin-bottom: hb-spacing-width('xxxs');
+      }
+
+      @include hb-traditional {
+        margin-bottom: hb-calculate-rems(4px);
+      }
+    }
+  }
+
+  .hb-card__category,
+  .hb-card__category .views-field,
+  .hb-card__columns .views-field {
+    @include hb-themes(('airy', 'colorful')) {
+      margin-bottom: hb-spacing-width('xxxs');
+
+      @include grid-media-min('sm') {
+        margin-bottom: hb-spacing-width('sm');
+      }
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xxs');
     }
   }
 
@@ -34,11 +50,17 @@ $container-small: hb-calculate-rems(576px);
     flex-wrap: wrap;
 
     .views-field {
-      padding-inline-end: hb-calculate-rems(11px);
+      padding-right: hb-calculate-rems(11px);
       width: 100%;
 
-      @container card (width > #{$container-small}) {
+      @include grid-media-min('sm') {
         width: 50%;
+      }
+
+      @include hb-traditional {
+        @include grid-media-min('2xl') {
+          width: 33.33%;
+        }
       }
     }
   }

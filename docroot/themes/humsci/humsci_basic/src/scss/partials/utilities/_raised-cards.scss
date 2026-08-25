@@ -1,12 +1,8 @@
 @use '../functions/general' as *;
 @use '../functions/color' as *;
 @use '../mixins/theme' as *;
-@use '../mixins/breakpoints' as *;
 @use '../mixins/decorative' as *;
 @use '../mixins/icons' as *;
-
-$container-small: hb-calculate-rems(576px);
-$container-medium: hb-calculate-rems(768px);
 
 .hb-raised-cards {
   // The uniform-height modifier adds the ability for cards to be consistent height regardless of content.
@@ -31,22 +27,10 @@ $container-medium: hb-calculate-rems(768px);
     .paragraph-item
     .hb-vertical-linked-card,
   &--uniform-height .field-hs-collection-items .paragraph-item .hb-card,
-  &--uniform-height .field-hs-collection-items .paragraph-item .hb-card--horizontal .hb-card__wrapper,
   &--uniform-height .hb-timeline,
   &--uniform-height .hb-timeline .hb-timelime__wrapper {
     height: 100%;
   }
-
-  &--uniform-height .hb-vertical-linked-card {
-    .hb-vertical-linked-card__title:not(:has(+ .hb-vertical-linked-card__description)) {
-      flex-grow: 1;
-    }
-
-    .hb-vertical-linked-card__description {
-      flex-grow: 1;
-    }
-  }
-
 
   // Raised cards uniform height styles for Testimonial & Timeline
   &--uniform-height .field-hs-collection-items .ptype-hs-testimonial,
@@ -68,10 +52,11 @@ $container-medium: hb-calculate-rems(768px);
   }
 
   .hb-card {
-    flex-grow: 1;
     background-color: color('white', 'global');
+    flex-grow: 1;
 
     @include hb-traditional {
+      padding: hb-spacing-width('xs');
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px)
         hb-calculate-rems(17px) color('gray-medium', 'global');
     }
@@ -82,16 +67,10 @@ $container-medium: hb-calculate-rems(768px);
         color-mix(in srgb, color('black', 'global') 12%, transparent);
 
       @supports (object-fit: cover) {
-        .hb-card__wrapper {
-          align-items: stretch;
-        }
+        align-items: stretch;
 
         &__graphics {
           margin: 0;
-
-          @include grid-media-min('md') {
-            align-self: stretch;
-          }
 
           img {
             height: 100%;
@@ -114,6 +93,10 @@ $container-medium: hb-calculate-rems(768px);
         }
       }
 
+      &__content {
+        padding: hb-spacing-width('xs');
+      }
+
       &.hb-card--horizontal-date-stacked.hb-card--no-image {
         .hb-card__graphics--has-date {
           .hb-card__date-tile {
@@ -133,62 +116,9 @@ $container-medium: hb-calculate-rems(768px);
           left: hb-calculate-rems(-14px);
         }
       }
-    }
-  }
 
-  .hb-card__title:only-child {
-    @include hb-themes(('airy', 'colorful')) {
-      margin: 0;
-    }
-  }
-
-  .hb-card--horizontal {
-    @include hb-traditional {
-      padding: hb-calculate-rems(20px);
-    }
-
-    .hb-card__content {
-      // Padding for horizontal cards without image.
-      @include hb-themes(('colorful', 'airy')) {
-        padding: hb-calculate-rems(24px);
-      }
-    }
-
-    &:has(.hb-card__graphics) {
-      &.hb-card--horizontal--left {
-        .hb-card__content {
-          @include hb-themes(('colorful', 'airy')) {
-            @include grid-media-min('md') {
-              padding-inline: hb-calculate-rems(12px) hb-calculate-rems(24px);
-            }
-          }
-        }
-
-        .hb-card__graphics {
-          @include hb-themes(('airy', 'colorful')) {
-            @include grid-media-min('md') {
-              padding-inline: 0 hb-calculate-rems(12px);
-            }
-          }
-        }
-      }
-
-      &.hb-card--horizontal--right {
-        .hb-card__content {
-          @include hb-themes(('colorful', 'airy')) {
-            @include grid-media-min('md') {
-              padding-inline: hb-calculate-rems(24px) hb-calculate-rems(12px);
-            }
-          }
-        }
-
-        .hb-card__graphics {
-          @include hb-themes(('airy', 'colorful')) {
-            @include grid-media-min('md') {
-              padding-inline: hb-calculate-rems(12px) 0;
-            }
-          }
-        }
+      &__title:only-child {
+        margin: 0;
       }
     }
   }
@@ -223,20 +153,6 @@ $container-medium: hb-calculate-rems(768px);
     @include hb-colorful {
       border-bottom: 3px solid;
       border-color: color('secondary');
-    }
-
-    @include hb-traditional {
-      padding: hb-calculate-rems(20px);
-    }
-
-    .hb-card__content {
-      @include hb-themes(('airy', 'colorful')) {
-        padding: hb-calculate-rems(18px);
-
-        @container card (width > #{$container-small}) {
-          padding: hb-spacing-width('xs')
-        }
-      }
     }
   }
 }
@@ -324,5 +240,15 @@ $container-medium: hb-calculate-rems(768px);
         }
       }
     }
+  }
+}
+
+// Update padding when vertical card is in 4 columns.
+.hb-raised-cards
+  .field-hs-collection-items.item-per-row--4
+  .hb-vertical-card
+  .hb-card__content {
+  @include hb-colorful {
+    padding: hb-calculate-rems(18px);
   }
 }

@@ -38,7 +38,6 @@ const shared = {
   'table-wrap': 'shared/tables/wrap.js',
   table: 'shared/tables/table.js',
   timeline: 'shared/timeline/expand-collapse-timeline.js',
-  'views-ajax-scroll-fix': 'shared/views/views-ajax-scroll-fix.js',
   'views-exposed-form': 'shared/views/views-exposed-form.js',
   'views-exposed-form-breadbox': 'shared/views/views-exposed-form-breadbox.js',
 };

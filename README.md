@@ -13,6 +13,29 @@ Note the following properties of this project:
 * Local drush alias: `@<SITE_ALIAS>.local`
 * Local site URL: `http://<SITE_ALIAS>.suhumsci.loc`
 
+## AI-Assisted Development
+
+AI coding agents (Claude Code, OpenCode, Codex, Cursor, etc.) should read [AGENTS.md](AGENTS.md) before making changes. It is the source of truth for AI-assisted development and covers where code lives, module ownership by domain, conventions, commands, a pre-finish verify checklist, and review patterns to follow preemptively. `CLAUDE.md` points there as well.
+
+## Repository Layout
+
+Custom code lives in three locations; there is no `web/` directory. See [AGENTS.md](AGENTS.md) for the full map and module ownership.
+
+| What | Where |
+|---|---|
+| Primary custom modules (`hs_*`) | `docroot/modules/humsci/` |
+| Secondary custom modules (`stanford_*`) | `docroot/modules/custom/` |
+| Profile submodules | `docroot/profiles/humsci/su_humsci_profile/modules/` |
+| Custom themes | `docroot/themes/humsci/` |
+| Global config | `config/default/` |
+| Environment splits | `config/envs/` |
+| Site-specific settings | `docroot/sites/<SITENAME>/` |
+| Drush commands | `drush/Commands/` |
+| Patches | `patches/core/`, `patches/contrib/` |
+| Tests | `tests/phpunit/`, `tests/codeception/` |
+
+> **Important:** The `stanford_*` modules and `ckeditor5_plugins` in `docroot/modules/custom/` are Composer-installed from upstream `su-sws/*` repositories and that directory is gitignored, so direct edits are overwritten on the next `composer install`. To change one of them, fork the upstream repo, open a PR there, and apply the change as a local patch in this repo until it merges upstream. See [AGENTS.md](AGENTS.md#how-changes-are-made) and [Patching](docs/Patching.md).
+
 ## BLT to SWS Drush Commands (SWSDC) Migration
 
 In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC). If you are still using BLT and have not set up SWSDC, please read the [migration documentation](docs/BltToSWSDC.md).
@@ -26,6 +49,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Configuration Management](docs/Config.md)
 - [Development Requirements](docs/DevelopmentRequirements.md)
 - [Documentation Standards](docs/DocumentationStandards.md)
+- [Frontend Patterns](docs/FrontendPatterns.md)
 - [GitHub Codespaces](docs/GithubCodespaces.md)
 - [Module Evaluation](docs/ModuleEvaluation.md)
 

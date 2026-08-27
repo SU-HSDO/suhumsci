@@ -107,6 +107,10 @@ drush drupal:sync --site=<SITENAME>   # Sync a site from a live environment
 
 See [docs/Testing.md](docs/Testing.md), [docs/CodingStandards.md](docs/CodingStandards.md), and [docs/DevelopmentRequirements.md](docs/DevelopmentRequirements.md).
 
+## Process Guides
+
+Operational tasks have step-by-step guides in `docs/`, linked from [README.md](README.md#documentation). Read the relevant guide before starting one of these: site launch, provisioning, copying, decommissioning, code deployment, Drupal core upgrades, dependency update review, module uninstall, or Codespaces setup.
+
 ## Before You Finish (Verify)
 
 - Hook names match the module's machine name. Services are registered in `services.yml`.

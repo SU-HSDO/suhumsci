@@ -7,7 +7,6 @@ This codebase runs the Humanities and Sciences Drupal (or Digital) Platform a.k.
 Note the following properties of this project:
 * Default development branch: the current major version branch, e.g. `12.x`
 * Production release branch: `main`
-* Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-<SPRINT_NUMBER>`
 * Development branching convention: branch off the current major development branch
 * Development environments: GitHub Codespaces, DDEV, Lando, or bare metal LAMP
 * Local drush alias: `@<SITE_ALIAS>.local`
@@ -119,9 +118,9 @@ GitHub Codespaces provides a cloud-based development environment with all depend
 
 CSS assets are built using the Grunt task runner via npm scripts.
 
-- `npm run theme-build` — Compile Sass for production for all themes based on `humsci_basic`.
-- `npm run theme-watch` — Compile a CSS build and watch for changes in the existing `.scss` files in all themes based on `humsci_basic`.
-- `npm run theme-visreg` — Run Percy VRT on `hs_colorful` and `hs_traditional` sites (see `docroot/themes/humsci/humsci_basic/README.md` for details.)
+- `npm run theme-build`: Compile Sass for production for all themes based on `humsci_basic`.
+- `npm run theme-watch`: Compile a CSS build and watch for changes in the existing `.scss` files in all themes based on `humsci_basic`.
+- `npm run theme-visreg`: Run Percy VRT on `hs_colorful` and `hs_traditional` sites (see `docroot/themes/humsci/humsci_basic/README.md` for details.)
 
 The build process automatically detects whether to run inside DDEV or Lando. To override:
 
@@ -135,7 +134,7 @@ See [Testing](docs/Testing.md) for how to run the PHPUnit and Codeception suites
 
 ### Sass
 
-- `npm test` — Run tests for all Sass in the project (including humsci_basic).
+- `npm test`: Run tests for all Sass in the project (including humsci_basic).
 
 ## Reporting
 
@@ -149,13 +148,13 @@ Architecture Decision Records (ADRs) are used to document important architectura
 
 | Term | Definition |
 |---|---|
-| HSDP | Humanities and Sciences Drupal Platform — the name for this multi-site Drupal application |
-| SWSDC | SWS Drush Commands — the custom Drush command library that replaced BLT. Commands are prefixed with `drush sws:` |
+| HSDP | Humanities and Sciences Drupal Platform: the name for this multi-site Drupal application |
+| SWSDC | SWS Drush Commands: the custom Drush command library that replaced BLT. Commands are prefixed with `drush sws:` |
 | `<major>.x` | The current major version development branch (e.g., `12.x`). This is the default branch and base for all feature work |
 | `<major>.x-build` | The deployment artifact branch generated from `<major>.x` and deployed to staging |
 | Staging | The pre-production Acquia environment. Called "staging" in documentation and "test" in Acquia infrastructure, ACLI commands, and drush aliases (e.g., `@<SITENAME>.test`) |
 | Drush alias | Site identifier used in drush commands. Derived from the site URL: dashes become underscores (`_`), dots become double underscores (`__`). Example: `my-site.stanford.edu` → alias `my_site` |
-| ADR | Architecture Decision Record — a short document capturing a significant architectural decision, its context, and its consequences. Stored in `docs/architecture/decisions/` |
+| ADR | Architecture Decision Record: a short document capturing a significant architectural decision, its context, and its consequences. Stored in `docs/architecture/decisions/` |
 | Artifact tag | A deployable release tag in the format `YYYY-MM-DD_VERSION` (e.g., `2026-06-03_12.1.1`) pushed to Acquia Cloud by release automation |
 
 ## Resources

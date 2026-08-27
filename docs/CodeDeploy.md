@@ -88,7 +88,7 @@ composer install
 - Update the PR description with release notes if applicable.
 - Review changes and confirm SEMVER alignment.
 
-> **Warning:** Double-check the PR label. The label must be correct (`major`, `minor`, or `patch`) — GitHub Actions will not trigger without it.
+> **Warning:** Double-check the PR label. The label must be correct (`major`, `minor`, or `patch`); GitHub Actions will not trigger without it.
 
 ### Merge the Release PR
 - Wait for all GitHub Actions tests to pass.
@@ -202,8 +202,8 @@ To rollback a deployment:
 
 ## Additional Notes
 
-- **Always double-check PR labels** before merging — the label is what triggers automation.
-- **Use merge commits** for release PRs, not squash merges — this preserves the commit history.
-- **Keep base branches correct** — ensure release PRs target `main` and back-to-dev PRs target the current `<major>.x` branch.
-- **Communicate clearly** — update your team and the deployment ticket at each stage.
-- **Read the branching strategy** — see [Branching Strategy](BranchingStrategy.md) for the full context on how branches work.
+- **Always double-check PR labels** before merging; the label is what triggers automation.
+- **Use merge commits** for release PRs, not squash merges; this preserves the commit history.
+- **Keep base branches correct**: ensure release PRs target `main` and back-to-dev PRs target the current `<major>.x` branch.
+- **Communicate clearly**: update your team and the deployment ticket at each stage.
+- **Read the branching strategy**: see [Branching Strategy](BranchingStrategy.md) for the full context on how branches work.

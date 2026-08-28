@@ -3,12 +3,15 @@
 @use '../mixins/flex-grid' as *;
 @use '../mixins/breakpoints' as *;
 
+$container-small: hb-calculate-rems(576px);
+
 // Loops through the number of available columns (12). Classes determine the number
 // of columns that the image in cards will span.
 @mixin hb-image-sizes() {
   @for $i from 1 through 12 {
     $areas: '';
     $areas-right: '';
+    $areas-content: '';
 
     @for $j from 1 through $i {
       $areas: $areas + 'a ';
@@ -22,16 +25,42 @@
       }
     }
 
+    @else {
+
+      // Content needs its own row.
+      @for $j from 1 through 12 {
+        $areas-content: $areas-content + 'b ';
+      }
+    }
+
     &-#{$i}-of-12 {
-      .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
-        @include grid-media-min('md') {
-          grid-template-areas: '#{$areas}';
+      @if $i ==12 {
+
+        // Left and right are identical at 12 columns.
+        .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
+          @container card (width > #{$container-small}) {
+            align-items: start;
+            grid-template-rows: auto auto;
+
+            // stylelint-disable-next-line
+            grid-template-areas: '#{$areas}'
+            '#{$areas-content}';
+          }
         }
       }
 
-      @if $i == 12 {
-        .hb-card--horizontal:has(.hb-card__graphics) .hb-card__content {
-          display: none;
+      @else {
+        .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
+          @container card (width > #{$container-small}) {
+            grid-template-areas: '#{$areas}';
+          }
+        }
+
+        // Must stay after the rule above: equal specificity.
+        .hb-card--horizontal--right:has(.hb-card__graphics) .hb-card__wrapper {
+          @container card (width > #{$container-small}) {
+            grid-template-areas: '#{$areas-right}';
+          }
         }
       }
     }

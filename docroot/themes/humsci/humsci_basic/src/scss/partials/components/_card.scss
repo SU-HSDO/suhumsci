@@ -65,6 +65,22 @@ $container-medium: hb-calculate-rems(768px);
   }
 }
 
+// Without an image, the date card shrinks the graphics area to fit the date tile.
+.hb-card--horizontal-date-stacked.hb-card--no-image:has(.hb-card__graphics) {
+  .hb-card__wrapper {
+    @include grid-media-min('md') {
+      grid-template: 'a b' auto / auto 1fr;
+    }
+  }
+
+  .hb-card__content,
+  .hb-card__graphics {
+    @include grid-media-min('md') {
+      padding-inline: 0;
+    }
+  }
+}
+
 .hb-card__graphics {
   position: relative;
 

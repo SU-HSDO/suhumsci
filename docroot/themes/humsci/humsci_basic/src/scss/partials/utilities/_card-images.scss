@@ -23,10 +23,7 @@ $container-small: hb-calculate-rems(576px);
         $areas: $areas + 'b ';
         $areas-right: 'b ' + $areas-right;
       }
-    }
-
-    @else {
-
+    } @else {
       // Content needs its own row.
       @for $j from 1 through 12 {
         $areas-content: $areas-content + 'b ';
@@ -34,8 +31,7 @@ $container-small: hb-calculate-rems(576px);
     }
 
     &-#{$i}-of-12 {
-      @if $i ==12 {
-
+      @if $i == 12 {
         // Left and right are identical at 12 columns.
         .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
           @container card (width > #{$container-small}) {
@@ -47,9 +43,7 @@ $container-small: hb-calculate-rems(576px);
             '#{$areas-content}';
           }
         }
-      }
-
-      @else {
+      } @else {
         .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
           @container card (width > #{$container-small}) {
             grid-template-areas: '#{$areas}';

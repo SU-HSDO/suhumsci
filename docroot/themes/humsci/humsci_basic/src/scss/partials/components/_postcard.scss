@@ -1,10 +1,11 @@
 @use '../functions/general' as *;
 @use '../functions/fonts' as *;
 @use '../mixins/theme' as *;
-@use '../mixins/breakpoints' as *;
 @use '../mixins/links' as *;
 @use '../mixins/buttons' as *;
 @use '../mixins/text' as *;
+
+$container-horizontal-card: hb-calculate-rems(480px);
 
 .ptype-hs-postcard {
   // Override the hb-card styles so that they display correctly within paragraph postcard components.
@@ -17,7 +18,7 @@
   // Image in horizontal card spans to 6 cols (out of 12).
   .hb-card--horizontal:has(.hb-card__graphics) {
     .hb-card__wrapper {
-      @include grid-media-min('md') {
+      @container card (width > #{$container-horizontal-card}) {
         grid-template-areas: 'a a a a a b b b b b b b';
       }
     }
@@ -25,7 +26,7 @@
 
   .hb-card--horizontal--right:has(.hb-card__graphics) {
     .hb-card__wrapper {
-      @include grid-media-min('md') {
+      @container card (width > #{$container-horizontal-card}) {
         grid-template-areas: 'b b b b b b b a a a a a';
       }
     }

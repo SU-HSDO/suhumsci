@@ -3,6 +3,8 @@
 @use '../mixins/flex-grid' as *;
 @use '../mixins/breakpoints' as *;
 
+$container-horizontal-card: hb-calculate-rems(480px);
+
 // Loops through the number of available columns (12). Classes determine the number
 // of columns that the image in cards will span.
 @mixin hb-image-sizes() {
@@ -24,7 +26,7 @@
 
     &-#{$i}-of-12 {
       .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
-        @include grid-media-min('md') {
+        @container card (width > #{$container-horizontal-card}) {
           grid-template-areas: '#{$areas}';
         }
       }

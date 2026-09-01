@@ -121,7 +121,7 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 All images in card patterns have default widths defined:
 
 - 100% (12 columns) for vertical cards
-- 30% ( 5 columns) for horizontal and structured cards (starting at the md breakpoint)
+- 30% ( 5 columns) for horizontal and structured cards (once the card itself is wider than 480px)
   These styles can be overridden by adding utility classes to the entire view. `hb-card-image-*` classes follow a similar naming convention to the [Decanter Grid System](https://decanter.stanford.edu/page/layouts-grid-system/), including the responsive names.
 
 Classes are made responsive by adding the desired breakpoint (xs, sm, md, lg, xl, 2xl) after the `hb-card-image-`. **Example:** `hb-card-image-sm-4-of-12`

@@ -10,7 +10,7 @@ This document describes the frontend architecture and conventions used across th
 - `humsci_colorful`, `humsci_traditional`, and `humsci_airy` are subthemes (each declares `base theme: humsci_basic`). They hold subtheme-specific compiled CSS and a small set of subtheme libraries.
 - `su_humsci_gin_admin` is the admin theme, separate from the base theme tree.
 
-Source files live in `humsci_basic/src/`. Compiled output goes to each theme's `dist/` and `css/` directories. Never edit compiled output directly; edit the source and run the build.
+Source files live in `humsci_basic/src/`. Compiled output goes to each theme's `dist/` and `css/` directories. For the `humsci_basic` theme tree, compiled output is gitignored and built on demand rather than committed (see [ADR 0001](architecture/decisions/0001-compile-theme-assets-on-demand.md)). `su_humsci_gin_admin` is the exception: it commits its compiled `dist/` CSS. Never edit compiled output directly; edit the source and run the build.
 
 ## JavaScript
 

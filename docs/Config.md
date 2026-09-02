@@ -12,6 +12,21 @@ The platform uses a combination of contributed and custom modules to manage conf
 
 > **Note:** This setting also means that during a site sync to local, `config_ignore` uses the active configuration on the site at the time of the sync. On a fresh site sync, the local split is not yet imported, so the first import uses the production ignore rules from `config/default`. Once the local split is imported, all subsequent imports and exports use the local split's rules.
 
+### Ignoring a Single Key of New Configuration
+
+A pattern can target one key of a configuration object using colon syntax, such as `views.view.hs_*:status`. For configuration that already exists on a site, the site's value is kept and the value from `config/default` is discarded, which is what you would expect.
+
+New configuration behaves differently. When the object does not yet exist in a site's active storage, `config_ignore` removes the ignored key from the imported data instead of preserving it. Drupal then applies its own default for that key. For a configuration entity, `status` defaults to enabled, so shipping a new entity with `status: false` and a `:status` ignore pattern creates it **enabled** on every site.
+
+Plan for this whenever you add a per-key pattern for configuration that does not exist yet:
+
+- Ship the configuration in a module's `config/install` as well as in `config/default`, so new sites create it with the intended values before the first import. The two copies must be byte identical, including the `uuid`, or the import will fail on a UUID mismatch.
+- Add a deploy hook that sets the intended value on existing sites, which run the import before the configuration exists. See [Deploy Hooks and Post-Config-Import Operations](#deploy-hooks-and-post-config-import-operations).
+
+The Algolia search server and index use both safeguards. See [Algolia Search](AlgoliaSearch.md).
+
+> **Important:** Excluding one key also unlocks the entire configuration form in production. The `hs_config_readonly` check treats any ignored configuration as editable and has no key-level granularity, so a single ignored key makes every other key on that form editable by anyone with the relevant permission.
+
 ## config_split
 
 - Manages environment-specific configuration and modules (dev, stage, prod, local, ci, etc.).

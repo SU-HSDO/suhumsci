@@ -1,11 +1,13 @@
 @use '../functions/general' as *;
 @use '../functions/fonts' as *;
+@use '../mixins/breakpoints' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/links' as *;
 @use '../mixins/buttons' as *;
 @use '../mixins/text' as *;
 
 $container-horizontal-card: hb-calculate-rems(480px);
+$container-horizontal-card-wide: hb-calculate-rems(720px);
 
 .ptype-hs-postcard {
   // Override the hb-card styles so that they display correctly within paragraph postcard components.
@@ -16,10 +18,40 @@ $container-horizontal-card: hb-calculate-rems(480px);
   }
 
   // Image in horizontal card spans to 6 cols (out of 12).
-  .hb-card--horizontal:has(.hb-card__graphics) {
+  .hb-card--horizontal--left:has(.hb-card__graphics) {
     .hb-card__wrapper {
       @container card (width > #{$container-horizontal-card}) {
-        grid-template-areas: 'a a a a a b b b b b b b';
+        // Image takes half of the card, content takes the other half.
+        // stylelint-disable-next-line
+        grid-template-areas: 'a a a a a a b b b b b b';
+
+        .hb-card__graphics {
+          @include hb-themes(('colorful', 'airy')) {
+            padding-right: hb-calculate-rems(20px);
+          }
+
+          @include hb-traditional {
+            padding-right: 0;
+          }
+        }
+      }
+    }
+
+    .hb-card__content {
+      @include hb-themes(('colorful', 'airy')) {
+        @container card (width > #{$container-horizontal-card}) {
+          padding-left: hb-calculate-rems(12px);
+        }
+
+        @container card (width > #{$container-horizontal-card-wide}) {
+          padding-left: hb-calculate-rems(20px);
+        }
+      }
+
+      @include hb-traditional {
+        @container card (width > #{$container-horizontal-card-wide}) {
+          padding-left: hb-calculate-rems(32px);
+        }
       }
     }
   }
@@ -27,7 +59,37 @@ $container-horizontal-card: hb-calculate-rems(480px);
   .hb-card--horizontal--right:has(.hb-card__graphics) {
     .hb-card__wrapper {
       @container card (width > #{$container-horizontal-card}) {
-        grid-template-areas: 'b b b b b b b a a a a a';
+        // Image takes half of the card, content takes the other half.
+        // stylelint-disable-next-line
+        grid-template-areas: 'b b b b b b a a a a a a';
+
+        .hb-card__graphics {
+          @include hb-themes(('colorful', 'airy')) {
+            padding-left: hb-calculate-rems(20px);
+          }
+
+          @include hb-traditional {
+            padding-left: 0;
+          }
+        }
+      }
+    }
+
+    .hb-card__content {
+      @include hb-themes(('colorful', 'airy')) {
+        @container card (width > #{$container-horizontal-card}) {
+          padding-right: hb-calculate-rems(12px);
+        }
+
+        @container card (width > #{$container-horizontal-card-wide}) {
+          padding-right: hb-calculate-rems(20px);
+        }
+      }
+
+      @include hb-traditional {
+        @container card (width > #{$container-horizontal-card-wide}) {
+          padding-right: hb-calculate-rems(32px);
+        }
       }
     }
   }

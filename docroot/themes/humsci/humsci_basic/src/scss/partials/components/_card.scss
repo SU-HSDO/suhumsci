@@ -53,6 +53,12 @@ $container-medium: hb-calculate-rems(768px);
       // postcards to use 6 columns.
       // stylelint-disable-next-line
       grid-template-areas: 'a a a a a b b b b b b b';
+
+      .ptype-hs-postcard & {
+        // Image takes half of the card, content takes the other half.
+        // stylelint-disable-next-line
+        grid-template-areas: 'a a a a a a b b b b b b';
+      }
     }
   }
 }
@@ -90,12 +96,22 @@ $container-medium: hb-calculate-rems(768px);
     @include hb-themes(('colorful', 'airy')) {
       @include grid-media-min('md') {
         padding-inline: 0 hb-calculate-rems(12px);
+
+        // Avoid implementing changes in views.
+        .ptype-hs-postcard & {
+          padding-left: hb-calculate-rems(20px);
+        }
       }
     }
 
     @include hb-traditional {
       @include grid-media-min('md') {
         padding-inline: 0 hb-calculate-rems(12px);
+
+        // Avoid implementing changes in views.
+        .ptype-hs-postcard & {
+          padding-inline: 0;
+        }
       }
     }
   }
@@ -104,12 +120,22 @@ $container-medium: hb-calculate-rems(768px);
     @include hb-themes(('colorful', 'airy')) {
       @include grid-media-min('md') {
         padding-inline: hb-calculate-rems(12px) 0;
+
+        // Avoid implementing changes in views.
+        .ptype-hs-postcard & {
+          padding-right: hb-calculate-rems(20px);
+        }
       }
     }
 
     @include hb-traditional {
       @include grid-media-min('md') {
         padding-inline: hb-calculate-rems(12px) 0;
+
+        // Avoid implementing changes in views.
+        .ptype-hs-postcard & {
+          padding-inline: 0;
+        }
       }
     }
   }
@@ -195,12 +221,28 @@ $container-medium: hb-calculate-rems(768px);
     @include hb-themes(('colorful', 'airy')) {
       @include grid-media-min('md') {
         padding: 0 0 0 hb-calculate-rems(36px);
+
+        .ptype-hs-postcard & {
+          padding-left: hb-calculate-rems(12px);
+        }
+      }
+
+      @include grid-media-min('lg') {
+        .ptype-hs-postcard & {
+          padding-left: hb-calculate-rems(20px);
+        }
       }
     }
 
     @include hb-traditional {
       @include grid-media-min('md') {
         padding: 0 0 0 hb-calculate-rems(20px);
+      }
+
+      @include grid-media-min('lg') {
+        .ptype-hs-postcard & {
+          padding-left: hb-calculate-rems(32px);
+        }
       }
     }
   }

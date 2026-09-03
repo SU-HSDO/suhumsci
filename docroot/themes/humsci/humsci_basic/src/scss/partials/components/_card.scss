@@ -279,7 +279,8 @@ $container-medium: hb-calculate-rems(768px);
     text-transform: initial;
   }
 
-  :where(a, a:not([class])):not(.hb-pill-link-list *) {
+  a,
+  a:not([class]) {
     font-size: unset;
     font-weight: hb-theme-font-weight(semibold);
     text-decoration-color: color('gray-medium', 'global');
@@ -301,6 +302,11 @@ $container-medium: hb-calculate-rems(768px);
         color: var(--link-base-hover-current-color);
       }
     }
+  }
+
+  // Override font size in pill link list.
+  .hb-pill-link-list a {
+    font-size: hb-calculate-rems(14px);
   }
 }
 

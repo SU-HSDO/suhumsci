@@ -150,9 +150,6 @@ class FlexiblePageCest {
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForElementVisible('.media-library-item__preview img');
-    $I->executeJS('window.scrollTo(0,0);');
-    $I->click('#field-hs-page-components-add-more-wrapper > ul:nth-child(1) > li:nth-child(2)');
-    $I->waitForText('Display Mode');
     $I->click('Save');
 
     $I->waitForText('Demo Basic Page');
@@ -163,7 +160,7 @@ class FlexiblePageCest {
     $I->waitForText('Edit');
     $I->click('Edit', '.tabs');
     $I->click('//input[@data-paragraphs-split-text-type="stanford_gallery"]/preceding::input[contains(@class, "paragraphs-icon-button-edit")][1]');
-    $I->waitForText('Content');
+    $I->waitForText('Style');
     $I->scrollTo('Style');
     $I->selectOption('Style', 'Slideshow');
     $I->executeJS('window.scrollTo(0,0);');
@@ -404,6 +401,8 @@ class FlexiblePageCest {
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Sed augue ipsum egestas nec');
     $I->click('.field-hs-accordion-summary');
+    // Add delay to wait for accordion transition to end.
+    $I->wait(0.5);
     $I->canSee('Vivamus in erat ut urna cursus vestibulum');
   }
 

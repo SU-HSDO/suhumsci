@@ -9,7 +9,21 @@
 @use '../mixins/icons' as *;
 @use '../mixins/text' as *;
 
-.stanford-gallery.paragraph--view-mode--default {
+.paragraph--type--stanford-gallery.paragraph--view-mode--default {
+  .su-gallery-images {
+    display: grid;
+    justify-content: space-between;
+    gap: 2rem;
+
+    @include grid-media-min('md') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include grid-media-min('lg') {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
   // Grid raised cards
   .hb-raised-cards & {
     .hb-caption-credit-image {

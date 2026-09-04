@@ -1,37 +1,38 @@
 @use '../variables/general' as *;
-@use '../functions/general' as *;
 @use '../mixins/flex-grid' as *;
 @use '../mixins/breakpoints' as *;
 
-// Loops through the number of available columns (12). Classes determine the number
-// of columns that the image in cards will span.
+// Generates classes for each image column span.
 @mixin hb-image-sizes() {
-  @for $i from 1 through 12 {
+  @for $i from 1 through $hb-grid-count {
+    // Grid areas: 'a' = image ($i cols), 'b' = content. Right variant is mirrored.
     $areas: '';
     $areas-right: '';
+    $content-row: '';
 
-    @for $j from 1 through $i {
-      $areas: $areas + 'a ';
-      $areas-right: 'a ' + $areas-right;
+    @for $column from 1 through $hb-grid-count {
+      $area: if($column <= $i, 'a ', 'b ');
+      $areas: $areas + $area;
+      $areas-right: $area + $areas-right;
+      $content-row: $content-row + 'b ';
     }
 
-    @if $i < 12 {
-      @for $j from 1 through (12 - $i) {
-        $areas: $areas + 'b ';
-        $areas-right: 'b ' + $areas-right;
-      }
-    }
+    // At full width, content wraps to a second row.
+    $template: if($i == $hb-grid-count, '#{$areas}' '#{$content-row}', '#{$areas}');
 
-    &-#{$i}-of-12 {
+    &-#{$i}-of-#{$hb-grid-count} {
       .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
         @include grid-media-min('md') {
-          grid-template-areas: '#{$areas}';
+          grid-template-areas: $template;
         }
       }
 
-      @if $i == 12 {
-        .hb-card--horizontal:has(.hb-card__graphics) .hb-card__content {
-          display: none;
+      // Skip right override at full width (identical). Must follow rule above.
+      @if $i < $hb-grid-count {
+        .hb-card--horizontal--right:has(.hb-card__graphics) .hb-card__wrapper {
+          @include grid-media-min('md') {
+            grid-template-areas: '#{$areas-right}';
+          }
         }
       }
     }
@@ -39,12 +40,10 @@
 }
 
 .hb-card-image {
-  // Creates the base classes that are not tied to a media query
-  // Example: .hb-card-image-4-of-12
+  // Base classes: .hb-card-image-4-of-12
   @include hb-image-sizes;
 
-  // Loops though the media query breakpoints to create responsive classes
-  // Example: .hb-card-image-md-4-of-12
+  // Responsive classes: .hb-card-image-md-4-of-12
   @each $bp-key, $bp-value in $hb-grid-media {
     @include grid-media-min($bp-key) {
       &-#{$bp-key} {

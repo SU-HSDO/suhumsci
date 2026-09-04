@@ -268,11 +268,6 @@ $container-medium: hb-calculate-rems(768px);
       @include hb-heading-4;
     }
 
-    // Override external link colors.
-    .ext {
-      --link-base-current-color: #{color('black', 'global')};
-      --link-base-hover-current-color: #{color('black', 'global')};
-    }
   }
 
   h6 {
@@ -294,7 +289,7 @@ $container-medium: hb-calculate-rems(768px);
 
     &:hover,
     &:focus {
-      text-decoration-color: color('link-base');
+      text-decoration-color: color('primary');
       text-decoration-thickness: 9%;
 
       .hb-dark-pattern &,
@@ -302,6 +297,12 @@ $container-medium: hb-calculate-rems(768px);
         color: var(--link-base-hover-current-color);
       }
     }
+  }
+
+  // Override external link colors.
+  a.ext {
+    --link-base-current-color: #{color('black', 'global')};
+    --link-base-hover-current-color: #{color('black', 'global')};
   }
 
   // Override font size in pill link list.

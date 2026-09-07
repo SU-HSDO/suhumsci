@@ -41,7 +41,7 @@ services:
         - composer install --no-ansi
         # Install sites.
         - |
-          for ALIAS in ${TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES//,/ } do
+          for ALIAS in ${TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES//,/ }; do
             SITE_ID=${ALIAS//-/_}
             drush sql-sync @${SITE_ID}.prod @${SITE_ID}.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
             drush @${SITE_ID}.local sql-sanitize --no-interaction --ansi

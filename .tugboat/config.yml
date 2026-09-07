@@ -41,13 +41,14 @@ services:
         - composer install --no-ansi
         # Install sites.
         - |
-          for ALIAS in ${TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES//,/ }; do
-            SITE_ID=${ALIAS//-/_}
-            drush sql-sync @${SITE_ID}.prod @${SITE_ID}.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-            drush @${SITE_ID}.local sql-sanitize --no-interaction --ansi
-            drush rsync @${SITE_ID}.prod:%files @${SITE_ID}.local:%files --ansi --no-interaction
-            drush @${SITE_ID}.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-            drush @${SITE_ID}.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+          IFS=,
+          for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
+            site_id=$(echo $alias | sed "s/-/_/g")
+            drush sql-sync @${site_id}.prod @${site_id}.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+            drush @${site_id}.local sql-sanitize --no-interaction --ansi
+            drush rsync @${site_id}.prod:%files @${site_id}.local:%files --ansi --no-interaction
+            drush @${site_id}.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+            drush @${site_id}.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
           done
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       # update:
@@ -94,10 +95,10 @@ services:
         - composer install --no-ansi
 
         - |
-          for ALIAS in ${TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES//,/ }; do
-            SITE_ID=${ALIAS//-/_}
-            drush @${SITE_ID}.local cr
-            drush @${SITE_ID}.local deploy
+          for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
+            site_id=$(echo $alias | sed "s/-/_/g")
+            drush @${site_id}.local cr
+            drush @${site_id}.local deploy
           done
 
         # - drush @hs_colorful.local cr

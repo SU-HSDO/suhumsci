@@ -250,3 +250,21 @@
     }
   }
 }
+
+// Sticky sidebar styles. These are applied
+// to the sidebar wrapper and inner wrapper by the JS.
+.hb-sticky-sidebar--active {
+  position: relative;
+}
+
+/* The JS-inserted wrapper that actually becomes `position: fixed`. */
+.hb-sticky-sidebar__inner {
+  box-sizing: border-box;
+}
+
+/* While pinned (fixed), keep the sidebar above normal page content so
+   nothing from the main column can overlap it. Raise this if something
+   else on the page (a sticky header, modal, etc.) needs to sit above it. */
+.hb-sticky-sidebar--pinned .hb-sticky-sidebar__inner {
+  z-index: 2;
+}

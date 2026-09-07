@@ -1,0 +1,27 @@
+@use '../variables/zindex' as *;
+@use '../mixins/breakpoints' as *;
+
+// Sticky sidebar. The JS wraps the sidebar's blocks in
+// `.hb-sticky-sidebar__inner` and, while an edge is pinned, sets
+// `position: fixed` on it directly (inline, overriding the default below);
+// otherwise it sits in flow, nudged into place with a transform. None of
+// this applies below 'lg', where the columns stack and the behavior is
+// switched off.
+@include grid-media-min('lg') {
+  .hb-sticky-sidebar--active {
+    position: relative;
+  }
+
+  // The default (non-pinned) state: normal flow, optionally offset with a
+  // transform.
+  .hb-sticky-sidebar__inner {
+    position: relative;
+  }
+
+  // Offset from its natural position -- an edge pinned via `position: fixed`,
+  // or parked/released via a transform -- so keep it above the body content
+  // in either case, since both can visually overlap what's below.
+  .hb-sticky-sidebar--pinned .hb-sticky-sidebar__inner {
+    z-index: $hb-z-index-small-2;
+  }
+}

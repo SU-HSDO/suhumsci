@@ -1,198 +1,315 @@
 /**
  * @file
- * Direction-aware sticky sidebar.
+ * Direction-aware sticky sidebar for the three column layout.
  *
- * Behavior:
- * - Scrolling DOWN: the sidebar's bottom edge sticks to the bottom of the
- *   viewport until the bottom of the shared container (sidebar + main
- *   content) is reached, then it scrolls off like the main content column.
- * - Scrolling UP: mirror behavior, sticking to the top of the viewport
- *   until the top of the container, then scrolling off.
- * - Works for sidebars shorter OR taller than the viewport: a sidebar
- *   taller than the screen is revealed gradually in normal flow, then
- *   "catches" (pins) once its top or bottom edge would otherwise run off
- *   screen, so all of its content stays reachable.
- * - Disabled entirely below desktopBreakpoint (mobile/tablet get normal,
- *   static stacking).
+ * Scrolling down, the sidebar's bottom edge holds at the bottom of the
+ * screen; scrolling up, its top edge holds at the top of the screen. At
+ * either end of the range it is released and scrolls away with the main
+ * content column.
+ *
+ * The behavior only runs from 'lg' up, where the layout actually puts the
+ * sidebar beside the main content. Below that the columns stack and every
+ * block in the sidebar is left in normal flow.
  *
  * Implementation notes:
- * - Uses a JS-inserted wrapper around the sidebar's children (per the
- *   ticket's tech notes) instead of making `.hb-three-column__sidebar-1`
- *   itself sticky/fixed. This avoids fighting whatever the ancestor
- *   Layout Builder regions are doing (overflow, transforms, etc.), and
- *   lets us reserve the column's height via `min-height` on the outer
- *   element so nothing collapses or overlaps while the wrapper is
- *   `position: fixed`.
- * - The core positioning math is a single formula (see `loop`) that
- *   naturally reproduces "stick to top while scrolling up / stick to
- *   bottom while scrolling down" WITHOUT needing to track scroll
- *   direction explicitly — it falls out of clamping the natural
- *   (unpositioned) scroll position between a top pin and a bottom pin,
- *   both bounded by the container's own top/bottom edges. Whichever pin
- *   is "in the way" wins, for whichever direction you happen to be
- *   scrolling.
- * - Each sidebar found on the page gets its own private state via a
- *   closure (no shared `this`), so multiple sidebars on one page won't
- *   step on each other.
+ * - The sidebar's children are wrapped in a JS-inserted element (per the
+ *   ticket's tech notes) and that wrapper is what moves. Whichever edge is
+ *   actively being held against the viewport is done with real
+ *   `position: fixed`, not a scroll-driven `transform`: fixed positioning
+ *   is tracked by the browser's compositor, so once an edge is pinned it
+ *   costs no further JS and has no per-frame lag behind the scroll. A
+ *   `transform`-driven version has to recompute and repaint on every
+ *   scroll pixel while gluing an edge, trailing the (compositor-driven,
+ *   zero-lag) rest of the page by however long the scroll → rAF → style
+ *   round trip takes -- visible as the sidebar swimming relative to the
+ *   page during a fast scroll. `transform` is used only while "parked"
+ *   (between the two pins, or before/after the sticky range), where the
+ *   position does not need to track scroll at all and a constant
+ *   `transform` costs nothing further either.
+ * - Because `position: fixed` removes the wrapper from normal flow, the
+ *   sidebar column reserves its height with an explicit `min-height` so
+ *   nothing collapses or overlaps while an edge is pinned.
+ * - The travel distance is deliberately path-dependent: where the sidebar
+ *   sits depends on which way you came, not just on the scroll position.
+ *   That hysteresis is what "sticks the bottom going down, the top going
+ *   up" means, and it is what keeps a sidebar taller than the screen fully
+ *   readable in both directions. It is implemented as a pure clamp of the
+ *   current position into the band between the top-pin and bottom-pin
+ *   offsets, rather than by branching on scroll direction: whichever pin
+ *   the current position has fallen outside of "wins". That makes it
+ *   correct on the very first frame after (re)computing where things are
+ *   (page load already scrolled past the sidebar, a mobile-to-desktop
+ *   resize, a submenu changing the sidebar's height, ...), where a
+ *   direction-based version has nothing to compare against yet and would
+ *   otherwise render one frame in the wrong place and visibly snap into
+ *   position on the next scroll event.
+ * - Each sidebar keeps its own state in a closure, so more than one on a
+ *   page cannot interfere.
  */
 
 (function (Drupal, once) {
-  const desktopBreakpoint = '(min-width: 992px)';
+  // Matches $su-screen-lg, the width at which the layout switches from
+  // stacked columns to sidebar-beside-content.
+  const desktopQuery = '(min-width: 992px)';
 
   const sidebarSelector = '.hb-three-column__sidebar-1';
   const containerSelector = '.hb-three-column';
+  const mainSelector = '.hb-three-column__main';
+
   const wrapperClass = 'hb-sticky-sidebar__inner';
   const activeClass = 'hb-sticky-sidebar--active';
   const pinnedClass = 'hb-sticky-sidebar--pinned';
 
-  // Optional breathing room between the pinned sidebar and the viewport
-  // edge (e.g. so it doesn't sit flush against the very top/bottom of the
-  // screen). Set to 0 to disable.
+  // Breathing room between the pinned sidebar and the viewport edges.
   const topSpacing = 0;
   const bottomSpacing = 0;
 
+  // A window resize drag, a submenu opening and an image loading can each
+  // fire several times in a row, so re-measuring waits for them to settle.
+  const remeasureDelay = 100;
+
   function initStickySidebar(sidebar) {
-    const container = sidebar.closest(containerSelector) || sidebar.parentElement;
-    const mq = window.matchMedia(desktopBreakpoint);
+    const container = sidebar.closest(containerSelector);
 
-    let wrapper = null;
-    let metrics = null;
-    let rafId = null;
-    let resizeTimer = null;
-    let contentResizeObserver = null;
-
-    function measure() {
-      // Reset first so measurements reflect natural, unpositioned layout.
-      wrapper.style.cssText = '';
-
-      const sidebarRect = sidebar.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      const scrollY = window.pageYOffset;
-
-      metrics = {
-        containerTop: containerRect.top + scrollY,
-        containerBottom: containerRect.bottom + scrollY,
-        sidebarHeight: wrapper.offsetHeight,
-        left: sidebarRect.left,
-        width: sidebarRect.width,
-      };
-
-      // Reserve the column's height so the grid doesn't collapse once the
-      // wrapper is taken out of flow (position: fixed).
-      sidebar.style.minHeight = `${metrics.sidebarHeight}px`;
+    if (!container) {
+      return;
     }
 
-    function loop() {
-      rafId = null;
-      if (!metrics) {
-        return;
-      }
+    // The sidebar is released at the bottom of the main content region, so
+    // it scrolls off with the body content rather than at the bottom of the
+    // section, which can carry padding below it.
+    const main = container.querySelector(mainSelector) || container;
+    const desktop = window.matchMedia(desktopQuery);
 
-      const { containerTop, containerBottom, sidebarHeight, left, width } = metrics;
+    let wrapper = null;
+    let frame = null;
+    let remeasureTimer = null;
+    let contentObserver = null;
+
+    // Every position below is in document space, in pixels.
+    let naturalTop = 0; // Where the wrapper sits in normal flow.
+    let releaseAt = 0; // Document Y the wrapper's bottom may not pass.
+    let wrapperHeight = 0;
+    let left = 0; // The sidebar column's own offset, for fixed positioning.
+    let width = 0;
+    let offset = 0; // How far the wrapper currently sits from naturalTop.
+
+    // What is currently applied to the DOM: 'static' (in-flow, positioned
+    // with a transform if `offset` is non-zero), 'fixed-top' or
+    // 'fixed-bottom'. Starts `null` so the first update() always applies,
+    // even if the computed mode happens to be 'static' with offset 0.
+    let mode = null;
+
+    function measure() {
+      // Reset first so the read reflects natural layout rather than
+      // whatever is currently pinned. This forces a reflow, but only here
+      // -- on init, on resize, and when the sidebar or main content
+      // changes height -- never on scroll.
+      wrapper.style.cssText = '';
+      sidebar.style.minHeight = '';
+
+      const scrollY = window.pageYOffset;
+      const sidebarRect = sidebar.getBoundingClientRect();
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const mainBottom = main.getBoundingClientRect().bottom + scrollY;
+
+      naturalTop = wrapperRect.top + scrollY;
+      wrapperHeight = wrapperRect.height;
+      left = sidebarRect.left;
+      width = sidebarRect.width;
+
+      // Math.max keeps a sidebar that is taller than the main content at a
+      // travel distance of zero rather than a negative one.
+      releaseAt = Math.max(mainBottom, naturalTop + wrapperHeight);
+
+      // Reserve the column's height so nothing collapses or overlaps while
+      // the wrapper is taken out of flow below.
+      sidebar.style.minHeight = `${wrapperHeight}px`;
+
+      // Force the next update() to reapply styles even if the mode it
+      // computes is unchanged -- left/width (from a resize) or which
+      // pixel edge is glued may need to move regardless.
+      mode = null;
+    }
+
+    function applyStatic(docTop) {
+      wrapper.style.position = '';
+      wrapper.style.top = '';
+      wrapper.style.bottom = '';
+      wrapper.style.left = '';
+      wrapper.style.width = '';
+
+      const t = Math.round(docTop - naturalTop);
+      wrapper.style.transform = t !== 0 ? `translate3d(0, ${t}px, 0)` : '';
+
+      // Still offset from its natural spot (parked mid-scroll, or released
+      // and left sitting at the bottom of the main content) needs the same
+      // z-index bump a pinned edge does, for the same reason.
+      sidebar.classList.toggle(pinnedClass, t !== 0);
+    }
+
+    function applyFixed(edge) {
+      wrapper.style.transform = '';
+      wrapper.style.position = 'fixed';
+      wrapper.style.top = edge === 'top' ? `${topSpacing}px` : '';
+      wrapper.style.bottom = edge === 'bottom' ? `${bottomSpacing}px` : '';
+      wrapper.style.left = `${left}px`;
+      wrapper.style.width = `${width}px`;
+      sidebar.classList.add(pinnedClass);
+    }
+
+    function update() {
+      frame = null;
+
       const scrollY = window.pageYOffset;
       const viewportHeight = window.innerHeight;
 
-      // Where the sidebar's top would sit (viewport-relative) if it were
-      // just sitting untouched at the top of the container.
-      const naturalTop = containerTop - scrollY;
+      // The two offsets that put an edge of the sidebar against an edge of
+      // the viewport, and the furthest it may travel before being released.
+      const pinTop = (scrollY + topSpacing) - naturalTop;
+      const pinBottom = (scrollY + viewportHeight) - bottomSpacing - wrapperHeight - naturalTop;
+      const maxOffset = releaseAt - naturalTop - wrapperHeight;
 
-      if (naturalTop >= 0) {
-        // Container hasn't reached the top of the screen yet: normal flow.
-        sidebar.classList.remove(pinnedClass);
-        wrapper.style.cssText = '';
+      let next;
+      let nextMode;
+
+      if (wrapperHeight + topSpacing + bottomSpacing <= viewportHeight) {
+        // The sidebar fits on screen, so both directions want the same
+        // thing: hold its top edge at the top of the viewport, which keeps
+        // all of it visible the whole way down. Pinning the bottom edge
+        // instead would shove a short sidebar to the foot of the screen and
+        // open a gap above it, and there is nothing to read into by
+        // scrolling since it is already fully shown.
+        next = pinTop;
+        nextMode = 'fixed-top';
+      } else if (offset < pinBottom) {
+        // The edge being scrolled toward (down) would otherwise leave the
+        // screen: catch it there.
+        next = pinBottom;
+        nextMode = 'fixed-bottom';
+      } else if (offset > pinTop) {
+        // Mirror, scrolling up.
+        next = pinTop;
+        nextMode = 'fixed-top';
+      } else {
+        // Comfortably between the two pins: leave it parked wherever it
+        // currently sits, scrolling with the page, until one of the above
+        // catches up to it. Reversing direction here is what releases a
+        // pin and lets the reader work through a long sidebar either way.
+        next = offset;
+        nextMode = 'static';
+      }
+
+      // Never travel above the natural position or past the bottom of the
+      // main content, so at both ends of the range the sidebar simply
+      // scrolls away like the main column. Hitting either of these bounds
+      // means the sidebar isn't tracking scroll any more, so it's static.
+      const clamped = Math.min(Math.max(next, 0), Math.max(maxOffset, 0));
+
+      if (clamped !== next) {
+        nextMode = 'static';
+      }
+
+      offset = clamped;
+
+      if (nextMode === mode) {
+        // Already showing the right thing. While an edge is pinned this is
+        // the common case on every scroll event: the browser is already
+        // rendering it correctly via `position: fixed`, with nothing
+        // further for JS to do.
         return;
       }
 
-      const pinTop = topSpacing;
-      const pinBottom = viewportHeight - sidebarHeight - bottomSpacing;
+      mode = nextMode;
 
-      let top = naturalTop;
-      top = Math.min(top, pinTop);
-      top = Math.max(top, pinBottom);
-
-      // Don't let the sidebar's bottom edge pass the bottom of the shared
-      // container — this is what makes it release and scroll off screen
-      // at the end, same as the main content column.
-      const maxTopFromContainer = containerBottom - scrollY - sidebarHeight;
-      top = Math.min(top, maxTopFromContainer);
-
-      sidebar.classList.add(pinnedClass);
-      wrapper.style.position = 'fixed';
-      wrapper.style.top = `${top}px`;
-      wrapper.style.left = `${left}px`;
-      wrapper.style.width = `${width}px`;
+      if (mode === 'fixed-top') {
+        applyFixed('top');
+      } else if (mode === 'fixed-bottom') {
+        applyFixed('bottom');
+      } else {
+        applyStatic(naturalTop + offset);
+      }
     }
 
     function onScroll() {
-      if (rafId) {
-        return;
+      if (frame === null) {
+        frame = requestAnimationFrame(update);
       }
-      rafId = requestAnimationFrame(loop);
     }
 
-    // Shared by window resize and sidebar-content resize: re-measure after
-    // a short debounce (a toggled submenu or a resize drag can trigger
-    // several rapid layout changes in a row).
-    function remeasureDebounced() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
+    function remeasure() {
+      clearTimeout(remeasureTimer);
+      remeasureTimer = setTimeout(() => {
         measure();
         onScroll();
-      }, 150);
+      }, remeasureDelay);
     }
 
     function onResize() {
-      if (!mq.matches) {
-        return;
+      if (desktop.matches) {
+        remeasure();
       }
-      remeasureDebounced();
     }
 
     function enable() {
       if (!wrapper) {
         wrapper = document.createElement('div');
         wrapper.className = wrapperClass;
+
         while (sidebar.firstChild) {
           wrapper.appendChild(sidebar.firstChild);
         }
+
         sidebar.appendChild(wrapper);
       }
 
       sidebar.classList.add(activeClass);
       measure();
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
+      update();
 
-      // Content inside the sidebar can change height without a window
-      // resize firing (submenu toggles like `.hb-secondary-toggler`,
-      // images loading in a block, etc.). Watch for that and re-measure
-      // so the pinned position doesn't get stale or clip content.
-      if (!contentResizeObserver && 'ResizeObserver' in window) {
-        contentResizeObserver = new ResizeObserver(remeasureDebounced);
-        contentResizeObserver.observe(wrapper);
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // Either column can change height without the window resizing, and
+      // both move where the sidebar has to pin: a submenu toggling open or
+      // an image loading in the sidebar, an AJAX view or a pager redrawing
+      // the main content.
+      if (!contentObserver && 'ResizeObserver' in window) {
+        contentObserver = new ResizeObserver(remeasure);
+        contentObserver.observe(wrapper);
+        contentObserver.observe(main);
       }
     }
 
     function disable() {
       window.removeEventListener('scroll', onScroll);
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
+      clearTimeout(remeasureTimer);
+
+      if (frame !== null) {
+        cancelAnimationFrame(frame);
+        frame = null;
       }
-      if (contentResizeObserver) {
-        contentResizeObserver.disconnect();
-        contentResizeObserver = null;
+
+      if (contentObserver) {
+        contentObserver.disconnect();
+        contentObserver = null;
       }
+
+      // The wrapper is left in place: the breakpoint can be crossed either
+      // way, and unwrapping would tear down DOM that other behaviors may
+      // already hold references into.
       sidebar.classList.remove(activeClass, pinnedClass);
       sidebar.style.minHeight = '';
+
       if (wrapper) {
         wrapper.style.cssText = '';
       }
-      metrics = null;
+
+      offset = 0;
+      mode = null;
     }
 
     function setup() {
-      if (mq.matches) {
+      if (desktop.matches) {
         enable();
       } else {
         disable();
@@ -201,23 +318,28 @@
 
     setup();
 
-    if (mq.addEventListener) {
-      mq.addEventListener('change', setup);
-    }
+    desktop.addEventListener('change', setup);
     window.addEventListener('resize', onResize, { passive: true });
   }
 
   Drupal.behaviors.hbStickySidebar = {
     attach(context) {
-      const sidebars = once('hb-sticky-sidebar', sidebarSelector, context);
+      once('hb-sticky-sidebar', sidebarSelector, context)
+        .filter((sidebar) => {
+          // Some Layout Builder markup repeats the sidebar class on a
+          // wrapper that also holds the main content column. Sticking that
+          // would take the whole page with it.
+          if (sidebar.querySelector(mainSelector)) {
+            return false;
+          }
 
-      // Guard against the nested-duplicate-class case: only ever
-      // initialize the outermost element matching sidebarSelector.
-      sidebars
-        .filter((el) => !el.parentElement || !el.parentElement.closest(sidebarSelector))
-        .forEach((sidebar) => {
-          initStickySidebar(sidebar);
-        });
+          // Otherwise, when the class is nested, only the outermost one that
+          // holds just sidebar content is stuck.
+          const outer = sidebar.parentElement?.closest(sidebarSelector);
+
+          return !outer || !!outer.querySelector(mainSelector);
+        })
+        .forEach(initStickySidebar);
     },
   };
 }(Drupal, once));

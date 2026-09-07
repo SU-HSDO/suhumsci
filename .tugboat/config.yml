@@ -94,7 +94,7 @@ services:
         - composer install --no-ansi
 
         - |
-          for ALIAS in ${TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES//,/ } do
+          for ALIAS in ${TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES//,/ }; do
             SITE_ID=${ALIAS//-/_}
             drush @${SITE_ID}.local cr
             drush @${SITE_ID}.local deploy

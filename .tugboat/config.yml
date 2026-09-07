@@ -36,6 +36,7 @@ services:
 
         # Init the settings files.
         - drush sws:multisite:settings
+      update:
         # Composer install.
         - rm -rf vendor
         - composer install --no-ansi
@@ -51,7 +52,6 @@ services:
             drush @${site_id}.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
           done
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
-      # update:
       #   - rm -rf vendor
       #   - composer install --no-ansi
       #   # Sync to hs_colorful, hs_colorful database & files and create user.
@@ -95,6 +95,7 @@ services:
         - composer install --no-ansi
 
         - |
+          IFS=,
           for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
             site_id=$(echo $alias | sed "s/-/_/g")
             drush @${site_id}.local cr

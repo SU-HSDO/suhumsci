@@ -6,22 +6,6 @@
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 
-.hb-media-video:has(.hb-video-lazy) {
-  // Margin to give enough space between the play button and the text.
-  @include hb-themes(('colorful', 'airy')) {
-    margin-bottom: hb-calculate-rems(8px);
-  }
-
-  @include hb-traditional {
-    margin-bottom: hb-calculate-rems(6px);
-  }
-
-  // Needs more space if it's followed by text.
-  &:has(+ p) {
-    margin-bottom: hb-calculate-rems(16px);
-  }
-}
-
 .hb-video-lazy {
   position: relative;
   aspect-ratio: 16 / 9;

@@ -3,17 +3,23 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_postcard.field_hs_postcard_alignment
     - field.field.paragraph.hs_postcard.field_hs_postcard_body
     - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
+    - field.field.paragraph.hs_postcard.field_hs_postcard_layout
     - field.field.paragraph.hs_postcard.field_hs_postcard_link
     - field.field.paragraph.hs_postcard.field_hs_postcard_title
+    - field.field.paragraph.hs_postcard.field_hs_postcard_vertical_style
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - allowed_formats
+    - conditional_fields
+    - field_formatter_class
     - linkit
     - maxlength
     - media_library
+    - style_selector
     - text
 _core:
   default_config_hash: UysLzDvqJYQV5qn6Jc5j3y3Mqf9g8r0XAlQJ4o0SV2U
@@ -22,6 +28,42 @@ targetEntityType: paragraph
 bundle: hs_postcard
 mode: default
 content:
+  field_hs_postcard_alignment:
+    type: style_selector_tile_widget
+    weight: 6
+    region: content
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      conditional_fields:
+        1307736b-c392-43c5-9179-493ce35be541:
+          entity_type: paragraph
+          bundle: hs_postcard
+          dependee: field_hs_postcard_layout
+          settings:
+            state: visible
+            reset: false
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: horizontal
+            effect: show
+            effect_options: {  }
+            selector: ':input[name*="field_hs_postcard_layout"][name*="style_selector"]'
   field_hs_postcard_body:
     type: text_textarea
     weight: 2
@@ -38,12 +80,6 @@ content:
       allowed_formats:
         hide_help: '0'
         hide_guidelines: '0'
-  field_hs_postcard_display:
-    type: options_select
-    weight: 4
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_hs_postcard_image:
     type: media_library_widget
     weight: 0
@@ -51,6 +87,23 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
+  field_hs_postcard_layout:
+    type: style_selector_tile_widget
+    weight: 4
+    region: content
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   field_hs_postcard_link:
     type: linkit
     weight: 3
@@ -72,7 +125,44 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_hs_postcard_vertical_style:
+    type: style_selector_tile_widget
+    weight: 5
+    region: content
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      conditional_fields:
+        e5808d1c-a34b-4af1-aab5-a2f2177ff549:
+          entity_type: paragraph
+          bundle: hs_postcard
+          dependee: field_hs_postcard_layout
+          settings:
+            state: visible
+            reset: false
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: vertical
+            effect: show
+            effect_options: {  }
+            selector: ':input[name*="field_hs_postcard_layout"][name*="style_selector"]'
 hidden:
   created: true
+  field_hs_postcard_display: true
   status: true
   uid: true

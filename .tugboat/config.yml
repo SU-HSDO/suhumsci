@@ -37,62 +37,85 @@ services:
         # Init the settings files.
         - drush sws:multisite:settings
       update:
+        # Composer install.
         - rm -rf vendor
         - composer install --no-ansi
-        # Sync to hs_colorful, hs_colorful database & files and create user.
-        - drush sql-sync @hs_colorful.prod @hs_colorful.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @hs_colorful.local sql-sanitize --no-interaction --ansi
-        - drush rsync @hs_colorful.prod:%files @hs_colorful.local:%files --ansi --no-interaction
-        - drush @hs_colorful.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-        - drush @hs_colorful.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
-
-        # Sync to hs_traditional, hs_traditional database & files and create user.
-        - drush sql-sync @hs_traditional.prod @hs_traditional.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @hs_traditional.local sql-sanitize --no-interaction --ansi
-        - drush rsync @hs_traditional.prod:%files @hs_traditional.local:%files --ansi --no-interaction
-        - drush @hs_traditional.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-        - drush @hs_traditional.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
-
-        # Sync to english, english database & files, does not create a user.
-        - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @english.local sql-sanitize --no-interaction --ansi
-        - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
-        - drush @english.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-        - drush @english.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
-
-        # Sync to history, history database & files, does not create a user.
-        - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @history.local sql-sanitize --no-interaction --ansi
-        - drush rsync @history.prod:%files @history.local:%files --ansi --no-interaction
-        - drush @history.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-        - drush @history.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
-
-        # Sync to west, west database & files, does not create a user.
-        - drush sql-sync @west.prod @west.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @west.local sql-sanitize --no-interaction --ansi
-        - drush rsync @west.prod:%files @west.local:%files --ansi --no-interaction
-        - drush @west.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
-        - drush @west.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
-
+        # Install sites.
+        - |
+          IFS=,
+          for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
+            site_id=$(echo $alias | sed "s/-/_/g")
+            drush sql-sync @${site_id}.prod @${site_id}.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+            drush @${site_id}.local sql-sanitize --no-interaction --ansi
+            drush rsync @${site_id}.prod:%files @${site_id}.local:%files --ansi --no-interaction
+            drush @${site_id}.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+            drush @${site_id}.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+          done
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
+      #   - rm -rf vendor
+      #   - composer install --no-ansi
+      #   # Sync to hs_colorful, hs_colorful database & files and create user.
+      #   - drush sql-sync @hs_colorful.prod @hs_colorful.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+      #   - drush @hs_colorful.local sql-sanitize --no-interaction --ansi
+      #   - drush rsync @hs_colorful.prod:%files @hs_colorful.local:%files --ansi --no-interaction
+      #   - drush @hs_colorful.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+      #   - drush @hs_colorful.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+      #
+      #   # Sync to hs_traditional, hs_traditional database & files and create user.
+      #   - drush sql-sync @hs_traditional.prod @hs_traditional.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+      #   - drush @hs_traditional.local sql-sanitize --no-interaction --ansi
+      #   - drush rsync @hs_traditional.prod:%files @hs_traditional.local:%files --ansi --no-interaction
+      #   - drush @hs_traditional.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+      #   - drush @hs_traditional.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+      #
+      #   # Sync to english, english database & files, does not create a user.
+      #   - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+      #   - drush @english.local sql-sanitize --no-interaction --ansi
+      #   - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
+      #   - drush @english.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+      #   - drush @english.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+      #
+      #   # Sync to history, history database & files, does not create a user.
+      #   - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+      #   - drush @history.local sql-sanitize --no-interaction --ansi
+      #   - drush rsync @history.prod:%files @history.local:%files --ansi --no-interaction
+      #   - drush @history.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+      #   - drush @history.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+      #
+      #   # Sync to west, west database & files, does not create a user.
+      #   - drush sql-sync @west.prod @west.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+      #   - drush @west.local sql-sanitize --no-interaction --ansi
+      #   - drush rsync @west.prod:%files @west.local:%files --ansi --no-interaction
+      #   - drush @west.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
+      #   - drush @west.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+      #
+      #   - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
         - rm -rf vendor
         - composer install --no-ansi
 
-        - drush @hs_colorful.local cr
-        - drush @hs_colorful.local deploy
+        - |
+          IFS=,
+          for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
+            site_id=$(echo $alias | sed "s/-/_/g")
+            drush @${site_id}.local cr
+            drush @${site_id}.local deploy
+          done
 
-        - drush @hs_traditional.local cr
-        - drush @hs_traditional.local deploy
-
-        - drush @english.local cr
-        - drush @english.local deploy
-
-        - drush @history.local cr
-        - drush @history.local deploy
-
-        - drush @west.local cr
-        - drush @west.local deploy
+        # - drush @hs_colorful.local cr
+        # - drush @hs_colorful.local deploy
+        #
+        # - drush @hs_traditional.local cr
+        # - drush @hs_traditional.local deploy
+        #
+        # - drush @english.local cr
+        # - drush @english.local deploy
+        #
+        # - drush @history.local cr
+        # - drush @history.local deploy
+        #
+        # - drush @west.local cr
+        # - drush @west.local deploy
 
         # Build frontend assets. Prevent Puppeteer from downloading chrome because it's not needed here.
         - PUPPETEER_SKIP_DOWNLOAD=true npm run theme-build

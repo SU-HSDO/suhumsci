@@ -9,20 +9,20 @@
 
 // $convert-to-rem: false outputs px for CKEditor (admin theme controls root font size).
 @mixin hb-button-size-vars($convert-to-rem: true) {
-  @each $size, $properties in $hb-button-sizes {
+  @each $size, $properties in get-theme-array-list($hb-button-size-list) {
     @each $property, $value in $properties {
-      --hb-button-#{$property}--#{$size}: #{if(
-          $convert-to-rem,
-          hb-calculate-rems($value),
-          $value
-        )};
+      $output: if($convert-to-rem, hb-calculate-rems($value), $value);
+
+      --hb-button-#{$property}--#{$size}: #{$output};
     }
   }
 }
 
 @mixin hb-button-size($size: 'standard') {
-  @if not map.has-key($hb-button-sizes, $size) {
-    @error 'Unknown button size `#{$size}`. Expected one of #{map.keys($hb-button-sizes)}.';
+  $sizes: get-theme-array-list($hb-button-size-list);
+
+  @if not map.has-key($sizes, $size) {
+    @error 'Unknown button size `#{$size}`. Expected one of #{map.keys($sizes)}.';
   }
 
   font-size: var(--hb-button-font-size--#{$size});

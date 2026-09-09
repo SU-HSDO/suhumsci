@@ -14,8 +14,8 @@ See [H&S Development Requirements](DevelopmentRequirements.md)
 
 Several different aliases are referenced throughout this guide:
 
-* **URL Alias** — the chosen live domain/site URL (e.g., `<URL_ALIAS>.stanford.edu`)
-* **Site Alias** — the site name used when provisioning the site (in `docroot/sites/<SITE_ALIAS>`), also used for **Drush Aliases** (e.g., `@<SITE_ALIAS>.prod`)
+* **URL Alias**: the chosen live domain/site URL (e.g., `<URL_ALIAS>.stanford.edu`)
+* **Site Alias**: the site name used when provisioning the site (in `docroot/sites/<SITE_ALIAS>`), also used for **Drush Aliases** (e.g., `@<SITE_ALIAS>.prod`)
   * Site Alias uses underscores `_` instead of dashes `-`, and double underscores `__` for periods `.`
   * Example: URL Alias `my-site` → Site Alias `my_site`
 
@@ -25,8 +25,8 @@ Several different aliases are referenced throughout this guide:
 
 Search for the desired URL Alias in [NetDB](https://netdb.stanford.edu/) (requires Stanford network access or VPN):
 
-* If there are no results, proceed — the alias is available.
-* If the alias is on the `stanfordedu.edgesuite.net` NetDB node, it points to the SWS WAF / CDN — you're ready to proceed.
+* If there are no results, proceed; the alias is available.
+* If the alias is on the `stanfordedu.edgesuite.net` NetDB node, it points to the SWS WAF / CDN, so you're ready to proceed.
 * If the alias is on the `stanford.dns.bl.ink` NetDB node, it's in the [Vanity URL](https://vanityurl.stanford.edu/) service. Verify H&S owns the domain and request they add it to the `hsweb:sws-vanity-url-shared` workgroup for SWS access.
 * If the alias exists on another NetDB node, a site is already using it. Verify H&S ownership and confirm you have NetDB modification access before proceeding.
 
@@ -236,7 +236,7 @@ Navigate to the prod site (`<SITE_ALIAS>-prod.stanford.edu` or the live URL if a
 
 1. Log into [Google Search Console](https://search.google.com/) with the SWS Developers Google account (uses TFA)
    * **Important:** Ensure you're logged into the SWSdevelopers account, not your personal account
-   * Credentials are stored in the team's internal credential management system — ask a team member if you need access
+   * Credentials are stored in the team's internal credential management system; ask a team member if you need access
 
 1. Add the property:
    * Click "Add Property" (or a form will appear with Domain/URL prefix options)
@@ -269,7 +269,7 @@ Navigate to the prod site (`<SITE_ALIAS>-prod.stanford.edu` or the live URL if a
 
 > **Note:** This section was more relevant during D7-to-D8 switchovers; current cleanup needs are minimal.
 
-> **Important:** Use the correct alias — easy to confuse old and new when both are on the same stack.
+> **Important:** Use the correct alias; it is easy to confuse old and new when both are on the same stack.
 
 If replacing an old site, disable its canonical URL redirect and enable nobots:
 

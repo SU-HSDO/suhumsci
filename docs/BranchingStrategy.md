@@ -1,6 +1,6 @@
 # H&S Branching Strategy
 
-This document describes the active branching model for the HSDP application.
+This document describes the active branching model for the HSDP application, originally adopted in [ADR 0003](architecture/decisions/0003-adopt-major-version-development-branching-strategy.md).
 
 ## Branch Roles
 

@@ -179,7 +179,7 @@ This step cannot be completed until the provisioned code PR has been merged and 
 
 New sites are installed using the `su_humsci_profile`.
 
-Configurations in `su_humsci_profile` are overridden by those in `config/default` during the site-install process. The profile is valuable for:
+During the site-install process, the installer imports configuration from the shared sync directory (`config/default`, set in `docroot/sites/settings/global.settings.php`). The profile's `config/sync` directory is a symlink to `config/default`, so there is a single copy of the platform configuration. The install-time import does not run the transformation pipeline, so `config_ignore` and `config_split` do not apply: new sites receive everything in `config/default`, including configs that are ignored on later imports (blocks, roles, etc.). See [New Sites vs Existing Sites](Config.md#new-sites-vs-existing-sites) in the configuration documentation for the patterns this enables. The profile is valuable for:
 - Adding update hooks for new multisites
 - Providing placeholder content for new sites
 - Defining initial site-specific settings

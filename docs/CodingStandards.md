@@ -11,6 +11,39 @@ This repo follows [Drupal Coding Standards](https://www.drupal.org/docs/develop/
 - User input should be [properly sanitized when rendered](https://www.drupal.org/docs/8/security/drupal-8-sanitizing-output).
 - Code should follow [Drupal Security Best Practices](https://www.drupal.org/docs/develop/security).
 
+## Review Patterns
+
+These corrections come up repeatedly in code review of this codebase. Apply them preemptively when writing code; do not wait for review to catch them.
+
+### PHP
+
+- Guard with `hasField()` before `->get()` on any field, and check `instanceof` (e.g. `ParagraphInterface`) before using a referenced entity.
+- Use strict comparison (`===`, `!==`). Watch `array_search` returning `0`, which equals `FALSE` under loose comparison.
+- Use `?->first()` for nullable entity references instead of null checks.
+- Prefer early returns over deep nesting. Use `if` over `switch` when every case returns.
+- `break` out of loops once the condition is met.
+- Add return type declarations to functions and scope helper functions properly.
+- Use `t()` and routing or URL objects for translatable links, not hardcoded HTML.
+
+### Update and Deploy Hooks
+
+- Batch with `$sandbox`; batch size around 50.
+- `return t(...)` with counts or metrics from every update.
+- Grant permissions in their own update hook that runs before dependent config. The `administrator` role gets all permissions by default; do not add them explicitly.
+- Do not delete field storage in the same update that migrates data off it.
+
+See [Configuration Management](Config.md) for the update-hook and deploy-hook split and related rules.
+
+### Frontend (JS and Twig)
+
+- Always wrap behavior setup in `once('key', selector, context)`. Consider `once.remove()` for cleanup when elements may re-attach. See [Frontend Patterns](FrontendPatterns.md).
+- Use `visually-hidden` for screen-reader content; never `display: none` or DOM removal to hide semantics.
+- Set initial ARIA state in markup (`aria-expanded="false"`), use `aria-controls` with `clean_unique_id`, and prefer a visually-hidden `<span>` over `aria-label`.
+- Do not override image `alt` text when wrapping an image in a link; put the label on the link as `aria-label` or a visually-hidden span.
+- For empty-content checks on rendered fields, use `|render|striptags('<img><iframe><picture><video>')|trim` with a tag allow-list.
+- Use the `clean_class` Twig filter, not manual string replacement. Use spaces (not tabs) in Twig. Remove dev comments before committing.
+- Scope CSS and JS to the intended target (e.g. views tables vs WYSIWYG tables). Use lowercase hex colors. Avoid `!important`. Use the theme's breakpoint function for media queries.
+
 ## Automation and Tools
 - This repo includes both PHPCS and PHPStan configured for Drupal code, with CI runners for each on pull requests.
 

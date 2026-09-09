@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '../variables/general' as *;
 @use '../variables/fonts' as *;
 @use '../functions/fonts' as *;
@@ -5,6 +6,45 @@
 @use '../functions/animation' as *;
 @use '../functions/color' as *;
 @use 'theme' as *;
+
+// $convert-to-rem: false outputs px for CKEditor (admin theme controls root font size).
+@mixin hb-button-size-vars($convert-to-rem: true) {
+  @each $size, $properties in get-theme-array-list($hb-button-size-list) {
+    @each $property, $value in $properties {
+      $output: if($convert-to-rem, hb-calculate-rems($value), $value);
+
+      --hb-button-#{$property}--#{$size}: #{$output};
+    }
+  }
+}
+
+@mixin hb-button-size($size: 'standard') {
+  $sizes: get-theme-array-list($hb-button-size-list);
+
+  @if not map.has-key($sizes, $size) {
+    @error 'Unknown button size `#{$size}`. Expected one of #{map.keys($sizes)}.';
+  }
+
+  font-size: var(--hb-button-font-size--#{$size});
+  line-height: var(--scrunched-line-height);
+  padding: var(--hb-button-padding-block--#{$size})
+    var(--hb-button-padding-inline--#{$size});
+}
+
+// WYSIWYG buttons render one size down; shared by front end and CKEditor preview.
+@mixin hb-wysiwyg-button-sizes {
+  a.hs-button--big,
+  .hs-button--big a {
+    @include hb-button-size('standard');
+  }
+
+  a.hs-button,
+  .hs-button a,
+  a.hs-secondary-button,
+  .hs-secondary-button a {
+    @include hb-button-size('small');
+  }
+}
 
 // This removes styles added by default to button elements.
 // For when something should semantically be a button,
@@ -23,11 +63,11 @@
 }
 
 @mixin hb-button-base {
+  @include hb-button-size;
+
   display: inline-block;
   width: auto;
   font-weight: hb-theme-font-weight(semibold);
-  font-size: hb-calculate-rems(16px);
-  line-height: 1.4;
   text-decoration: none;
   text-align: center;
   border-width: hb-calculate-rems(2px);
@@ -53,12 +93,10 @@
   @include hb-themes(('colorful', 'airy')) {
     font-family: $hb-colorful-font--sans;
     border-radius: $hb-button-border-radius;
-    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
   }
 
   @include hb-traditional {
     font-family: $hb-traditional-font--sans;
-    padding: hb-calculate-rems(6px) hb-calculate-rems(26px);
   }
 }
 
@@ -110,16 +148,9 @@
 
 @mixin hb-big-button {
   @include hb-button;
-  font-size: hb-calculate-rems(18px);
+  @include hb-button-size('big');
+
   border-width: hb-calculate-rems(3px);
-
-  @include hb-themes(('colorful', 'airy')) {
-    padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
-  }
-
-  @include hb-traditional {
-    padding: hb-calculate-rems(8px) hb-calculate-rems(35px);
-  }
 }
 
 @mixin hb-secondary-button {

@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_algolia.module.
+ */
+
+use Drupal\Core\Site\Settings;
+use Drupal\node\NodeInterface;
+use Drupal\search_api\IndexInterface;
+
+/**
+ * Maximum size in bytes of a single Algolia record on the free plan.
+ */
+const HS_ALGOLIA_RECORD_LIMIT = 10000;
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * Search API removes an unpublished node from its tracker but leaves the
+ * Algolia record in place until the next full reindex. Clear it immediately so
+ * unpublishing takes content out of search right away.
+ */
+function hs_algolia_node_update(NodeInterface $node) {
+  if ($node->isPublished() || !$node->getOriginal()?->isPublished()) {
+    return;
+  }
+
+  if (\Drupal::hasService('search_api_algolia.helper')) {
+    \Drupal::service('search_api_algolia.helper')->entityDelete($node);
+  }
+}
+
+/**
+ * Implements hook_search_api_algolia_objects_alter().
+ *
+ * Shapes each record before it is sent to Algolia.
+ */
+function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInterface $index, array $items) {
+  $canonical_host = hs_algolia_canonical_host();
+  $current_host = \Drupal::requestStack()->getCurrentRequest()?->getSchemeAndHttpHost();
+
+  foreach ($objects as &$object) {
+    // Fields that only describe how Search API tracked the item.
+    unset($object['search_api_datasource'], $object['status']);
+
+    // Put the title first so records are readable in the Algolia dashboard.
+    if (isset($object['title'])) {
+      $object = ['title' => $object['title']] + $object;
+    }
+
+    foreach ($object as $name => &$value) {
+      // A taxonomy reference with a single value arrives as a string. Always
+      // send an array so the front end and Algolia facets see one shape.
+      $property_path = $index->getField($name)?->getPropertyPath() ?? '';
+      if (is_string($value) && str_contains($property_path, ':entity:name')) {
+        $value = [$value];
+      }
+
+      // Cron builds URLs from the current request, which on Acquia is the
+      // internal hostname rather than the site's public domain.
+      if ($canonical_host && $current_host && $canonical_host !== $current_host && is_string($value)) {
+        $value = str_replace($current_host, $canonical_host, $value);
+      }
+    }
+
+    hs_algolia_trim_record($object);
+  }
+}
+
+/**
+ * Get the site's canonical public host.
+ *
+ * @return string|null
+ *   Scheme and host, or NULL when no canonical domain is configured.
+ */
+function hs_algolia_canonical_host(): ?string {
+  $domain = \Drupal::config('domain_301_redirect.settings')->get('domain');
+  if (!$domain) {
+    return NULL;
+  }
+
+  // The stored value may or may not carry a scheme.
+  if (!parse_url($domain, PHP_URL_SCHEME)) {
+    $domain = 'https://' . $domain;
+  }
+
+  $parts = parse_url($domain);
+  if (empty($parts['host'])) {
+    return NULL;
+  }
+
+  return $parts['scheme'] . '://' . $parts['host'];
+}
+
+/**
+ * Trim a record's rendered HTML until it fits Algolia's size limit.
+ *
+ * Algolia rejects any record over 10KB on the free plan. Long pages are
+ * trimmed from the end rather than dropped entirely, so the record still
+ * matches on everything above the cut. Enable this only on sites using a plan
+ * with the smaller record limit.
+ *
+ * @param array $object
+ *   Algolia record, altered by reference.
+ */
+function hs_algolia_trim_record(array &$object): void {
+  if (!Settings::get('hs_algolia_trim_html') || empty($object['html'])) {
+    return;
+  }
+
+  while (strlen(json_encode($object, JSON_UNESCAPED_SLASHES)) > HS_ALGOLIA_RECORD_LIMIT) {
+    $words = explode(' ', $object['html']);
+    array_pop($words);
+
+    if (!$words) {
+      break;
+    }
+    $object['html'] = implode(' ', $words);
+  }
+}

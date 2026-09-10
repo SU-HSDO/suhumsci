@@ -56,6 +56,16 @@
   const containerSelector = '.hb-three-column';
   const mainSelector = '.hb-three-column__main';
 
+  // The admin toolbar's own bar (always present for a user who can see it)
+  // and the tray it opens into -- e.g. `#toolbar-item-administration-tray`,
+  // holding the `.toolbar-lining` admin menu -- are both `position: fixed`
+  // at the top of the viewport and stack on top of each other, so together
+  // they set how far down the sidebar's top pin needs to sit. The tray is
+  // watched directly (rather than trusting only `Drupal.displace()`) because
+  // it can be toggled open/closed by the user at any time.
+  const toolbarBarSelector = '#toolbar-bar';
+  const toolbarTraySelector = '.toolbar-tray';
+
   const wrapperClass = 'hb-sticky-sidebar__inner';
   const activeClass = 'hb-sticky-sidebar--active';
   const pinnedClass = 'hb-sticky-sidebar--pinned';
@@ -96,6 +106,7 @@
     let frame = null;
     let remeasureTimer = null;
     let contentObserver = null;
+    let toolbarObserver = null;
 
     // Every position below is in document space, in pixels.
     let naturalTop = 0; // Where the wrapper sits in normal flow.
@@ -298,6 +309,28 @@
         contentObserver.observe(wrapper);
         contentObserver.observe(main);
       }
+
+      // Belt and braces alongside the `drupalViewportOffsetChange` listener
+      // below: that event is only as timely as core's toolbar module is
+      // about dispatching it, so the bar and its tray(s) -- holding
+      // `.toolbar-lining` -- are also watched directly. Either one opening,
+      // closing, or changing height (its tray sliding open, the toolbar
+      // itself collapsing to icons) re-measures immediately rather than
+      // waiting on that event.
+      if (!toolbarObserver && 'ResizeObserver' in window) {
+        const toolbarBar = document.querySelector(toolbarBarSelector);
+        const toolbarTrays = document.querySelectorAll(toolbarTraySelector);
+
+        if (toolbarBar || toolbarTrays.length) {
+          toolbarObserver = new ResizeObserver(remeasure);
+
+          if (toolbarBar) {
+            toolbarObserver.observe(toolbarBar);
+          }
+
+          toolbarTrays.forEach((tray) => toolbarObserver.observe(tray));
+        }
+      }
     }
 
     function disable() {
@@ -312,6 +345,11 @@
       if (contentObserver) {
         contentObserver.disconnect();
         contentObserver = null;
+      }
+
+      if (toolbarObserver) {
+        toolbarObserver.disconnect();
+        toolbarObserver = null;
       }
 
       // The wrapper is left in place: the breakpoint can be crossed either

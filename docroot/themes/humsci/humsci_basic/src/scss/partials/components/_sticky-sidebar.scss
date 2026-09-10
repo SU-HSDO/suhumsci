@@ -16,6 +16,22 @@
   // transform.
   .hb-sticky-sidebar__inner {
     position: relative;
+
+    // `display: flow-root` gives this element its own block formatting
+    // context permanently, in every mode -- not just while `position: fixed`
+    // (which already gets one for free). Without it, a trailing child's
+    // bottom margin collapses through and is excluded from this element's
+    // own height while in normal flow, but is *included* once JS switches it
+    // to `position: fixed` (fixed positioning also establishes a BFC). That
+    // few-pixel difference is a genuine height change, so the JS's
+    // `ResizeObserver` (watching this element to re-measure when its content
+    // changes size) picks it up and re-measures -- which flips the mode
+    // back, changing the height back, re-triggering the observer, and so on
+    // -- a self-sustaining loop, visible as the sidebar jittering the whole
+    // time an edge is pinned. Forcing a BFC here unconditionally makes the
+    // height identical in both modes, so pinning/releasing never looks like
+    // a resize to begin with.
+    display: flow-root;
   }
 
   // Offset from its natural position -- an edge pinned via `position: fixed`,

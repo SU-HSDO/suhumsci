@@ -7,7 +7,7 @@
  * either end of the range it is released and scrolls away with the main
  * content column.
  *
- * The behavior only runs from 'lg' up, where the layout actually puts the
+ * The behavior only runs from the 'lg' breakpoint up, where the layout actually puts the
  * sidebar beside the main content. Below that the columns stack and every
  * block in the sidebar is left in normal flow.
  *

@@ -65,6 +65,22 @@ $container-medium: hb-calculate-rems(768px);
   }
 }
 
+// Without an image, the date card shrinks the graphics area to fit the date tile.
+.hb-card--horizontal-date-stacked.hb-card--no-image:has(.hb-card__graphics) {
+  .hb-card__wrapper {
+    @include grid-media-min('md') {
+      grid-template: 'a b' auto / auto 1fr;
+    }
+  }
+
+  .hb-card__content,
+  .hb-card__graphics {
+    @include grid-media-min('md') {
+      padding-inline: 0;
+    }
+  }
+}
+
 .hb-card__graphics {
   position: relative;
 
@@ -251,6 +267,7 @@ $container-medium: hb-calculate-rems(768px);
     .ptype-hs-collection & {
       @include hb-heading-4;
     }
+
   }
 
   h6 {
@@ -272,7 +289,7 @@ $container-medium: hb-calculate-rems(768px);
 
     &:hover,
     &:focus {
-      text-decoration-color: color('link-base');
+      text-decoration-color: color('primary');
       text-decoration-thickness: 9%;
 
       .hb-dark-pattern &,
@@ -280,6 +297,17 @@ $container-medium: hb-calculate-rems(768px);
         color: var(--link-base-hover-current-color);
       }
     }
+  }
+
+  // Override external link colors.
+  a.ext {
+    --link-base-current-color: #{color('black', 'global')};
+    --link-base-hover-current-color: #{color('black', 'global')};
+  }
+
+  // Override font size in pill link list.
+  .hb-pill-link-list a {
+    font-size: hb-calculate-rems(14px);
   }
 }
 

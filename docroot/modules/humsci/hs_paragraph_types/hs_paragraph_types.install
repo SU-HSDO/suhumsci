@@ -745,3 +745,116 @@ function hs_paragraph_types_update_10031() {
 
   return t('Removed the image_gallery behavior plugin from the stanford_gallery paragraph type.');
 }
+
+/**
+ * Backfills default values onto entities with empty "Style list" fields.
+ *
+ * Every "Style list" (style_selector_css_class) field instance is required
+ * and has a default_value configured, but defaults only apply to newly
+ * created entities. Existing content created before the default was set (or
+ * migrated without it) stores NULL, and saving it triggers a "This value
+ * should not be null" constraint violation. This update finds every
+ * style_selector_css_class field instance and sets the configured default on
+ * any entity where the value is missing.
+ */
+function hs_paragraph_types_update_10032(&$sandbox) {
+  if (!isset($sandbox['field_configs'])) {
+    /** @var \Drupal\field\FieldConfigStorage $field_config_storage */
+    $field_config_storage = \Drupal::entityTypeManager()->getStorage('field_config');
+    $field_configs = $field_config_storage->loadByProperties(['field_type' => 'style_selector_css_class']);
+
+    $configs = [];
+    $grand_total = 0;
+    foreach ($field_configs as $field_config) {
+      /** @var \Drupal\field\Entity\FieldConfig $field_config */
+      // Skip instances that compute defaults via callback; only the literal
+      // default can be safely applied without an entity context.
+      if ($field_config->getDefaultValueCallback()) {
+        continue;
+      }
+      $default_value = $field_config->getDefaultValueLiteral();
+      if (empty($default_value[0]['value'])) {
+        continue;
+      }
+
+      $entity_type_id = $field_config->getTargetEntityTypeId();
+      $bundle = $field_config->getTargetBundle();
+      $field_name = $field_config->getName();
+      $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+      $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+
+      // Find entities of this bundle whose Style list field is empty. The
+      // 'IS NULL' operator forces a LEFT JOIN so entities with no field row
+      // are included.
+      $ids = array_values($entity_storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition($entity_type->getKey('bundle'), $bundle)
+        ->condition($field_name, NULL, 'IS NULL')
+        ->execute());
+
+      if (empty($ids)) {
+        continue;
+      }
+
+      $configs[] = [
+        'entity_type' => $entity_type_id,
+        'field_name' => $field_name,
+        'default_value' => $default_value[0]['value'],
+        'ids' => $ids,
+      ];
+      $grand_total += count($ids);
+    }
+
+    $sandbox['field_configs'] = $configs;
+    $sandbox['current_index'] = 0;
+    $sandbox['grand_total'] = $grand_total;
+    $sandbox['updated'] = 0;
+
+    if ($grand_total === 0) {
+      $sandbox['#finished'] = 1;
+      return t('No entities with empty Style list fields found.');
+    }
+  }
+
+  // Process up to 50 entities from the current field config.
+  if ($sandbox['current_index'] < count($sandbox['field_configs'])) {
+    $current = $sandbox['field_configs'][$sandbox['current_index']];
+    $entity_storage = \Drupal::entityTypeManager()->getStorage($current['entity_type']);
+
+    $entity_ids = array_splice($sandbox['field_configs'][$sandbox['current_index']]['ids'], 0, 50);
+    foreach ($entity_storage->loadMultiple($entity_ids) as $entity) {
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+      if ($entity->hasField($current['field_name']) && $entity->get($current['field_name'])->isEmpty()) {
+        $entity->set($current['field_name'], $current['default_value']);
+        $entity->save();
+        $sandbox['updated']++;
+      }
+    }
+
+    if (empty($sandbox['field_configs'][$sandbox['current_index']]['ids'])) {
+      $sandbox['current_index']++;
+    }
+  }
+
+  // Compute remaining work across all field configs.
+  $remaining = 0;
+  for ($i = $sandbox['current_index']; $i < count($sandbox['field_configs']); $i++) {
+    $remaining += count($sandbox['field_configs'][$i]['ids']);
+  }
+
+  if ($remaining === 0) {
+    $sandbox['#finished'] = 1;
+    if ($sandbox['updated'] !== $sandbox['grand_total']) {
+      \Drupal::logger('hs_paragraph_types')->error('Error: failed updating %count entities with empty Style list fields.', [
+        '%count' => $sandbox['grand_total'] - $sandbox['updated'],
+      ]);
+    }
+
+    return t('Backfilled default values for %updated of %total entities with empty Style list fields.', [
+      '%updated' => $sandbox['updated'],
+      '%total' => $sandbox['grand_total'],
+    ]);
+  }
+
+  $sandbox['#finished'] = ($sandbox['grand_total'] - $remaining) / $sandbox['grand_total'];
+}

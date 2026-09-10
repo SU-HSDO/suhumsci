@@ -12,9 +12,9 @@
  * block in the sidebar is left in normal flow.
  *
  * Implementation notes:
- * - The sidebar's children are wrapped in a JS-inserted element (per the
- *   ticket's tech notes) and that wrapper is what moves. Whichever edge is
- *   actively being held against the viewport is done with real
+ * - The sidebar's children are wrapped in a JS-inserted element, and that
+ *   wrapper is what moves. Whichever edge is actively being held against
+ *   the viewport is done with real
  *   `position: fixed`, not a scroll-driven `transform`: fixed positioning
  *   is tracked by the browser's compositor, so once an edge is pinned it
  *   costs no further JS and has no per-frame lag behind the scroll. A
@@ -61,8 +61,19 @@
   const pinnedClass = 'hb-sticky-sidebar--pinned';
 
   // Breathing room between the pinned sidebar and the viewport edges.
-  const topSpacing = 0;
+  // Top spacing tracks the Drupal admin toolbar, if one is displayed: the
+  // toolbar is `position: fixed` at the top of the viewport, so pinning the
+  // sidebar's top edge at 0 would tuck it behind the toolbar. The toolbar's
+  // own height varies (none when logged out, one row, or two rows while its
+  // tray is open), so this is read from `Drupal.displace()` -- the same API
+  // core's toolbar module uses to report its own current height -- rather
+  // than a fixed guess.
+  let topSpacing = 0;
   const bottomSpacing = 0;
+
+  function currentToolbarOffset() {
+    return typeof Drupal.displace === 'function' ? Drupal.displace().top : 0;
+  }
 
   // A window resize drag, a submenu opening and an image loading can each
   // fire several times in a row, so re-measuring waits for them to settle.
@@ -107,6 +118,8 @@
       // changes height -- never on scroll.
       wrapper.style.cssText = '';
       sidebar.style.minHeight = '';
+
+      topSpacing = currentToolbarOffset();
 
       const scrollY = window.pageYOffset;
       const sidebarRect = sidebar.getBoundingClientRect();
@@ -240,8 +253,15 @@
     function remeasure() {
       clearTimeout(remeasureTimer);
       remeasureTimer = setTimeout(() => {
+        // measure() resets the wrapper to its natural, unpinned position to
+        // get a clean reading, same as enable() does before its own direct
+        // update() call below. Re-pinning has to happen synchronously, in
+        // this same task: deferring it to onScroll()'s next animation frame
+        // (as opposed to calling update() here directly) would let the
+        // browser paint that reset, unpinned state for one real frame,
+        // visible as a small jump, before the next frame snapped it back.
         measure();
-        onScroll();
+        update();
       }, remeasureDelay);
     }
 
@@ -320,6 +340,10 @@
 
     desktop.addEventListener('change', setup);
     window.addEventListener('resize', onResize, { passive: true });
+
+    // Fires when the admin toolbar's height changes -- its tray opening or
+    // closing, or it appearing/disappearing on login/logout in the same tab.
+    window.addEventListener('drupalViewportOffsetChange', onResize, { passive: true });
   }
 
   Drupal.behaviors.hbStickySidebar = {

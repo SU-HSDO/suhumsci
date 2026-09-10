@@ -16,6 +16,7 @@
           let videoId = '';
           let provider = '';
           let isPlaylist = false;
+          let isEvent = false;
 
           // --- Determine provider and video ID ---
           if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
@@ -32,8 +33,15 @@
             }
           } else if (videoUrl.includes('vimeo.com')) {
             provider = 'vimeo';
-            const idMatch = videoUrl.match(/vimeo\.com\/(\d+)/);
-            videoId = idMatch ? idMatch[1] : '';
+            if (videoUrl.includes('/event/')) {
+              // Livestream event, e.g. https://vimeo.com/event/5426148
+              isEvent = true;
+              const idMatch = videoUrl.match(/vimeo\.com\/event\/(\d+)/);
+              videoId = idMatch ? idMatch[1] : '';
+            } else {
+              const idMatch = videoUrl.match(/vimeo\.com\/(\d+)/);
+              videoId = idMatch ? idMatch[1] : '';
+            }
           }
 
           // --- Build final embed URL ---
@@ -42,7 +50,10 @@
               ? `https://www.youtube.com/embed/videoseries?list=${videoId}&autoplay=1`
               : `https://www.youtube.com/embed/${videoId}?autoplay=1`;
           } else if (provider === 'vimeo') {
-            embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+            // Vimeo events are not served from player.vimeo.com/video/{id}.
+            embedUrl = isEvent
+              ? `https://vimeo.com/event/${videoId}/embed?autoplay=1`
+              : `https://player.vimeo.com/video/${videoId}?autoplay=1`;
           }
 
           if (!embedUrl) return;

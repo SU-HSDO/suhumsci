@@ -10,6 +10,67 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\views\Views;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Determines whether a collection has anything worth rendering, so that an
+ * empty collection doesn't output a stray background/color band.
+ *
+ * This lives in the module rather than in humsci_basic so that it also runs
+ * under the admin theme. Theme preprocess functions only run for the active
+ * theme and its base themes, and su_humsci_gin_admin is based on gin, not on
+ * humsci_basic. Without this, `has_content` was undefined in the paragraphs
+ * widget preview and every collection rendered empty.
+ */
+function hs_paragraph_types_preprocess_paragraph__hs_collection(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['has_content'] = FALSE;
+
+  // Store referenced entities in a variable and only load once since both loops
+  // use it.
+  $items = $paragraph->get('field_hs_collection_items')->referencedEntities();
+
+  // Check if any of the referenced entities are not hs_view paragraphs and skip
+  // more expensive Views checks if so.
+  $views = [];
+  foreach ($items as $entity) {
+    if ($entity->bundle() !== 'hs_view') {
+      $variables['has_content'] = TRUE;
+      return;
+    }
+    $views[] = $entity;
+  }
+
+  foreach ($views as $entity) {
+    $view_field = $entity->get('field_hs_view')->first();
+
+    if (!$view_field) {
+      continue;
+    }
+    // Load the view and check access.
+    $view = Views::getView($view_field->target_id);
+    if (!$view || !$view->access($view_field->display_id)) {
+      continue;
+    }
+    // Check for a view title and an empty results text or handler.
+    $view->setDisplay($view_field->display_id);
+    $has_empty_handlers = !empty($view->display_handler->getHandlers('empty'));
+    if ($view_field->show_title || $has_empty_handlers) {
+      $variables['has_content'] = TRUE;
+      return;
+    }
+    // Execute the view to check for results.
+    $view->preExecute();
+    $view->execute();
+    if (!empty($view->result)) {
+      $variables['has_content'] = TRUE;
+      return;
+    }
+  }
+}
 
 /**
  * Implements hook_preprocess_HOOK().

@@ -814,12 +814,12 @@ function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
     // fields that are mapped from migration as disabled.
     $field_definition = $field_definitions[$field_name];
     $columns = $field_definition->getFieldStorageDefinition()->getColumns();
-    $processing = !empty($migration->process[$field_name]) || !empty($migration->process["$field_name/0"]);
+    $processing = !empty($migration->getProcess()[$field_name]) || !empty($migration->getProcess()["$field_name/0"]);
 
     // This will check if a migrate process is mapped to a specific column on
     // the field.
     foreach (array_keys($columns) as $column) {
-      $processing = $processing ?: !empty($migration->process["$field_name/$column"]) || !empty($migration->process["$field_name/0/$column"]);
+      $processing = $processing ?: !empty($migration->getProcess()["$field_name/$column"]) || !empty($migration->getProcess()["$field_name/0/$column"]);
     }
 
     // If the migration destination has the `overwrite_properties` configured,

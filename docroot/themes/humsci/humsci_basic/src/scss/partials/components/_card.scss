@@ -21,6 +21,8 @@
 // - date-stacked-vertical-card (views only).
 
 $container-horizontal-card: hb-calculate-rems(350px);
+$container-small: hb-calculate-rems(576px);
+$container-medium: hb-calculate-rems(768px);
 
 // Base styles (views and postcard component).
 
@@ -60,6 +62,22 @@ $container-horizontal-card: hb-calculate-rems(350px);
   .hb-card__wrapper {
     @container card (width > #{$container-horizontal-card}) {
       grid-template-areas: 'b b b b b b b a a a a a';
+    }
+  }
+}
+
+// Without an image, the date card shrinks the graphics area to fit the date tile.
+.hb-card--horizontal-date-stacked.hb-card--no-image:has(.hb-card__graphics) {
+  .hb-card__wrapper {
+    @include grid-media-min('md') {
+      grid-template: 'a b' auto / auto 1fr;
+    }
+  }
+
+  .hb-card__content,
+  .hb-card__graphics {
+    @include grid-media-min('md') {
+      padding-inline: 0;
     }
   }
 }
@@ -271,7 +289,7 @@ $container-horizontal-card: hb-calculate-rems(350px);
 
     &:hover,
     &:focus {
-      text-decoration-color: color('link-base');
+      text-decoration-color: color('primary');
       text-decoration-thickness: 9%;
 
       .hb-dark-pattern &,
@@ -279,6 +297,17 @@ $container-horizontal-card: hb-calculate-rems(350px);
         color: var(--link-base-hover-current-color);
       }
     }
+  }
+
+  // Override external link colors.
+  a.ext {
+    --link-base-current-color: #{color('black', 'global')};
+    --link-base-hover-current-color: #{color('black', 'global')};
+  }
+
+  // Override font size in pill link list.
+  .hb-pill-link-list a {
+    font-size: hb-calculate-rems(14px);
   }
 }
 

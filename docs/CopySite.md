@@ -179,13 +179,11 @@ Drop the existing `<DESTINATION>` database:
 drush @<DESTINATION>.prod sql-drop -y
 ```
 
-Push the `<SOURCE>` database to `<DESTINATION>`. Piping a large file through `sql-cli` is slow because Drush stays in the data path; connect directly with `sql:connect` instead:
+Push the `<SOURCE>` database to `<DESTINATION>`.
 
 ```bash
-$(drush @<DESTINATION>.prod sql:connect) < ~/site-copies/<SOURCE>-<DESTINATION>-transfer/<SOURCE>.sql
+drush @<DESTINATION>.prod sql-cli < ~/site-copies/<SOURCE>-<DESTINATION>-transfer/<SOURCE>.sql
 ```
-
-> **Note:** `sql:connect` prints the database credentials as part of the connection command. Avoid running this in a context where the command line is logged or visible to others.
 
 Push the `<SOURCE>` files and private files to `<DESTINATION>`:
 

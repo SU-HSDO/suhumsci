@@ -1,0 +1,51 @@
+From 5d1052fb7e0efcedec4d33d43b86a6f075440125 Mon Sep 17 00:00:00 2001
+From: Stefan Korn <drupal@stefan-korn.de>
+Date: Thu, 2 Jul 2026 16:02:30 +0200
+Subject: [PATCH 1/2] fix: #3598605 Delete button in Views UI - color and
+ background-color are the same
+
+---
+ dist/css/components/dialog.css | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/dist/css/components/dialog.css b/dist/css/components/dialog.css
+index ce561606..721862c6 100644
+--- a/dist/css/components/dialog.css
++++ b/dist/css/components/dialog.css
+@@ -119,6 +119,7 @@
+ .ui-dialog [data-drupal-selector*=-remove-form] .button.button--danger {
+   border-color: var(--gin-color-danger) !important;
+   background-color: var(--gin-color-danger) !important;
++  color: var(--gin-color-button-text) !important;
+ }
+ 
+ .ui-dialog .ui-dialog-buttonset {
+-- 
+GitLab
+
+
+From 32f171bd19e7e78fb55b9cac57681881be8b6c83 Mon Sep 17 00:00:00 2001
+From: Stefan Korn <drupal@stefan-korn.de>
+Date: Thu, 2 Jul 2026 16:09:04 +0200
+Subject: [PATCH 2/2] fix: #3598605 Delete button in Views UI - color and
+ background-color are the same
+
+---
+ styles/components/dialog.scss | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/styles/components/dialog.scss b/styles/components/dialog.scss
+index 31827327..7dc96f15 100644
+--- a/styles/components/dialog.scss
++++ b/styles/components/dialog.scss
+@@ -118,6 +118,7 @@
+     .button.button--danger {
+       border-color: var(--gin-color-danger) !important;
+       background-color: var(--gin-color-danger) !important;
++      color: var(--gin-color-button-text) !important;
+     }
+   }
+ 
+-- 
+GitLab
+

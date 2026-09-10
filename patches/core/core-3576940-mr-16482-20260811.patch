@@ -1,0 +1,15 @@
+diff --git a/core/modules/node/src/NodeBulkUpdate.php b/core/modules/node/src/NodeBulkUpdate.php
+index 16461aae2ff9d92ff97055062527b960c8fd6534..e4af78d777ccd8ed56aa821c8c833e39ea04af1b 100644
+--- a/core/modules/node/src/NodeBulkUpdate.php
++++ b/core/modules/node/src/NodeBulkUpdate.php
+@@ -90,7 +90,9 @@ protected static function processNode(NodeInterface $node, array $updates, strin
+     $langcodes = isset($langcode) ? [$langcode] : array_keys($node->getTranslationLanguages());
+     // For efficiency manually save the original node before applying any
+     // changes.
+-    $node->setOriginal(clone $node);
++    if (!$node->isNew() && !$node->getOriginal() && !$node->wasDefaultRevision()) {
++      $node->setOriginal(clone $node);
++    }
+     foreach ($langcodes as $langcode) {
+       foreach ($updates as $name => $value) {
+         $node->getTranslation($langcode)->$name = $value;

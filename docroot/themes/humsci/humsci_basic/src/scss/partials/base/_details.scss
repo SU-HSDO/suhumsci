@@ -108,3 +108,28 @@ summary:not(.hb-timeline-item__summary) {
   border-color: color('gray-medium', 'global');
   border-top: none;
 }
+
+
+.hb-three-column__main,
+.hb-three-column__sidebar-1 {
+  .revealed-details .views-exposed-form {
+    grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+
+    .form-item {
+      max-width: 100%;
+    }
+
+    .form-type-textfield,
+    .form-type-entity-autocomplete {
+      input {
+        padding: hb-calculate-rems(1px) hb-calculate-rems(4px);
+        min-height: hb-calculate-rems(40px);
+      }
+    }
+
+    .select-preact button {
+      // !important because the select-preact styles have more weight.
+      padding-inline: hb-calculate-rems(4px) !important;
+    }
+  }
+}

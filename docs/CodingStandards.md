@@ -41,8 +41,11 @@ See [Configuration Management](Config.md) for the update-hook and deploy-hook sp
 - Set initial ARIA state in markup (`aria-expanded="false"`), use `aria-controls` with `clean_unique_id`, and prefer a visually-hidden `<span>` over `aria-label`.
 - Do not override image `alt` text when wrapping an image in a link; put the label on the link as `aria-label` or a visually-hidden span.
 - For empty-content checks on rendered fields, use `|render|striptags('<img><iframe><picture><video>')|trim` with a tag allow-list.
-- Use the `clean_class` Twig filter, not manual string replacement. Use spaces (not tabs) in Twig. Remove dev comments before committing.
-- Scope CSS and JS to the intended target (e.g. views tables vs WYSIWYG tables). Use lowercase hex colors. Avoid `!important`. Use the theme's breakpoint function for media queries.
+- Use the `clean_class` or `clean_unique_id` Twig filters, not manual string replacement.
+- Use spaces (not tabs) in Twig.
+- Scope CSS and JS to the intended target (e.g. views tables vs WYSIWYG tables).
+- Use lowercase hex colors. Avoid `!important`. 
+- Use the theme's breakpoint mixins (`grid-media-min`, `grid-media-max`, etc.) for media queries, unless a non-standard breakpoint is needed.
 
 ## Automation and Tools
 - This repo includes both PHPCS and PHPStan configured for Drupal code, with CI runners for each on pull requests.

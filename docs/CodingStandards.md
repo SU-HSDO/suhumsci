@@ -38,8 +38,6 @@ See [Configuration Management](Config.md) for the update-hook and deploy-hook sp
 
 - Always wrap behavior setup in `once('key', selector, context)`. Consider `once.remove()` for cleanup when elements may re-attach. See [Frontend Patterns](FrontendPatterns.md).
 - Use `visually-hidden` for screen-reader content; never `display: none` or DOM removal to hide semantics.
-- Set initial ARIA state in markup (`aria-expanded="false"`), use `aria-controls` with `clean_unique_id`, and prefer a visually-hidden `<span>` over `aria-label`.
-- Do not override image `alt` text when wrapping an image in a link; put the label on the link as `aria-label` or a visually-hidden span.
 - For empty-content checks on rendered fields, use `|render|striptags('<img><iframe><picture><video>')|trim` with a tag allow-list.
 - Use the `clean_class` or `clean_unique_id` Twig filters, not manual string replacement.
 - Use spaces (not tabs) in Twig.

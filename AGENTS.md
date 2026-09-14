@@ -42,6 +42,8 @@ Read the relevant documentation before starting work; do not rely on assumptions
 - `vendor/bin/phpcs` and `vendor/bin/phpstan` pass on changed files.
 - Config changes import cleanly with `drush ci -y && drush ci -y`; any deletion has a matching update hook.
 - A `drush cr` (cache rebuild) would succeed.
+- Theme builds correctly (`npm run theme-build`) and there are no linting errors (`npm run theme-lint`).
+- Does documentation need to be updated to match the code changes?
 - Any new `docs/` file is linked from `README.md`.
 
 ## Do Not

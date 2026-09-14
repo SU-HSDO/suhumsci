@@ -98,7 +98,7 @@ Per-theme SCSS (variables and overrides per subtheme) lives in `src/scss/humsci_
 
 - Use lowercase for hex color values.
 - Avoid `!important`. Restructure selectors or use a wrapper class instead.
-- Use the theme's breakpoint function for media queries, not raw pixel values.
+- Use the theme's breakpoint mixins (`grid-media-min`, `grid-media-max`, etc.) for media queries, unless a non-standard breakpoint is needed.
 - Use CSS variables for container-query widths and column counts.
 - Add a comment explaining any non-obvious CSS override.
 - Keep a newline at the end of every file.

@@ -18,7 +18,7 @@
   }
 }
 
-@mixin hb-button-size($size: 'standard') {
+@mixin hb-button-size($size) {
   $sizes: get-theme-array-list($hb-button-size-list);
 
   @if not map.has-key($sizes, $size) {
@@ -63,7 +63,7 @@
 }
 
 @mixin hb-button-base {
-  @include hb-button-size;
+  @include hb-button-size('standard');
 
   display: inline-block;
   width: auto;

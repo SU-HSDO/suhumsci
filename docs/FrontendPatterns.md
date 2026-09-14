@@ -124,7 +124,6 @@ When adding a filter or changing submit behavior:
 
 - The Reset button should only appear when at least one filter has a non-default value. On non-auto-submit forms, do not toggle Reset live, because the results have not refreshed yet.
 - Keep the reset control inside the `<form>`. Moving it outside breaks submission.
-- Trigger chip and reset updates from events, not from timers.
 
 ## Build Commands
 
@@ -140,8 +139,6 @@ The build auto-detects DDEV vs Lando vs bare metal. To force one, set `HSDP_COMP
 ## Accessibility
 
 - Use `visually-hidden` for screen-reader-only content. Never `display: none` or DOM removal to hide semantics.
-- Set initial ARIA state in markup (`aria-expanded="false"`), not in JS. Use `aria-controls` with the `clean_unique_id` Twig filter, and prefer a visually-hidden `<span>` inside a button over `aria-label`.
-- Do not override image `alt` text when wrapping an image in a link. Put the link label on the wrapping link as `aria-label` or a visually-hidden span.
 - Confirm changes work with OS "reduce motion" enabled and with a screen reader where practical.
 
 ## See Also

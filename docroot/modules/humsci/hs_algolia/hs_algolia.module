@@ -1,0 +1,259 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_algolia.module.
+ */
+
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\node\NodeInterface;
+use Drupal\search_api\Entity\Index;
+use Drupal\search_api\IndexInterface;
+use Drupal\search_api\ServerInterface;
+use Drupal\search_api_algolia\Plugin\search_api\backend\SearchApiAlgoliaBackend;
+
+/**
+ * Maximum size in bytes of a single Algolia record on the free plan.
+ */
+const HS_ALGOLIA_RECORD_LIMIT = 10000;
+
+/**
+ * Number of records removed from Algolia in a single API request.
+ */
+const HS_ALGOLIA_DELETE_BATCH_SIZE = 100;
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * The contrib entity delete hook queues a deletion for every Algolia index
+ * that tracks the entity, whether or not the index is enabled. On a site that
+ * has not enabled Algolia the index has no Algolia index name, and the queue
+ * table rejects the resulting NULL. hs_algolia_entity_delete() adds the guard.
+ */
+function hs_algolia_module_implements_alter(array &$implementations, string $hook): void {
+  if ($hook === 'entity_delete') {
+    unset($implementations['search_api_algolia']);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function hs_algolia_entity_delete(EntityInterface $entity): void {
+  if (hs_algolia_active_indexes()) {
+    \Drupal::service('search_api_algolia.helper')->entityDelete($entity);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * Search API stops tracking an unpublished node but leaves its Algolia record
+ * in place until the next full reindex. Queue it for deletion so it leaves
+ * search on the next cron run.
+ */
+function hs_algolia_node_update(NodeInterface $node): void {
+  if ($node->isPublished() || !$node->getOriginal()?->isPublished()) {
+    return;
+  }
+
+  if (hs_algolia_active_indexes()) {
+    \Drupal::service('search_api_algolia.helper')->entityDelete($node);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for search_api_server_form.
+ *
+ * Algolia credentials are set per site in secrets.settings.php and never
+ * stored on the server entity. Hide the fields so nobody enters them here.
+ */
+function hs_algolia_form_search_api_server_form_alter(array &$form, FormStateInterface $form_state): void {
+  $form_object = $form_state->getFormObject();
+  $server = $form_object instanceof EntityFormInterface ? $form_object->getEntity() : NULL;
+  if (!$server instanceof ServerInterface || $server->getBackendId() !== 'search_api_algolia') {
+    return;
+  }
+
+  $form['backend_config']['application_id']['#access'] = FALSE;
+  $form['backend_config']['api_key']['#access'] = FALSE;
+  $form['backend_config']['help']['#markup'] = '<p>' . t('The application ID and API key are set per site, and cannot be edited here.') . '</p>';
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * The contrib module queues deletions in the search_api_algolia_deleted_items
+ * table and expects a drush command to drain it. Drain it on cron instead,
+ * deleting records from Algolia in bulk. Rows are removed only after Algolia
+ * accepts the request, so a failed run is retried on the next one.
+ */
+function hs_algolia_cron(): void {
+  $connection = \Drupal::database();
+  $rows = $connection->select('search_api_algolia_deleted_items', 'd')
+    ->fields('d', ['index_id', 'object_id'])
+    ->execute()
+    ->fetchAll();
+
+  if (!$rows) {
+    return;
+  }
+
+  $queued = [];
+  foreach ($rows as $row) {
+    $queued[$row->index_id][] = $row->object_id;
+  }
+
+  $logger = \Drupal::logger('hs_algolia');
+  $indexes = hs_algolia_active_indexes();
+
+  foreach ($queued as $index_name => $object_ids) {
+    // Leave the rows in place. They drain once the index is enabled again.
+    if (!isset($indexes[$index_name])) {
+      $logger->notice('Skipped @count queued deletions for Algolia index @index: no enabled Search API index uses it.', [
+        '@count' => count($object_ids),
+        '@index' => $index_name,
+      ]);
+      continue;
+    }
+
+    /** @var \Drupal\search_api_algolia\Plugin\search_api\backend\SearchApiAlgoliaBackend $backend */
+    $backend = $indexes[$index_name]->getServerInstance()->getBackend();
+    $client = $backend->getAlgolia();
+
+    foreach (array_chunk($object_ids, HS_ALGOLIA_DELETE_BATCH_SIZE) as $chunk) {
+      try {
+        $client->deleteObjects(indexName: $index_name, objectIDs: $chunk);
+      }
+      catch (\Throwable $e) {
+        $logger->error('Unable to delete @count records from Algolia index @index: @message', [
+          '@count' => count($chunk),
+          '@index' => $index_name,
+          '@message' => $e->getMessage(),
+        ]);
+        break;
+      }
+
+      $connection->delete('search_api_algolia_deleted_items')
+        ->condition('index_id', $index_name)
+        ->condition('object_id', $chunk, 'IN')
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Get the Algolia-backed Search API indexes that can currently be written to.
+ *
+ * @return \Drupal\search_api\IndexInterface[]
+ *   Enabled, writable indexes on an enabled Algolia server, keyed by their
+ *   Algolia index name. Empty on a site that has not enabled Algolia.
+ */
+function hs_algolia_active_indexes(): array {
+  $active = [];
+
+  foreach (Index::loadMultiple() as $index) {
+    $index_name = $index->getOption('algolia_index_name');
+    if (!$index_name || !$index->status() || $index->isReadOnly() || !$index->isServerEnabled()) {
+      continue;
+    }
+
+    if ($index->getServerInstance()->getBackend() instanceof SearchApiAlgoliaBackend) {
+      $active[$index_name] = $index;
+    }
+  }
+
+  return $active;
+}
+
+/**
+ * Implements hook_search_api_algolia_objects_alter().
+ *
+ * Shapes each record before it is sent to Algolia.
+ */
+function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInterface $index, array $items) {
+  $canonical_host = hs_algolia_canonical_host();
+  $current_host = \Drupal::requestStack()->getCurrentRequest()?->getSchemeAndHttpHost();
+
+  foreach ($objects as &$object) {
+    // Fields that only describe how Search API tracked the item.
+    unset($object['search_api_datasource'], $object['status']);
+
+    // Put the title first so records are readable in the Algolia dashboard.
+    if (isset($object['title'])) {
+      $object = ['title' => $object['title']] + $object;
+    }
+
+    foreach ($object as $name => &$value) {
+      // A taxonomy reference with a single value arrives as a string. Always
+      // send an array so the front end and Algolia facets see one shape.
+      $property_path = $index->getField($name)?->getPropertyPath() ?? '';
+      if (is_string($value) && str_contains($property_path, ':entity:name')) {
+        $value = [$value];
+      }
+
+      // Cron builds URLs from the current request, which on Acquia is the
+      // internal hostname rather than the site's public domain.
+      if ($canonical_host && $current_host && $canonical_host !== $current_host && is_string($value)) {
+        $value = str_replace($current_host, $canonical_host, $value);
+      }
+    }
+
+    hs_algolia_trim_record($object);
+  }
+}
+
+/**
+ * Get the site's canonical public host.
+ *
+ * @return string|null
+ *   Scheme and host, or NULL when no canonical domain is configured.
+ */
+function hs_algolia_canonical_host(): ?string {
+  $domain = \Drupal::config('domain_301_redirect.settings')->get('domain');
+  if (!$domain) {
+    return NULL;
+  }
+
+  // The stored value may or may not carry a scheme.
+  if (!parse_url($domain, PHP_URL_SCHEME)) {
+    $domain = 'https://' . $domain;
+  }
+
+  $parts = parse_url($domain);
+  if (empty($parts['host'])) {
+    return NULL;
+  }
+
+  return $parts['scheme'] . '://' . $parts['host'];
+}
+
+/**
+ * Trim a record's rendered HTML until it fits Algolia's size limit.
+ *
+ * Algolia rejects any record over 10KB on the free plan. Long pages are
+ * trimmed from the end rather than dropped entirely, so the record still
+ * matches on everything above the cut. Enable this only on sites using a plan
+ * with the smaller record limit.
+ *
+ * @param array $object
+ *   Algolia record, altered by reference.
+ */
+function hs_algolia_trim_record(array &$object): void {
+  if (!Settings::get('hs_algolia_trim_html') || empty($object['html'])) {
+    return;
+  }
+
+  while (strlen(json_encode($object, JSON_UNESCAPED_SLASHES)) > HS_ALGOLIA_RECORD_LIMIT) {
+    $words = explode(' ', $object['html']);
+    array_pop($words);
+
+    if (!$words) {
+      break;
+    }
+    $object['html'] = implode(' ', $words);
+  }
+}

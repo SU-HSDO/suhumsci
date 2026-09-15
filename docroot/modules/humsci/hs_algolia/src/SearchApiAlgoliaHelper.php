@@ -10,21 +10,21 @@ use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 use Drupal\search_api_algolia\SearchApiAlgoliaHelper as ContribSearchApiAlgoliaHelper;
 
 /**
- * Deletes Algolia records immediately instead of queueing them.
+ * Overrides the contrib Algolia helper service.
  *
- * The contrib helper only records the deletion in the
- * search_api_algolia_deleted_items table. Clearing that queue requires a
- * separate scheduled task running the module's drush command, which this
- * platform does not run. Records for deleted or unpublished content would
- * therefore stay in Algolia indefinitely. Deleting during shutdown keeps the
- * request fast while guaranteeing the record is gone.
- *
- * @see \Drupal\search_api_algolia\SearchApiAlgoliaHelper::scheduleForDeletion()
+ * @see \Drupal\hs_algolia\HsAlgoliaServiceProvider
  */
 class SearchApiAlgoliaHelper extends ContribSearchApiAlgoliaHelper {
 
   /**
    * {@inheritdoc}
+   *
+   * Deletes the record during request shutdown instead of queueing it. The
+   * contrib helper writes to the search_api_algolia_deleted_items table and
+   * relies on a drush command this platform does not run, so queued records
+   * would stay in Algolia indefinitely.
+   *
+   * @see \Drupal\search_api_algolia\SearchApiAlgoliaHelper::scheduleForDeletion()
    */
   public function entityDelete(EntityInterface $entity) {
     // Search API lets other code opt an entity out of indexing by setting this

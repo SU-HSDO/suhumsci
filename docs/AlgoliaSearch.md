@@ -95,17 +95,11 @@ You need an Algolia application with its Application ID, Admin API key, and Sear
 
 ## Local Development Setup
 
-Local credentials go in `keys/secrets.settings.php`. Confirm `keys` is listed in `.gitignore` before you put anything in it.
-
-This file is shared by every local multisite, so scope the values to one site or every local site will write to the same Algolia index.
+Put local credentials in the site's local settings file at `docroot/sites/<SITE_NAME>/settings/local.settings.php`. Confirm `local.settings.php` is listed in `.gitignore` before you add anything to it. This file applies to one site only, so each local site can point at its own Algolia index.
 
 ```php
-use Drupal\SwsDrush\Helpers\EnvironmentDetector;
-
-if (EnvironmentDetector::getSiteName($site_path) === '<SITE_NAME>') {
-  $config['search_api.server.hs_algolia']['backend_config']['application_id'] = getenv('ALGOLIA_APPLICATION_ID');
-  $config['search_api.server.hs_algolia']['backend_config']['api_key'] = getenv('ALGOLIA_ADMIN_API_KEY');
-}
+$config['search_api.server.hs_algolia']['backend_config']['application_id'] = '<ALGOLIA_APPLICATION_ID>';
+$config['search_api.server.hs_algolia']['backend_config']['api_key'] = '<ALGOLIA_ADMIN_API_KEY>';
 ```
 
 Use a disposable Algolia application for local and continuous integration work, never a production one.

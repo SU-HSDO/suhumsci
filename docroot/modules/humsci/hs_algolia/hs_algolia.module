@@ -5,11 +5,14 @@
  * Contains hs_algolia.module.
  */
 
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\ServerInterface;
 use Drupal\search_api_algolia\Plugin\search_api\backend\SearchApiAlgoliaBackend;
 
 /**
@@ -60,6 +63,24 @@ function hs_algolia_node_update(NodeInterface $node): void {
   if (hs_algolia_active_indexes()) {
     \Drupal::service('search_api_algolia.helper')->entityDelete($node);
   }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for search_api_server_form.
+ *
+ * Algolia credentials are set per site in secrets.settings.php and never
+ * stored on the server entity. Hide the fields so nobody enters them here.
+ */
+function hs_algolia_form_search_api_server_form_alter(array &$form, FormStateInterface $form_state): void {
+  $form_object = $form_state->getFormObject();
+  $server = $form_object instanceof EntityFormInterface ? $form_object->getEntity() : NULL;
+  if (!$server instanceof ServerInterface || $server->getBackendId() !== 'search_api_algolia') {
+    return;
+  }
+
+  $form['backend_config']['application_id']['#access'] = FALSE;
+  $form['backend_config']['api_key']['#access'] = FALSE;
+  $form['backend_config']['help']['#markup'] = '<p>' . t('The application ID and API key are set per site, and cannot be edited here.') . '</p>';
 }
 
 /**

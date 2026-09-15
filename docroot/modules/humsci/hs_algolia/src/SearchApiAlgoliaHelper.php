@@ -34,6 +34,13 @@ class SearchApiAlgoliaHelper extends ContribSearchApiAlgoliaHelper {
     }
 
     foreach (ContentEntity::getIndexesForEntity($entity) as $index) {
+      // Never write to an index that is disabled, read only, or attached to a
+      // disabled server. The contrib helper applies the read only check in
+      // scheduleForDeletion(), which this override does not call.
+      if (!$index->status() || $index->isReadOnly() || !$index->isServerEnabled()) {
+        continue;
+      }
+
       $index_name = $index->getOption('algolia_index_name');
       $object_id_field = $index->getOption('object_id_field');
 

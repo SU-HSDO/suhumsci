@@ -118,8 +118,8 @@ This drops the tail of long pages, so content near the bottom stops matching. Us
 
 The contributed `search_api_algolia` module handles indexing only. It does not provide a search results page. The `hs_algolia` module adds the behavior this platform needs.
 
-- **Deletions happen immediately.** The contributed module records deletions in a database table and expects a separate scheduled task to run a drush command that clears them. This platform does not run that task, so records for deleted content would remain in Algolia indefinitely. `hs_algolia` deletes the record during request shutdown instead.
-- **Unpublishing removes content from search.** Search API stops tracking an unpublished node but leaves its Algolia record in place until the next full reindex. `hs_algolia` clears the record as soon as a published node is unpublished.
+- **Deletions are processed on cron.** The contributed module records deletions in a database table and expects a separate drush command to clear it. `hs_algolia` clears that table on cron instead, removing records from Algolia in bulk. To process the queue ahead of the next scheduled cron, run `drush @<SITE_NAME>.<ENV> cron:run hs_algolia_cron`.
+- **Unpublishing removes content from search.** Search API stops tracking an unpublished node but leaves its Algolia record in place until the next full reindex. `hs_algolia` queues the record for deletion when a published node is unpublished.
 - **URLs use the site's canonical domain.** Cron builds URLs from the current request, which on Acquia is an internal hostname. `hs_algolia` rewrites them to the domain configured in the site's 301 redirect settings.
 - **Taxonomy values are always arrays.** A reference field holding one term arrives as a string. Sending a consistent shape keeps Algolia facets and the front end simple.
 - **Tracking fields are removed** from each record, and the title is moved to the front so records are readable in the Algolia dashboard.

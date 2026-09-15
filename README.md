@@ -21,6 +21,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 
 ### Standards & Reference
 
+- [Algolia Search](docs/AlgoliaSearch.md)
 - [Branching Strategy](docs/BranchingStrategy.md)
 - [Coding Standards](docs/CodingStandards.md) (PHPStan, PHPCS, etc.)
 - [Configuration Management](docs/Config.md)

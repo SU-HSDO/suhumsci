@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\search_api\ServerInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
@@ -23,8 +24,12 @@ class ServerFormAlterTest extends UnitTestCase {
     parent::setUp();
     require_once __DIR__ . '/../../../hs_algolia.module';
 
+    $url_generator = $this->createMock(UrlGeneratorInterface::class);
+    $url_generator->method('generateFromRoute')->willReturn('/admin/config/search/algolia');
+
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->getStringTranslationStub());
+    $container->set('url_generator', $url_generator);
     \Drupal::setContainer($container);
   }
 
@@ -66,7 +71,7 @@ class ServerFormAlterTest extends UnitTestCase {
 
     $this->assertFalse($form['backend_config']['application_id']['#access']);
     $this->assertFalse($form['backend_config']['api_key']['#access']);
-    $this->assertStringContainsString('secrets.settings.php', (string) $form['backend_config']['help']['#markup']);
+    $this->assertStringContainsString('href="/admin/config/search/algolia"', (string) $form['backend_config']['help']['#markup']);
     $this->assertArrayNotHasKey('#access', $form['backend_config']['disable_truncate']);
   }
 

@@ -1,0 +1,6 @@
+services:
+  hs_algolia.overrider:
+    class: Drupal\hs_algolia\Overrides\ConfigOverrides
+    arguments: ['@config.factory', '@entity_type.manager']
+    tags:
+      - { name: config.factory.override, priority: 5 }

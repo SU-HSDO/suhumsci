@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\IndexInterface;
@@ -68,8 +69,9 @@ function hs_algolia_node_update(NodeInterface $node): void {
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for search_api_server_form.
  *
- * Algolia credentials are set per site in secrets.settings.php and never
- * stored on the server entity. Hide the fields so nobody enters them here.
+ * Algolia credentials are set per site on the Algolia settings form and
+ * applied as config overrides, never stored on the server entity. Hide the
+ * fields so nobody enters them here.
  */
 function hs_algolia_form_search_api_server_form_alter(array &$form, FormStateInterface $form_state): void {
   $form_object = $form_state->getFormObject();
@@ -80,7 +82,9 @@ function hs_algolia_form_search_api_server_form_alter(array &$form, FormStateInt
 
   $form['backend_config']['application_id']['#access'] = FALSE;
   $form['backend_config']['api_key']['#access'] = FALSE;
-  $form['backend_config']['help']['#markup'] = '<p>' . t('The application ID and API key are set per site, and cannot be edited here.') . '</p>';
+  $form['backend_config']['help']['#markup'] = '<p>' . t('The application ID and API key are set on the <a href=":url">Algolia search settings</a> form and cannot be edited here.', [
+    ':url' => Url::fromRoute('hs_algolia.settings')->toString(),
+  ]) . '</p>';
 }
 
 /**

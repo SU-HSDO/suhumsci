@@ -53,7 +53,7 @@ class ShippedConfigTest extends UnitTestCase {
    * would leave new sites configured differently from existing ones.
    */
   public function testModuleAndPlatformCopiesAreIdentical() {
-    foreach (['search_api.server.hs_algolia', 'search_api.index.hs_algolia'] as $name) {
+    foreach (['search_api.server.hs_algolia', 'search_api.index.hs_algolia', 'hs_algolia.settings'] as $name) {
       $this->assertSame(
         file_get_contents($this->repoRoot() . '/config/default/' . $name . '.yml'),
         file_get_contents($this->repoRoot() . '/docroot/modules/humsci/hs_algolia/config/install/' . $name . '.yml'),
@@ -172,17 +172,31 @@ class ShippedConfigTest extends UnitTestCase {
   }
 
   /**
-   * The per-site keys are the only configuration a site may diverge on.
+   * Per-site values are ignored on import and everything else is not.
+   *
+   * Status stays on the entities because enabling has save-time side effects.
+   * Credentials and the index name live in hs_algolia.settings and a key
+   * entity, so those are ignored whole and the entity keys are not.
    */
   public function testConfigIgnorePatterns() {
     $config_ignore = $this->loadConfig('config/default', 'config_ignore.settings');
+    $patterns = $config_ignore['ignored_config_entities'];
 
     foreach ([
       'search_api.server.hs_algolia:status',
       'search_api.index.hs_algolia:status',
-      'search_api.index.hs_algolia:options.algolia_index_name',
+      'hs_algolia.settings',
+      'key.key.*',
     ] as $pattern) {
-      $this->assertContains($pattern, $config_ignore['ignored_config_entities']);
+      $this->assertContains($pattern, $patterns);
+    }
+
+    $this->assertNotContains('search_api.index.hs_algolia:options.algolia_index_name', $patterns, 'The index name is a runtime override, not an ignored key.');
+
+    // The shipped platform keys must still import.
+    foreach (['real_aes', 'hs_shield_key'] as $shipped_key) {
+      $this->assertContains('~key.key.' . $shipped_key, $patterns);
+      $this->assertFileExists($this->repoRoot() . '/config/default/key.key.' . $shipped_key . '.yml');
     }
   }
 

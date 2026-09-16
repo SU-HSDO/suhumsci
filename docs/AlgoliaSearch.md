@@ -34,16 +34,15 @@ Never indexed: Private Page content, unpublished content, node grants, and Train
 
 ## Per-Site Configuration
 
-Every site imports the same configuration from `config/default`. Values that differ per site are excluded from import by `config_ignore`, and credentials never enter configuration at all. See [Configuration Management](Config.md) for the conventions.
+Every site imports the same configuration from `config/default`. The values that differ per site are set on the Algolia settings form at `/admin/config/search/algolia` and excluded from import by `config_ignore`, so a configuration export never carries them. See [Configuration Management](Config.md) for the conventions.
 
 | Value | Where it lives |
 |---|---|
-| `search_api.server.hs_algolia:status` | Site database, excluded by `config_ignore` |
-| `search_api.index.hs_algolia:status` | Site database, excluded by `config_ignore` |
-| `search_api.index.hs_algolia:options.algolia_index_name` | Site database, excluded by `config_ignore` |
-| Application ID and Admin API key | Per-site `secrets.settings.php` on Acquia, never in this repository |
+| Whether Algolia is on | `status` of the server and index entities, excluded by `config_ignore` |
+| Application ID and Algolia index name | `hs_algolia.settings`, excluded by `config_ignore` |
+| Write API key | A key entity created on the site, excluded by `config_ignore` (`key.key.*`) |
 
-The server edit form hides the credential fields, since they are set in `secrets.settings.php` and would otherwise appear empty.
+The credentials and index name are applied to the Search API server and index as runtime overrides. They never appear in those entities, and the server edit form hides the credential fields so nobody enters them there.
 
 > **Important:** Both entities ship disabled through two safeguards: the `hs_algolia` module's `config/install` on new sites, and a deploy hook in `hs_admin` on existing sites. Both are required. See [Ignoring a Single Key of New Configuration](Config.md#ignoring-a-single-key-of-new-configuration) for why.
 
@@ -51,57 +50,32 @@ The server edit form hides the credential fields, since they are set in `secrets
 
 ## Enabling Algolia for a Site
 
-You need an Algolia application with its Application ID, Admin API key, and Search-only API key before you start.
+You need an Algolia application and, from its API Keys page, the Application ID and an API key with write access. Create a key scoped to this site's index with the `addObject`, `deleteObject`, `deleteIndex`, and `settings` permissions rather than using the Admin API key.
 
-1. Add the credentials to the site's secrets file on Acquia. Each environment is a separate server, so create the file on each environment where Algolia should run. These are runtime overrides, so `drush config:export` cannot write them into this repository.
+1. Create a key entity to hold the API key at `/admin/config/system/keys/add`. Use key type **Authentication** and key provider **Configuration**, and paste the API key as the value.
 
-   ```bash
-   /mnt/files/<APP>.<ENV>/<SITE_NAME>/secrets.settings.php
+1. Open `/admin/config/search/algolia`, fill in the Application ID, select the key, and set the Algolia index name. Use the site name, for example `archaeology`. Check **Enable Algolia search** and save.
 
-   # Example, for the archaeology site on production:
-   /mnt/files/humscigryphon.prod/archaeology/secrets.settings.php
-   ```
-
-   Do not use the environment-wide `/mnt/files/<APP>.<ENV>/secrets.settings.php` one level up. It applies to every site on that environment.
-
-   ```php
-   $config['search_api.server.hs_algolia']['backend_config']['application_id'] = '<ALGOLIA_APPLICATION_ID>';
-   $config['search_api.server.hs_algolia']['backend_config']['api_key'] = '<ALGOLIA_ADMIN_API_KEY>';
-   ```
-
-1. Enable the server, set the Algolia index name, and enable the index.
-
-   ```bash
-   drush @<SITE_NAME>.<ENV> config:set search_api.server.hs_algolia status true -y
-   drush @<SITE_NAME>.<ENV> config:set search_api.index.hs_algolia options.algolia_index_name <ALGOLIA_INDEX_NAME> -y
-   drush @<SITE_NAME>.<ENV> config:set search_api.index.hs_algolia status true -y
-
-   # Example:
-   drush @hs_sandbox.dev config:set search_api.index.hs_algolia options.algolia_index_name hs_sandbox -y
-   ```
-
-1. Run the initial index. Cron indexes in batches, so populate a new index directly rather than waiting.
+1. Run the initial index. Cron indexes in batches, so populate a new index directly rather than waiting. Use **Index now** at `/admin/config/search/search-api/index/hs_algolia`, or:
 
    ```bash
    drush @<SITE_NAME>.<ENV> search-api:index hs_algolia
+
+   # Example:
+   drush @archaeology.prod search-api:index hs_algolia
    ```
 
 1. Confirm the records appear in the Algolia dashboard, and that no unpublished or Private Page content is among them.
+
+Each environment is a separate site database, so repeat these steps on each environment where Algolia should run.
+
+To turn Algolia off, uncheck **Enable Algolia search** and save. This removes every record from the Algolia index.
 
 > **Warning:** Enable a site only after a deploy has finished. The deploy hook that forces the Algolia configuration off runs once per site, and enabling a site partway through a deploy would be undone.
 
 ## Local Development Setup
 
-Put local credentials in the site's local settings file at `docroot/sites/<SITE_NAME>/settings/local.settings.php`. Confirm `local.settings.php` is listed in `.gitignore` before you add anything to it. This file applies to one site only, so each local site can point at its own Algolia index.
-
-```php
-$config['search_api.server.hs_algolia']['backend_config']['application_id'] = '<ALGOLIA_APPLICATION_ID>';
-$config['search_api.server.hs_algolia']['backend_config']['api_key'] = '<ALGOLIA_ADMIN_API_KEY>';
-```
-
-Do not put credentials in `keys/secrets.settings.php`. The `drush sws:keys` command overwrites that directory from the staging environment. This is a different file from the `secrets.settings.php` on Acquia described above, which is where a site's real credentials belong.
-
-Use a disposable Algolia application for local and continuous integration work, never a production one.
+Follow the same steps on the local site. Use a disposable Algolia application for local and continuous integration work, never a production one.
 
 ### Record Size on Smaller Plans
 

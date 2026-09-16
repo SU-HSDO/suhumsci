@@ -6,6 +6,7 @@
 @use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/general' as *;
+@use '../mixins/buttons' as *;
 @use '../mixins/text' as *;
 @use '../mixins/links' as *;
 @use '../mixins/forms' as *;
@@ -17,6 +18,9 @@
 
   --link-base-current-color: #{color(link-base)};
   --link-base-hover-current-color: #{color(link-base-hover)};
+  --scrunched-line-height: #{$hb-scrunched-line-height};
+
+  @include hb-button-size-vars;
 
   @include hb-themes(('colorful', 'airy')) {
     --normal-line-height: 165%;

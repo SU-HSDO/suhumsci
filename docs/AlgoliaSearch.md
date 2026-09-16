@@ -26,11 +26,14 @@ The cost of enabling Algolia is that the site indexes its content twice. The dat
 Algolia records are queried from the browser with a public search-only key, so everything in the index is effectively public. The shipped index guarantees that:
 
 - Published nodes only, enforced by the `entity_status` processor
+- Only content the anonymous user can view. Every item is checked against node access as the anonymous user before it is sent, so content restricted with `content_access` or per-node grants stays out even when published
 - An allow-list of content types: Basic Page, Course, Event, Event Series, News, Person, Publications, and Research. New content types are not indexed until added to the list
 - Output rendered as an anonymous visitor, so nothing behind a login can appear in a record
 - Flat attributes for faceting: content type, site name, taxonomy term names, dates, person titles, image URLs, and the canonical page URL
 
 Never indexed: Private Page content, unpublished content, node grants, and Training and Project content (which have no search indexing view display).
+
+> **Important:** The access check runs when an item is indexed. Restricting content that is already in Algolia does not remove it until the item is indexed again. After changing content access settings on a site, queue a reindex from `/admin/config/search/search-api/index/hs_algolia` or run `drush @<SITE_NAME>.<ENV> search-api:reset-tracker hs_algolia`.
 
 ## Per-Site Configuration
 
@@ -91,7 +94,8 @@ Content near the bottom of long pages stops matching. Use it for local and sandb
 
 The `hs_algolia` module changes how the contributed module indexes and removes content:
 
-- **Deletions are processed on cron.** The contributed module records deletions in a database table and expects a separate drush command to clear it. `hs_algolia` clears that table on cron instead, removing records from Algolia in bulk. To process the queue ahead of the next scheduled cron, run `drush @<SITE_NAME>.<ENV> cron:run hs_algolia_cron`.
+- **Restricted content is never sent.** An event subscriber drops any item the anonymous user cannot view and queues its record for removal. It applies only to indexes on an Algolia server, so the database index still serves private content to users who may see it.
+- **Deletions are processed on cron.** The contributed module records deletions in a database table and expects a separate drush command to clear it. `hs_algolia` clears that table on cron instead, removing records from Algolia in bulk. To process the queue ahead of the next scheduled cron on one site, run `drush @<SITE_NAME>.<ENV> cron:run hs_algolia_cron --force`. To run it on every site, for example from an Acquia scheduled job, run `drush humsci:multisite:cron:run hs_algolia_cron --force` from the repository root on the target environment.
 - **Unpublishing removes content from search.** Search API stops tracking an unpublished node but leaves its Algolia record in place until the next full reindex. `hs_algolia` queues the record for deletion when a published node is unpublished.
 - **URLs use the site's canonical domain.** Cron builds URLs from the current request, which on Acquia is an internal hostname. `hs_algolia` rewrites them to the domain in the site's 301 redirect settings.
 - **Taxonomy values are always arrays.** A reference field holding one term arrives as a string. A consistent shape keeps Algolia facets simple.

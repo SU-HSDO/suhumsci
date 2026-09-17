@@ -87,6 +87,8 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 
 ### WYSIWYG Platform Wide Text Area Classes
 
+_Note:_ Buttons come in three sizes: standard (no suffix), `--big` and `--small`. Each size has a primary (filled) variant, `hs-button`, and a secondary (outline) variant, `hs-secondary-button`.
+
 | Class                           | Works in Views? |
 | --------------------            | :-------------: |
 | hs-font-splash                  |       ✅        |
@@ -96,7 +98,10 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 | hs-credits                      |       ✅        |
 | hs-button                       |       ✅        |
 | hs-button--big                  |       ✅        |
+| hs-button--small                |       ✅        |
 | hs-secondary-button             |       ✅        |
+| hs-secondary-button--big        |       ✅        |
+| hs-secondary-button--small      |       ✅        |
 | hs-external-link                |       ✅        |
 | hs-private-link                 |       ✅        |
 | ~hs-mailto-link~ **DEPRECATED** |        -        |

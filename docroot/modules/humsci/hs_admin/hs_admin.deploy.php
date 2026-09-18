@@ -605,3 +605,31 @@ function hs_admin_deploy_10013(): string {
     ? 'Manage Training and Manage Project shortcuts not found; nothing to delete.'
     : 'Deleted shortcuts: ' . implode(', ', $deleted) . '.';
 }
+
+/**
+ * Ensure the Algolia search server and index ship disabled.
+ *
+ * The status key of both entities is excluded by config_ignore. On an existing
+ * site the entities are new at import time, so the ignored key is stripped and
+ * Drupal defaults status to TRUE. See "Ignoring a Single Key of New
+ * Configuration" in docs/Config.md.
+ */
+function hs_admin_deploy_10014(): string {
+  $disabled = [];
+
+  foreach (['search_api.server.hs_algolia', 'search_api.index.hs_algolia'] as $name) {
+    // Write raw config rather than saving the entity. Index::postSave() and
+    // Server::postSave() would call a backend that has no credentials yet.
+    $config = \Drupal::configFactory()->getEditable($name);
+    if ($config->isNew() || !$config->get('status')) {
+      continue;
+    }
+
+    $config->set('status', FALSE)->save();
+    $disabled[] = $name;
+  }
+
+  return empty($disabled)
+    ? 'Algolia server and index already disabled; no changes made.'
+    : 'Disabled: ' . implode(', ', $disabled) . '.';
+}

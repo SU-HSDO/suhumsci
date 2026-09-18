@@ -146,3 +146,56 @@
   }
 }
 
+.hb-three-column__main,
+.hb-three-column__sidebar-1 {
+  .revealed-details .views-exposed-form {
+    grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+
+    // The wider columns above need a tighter gap to keep fitting inside the
+    // accordion's narrower width.
+    gap: hb-calculate-rems(12px);
+
+    .form-item,
+    .form-actions {
+      // Without this, a control's own min-content size can force its 1fr
+      // column wider than the others even though they're meant to share
+      // space equally.
+      min-width: 0;
+    }
+
+    .form-item {
+      max-width: 100%;
+    }
+
+    .form-type-textfield,
+    .form-type-entity-autocomplete {
+      input {
+        // Without this, the padding below pushes the input's rendered
+        // width/height past the form-item's box instead of fitting inside it.
+        box-sizing: border-box;
+        padding: hb-calculate-rems(1px) hb-calculate-rems(4px);
+        min-height: hb-calculate-rems(40px);
+      }
+    }
+
+    .select-preact button {
+      // !important because the select-preact styles have more weight.
+      padding-inline: hb-calculate-rems(4px) !important;
+      min-height: hb-calculate-rems(40px);
+
+      // Without this, the padding below pushes the input's rendered
+      // width/height past the form-item's box instead of fitting inside it.
+      box-sizing: border-box;
+    }
+
+    .form-actions {
+      align-self: end;
+
+      .form-submit {
+        padding-block: 0;
+        box-sizing: border-box;
+      }
+    }
+  }
+}
+

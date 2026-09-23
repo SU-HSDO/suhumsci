@@ -50,6 +50,8 @@ services:
             drush rsync @${site_id}.prod:%files @${site_id}.local:%files --ansi --no-interaction
             drush @${site_id}.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
             drush @${site_id}.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
+            cp .tugboat/ci.settings.php docroot/sites/${site_id}/settings/
+            sed -i 's/TUGBOAT_ALIAS/${site_id}/' docroot/sites/${site_id}/settings/ci.settings.php
           done
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       #   - rm -rf vendor

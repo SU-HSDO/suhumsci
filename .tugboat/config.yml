@@ -43,7 +43,7 @@ services:
           for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
             site_id=$(echo $alias | sed "s/-/_/g")
             cp .tugboat/ci.settings.php docroot/sites/${site_id}/settings/
-            sed -i 's/TUGBOAT_ALIAS/${site_id}/' docroot/sites/${site_id}/settings/ci.settings.php
+            sed -i "s/TUGBOAT_ALIAS/${site_id}/" docroot/sites/${site_id}/settings/ci.settings.php
           done
       update:
         - echo "========= UPDATE ========="

@@ -13,12 +13,12 @@ label,
   margin-bottom: hb-calculate-rems(8px);
 }
 
-// Style the native select like the other exposed-filter fields (border,
-// height, padding) so it looks intentional rather than a bare browser
-// control while select-list-filters.island.js is still downloading or
-// executing. Once that JS mounts it hides this element in favor of the
-// Preact combobox, so no separate no-JS fallback is needed here.
-.select-preact select {
+// Style the native select to match other exposed-filter fields while
+// select-list-filters.island.js loads. Once JS mounts, it replaces this
+// with the Preact combobox. The .js class enables progressive enhancement:
+// without JS, the native select remains unchanged, especially important
+// for multi-selects to avoid clipping the browser's option list.
+.js .select-preact select {
   @include hb-icon-background('chevron', 'gray-900');
 
   appearance: none;

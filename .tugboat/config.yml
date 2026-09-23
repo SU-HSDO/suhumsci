@@ -23,6 +23,7 @@ services:
     commands:
       # Commands that set up the basic preview infrastructure
       init:
+        - echo "========= INIT ========="
         # Install Node.js system-wide based on .nvmrc major version for consistent builds
         - export NODE_VERSION=$(cat .nvmrc | cut -d. -f1) && curl -fsSL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - && apt-get install -y nodejs
         # Symlink the tugboat directory to the docker image expected path.
@@ -36,7 +37,16 @@ services:
 
         # Init the settings files.
         - drush sws:multisite:settings
+        # Copy ci.settings.php to all sites in the preview.
+        - |
+          IFS=,
+          for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
+            site_id=$(echo $alias | sed "s/-/_/g")
+            cp .tugboat/ci.settings.php docroot/sites/${site_id}/settings/
+            sed -i 's/TUGBOAT_ALIAS/${site_id}/' docroot/sites/${site_id}/settings/ci.settings.php
+          done
       update:
+        - echo "========= UPDATE ========="
         # Composer install.
         - rm -rf vendor
         - composer install --no-ansi
@@ -50,8 +60,6 @@ services:
             drush rsync @${site_id}.prod:%files @${site_id}.local:%files --ansi --no-interaction
             drush @${site_id}.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
             drush @${site_id}.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
-            cp .tugboat/ci.settings.php docroot/sites/${site_id}/settings/
-            sed -i 's/TUGBOAT_ALIAS/${site_id}/' docroot/sites/${site_id}/settings/ci.settings.php
           done
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       #   - rm -rf vendor
@@ -93,6 +101,7 @@ services:
       #
       #   - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
+        - echo "========= BUILD ========="
         - rm -rf vendor
         - composer install --no-ansi
 

@@ -11,7 +11,7 @@ if (getenv('TUGBOAT_SERVICE')) {
       [
         'default' =>
           [
-            'database' => 'west',
+            'database' => 'TUGBOAT_ALIAS',
             'username' => 'tugboat',
             'password' => 'tugboat',
             'host' => 'mysql',

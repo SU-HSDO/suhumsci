@@ -88,6 +88,34 @@ function hs_algolia_form_search_api_server_form_alter(array &$form, FormStateInt
 }
 
 /**
+ * Implements hook_preprocess_HOOK() for search_api_server.
+ * Mask any cell holding algolia write key. Matching on the value rather than
+ * the row label keeps this working if the contrib label changes, and only ever
+ * hides the secret.
+ *
+ * @see \Drupal\search_api_algolia\Plugin\search_api\backend\SearchApiAlgoliaBackend::viewSettings()
+ */
+function hs_algolia_preprocess_search_api_server(array &$variables): void {
+  $server = $variables['server'] ?? NULL;
+  if (!$server instanceof ServerInterface || $server->getBackendId() !== 'search_api_algolia') {
+    return;
+  }
+
+  $secret = (string) ($server->getBackendConfig()['api_key'] ?? '');
+  if ($secret === '' || empty($variables['server_info_table']['#rows'])) {
+    return;
+  }
+
+  foreach ($variables['server_info_table']['#rows'] as &$row) {
+    if (isset($row['data'][1]) && is_string($row['data'][1]) && $row['data'][1] === $secret) {
+      $row['data'][1] = t('Hidden. Set on the <a href=":url">Algolia search settings</a> form.', [
+        ':url' => Url::fromRoute('hs_algolia.settings')->toString(),
+      ]);
+    }
+  }
+}
+
+/**
  * Implements hook_cron().
  *
  * The contrib module queues deletions in the search_api_algolia_deleted_items

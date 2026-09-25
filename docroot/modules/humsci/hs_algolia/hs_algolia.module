@@ -182,7 +182,7 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
   $canonical_host = hs_algolia_canonical_host();
   $current_host = \Drupal::requestStack()->getCurrentRequest()?->getSchemeAndHttpHost();
 
-  foreach ($objects as &$object) {
+  foreach ($objects as $item_id => &$object) {
     // Fields that only describe how Search API tracked the item.
     unset($object['search_api_datasource'], $object['status']);
 
@@ -191,12 +191,30 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
       $object = ['title' => $object['title']] + $object;
     }
 
+    // Token data for any custom value field, matching what the CustomValue
+    // processor would have passed to the token service.
+    $entity = ($items[$item_id] ?? NULL)?->getOriginalObject()?->getValue();
+    $token_data = $entity instanceof EntityInterface
+      ? [$entity->getEntityTypeId() => $entity]
+      : [];
+    $unresolved = [];
+
     foreach ($object as $name => &$value) {
+      $property_path = $index->getField($name)?->getPropertyPath() ?? '';
+
       // A taxonomy reference with a single value arrives as a string. Always
       // send an array so the front end and Algolia facets see one shape.
-      $property_path = $index->getField($name)?->getPropertyPath() ?? '';
       if (is_string($value) && str_contains($property_path, ':entity:name')) {
         $value = [$value];
+      }
+
+      // Custom value fields can still hold their tokens. Resolve them before
+      // the host rewrite below, so a resolved URL is rewritten too.
+      if (is_string($value) && str_contains($property_path, 'custom_value')) {
+        $value = hs_algolia_replace_tokens($value, $token_data);
+        if ($value === '') {
+          $unresolved[] = $name;
+        }
       }
 
       // Cron builds URLs from the current request, which on Acquia is the
@@ -205,9 +223,46 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
         $value = str_replace($current_host, $canonical_host, $value);
       }
     }
+    unset($value);
+
+    // Omit the attribute rather than sending an empty one.
+    foreach ($unresolved as $name) {
+      unset($object[$name]);
+    }
 
     hs_algolia_trim_record($object);
   }
+  unset($object);
+}
+
+/**
+ * Replace any tokens left in a custom value field.
+ *
+ * Search API's CustomValue processor only hands a value to the token service
+ * when its own pattern matches, and that pattern rejects the "or" syntax the
+ * token_or module provides, so those values arrive here verbatim.
+ *
+ * @param string $value
+ *   Field value, which may contain tokens.
+ * @param array $token_data
+ *   Token data keyed by token type, or empty for global tokens only.
+ *
+ * @return string
+ *   The replaced value, or an empty string when nothing resolved.
+ *
+ * @see \Drupal\search_api\Plugin\search_api\processor\CustomValue::addFieldValues()
+ * @see \Drupal\token_or\Token::replacePlain()
+ */
+function hs_algolia_replace_tokens(string $value, array $token_data): string {
+  if (!str_contains($value, '[')) {
+    return $value;
+  }
+
+  $replaced = trim(\Drupal::token()->replacePlain($value, $token_data, ['clear' => TRUE]));
+
+  // A value still holding a token did not resolve against this entity. Index
+  // nothing rather than the literal token text.
+  return str_contains($replaced, '[') ? '' : $replaced;
 }
 
 /**

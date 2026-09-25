@@ -233,6 +233,36 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
     hs_algolia_trim_record($object);
   }
   unset($object);
+
+  hs_algolia_cancel_queued_deletions($objects, $index);
+}
+
+/**
+ * Drop queued deletions for records that are about to be sent to Algolia.
+ *
+ * A node queued for deletion on unpublish stays queued until cron drains it.
+ * If it is republished and reindexed first, the drain would remove the record
+ * that was just sent, and Search API would still count the item as indexed.
+ *
+ * @param array $objects
+ *   Records about to be sent, each with an objectID.
+ * @param \Drupal\search_api\IndexInterface $index
+ *   Index the records belong to.
+ *
+ * @see hs_algolia_cron()
+ */
+function hs_algolia_cancel_queued_deletions(array $objects, IndexInterface $index): void {
+  $index_name = $index->getOption('algolia_index_name');
+  $object_ids = array_filter(array_column($objects, 'objectID'));
+
+  if (!$index_name || !$object_ids) {
+    return;
+  }
+
+  \Drupal::database()->delete('search_api_algolia_deleted_items')
+    ->condition('index_id', $index_name)
+    ->condition('object_id', $object_ids, 'IN')
+    ->execute();
 }
 
 /**

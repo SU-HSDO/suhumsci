@@ -4,6 +4,8 @@ namespace Drupal\Tests\hs_algolia\Unit;
 
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\Delete;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Site\Settings;
@@ -29,6 +31,39 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
    * @var \Drupal\Core\Utility\Token|null
    */
   protected $token;
+
+  /**
+   * Database connection used by setUpContainer(), when a test supplies one.
+   *
+   * @var \Drupal\Core\Database\Connection|null
+   */
+  protected $database;
+
+  /**
+   * Register a database whose delete query records the conditions it is given.
+   *
+   * @param array $captured
+   *   Filled with the conditions passed to the delete query.
+   * @param bool $expect_delete
+   *   Whether a delete is expected at all.
+   */
+  protected function setUpDatabase(array &$captured, bool $expect_delete = TRUE): void {
+    $delete = $this->createMock(Delete::class);
+    $delete->method('condition')->willReturnCallback(
+      function ($field, $value = NULL) use (&$captured, $delete) {
+        $captured[$field] = $value;
+        return $delete;
+      }
+    );
+
+    $connection = $this->createMock(Connection::class);
+    $connection->expects($expect_delete ? $this->once() : $this->never())
+      ->method('delete')
+      ->with('search_api_algolia_deleted_items')
+      ->willReturn($delete);
+
+    $this->database = $connection;
+  }
 
   /**
    * {@inheritdoc}
@@ -62,6 +97,7 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
     $container->set('config.factory', $config_factory);
     $container->set('request_stack', $request_stack);
     $container->set('token', $this->token ?? $this->createMock(Token::class));
+    $container->set('database', $this->database ?? $this->createMock(Connection::class));
     \Drupal::setContainer($container);
   }
 
@@ -104,12 +140,17 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
    *
    * @param array $property_paths
    *   Field name keyed to property path.
+   * @param string $index_name
+   *   Value of the algolia_index_name option.
    *
    * @return \Drupal\search_api\IndexInterface
    *   Mocked index.
    */
-  protected function mockIndex(array $property_paths = []): IndexInterface {
+  protected function mockIndex(array $property_paths = [], string $index_name = ''): IndexInterface {
     $index = $this->createMock(IndexInterface::class);
+    $index->method('getOption')->willReturnCallback(
+      fn($name) => $name === 'algolia_index_name' ? $index_name : NULL
+    );
     $index->method('getField')->willReturnCallback(function ($name) use ($property_paths) {
       if (!isset($property_paths[$name])) {
         return NULL;
@@ -321,6 +362,55 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
     hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(['summary' => 'summary']), $items);
 
     $this->assertSame('Text with [brackets] in it', $objects['entity:node/1:en']['summary']);
+  }
+
+  /**
+   * Sending a record cancels any deletion queued for it.
+   */
+  public function testSendingRecordsCancelsQueuedDeletions() {
+    $captured = [];
+    $this->setUpDatabase($captured);
+    $this->setUpContainer();
+
+    $objects = [
+      'entity:node/1:en' => ['objectID' => 'uuid-1', 'title' => 'One'],
+      'entity:node/2:en' => ['objectID' => 'uuid-2', 'title' => 'Two'],
+    ];
+
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex([], 'history'), []);
+
+    $this->assertSame('history', $captured['index_id']);
+    $this->assertSame(['uuid-1', 'uuid-2'], $captured['object_id']);
+  }
+
+  /**
+   * Nothing is dequeued when the index has no Algolia index name.
+   */
+  public function testNoDequeueWithoutAnIndexName() {
+    $captured = [];
+    $this->setUpDatabase($captured, FALSE);
+    $this->setUpContainer();
+
+    $objects = ['entity:node/1:en' => ['objectID' => 'uuid-1']];
+
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(), []);
+
+    $this->assertSame([], $captured);
+  }
+
+  /**
+   * Nothing is dequeued when there are no records to send.
+   */
+  public function testNoDequeueWithoutObjects() {
+    $captured = [];
+    $this->setUpDatabase($captured, FALSE);
+    $this->setUpContainer();
+
+    $objects = [];
+
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex([], 'history'), []);
+
+    $this->assertSame([], $captured);
   }
 
 }

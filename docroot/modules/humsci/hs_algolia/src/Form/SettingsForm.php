@@ -148,25 +148,62 @@ class SettingsForm extends ConfigFormBase {
     }
 
     if ($form_state->getValue('enabled')) {
-      if (!$server->status()) {
-        $server->enable()->save();
-        $server_storage->resetCache([self::SERVER_ID]);
+      try {
+        if (!$server->status()) {
+          $server->enable()->save();
+          $server_storage->resetCache([self::SERVER_ID]);
+        }
+        if (!$index->status()) {
+          $index->enable()->save();
+        }
       }
-      if (!$index->status()) {
-        $index->enable()->save();
+      catch (\Throwable $e) {
+        $this->getLogger('hs_algolia')->error('Unable to enable Algolia search: @message', ['@message' => $e->getMessage()]);
+        $this->messenger()->addError($this->t('The settings were saved, but Algolia search could not be enabled: @message', [
+          '@message' => $e->getMessage(),
+        ]));
+        return;
       }
+
       $this->messenger()->addStatus($this->t('Algolia search is enabled. Content is indexed on cron. To index everything now, use <a href=":url">Index now</a> on the index page.', [
         ':url' => Url::fromRoute('entity.search_api_index.canonical', ['search_api_index' => self::INDEX_ID])->toString(),
       ]));
     }
     else {
+      // Disabling the index asks the Algolia backend to clear the remote
+      // records. Search API saves the entity before that runs and only catches
+      // its own exceptions, so an unreachable Algolia or a missing key leaves
+      // the index disabled with its records still public. Report that rather
+      // than failing the request.
+      $clear_error = NULL;
+
       if ($index->status()) {
-        $index->disable()->save();
+        try {
+          $index->disable()->save();
+        }
+        catch (\Throwable $e) {
+          $clear_error = $e->getMessage();
+          $this->getLogger('hs_algolia')->error('Algolia records were not removed while disabling the index: @message', ['@message' => $clear_error]);
+        }
       }
+
       if ($server->status()) {
-        $server->disable()->save();
+        try {
+          $server->disable()->save();
+        }
+        catch (\Throwable $e) {
+          $this->getLogger('hs_algolia')->error('Unable to disable the Algolia server: @message', ['@message' => $e->getMessage()]);
+        }
       }
-      $this->messenger()->addStatus($this->t('Algolia search is disabled.'));
+
+      if ($clear_error === NULL) {
+        $this->messenger()->addStatus($this->t('Algolia search is disabled.'));
+      }
+      else {
+        $this->messenger()->addError($this->t('Algolia search is disabled, but its records could not be removed and are still public. Re-enable Algolia, correct the credentials, then disable it again, or delete the index in the Algolia dashboard. The error was: @message', [
+          '@message' => $clear_error,
+        ]));
+      }
     }
 
     parent::submitForm($form, $form_state);

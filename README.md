@@ -76,6 +76,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 
 ### Standards & Reference
 
+- [Algolia Search](docs/AlgoliaSearch.md)
 - [Branching Strategy](docs/BranchingStrategy.md)
 - [Coding Standards](docs/CodingStandards.md) (PHPStan, PHPCS, review patterns, etc.)
 - [Configuration Management](docs/Config.md)
@@ -169,9 +170,10 @@ See [Testing](docs/Testing.md) for how to run the PHPUnit and Codeception suites
 
 - `npm test`: Run tests for all Sass in the project (including humsci_basic).
 
-## Reporting
+## Custom Drush Commands
 
 - `drush humsci:reports:users-by-role <ROLE> --env=prod`: Generate a CSV or JSON report of users assigned to a role across all sites. Run with `--help` for all options.
+- `drush humsci:multisite:cron:run <JOB_ID> --force`: Run one Ultimate Cron job on every site, for example `hs_algolia_cron`. Intended for Acquia scheduled jobs that need a single hook on its own interval.
 
 ## Architecture Decision Records (ADRs)
 

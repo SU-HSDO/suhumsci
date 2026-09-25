@@ -605,3 +605,45 @@ function hs_admin_deploy_10013(): string {
     ? 'Manage Training and Manage Project shortcuts not found; nothing to delete.'
     : 'Deleted shortcuts: ' . implode(', ', $deleted) . '.';
 }
+
+/**
+ * Ensure the Algolia search server and index ship disabled.
+ *
+ * The status key of both entities is excluded by config_ignore. On an existing
+ * site the entities are new at import time, so the ignored key is stripped and
+ * Drupal defaults status to TRUE. See "Ignoring a Single Key of New
+ * Configuration" in docs/Config.md.
+ */
+function hs_admin_deploy_10014(): string {
+  $disabled = [];
+
+  foreach (['search_api.server.hs_algolia', 'search_api.index.hs_algolia'] as $name) {
+    // Write raw config rather than saving the entity. Index::postSave() and
+    // Server::postSave() would call a backend that has no credentials yet.
+    $config = \Drupal::configFactory()->getEditable($name);
+    if ($config->isNew() || !$config->get('status')) {
+      continue;
+    }
+
+    $config->set('status', FALSE)->save();
+    $disabled[] = $name;
+  }
+
+  // The import created the index enabled, so Index::postSave() started
+  // tracking every node on the site. Writing raw config above skips the
+  // matching teardown, which would leave the disabled index holding tracker
+  // rows and a pending tracking task.
+  if (in_array('search_api.index.hs_algolia', $disabled, TRUE)) {
+    $index = \Drupal::entityTypeManager()
+      ->getStorage('search_api_index')
+      ->loadUnchanged('hs_algolia');
+
+    if ($index) {
+      \Drupal::service('search_api.index_task_manager')->stopTracking($index);
+    }
+  }
+
+  return empty($disabled)
+    ? 'Algolia server and index already disabled; no changes made.'
+    : 'Disabled: ' . implode(', ', $disabled) . '.';
+}

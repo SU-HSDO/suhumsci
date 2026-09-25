@@ -1,0 +1,11 @@
+services:
+  hs_algolia.overrider:
+    class: Drupal\hs_algolia\Overrides\ConfigOverrides
+    arguments: ['@config.factory', '@entity_type.manager']
+    tags:
+      - { name: config.factory.override, priority: 5 }
+  hs_algolia.anonymous_access_subscriber:
+    class: Drupal\hs_algolia\EventSubscriber\AnonymousAccessSubscriber
+    arguments: ['@search_api_algolia.helper']
+    tags:
+      - { name: event_subscriber }

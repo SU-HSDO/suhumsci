@@ -14,6 +14,20 @@ The platform uses a combination of contributed and custom modules to manage conf
 
 > **Note:** This setting also means that during a site sync to local, `config_ignore` uses the active configuration on the site at the time of the sync. On a fresh site sync, the local split is not yet imported, so the first import uses the production ignore rules from `config/default`. Once the local split is imported, all subsequent imports and exports use the local split's rules.
 
+### Ignoring a Single Key of New Configuration
+
+A pattern can target one key of a configuration object using colon syntax, such as `views.view.hs_*:status`. For configuration that already exists on a site, the site's value is kept and the value from `config/default` is discarded, which is what you would expect.
+
+New configuration behaves differently. When the object does not yet exist in a site's active storage, `config_ignore` removes the ignored key from the imported data instead of preserving it. Drupal then applies its own default for that key. For a configuration entity, `status` defaults to enabled, so shipping a new entity with `status: false` and a `:status` ignore pattern creates it **enabled** on every site.
+
+This only affects sites that already exist. A newly provisioned site installs from `config/default` directly, because the install profile's `config/sync` is a symlink to it, and that path writes the sync storage without applying any `config_ignore` transform. New sites therefore get the shipped value.
+
+Add a deploy hook that sets the intended value whenever you add a per-key pattern for configuration that does not exist yet. See [Deploy Hooks and Post-Config-Import Operations](#deploy-hooks-and-post-config-import-operations). The Algolia search server and index do this. See [Algolia Search](AlgoliaSearch.md).
+
+> **Tip:** Shipping the same configuration in a module's `config/install` covers one more case, a manual `drush en` on a site where the configuration does not exist yet. Keep the two copies identical so both paths produce the same result. Drupal does not overwrite an existing entity's `uuid` on import, so a drifted `uuid` is kept rather than reported.
+
+> **Important:** Excluding one key also unlocks the entire configuration form in production. The `hs_config_readonly` check treats any ignored configuration as editable and has no key-level granularity, so a single ignored key makes every other key on that form editable by anyone with the relevant permission.
+
 ## config_split
 
 - Manages environment-specific configuration and modules (dev, stage, prod, local, ci, etc.).

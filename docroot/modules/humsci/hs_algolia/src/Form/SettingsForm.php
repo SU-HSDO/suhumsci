@@ -4,6 +4,7 @@ namespace Drupal\hs_algolia\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -28,6 +29,7 @@ class SettingsForm extends ConfigFormBase {
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typed_config_manager,
     protected EntityTypeManagerInterface $entityTypeManager,
+    protected Connection $database,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
   }
@@ -40,6 +42,7 @@ class SettingsForm extends ConfigFormBase {
       $container->get('config.factory'),
       $container->get('config.typed'),
       $container->get('entity_type.manager'),
+      $container->get('database'),
     );
   }
 
@@ -152,8 +155,9 @@ class SettingsForm extends ConfigFormBase {
 
     $enabling = (bool) $form_state->getValue('enabled');
 
-    // Turn things off before the new settings replace the old ones, or the clear
-    // targets whichever Algolia index was just typed in rather than the live one.
+    // Turn things off before the new settings replace the old ones, or the
+    // clear targets whichever Algolia index was just typed in rather than the
+    // live one.
     if (!$enabling) {
       $this->applyDisabled($server, $index);
     }
@@ -211,10 +215,12 @@ class SettingsForm extends ConfigFormBase {
    */
   protected function applyDisabled(ServerInterface $server, IndexInterface $index): void {
     $clear_error = NULL;
+    $cleared = FALSE;
 
     if ($index->status()) {
       try {
         $index->disable()->save();
+        $cleared = TRUE;
       }
       catch (\Throwable $e) {
         $clear_error = $e->getMessage();
@@ -232,6 +238,13 @@ class SettingsForm extends ConfigFormBase {
       }
     }
 
+    // A successful clear emptied the whole Algolia index, so anything queued
+    // for deletion from it is already gone. Leave the queue alone when the
+    // clear failed: those records are still in Algolia and still need removing.
+    if ($cleared) {
+      $this->discardQueuedDeletions();
+    }
+
     if ($clear_error === NULL) {
       $this->messenger()->addStatus($this->t('Algolia search is disabled.'));
       return;
@@ -240,6 +253,25 @@ class SettingsForm extends ConfigFormBase {
     $this->messenger()->addError($this->t('Algolia search is disabled, but its records could not be removed and are still public. Re-enable Algolia, correct the credentials, then disable it again, or delete the index in the Algolia dashboard. The error was: @message', [
       '@message' => $clear_error,
     ]));
+  }
+
+  /**
+   * Drop deletions queued against this site's Algolia index.
+   *
+   * Runs before the new settings are saved, so the configured index name is
+   * still the one that was just cleared. Other indexes keep their queue.
+   *
+   * @see hs_algolia_cron()
+   */
+  protected function discardQueuedDeletions(): void {
+    $index_name = (string) $this->config(ConfigOverrides::SETTINGS)->get('index_name');
+    if ($index_name === '') {
+      return;
+    }
+
+    $this->database->delete('search_api_algolia_deleted_items')
+      ->condition('index_id', $index_name)
+      ->execute();
   }
 
 }

@@ -629,6 +629,20 @@ function hs_admin_deploy_10014(): string {
     $disabled[] = $name;
   }
 
+  // The import created the index enabled, so Index::postSave() started
+  // tracking every node on the site. Writing raw config above skips the
+  // matching teardown, which would leave the disabled index holding tracker
+  // rows and a pending tracking task.
+  if (in_array('search_api.index.hs_algolia', $disabled, TRUE)) {
+    $index = \Drupal::entityTypeManager()
+      ->getStorage('search_api_index')
+      ->loadUnchanged('hs_algolia');
+
+    if ($index) {
+      \Drupal::service('search_api.index_task_manager')->stopTracking($index);
+    }
+  }
+
   return empty($disabled)
     ? 'Algolia server and index already disabled; no changes made.'
     : 'Disabled: ' . implode(', ', $disabled) . '.';

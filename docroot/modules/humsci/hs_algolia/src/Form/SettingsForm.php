@@ -9,6 +9,8 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\hs_algolia\Overrides\ConfigOverrides;
+use Drupal\search_api\IndexInterface;
+use Drupal\search_api\ServerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -61,20 +63,30 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config(ConfigOverrides::SETTINGS);
     $index = $this->entityTypeManager->getStorage('search_api_index')->load(self::INDEX_ID);
+    $enabled = $index?->status() ?? FALSE;
+
+    // Which Algolia index the site writes to cannot change while Algolia is
+    // on. Only lock the fields once they hold something worth protecting, so a
+    // half-configured site can still be corrected.
+    $locked = $enabled && $config->get('application_id') && $config->get('index_name');
+    $locked_note = $this->t('Disable Algolia search to change this. Changing it while enabled would leave the records in the old Algolia index public.');
 
     $form['enabled'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable Algolia search'),
       '#description' => $this->t('Index published content into Algolia. Disabling removes every record from the Algolia index.'),
-      '#default_value' => $index?->status() ?? FALSE,
+      '#default_value' => $enabled,
     ];
 
     $form['application_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Application ID'),
-      '#description' => $this->t('From the API Keys page of the Algolia application.'),
+      '#description' => $locked
+        ? $locked_note
+        : $this->t('From the API Keys page of the Algolia application.'),
       '#default_value' => $config->get('application_id'),
       '#maxlength' => 128,
+      '#disabled' => $locked,
     ];
 
     $form['api_key'] = [
@@ -89,9 +101,12 @@ class SettingsForm extends ConfigFormBase {
     $form['index_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Algolia index name'),
-      '#description' => $this->t('Name of the index inside the Algolia application. It is created on first use. Use the site name, for example <code>archaeology</code>.'),
+      '#description' => $locked
+        ? $locked_note
+        : $this->t('Name of the index inside the Algolia application. It is created on first use. Use the site name, for example <code>archaeology</code>.'),
       '#default_value' => $config->get('index_name'),
       '#maxlength' => 128,
+      '#disabled' => $locked,
     ];
 
     return parent::buildForm($form, $form_state);
@@ -120,20 +135,8 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config(ConfigOverrides::SETTINGS)
-      ->set('application_id', trim((string) $form_state->getValue('application_id')))
-      ->set('api_key', (string) $form_state->getValue('api_key'))
-      ->set('index_name', trim((string) $form_state->getValue('index_name')))
-      ->save();
-
-    // The overrides for the server and index read the settings just saved, so
-    // drop anything loaded earlier in this request.
-    $this->configFactory->reset(ConfigOverrides::SERVER);
-    $this->configFactory->reset(ConfigOverrides::INDEX);
     $server_storage = $this->entityTypeManager->getStorage('search_api_server');
     $index_storage = $this->entityTypeManager->getStorage('search_api_index');
-    $server_storage->resetCache([self::SERVER_ID]);
-    $index_storage->resetCache([self::INDEX_ID]);
 
     // Load without overrides so saving does not write the runtime credentials
     // into the entities. Search API refuses to enable an index whose server is
@@ -147,7 +150,32 @@ class SettingsForm extends ConfigFormBase {
       return;
     }
 
-    if ($form_state->getValue('enabled')) {
+    $enabling = (bool) $form_state->getValue('enabled');
+
+    // Turn things off before the new settings replace the old ones, or the clear
+    // targets whichever Algolia index was just typed in rather than the live one.
+    if (!$enabling) {
+      $this->applyDisabled($server, $index);
+    }
+
+    $this->config(ConfigOverrides::SETTINGS)
+      ->set('application_id', trim((string) $form_state->getValue('application_id')))
+      ->set('api_key', (string) $form_state->getValue('api_key'))
+      ->set('index_name', trim((string) $form_state->getValue('index_name')))
+      ->save();
+
+    // The overrides for the server and index read the settings just saved, so
+    // drop anything loaded earlier in this request.
+    $this->configFactory->reset(ConfigOverrides::SERVER);
+    $this->configFactory->reset(ConfigOverrides::INDEX);
+    $server_storage->resetCache([self::SERVER_ID]);
+    $index_storage->resetCache([self::INDEX_ID]);
+
+    if ($enabling) {
+      /** @var \Drupal\search_api\ServerInterface $server */
+      $server = $server_storage->loadOverrideFree(self::SERVER_ID);
+      /** @var \Drupal\search_api\IndexInterface $index */
+      $index = $index_storage->loadOverrideFree(self::INDEX_ID);
       try {
         if (!$server->status()) {
           $server->enable()->save();
@@ -169,44 +197,49 @@ class SettingsForm extends ConfigFormBase {
         ':url' => Url::fromRoute('entity.search_api_index.canonical', ['search_api_index' => self::INDEX_ID])->toString(),
       ]));
     }
-    else {
-      // Disabling the index asks the Algolia backend to clear the remote
-      // records. Search API saves the entity before that runs and only catches
-      // its own exceptions, so an unreachable Algolia or a missing key leaves
-      // the index disabled with its records still public. Report that rather
-      // than failing the request.
-      $clear_error = NULL;
 
-      if ($index->status()) {
-        try {
-          $index->disable()->save();
-        }
-        catch (\Throwable $e) {
-          $clear_error = $e->getMessage();
-          $this->getLogger('hs_algolia')->error('Algolia records were not removed while disabling the index: @message', ['@message' => $clear_error]);
-        }
-      }
+    parent::submitForm($form, $form_state);
+  }
 
-      if ($server->status()) {
-        try {
-          $server->disable()->save();
-        }
-        catch (\Throwable $e) {
-          $this->getLogger('hs_algolia')->error('Unable to disable the Algolia server: @message', ['@message' => $e->getMessage()]);
-        }
-      }
+  /**
+   * Turn Algolia off, clearing the remote index.
+   *
+   * @param \Drupal\search_api\ServerInterface $server
+   *   The Algolia server, loaded override free.
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The Algolia index, loaded override free.
+   */
+  protected function applyDisabled(ServerInterface $server, IndexInterface $index): void {
+    $clear_error = NULL;
 
-      if ($clear_error === NULL) {
-        $this->messenger()->addStatus($this->t('Algolia search is disabled.'));
+    if ($index->status()) {
+      try {
+        $index->disable()->save();
       }
-      else {
-        $this->messenger()->addError($this->t('Algolia search is disabled, but its records could not be removed and are still public. Re-enable Algolia, correct the credentials, then disable it again, or delete the index in the Algolia dashboard. The error was: @message', [
-          '@message' => $clear_error,
-        ]));
+      catch (\Throwable $e) {
+        $clear_error = $e->getMessage();
+        $this->getLogger('hs_algolia')->error('Algolia records were not removed while disabling the index: @message', ['@message' => $clear_error]);
       }
     }
 
-    parent::submitForm($form, $form_state);
+    // Turn the server off even when the clear failed, so nothing else writes.
+    if ($server->status()) {
+      try {
+        $server->disable()->save();
+      }
+      catch (\Throwable $e) {
+        $this->getLogger('hs_algolia')->error('Unable to disable the Algolia server: @message', ['@message' => $e->getMessage()]);
+      }
+    }
+
+    if ($clear_error === NULL) {
+      $this->messenger()->addStatus($this->t('Algolia search is disabled.'));
+      return;
+    }
+
+    $this->messenger()->addError($this->t('Algolia search is disabled, but its records could not be removed and are still public. Re-enable Algolia, correct the credentials, then disable it again, or delete the index in the Algolia dashboard. The error was: @message', [
+      '@message' => $clear_error,
+    ]));
   }
 
 }

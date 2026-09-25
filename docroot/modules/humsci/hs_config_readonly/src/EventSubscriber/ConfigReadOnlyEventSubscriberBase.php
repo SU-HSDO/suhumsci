@@ -68,6 +68,7 @@ abstract class ConfigReadOnlyEventSubscriberBase implements EventSubscriberInter
     'menu_edit_form',
     'shortcut_set_customize_form',
     'migration_csv-upload_form',
+    'taxonomy_overview_terms',
   ];
 
   /**

@@ -47,7 +47,7 @@ Every site imports the same configuration from `config/default`. The values that
 
 The credentials and index name are applied to the Search API server and index as runtime overrides. They never appear in those entities, and the server edit form hides the credential fields so nobody enters them there.
 
-> **Important:** Both entities ship disabled through two safeguards: the `hs_algolia` module's `config/install` on new sites, and a deploy hook in `hs_admin` on existing sites. Both are required. See [Ignoring a Single Key of New Configuration](Config.md#ignoring-a-single-key-of-new-configuration) for why.
+> **Important:** Both entities ship disabled. New sites get that from `config/default` when the site is installed. Existing sites import before the configuration exists, where the ignored `status` key is stripped and Drupal defaults it to enabled, so a deploy hook in `hs_admin` turns both back off. Do not remove that hook. See [Ignoring a Single Key of New Configuration](Config.md#ignoring-a-single-key-of-new-configuration) for why.
 
 > **Important:** Excluding a single key from import unlocks the entire Search API configuration form in production, because the read-only check has no key-level granularity. Anyone with `administer search_api` on a site with Algolia enabled can change the index datasource and processors through the admin UI. Restrict that permission to administrators.
 
@@ -55,7 +55,7 @@ The credentials and index name are applied to the Search API server and index as
 
 You need an Algolia application and, from its API Keys page, the Application ID and an API key with write access. Create a key scoped to this site's index with the `addObject`, `deleteObject`, `deleteIndex`, and `settings` permissions rather than using the Admin API key.
 
-1. Create a key entity to hold the API key at `/admin/config/system/keys/add`. Use key type **Authentication** and key provider **Configuration**, and paste the API key as the value.
+1. Create a key entity to hold the API key at `/admin/config/system/keys/add`. Use key type **Authentication** and key provider **Encrypted Configuration** with the `real_aes` encryption profile, then paste the API key as the value. This stores the key encrypted rather than in plain text, and matches how `hs_shield_key` is stored.
 
 1. Open `/admin/config/search/algolia`, fill in the Application ID, select the key, and set the Algolia index name. Use the site name, for example `archaeology`. Check **Enable Algolia search** and save.
 
@@ -79,6 +79,14 @@ To turn Algolia off, uncheck **Enable Algolia search** and save. This removes ev
 ## Local Development Setup
 
 Follow the same steps on the local site. Use a disposable Algolia application for local and continuous integration work, never a production one.
+
+Local environments have no `REAL_AES_ENCRYPTION` value, so `global.settings.php` generates a random one on each request and anything stored with the **Encrypted Configuration** provider cannot be read back. Either set a fixed value in your local settings before creating the key:
+
+```php
+putenv('REAL_AES_ENCRYPTION=<ANY_32_CHARACTER_STRING>');
+```
+
+or use the plain **Configuration** provider locally, which stores the key unencrypted and is acceptable for a disposable Algolia application.
 
 ### Record Size on Smaller Plans
 

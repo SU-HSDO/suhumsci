@@ -1,6 +1,6 @@
 uuid: 2e6eec04-4aae-469e-abc2-388b5123f042
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - core.entity_view_mode.paragraph.preview
@@ -8,27 +8,15 @@ dependencies:
     - paragraphs.paragraphs_type.hs_view
   module:
     - layout_builder
-    - viewfield
 third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
-_core:
-  default_config_hash: ROagQRyXu7b9dF0QKGoP9iNlpe7tPEn9cpIOfzmVTcM
 id: paragraph.hs_view.preview
 targetEntityType: paragraph
 bundle: hs_view
 mode: preview
-content:
-  field_hs_view:
-    type: viewfield_default
-    label: hidden
-    settings:
-      view_title: hidden
-      always_build_output: true
-      empty_view_title: hidden
-    third_party_settings: {  }
-    weight: 0
-    region: content
+content: {  }
 hidden:
+  field_hs_view: true
   search_api_excerpt: true

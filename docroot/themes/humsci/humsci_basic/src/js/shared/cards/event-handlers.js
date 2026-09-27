@@ -1,13 +1,19 @@
-const addCardEvents = (card, mainLink) => {
+const addCardEvents = (card, linkHref, linkElement) => {
   let downTime = 0;
 
-  // Add a focus state class to card
-  mainLink.addEventListener('focus', () => {
+  // Add class to apply card-wide hover styles.
+  if (card.classList.contains('hb-vertical-linked-card')) {
+    card.classList.add('hb-vertical-linked-card--linked');
+  } else {
+    card.classList.add('hb-card--linked');
+  }
+
+  // focusin/focusout bubble, so the card reflects focus on any child link.
+  card.addEventListener('focusin', () => {
     card.classList.add('is-focused');
   });
 
-  // Remove focus state class from card
-  mainLink.addEventListener('blur', () => {
+  card.addEventListener('focusout', () => {
     card.classList.remove('is-focused');
   });
 
@@ -45,7 +51,7 @@ const addCardEvents = (card, mainLink) => {
     const upTime = Date.now();
     // If the click "duration" is less than 200ms, trigger a click.
     if (upTime - downTime < 200) {
-      mainLink.click();
+      linkElement.click();
     }
   });
 };

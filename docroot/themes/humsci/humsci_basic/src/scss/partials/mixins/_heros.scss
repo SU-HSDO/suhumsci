@@ -6,6 +6,7 @@
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
 @use '../functions/color' as *;
+@use 'buttons' as *;
 @use 'theme' as *;
 @use 'breakpoints' as *;
 @use 'layout' as *;
@@ -247,7 +248,6 @@
 @mixin hb-hero-button($button-color, $button-color-hover) {
   display: inline-block;
   font-weight: hb-theme-font-weight(semibold);
-  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
   text-decoration: none;
   text-align: center;
   transition: hb-transition(all);
@@ -336,8 +336,7 @@
       }
     }
 
-    // Override the padding from the hb-hero-button mixin used above
-    padding: hb-calculate-rems(12px);
+    @include hb-button-size('big');
   }
 }
 

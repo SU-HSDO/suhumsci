@@ -62,6 +62,7 @@
   // Link current color variables.
   --link-base-current-color: #{color('link-base')};
   --link-base-hover-current-color: #{color('link-base-hover')};
+  --scrunched-line-height: #{$hb-scrunched-line-height};
 
   // Addresses small media previews in CK5
   .hb-media-video {
@@ -252,6 +253,8 @@
 // classes for the WYSIWYG need to be converted to px to ensure accurate
 // rendering.
 .ck.ck-content {
+  @include hb-button-size-vars($convert-to-rem: false);
+
   @include hb-themes(('colorful', 'airy')) {
     font-size: 16px;
 
@@ -358,34 +361,18 @@
     @include hb-secondary-button;
   }
 
-  .hs-button,
-  .hs-button--big,
-  .hs-secondary-button {
-    font-size: 16px;
-    border-width: 2px;
-
-    @include hb-themes(('colorful', 'airy')) {
-      padding: 4px 20px;
-    }
-
-    @include hb-traditional {
-      padding: 6px 26px;
-    }
-  }
-
   .hs-button--big {
-    @include hb-button;
-    font-size: 18px;
+    @include hb-big-button;
+
     border-width: 3px;
-
-    @include hb-themes(('colorful', 'airy')) {
-      padding: 8px 20px;
-    }
-
-    @include hb-traditional {
-      padding: 8px 35px;
-    }
   }
+
+  .hs-button,
+  .hs-secondary-button {
+    border-width: 2px;
+  }
+
+  @include hb-wysiwyg-button-sizes;
 
   table {
     @include table;

@@ -27,8 +27,12 @@ The platform uses a combination of contributed and custom modules to manage conf
 
 ## hs_config_prefix
 
-- Automatically prefixes new site-created config (fields, views, displays, etc.) with `custm_` to distinguish site-specific config from global product config.
+- Automatically prefixes new site-created config entities (vocabularies, content types, views, menus, etc.) with `custm_` to distinguish site-specific config from global product config. Form and view displays are excluded.
 - Product-level config uses the `hs_` prefix.
+- The prefix is set by the dev, staging, and prod config splits. It is empty in `config/default`, so config created locally is not prefixed unless one of those splits is enabled.
+- The prefix is added when the entity is saved, after form validation, and only for config created through the UI. Config created via drush or during site install is not prefixed.
+- To keep the prefixed ID within database column limits, the machine name field on add forms is shortened by the length of the prefix (e.g., 26 characters instead of 32 for vocabularies).
+- Field names are prefixed separately by Field UI (`field_ui.settings:field_prefix`, also set to `custm_` by the environment splits). `stanford_fields` limits field name length to account for it.
 
 ## Partial Config Imports & hs_config_partial
 

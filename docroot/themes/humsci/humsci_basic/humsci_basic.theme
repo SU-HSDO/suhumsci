@@ -63,6 +63,21 @@ function humsci_basic_preprocess_block(&$vars) {
     $description = $block->get('info')->get(0)->getValue();
     $vars['label'] = reset($description) ?: $vars['label'];
   }
+
+  // Some blocks (e.g. the "Title" field block, which renders nothing on the
+  // front page) can still print an empty wrapper div with no visible
+  // content. CSS :empty can't reliably catch this because Twig leaves
+  // whitespace text nodes between the tags, so flag it here instead: this
+  // lets spacing utilities like .block-layout-builder skip blocks that have
+  // nothing to show.
+  if (empty($vars['title_prefix']) && empty($vars['label']) && empty($vars['title_suffix'])) {
+    $content_copy = $vars['content'];
+    $markup = \Drupal::service('renderer')->renderInIsolation($content_copy);
+
+    if (trim((string) $markup) === '') {
+      $vars['attributes']['class'][] = 'block--no-visible-content';
+    }
+  }
 }
 
 /**

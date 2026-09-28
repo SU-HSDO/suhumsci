@@ -1,5 +1,6 @@
 @use '../functions/general' as *;
 @use '../mixins/layout' as *;
+@use '../mixins/breakpoints' as *;
 
 .hb-page-width {
   @include hb-page-width;
@@ -10,6 +11,30 @@
 
   &:not(:has(.hs-full-width:first-child)) {
     margin-top: hb-spacing-width();
+  }
+}
+
+// When a full-width Carousel hero is followed by a heading, a splash/lead
+// font style Text Area, a Spotlight Slider, or an Accordion without the
+// "Expand Button" as the first item in the main region, that first item's
+// own margin-top collapses through its wrapper and stacks with the hero's
+// margin-bottom, creating an oversized gap. `there-is-extra-gap-between-
+// hero-and-main-region` is added to the body (see humsci_basic.theme) only
+// for that exact combination, so it's safe to zero the leaking margin-top
+// here instead of touching the hero's own spacing.
+body.there-is-extra-gap-between-hero-and-main-region {
+  .field-hs-page-components > .ptype-hs-text-area:first-child .field-hs-text-area > :first-child {
+    margin-top: 0 !important;
+  }
+
+  .field-hs-page-components > .ptype-hs-sptlght-slder:first-child .hb-spotlight {
+    @include grid-media-min('md') {
+      margin-top: 0;
+    }
+  }
+
+  .field-hs-page-components > .ptype-hs-accordion:first-child .hs-accordion {
+    margin-top: 0;
   }
 }
 
@@ -69,7 +94,6 @@
 .ptype-hs-carousel,
 .ptype-hs-cmap,
 .ptype-hs-sptlght-slder,
-.field-hs-page-hero,
 .ptype-hs-timeline,
 .ptype-hs-view,
 .ptype-hs-priv-collection,

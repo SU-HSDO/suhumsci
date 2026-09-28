@@ -5,10 +5,16 @@
  * Functions to support theming in the HumSci Basic theme.
  */
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Extension\ThemeSettingsProvider;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\ParagraphInterface;
@@ -95,8 +101,9 @@ function humsci_basic_preprocess_html(&$vars) {
   if ($node instanceof NodeInterface && $node->bundle() == 'hs_basic_page') {
     $is_hs_carousel_in_hs_page_hero = humsci_basic_is_hs_carousel_in_hs_page_hero($node);
     $is_there_extra_gap_in_main_region = humsci_basic_is_there_extra_gap_in_main_region($node);
+    $is_title_block_first_in_main_region = humsci_basic_is_title_block_first_in_main_region($node);
 
-    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region) {
+    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region && !$is_title_block_first_in_main_region) {
       $vars['attributes']['class'][] = 'there-is-extra-gap-between-hero-and-main-region';
     }
   }
@@ -404,6 +411,58 @@ function humsci_basic_is_there_extra_gap_in_main_region(NodeInterface $node): bo
   }
 
   // Return false if doesn't match any of the previous if.
+  return FALSE;
+}
+
+/**
+ * Checks if the node's "Title" block is placed ahead of the page components
+ * field in the "main" region of its effective Layout Builder sections.
+ *
+ * When the title block is displayed there, it already breaks the margin
+ * adjacency between the full-width hero and the page components field, so
+ * the extra-gap scenarios checked by
+ * humsci_basic_is_there_extra_gap_in_main_region() don't apply.
+ */
+function humsci_basic_is_title_block_first_in_main_region(NodeInterface $node): bool {
+  if (!$node->hasField('field_hs_page_components')) {
+    return FALSE;
+  }
+
+  $view_mode = 'full';
+  $contexts = [
+    'entity' => EntityContext::fromEntity($node),
+  ];
+
+  $display = EntityViewDisplay::collectRenderDisplay($node, $view_mode);
+  if ($display instanceof LayoutEntityDisplayInterface) {
+    $contexts['display'] = EntityContext::fromEntity($display);
+  }
+  $contexts['view_mode'] = new Context(new ContextDefinition('string'), $view_mode);
+
+  $section_storage = \Drupal::service('plugin.manager.layout_builder.section_storage')
+    ->findByContext($contexts, new CacheableMetadata());
+
+  if (!$section_storage) {
+    return FALSE;
+  }
+
+  $components_field_block_id = 'field_block:node:' . $node->bundle() . ':field_hs_page_components';
+  $title_block_id = 'field_block:node:' . $node->bundle() . ':title';
+
+  foreach ($section_storage->getSections() as $section) {
+    foreach ($section->getComponentsByRegion('main') as $component) {
+      $plugin_id = $component->getPluginId();
+
+      if ($plugin_id === $components_field_block_id) {
+        // Reached the components field without finding the title block first.
+        return FALSE;
+      }
+      if ($plugin_id === $title_block_id) {
+        return TRUE;
+      }
+    }
+  }
+
   return FALSE;
 }
 

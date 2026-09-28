@@ -78,6 +78,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 
 - [Algolia Search](docs/AlgoliaSearch.md)
 - [Branching Strategy](docs/BranchingStrategy.md)
+- [CAP Profiles Importer](docs/CapImporter.md)
 - [Coding Standards](docs/CodingStandards.md) (PHPStan, PHPCS, review patterns, etc.)
 - [Configuration Management](docs/Config.md)
 - [Development Requirements](docs/DevelopmentRequirements.md)

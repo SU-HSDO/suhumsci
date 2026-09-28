@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\encrypt\Exception\EncryptException;
+use Drupal\hs_capx\Capx;
 use Drupal\key\Entity\Key;
 use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 use Psr\Log\LoggerAwareTrait;
@@ -116,7 +117,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
           'status' => !empty($urls),
           'shared_configuration' => [
             'source' => [
-              'authentication' => [
+              'authentication' => $this->getAuthUrlParts() + [
                 'client_id' => $config->get('username'),
                 'client_secret' => $password,
                 'plugin' => !empty($urls) && $password ? 'oauth2' : '',
@@ -140,7 +141,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
           'status' => !empty($urls),
           'shared_configuration' => [
             'source' => [
-              'authentication' => [
+              'authentication' => $this->getAuthUrlParts() + [
                 'client_id' => $config->get('username'),
                 'client_secret' => $password,
                 'plugin' => !empty($urls) && $password ? 'oauth2' : '',
@@ -157,6 +158,32 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       }
     }
     return $overrides;
+  }
+
+  /**
+   * Split the CAP auth url into the oauth2 plugin's base uri and token path.
+   *
+   * Migrations request their own token through migrate_plus's oauth2 plugin
+   * rather than the capx service, so the auth url setting has to be applied
+   * here too or imports would keep authenticating against the old server.
+   *
+   * @return array
+   *   Keyed array with base_uri and token_url, or empty if the url is invalid.
+   */
+  protected function getAuthUrlParts(): array {
+    $parts = parse_url(Capx::getAuthUrl());
+    if (empty($parts['scheme']) || empty($parts['host'])) {
+      $this->getLogger()->error('Invalid CAP auth url: @url', ['@url' => Capx::getAuthUrl()]);
+      return [];
+    }
+    $base_uri = $parts['scheme'] . '://' . $parts['host'];
+    if (!empty($parts['port'])) {
+      $base_uri .= ':' . $parts['port'];
+    }
+    return [
+      'base_uri' => $base_uri,
+      'token_url' => $parts['path'] ?? '/',
+    ];
   }
 
   /**

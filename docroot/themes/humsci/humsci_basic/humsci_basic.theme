@@ -415,12 +415,12 @@ function humsci_basic_is_there_extra_gap_in_main_region(NodeInterface $node): bo
 }
 
 /**
- * Checks if the node's "Title" block is placed ahead of the page components
- * field in the "main" region of its effective Layout Builder sections.
+ * Checks if the node's "Title" block appears before the page components.
  *
- * When the title block is displayed there, it already breaks the margin
- * adjacency between the full-width hero and the page components field, so
- * the extra-gap scenarios checked by
+ * The block must be in the "main" region of the node's effective Layout
+ * Builder sections. When the title block is displayed there, it already
+ * breaks the margin adjacency between the full-width hero and the page
+ * components field, so the extra-gap scenarios checked by
  * humsci_basic_is_there_extra_gap_in_main_region() don't apply.
  */
 function humsci_basic_is_title_block_first_in_main_region(NodeInterface $node): bool {
@@ -458,7 +458,21 @@ function humsci_basic_is_title_block_first_in_main_region(NodeInterface $node): 
         return FALSE;
       }
       if ($plugin_id === $title_block_id) {
-        return TRUE;
+        // block.html.twig renders an empty wrapper div when the title has
+        // no output, which has no padding/border/content to stop the margin
+        // adjacency. Only count it if it will actually render something.
+        //
+        // EntityTitleHeading::viewElements() also renders nothing when this
+        // is the front page and the tag is h1 (the "Home page" title isn't
+        // shown), so mirror that check here.
+        $configuration = $component->get('configuration') ?? [];
+        $tag = $configuration['formatter']['settings']['tag'] ?? NULL;
+        $is_suppressed_front_page_title = $tag === 'h1' && \Drupal::service('path.matcher')->isFrontPage();
+
+        if (!$is_suppressed_front_page_title && trim((string) $node->getTitle()) !== '') {
+          return TRUE;
+        }
+        continue;
       }
     }
   }

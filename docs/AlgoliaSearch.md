@@ -59,6 +59,8 @@ The credentials and index name are applied to the Search API server and index as
 
 > **Important:** Excluding a single key from import unlocks the entire Search API configuration form in production, because the read-only check has no key-level granularity. Anyone with `administer search_api` on a site with Algolia enabled can change the index datasource and processors through the admin UI. Restrict that permission to administrators.
 
+Saving the server or index from those unlocked forms would otherwise write the overridden credentials and index name into active configuration, and the next configuration export would commit the Algolia write key to the repository. `hs_algolia_search_api_server_presave()` and `hs_algolia_search_api_index_presave()` put the empty strings back on every save, so the values stay runtime-only whatever the admin UI does. The rest of the form is still editable, so the permission restriction above still matters.
+
 ## Enabling Algolia for a Site
 
 You need an Algolia application and, from its API Keys page, the Application ID and an API key with write access. Create a key scoped to this site's index with the `addObject`, `deleteObject`, `deleteIndex`, and `settings` permissions rather than using the Admin API key.

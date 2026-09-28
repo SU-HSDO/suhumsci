@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\hs_algolia\Form\SettingsForm;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\IndexInterface;
@@ -62,6 +63,50 @@ function hs_algolia_entity_delete(EntityInterface $entity): void {
   if (hs_algolia_active_indexes()) {
     \Drupal::service('search_api_algolia.helper')->entityDelete($entity);
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for search_api_server entities.
+ *
+ * The Algolia credentials are runtime overrides, so active configuration
+ * holds empty strings and a configuration export never carries the key.
+ *
+ * Put the empty strings back. The backend plugin keeps its own configuration,
+ * so the client built during this request still works.
+ *
+ * @see \Drupal\hs_algolia\Overrides\ConfigOverrides
+ * @see hs_algolia_form_search_api_server_form_alter()
+ */
+function hs_algolia_search_api_server_presave(ServerInterface $server): void {
+  if ($server->id() !== SettingsForm::SERVER_ID) {
+    return;
+  }
+
+  $backend_config = $server->get('backend_config') ?: [];
+  $backend_config['application_id'] = '';
+  $backend_config['api_key'] = '';
+  $server->set('backend_config', $backend_config);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for search_api_index entities.
+ *
+ * The Algolia index name reaches active configuration the same way.
+ *
+ * Only removeIndex() reads this option during a save, and it is given the
+ * unchanged original rather than this entity, so clearing a disabled index
+ * still uses the site's real index name.
+ *
+ * @see \Drupal\search_api\Entity\Index::postSave()
+ */
+function hs_algolia_search_api_index_presave(IndexInterface $index): void {
+  if ($index->id() !== SettingsForm::INDEX_ID) {
+    return;
+  }
+
+  $options = $index->getOptions();
+  $options['algolia_index_name'] = '';
+  $index->setOptions($options);
 }
 
 /**

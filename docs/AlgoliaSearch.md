@@ -33,7 +33,15 @@ Algolia records are queried from the browser with a public search-only key, so e
 
 Never indexed: Private Page content, unpublished content, node grants, and Training and Project content (which have no search indexing view display).
 
-> **Important:** The access check runs when an item is indexed. Restricting content that is already in Algolia does not remove it until the item is indexed again. After changing content access settings on a site, queue a reindex from `/admin/config/search/search-api/index/hs_algolia` or run `drush @<SITE_NAME>.<ENV> search-api:reset-tracker hs_algolia`.
+Restricting content that is already in Algolia removes it, but not instantly. The access check runs when an item is indexed, so a grant change has to put the item back in front of the indexer first. Three paths do that, and no manual step is needed on any of them:
+
+| Restricting through | What re-tracks the content |
+| --- | --- |
+| The access widget on the node edit form (`content_access_simple`) | The node is saved, so Search API re-tracks it the usual way |
+| `/node/<NID>/access` | `hs_algolia_content_access_per_node()` queues the record for removal immediately and re-tracks the item |
+| `/admin/structure/types/manage/<TYPE>/access` | `hs_algolia_form_content_access_admin_settings_alter()` adds a handler that re-tracks every item of that content type |
+
+The record leaves Algolia on the next `hs_algolia_cron` run. Worst case, the record stays public until that run, so on an urgent takedown unpublish the node or clear the index from the Algolia dashboard rather than waiting.
 
 ## Per-Site Configuration
 

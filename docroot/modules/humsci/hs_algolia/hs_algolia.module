@@ -8,11 +8,13 @@
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Plugin\search_api\datasource\ContentEntityTrackingManager;
 use Drupal\search_api\ServerInterface;
 use Drupal\search_api_algolia\Plugin\search_api\backend\SearchApiAlgoliaBackend;
 
@@ -25,6 +27,19 @@ const HS_ALGOLIA_RECORD_LIMIT = 10000;
  * Number of records removed from Algolia in a single API request.
  */
 const HS_ALGOLIA_DELETE_BATCH_SIZE = 100;
+
+/**
+ * Matches the token_or "or" syntax: [type:name|type:name|"fallback"].
+ *
+ * Search API's CustomValue processor scans with a pattern that rejects the
+ * pipe, so these constructs are the only tokens that reach the objects alter
+ * hook unresolved. Requiring both a colon and a pipe inside one bracket pair
+ * keeps ordinary bracketed prose, such as "[1]" or "[Smith:2020]", out.
+ *
+ * @see \Drupal\search_api\Plugin\search_api\processor\CustomValue::addFieldValues()
+ * @see \Drupal\token_or\TokenOrTokensPreAlter::tokensPreAlter()
+ */
+const HS_ALGOLIA_TOKEN_OR_PATTERN = '/\[[^\[\]]*:[^\[\]]*\|[^\[\]]*\]/';
 
 /**
  * Implements hook_module_implements_alter().
@@ -63,6 +78,95 @@ function hs_algolia_node_update(NodeInterface $node): void {
 
   if (hs_algolia_active_indexes()) {
     \Drupal::service('search_api_algolia.helper')->entityDelete($node);
+  }
+}
+
+/**
+ * Implements hook_content_access_per_node().
+ *
+ * Restricting a node through the access form writes node grants without
+ * saving the node, so Search API never re-tracks the item and a record that
+ * was already indexed would stay in a browser-queryable index. Queue the
+ * record for removal when the anonymous user can no longer view it, and
+ * re-track it either way so the next indexing run reflects the new grants.
+ *
+ * @see \Drupal\hs_algolia\EventSubscriber\AnonymousAccessSubscriber
+ * @see \Drupal\content_access\Form\ContentAccessPageForm::submitForm()
+ */
+function hs_algolia_content_access_per_node(array $settings, NodeInterface $node): void {
+  if (!hs_algolia_active_indexes()) {
+    return;
+  }
+
+  // Grants have already been written by the time this hook fires, so the
+  // access check reflects the setting that was just saved.
+  if (!$node->access('view', new AnonymousUserSession())) {
+    \Drupal::service('search_api_algolia.helper')->entityDelete($node);
+  }
+
+  \Drupal::service('search_api.entity_datasource.tracking_manager')
+    ->trackEntityChange($node);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * The bundle level access form rebuilds node grants for a whole content type
+ * without saving a single node, and invokes no hook. Re-track the affected
+ * content so the next indexing run re-checks anonymous access.
+ *
+ * @see \Drupal\Core\Form\FormBuilder::prepareForm()
+ * @see content_access_mass_update()
+ */
+function hs_algolia_form_content_access_admin_settings_alter(array &$form, FormStateInterface $form_state): void {
+  $form['#submit'][] = 'hs_algolia_content_access_bundle_submit';
+}
+
+/**
+ * Re-track one content type after its access settings change.
+ */
+function hs_algolia_content_access_bundle_submit(array $form, FormStateInterface $form_state): void {
+  $node_type = $form_state->getStorage()['node_type'] ?? NULL;
+
+  if ($node_type) {
+    hs_algolia_retrack_bundles([$node_type]);
+  }
+}
+
+/**
+ * Mark every indexed item of the given content types for reindexing.
+ *
+ * @param string[] $bundles
+ *   Node bundles whose items should be re-tracked.
+ *
+ * @see \Drupal\hs_algolia\EventSubscriber\AnonymousAccessSubscriber
+ */
+function hs_algolia_retrack_bundles(array $bundles): void {
+  $indexes = hs_algolia_active_indexes();
+
+  if (!$indexes || !$bundles) {
+    return;
+  }
+
+  $rows = \Drupal::database()->select('node_field_data', 'n')
+    ->fields('n', ['nid', 'langcode'])
+    ->condition('type', $bundles, 'IN')
+    ->execute();
+
+  $item_ids = [];
+  foreach ($rows as $row) {
+    $item_ids[] = ContentEntityTrackingManager::formatItemId('node', $row->nid, $row->langcode);
+  }
+
+  if (!$item_ids) {
+    return;
+  }
+
+  foreach ($indexes as $index) {
+    $valid = ContentEntityTrackingManager::filterValidItemIds($index, 'entity:node', $item_ids);
+    if ($valid) {
+      $index->trackItemsUpdated('entity:node', $valid);
+    }
   }
 }
 
@@ -313,15 +417,17 @@ function hs_algolia_cancel_queued_deletions(array $objects, IndexInterface $inde
  * @see \Drupal\token_or\Token::replacePlain()
  */
 function hs_algolia_replace_tokens(string $value, array $token_data): string {
-  if (!str_contains($value, '[')) {
+  // Anything the CustomValue processor could resolve has already been
+  // resolved, so a bare "[" here is ordinary content.
+  if (!preg_match(HS_ALGOLIA_TOKEN_OR_PATTERN, $value)) {
     return $value;
   }
 
   $replaced = trim(\Drupal::token()->replacePlain($value, $token_data, ['clear' => TRUE]));
 
-  // A value still holding a token did not resolve against this entity. Index
-  // nothing rather than the literal token text.
-  return str_contains($replaced, '[') ? '' : $replaced;
+  // A value still holding the construct did not resolve against this entity.
+  // Index nothing rather than the literal token text.
+  return preg_match(HS_ALGOLIA_TOKEN_OR_PATTERN, $replaced) ? '' : $replaced;
 }
 
 /**

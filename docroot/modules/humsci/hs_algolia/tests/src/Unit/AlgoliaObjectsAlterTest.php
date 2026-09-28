@@ -110,7 +110,22 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
   protected function setUpToken(array $map): void {
     $token = $this->createMock(Token::class);
     $token->method('replacePlain')->willReturnCallback(
-      fn($plain) => $map[$plain] ?? ''
+      function ($plain) use ($map) {
+        // token_or resolves a whole "or" construct as a single unit, so a
+        // map entry for the raw value wins before anything is scanned.
+        if (isset($map[$plain])) {
+          return $map[$plain];
+        }
+        // Otherwise behave like replacePlain() with 'clear': resolve the
+        // tokens it recognises, strip the ones it does not, and leave any
+        // other bracketed text alone. Core's scan pattern requires a colon,
+        // so "[1]" and "[PDF]" are not tokens but "[Smith:2020]" is.
+        return preg_replace_callback(
+          '/\[[^\s\[\]:]+:[^\[\]]*\]/',
+          fn($match) => $map[$match[0]] ?? '',
+          $plain
+        );
+      }
     );
     $this->token = $token;
   }
@@ -320,7 +335,7 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
    * A resolved token is still rewritten to the canonical domain.
    */
   public function testResolvedTokenIsRewrittenToCanonicalDomain() {
-    $token = '[node:field_a:entity:url]';
+    $token = '[node:field_a:entity:url|node:field_b:entity:url]';
     $this->setUpToken([$token => 'https://internal.example.com/image.jpg']);
     $this->setUpContainer('https://history.stanford.edu');
 
@@ -362,6 +377,42 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
     hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(['summary' => 'summary']), $items);
 
     $this->assertSame('Text with [brackets] in it', $objects['entity:node/1:en']['summary']);
+  }
+
+  /**
+   * Bracketed prose in a custom value is not mistaken for a token.
+   * 
+   */
+  public function testCustomValueBracketedProseIsPreserved() {
+    $summary = 'Chapter [1] of the survey, also released as [PDF].';
+    $this->setUpToken([]);
+    $this->setUpContainer();
+
+    $objects = ['entity:node/1:en' => ['summary' => $summary]];
+    $items = ['entity:node/1:en' => $this->mockItem($this->mockNode())];
+
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(['summary' => 'custom_value']), $items);
+
+    $this->assertSame($summary, $objects['entity:node/1:en']['summary']);
+  }
+
+  /**
+   * A bracketed citation in a custom value survives intact.
+   *
+   * "[Smith:2020]" matches the token service's scan pattern, so a second
+   * token pass over resolved prose would silently delete it.
+   */
+  public function testCustomValueCitationIsPreserved() {
+    $summary = 'Builds on earlier fieldwork [Smith:2020] in the region.';
+    $this->setUpToken([]);
+    $this->setUpContainer();
+
+    $objects = ['entity:node/1:en' => ['summary' => $summary]];
+    $items = ['entity:node/1:en' => $this->mockItem($this->mockNode())];
+
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(['summary' => 'custom_value']), $items);
+
+    $this->assertSame($summary, $objects['entity:node/1:en']['summary']);
   }
 
   /**

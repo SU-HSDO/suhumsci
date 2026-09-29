@@ -161,12 +161,12 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   }
 
   /**
-   * Split the CAP auth url into the oauth2 plugin's base uri and token path.
+   * Split the CAP auth url into the migration group's base_uri and token_url.
    *
-   * Migrations request their own token through migrate_plus's oauth2 plugin
-   * rather than the capx service, so the auth url setting has to be applied
-   * here too or imports would keep authenticating against the old server.
-   * Without the setting, the migration group configuration is left as is.
+   * The migrations' auth endpoint is stored in the migration group
+   * configuration, separate from the capx service, so the auth url setting
+   * has to be applied here too. Without the setting, the migration group
+   * configuration is left as is.
    *
    * @return array
    *   Keyed array with base_uri and token_url, or empty if the setting is not

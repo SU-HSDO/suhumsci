@@ -7,8 +7,8 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\encrypt\Exception\EncryptException;
-use Drupal\hs_capx\Capx;
 use Drupal\key\Entity\Key;
 use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 use Psr\Log\LoggerAwareTrait;
@@ -166,14 +166,19 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * Migrations request their own token through migrate_plus's oauth2 plugin
    * rather than the capx service, so the auth url setting has to be applied
    * here too or imports would keep authenticating against the old server.
+   * Without the setting, the migration group configuration is left as is.
    *
    * @return array
-   *   Keyed array with base_uri and token_url, or empty if the url is invalid.
+   *   Keyed array with base_uri and token_url, or empty if the setting is not
+   *   set or invalid.
    */
   protected function getAuthUrlParts(): array {
-    $parts = parse_url(Capx::getAuthUrl());
+    if (!$auth_url = Settings::get('CAP_AUTH_URL')) {
+      return [];
+    }
+    $parts = parse_url($auth_url);
     if (empty($parts['scheme']) || empty($parts['host'])) {
-      $this->getLogger()->error('Invalid CAP auth url: @url', ['@url' => Capx::getAuthUrl()]);
+      $this->getLogger()->error('Invalid CAP auth url: @url', ['@url' => $auth_url]);
       return [];
     }
     $base_uri = $parts['scheme'] . '://' . $parts['host'];

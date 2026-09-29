@@ -42,6 +42,9 @@ if (getenv('TUGBOAT_SERVICE')) {
   // Always enable partial imports in Tugboat to preserve custom site
   // configuration.
   $config['hs_config_partial.settings']['enabled'] = TRUE;
+  // Tugboat enables stage_file_proxy outside of config_split, so keep config
+  // imports from uninstalling it and exports from including it.
+  $settings['config_exclude_modules'] = ['stage_file_proxy'];
 }
 
 // Use development service parameters.

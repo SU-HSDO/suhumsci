@@ -9,16 +9,17 @@ Tugboat builds a preview environment for every pull request so the H&S web team 
 | Stage | What it does | When it runs |
 |---|---|---|
 | `init` | Installs Node.js, links the docroot, runs `composer install`, and generates settings files | Only on a preview built from scratch |
-| `update` | Syncs and sanitizes each site's production database, enables `stage_file_proxy`, and creates the preview admin user | On a preview built from scratch, and on every base preview refresh |
+| `update` | Syncs and sanitizes each site's production database, enables `stage_file_proxy`, and creates the preview admin user | On a preview built from scratch, and on every refresh |
 | `build` | Runs `composer install`, then `drush cr` and `drush deploy` on each site, then `npm run theme-build` | On every build |
 
 ## Base Preview
 
 The repository base preview tracks the current `<major>.x` branch (see [Branching Strategy](BranchingStrategy.md)). It is the only preview that syncs databases from production.
 
-- Tugboat refreshes the base preview on a weekly schedule set in the repository settings. A refresh runs `update` and `build`.
+- Tugboat refreshes the base preview on the schedule set in the repository settings. A refresh runs `update` and `build`.
 - Pull request previews are built from the base preview and run only the `build` stage, including on every push. They do not sync from production.
 - "Rebuild Orphaned Previews Automatically" and "Rebuild Stale Previews Automatically" are turned off, so refreshing the base preview does not rebuild existing pull request previews.
+- A preview built from the base preview stores only its difference from the base preview. All previews count toward the project's storage quota. If the project reaches its quota, rebuild stale pull request previews or delete unused ones.
 
 ## Merge Behavior
 
@@ -36,9 +37,8 @@ The module is not part of any config split used by Tugboat, so `docroot/sites/se
 
 After a pull request preview builds, Tugboat screenshots the pages listed under the `urls` key in `.tugboat/config.yml` and compares them pixel by pixel against the same pages on the base preview. URLs are grouped by site alias. To cover a new page, add its relative path under the appropriate alias. See [Configure Visual Diffs](https://docs.tugboatqa.com/visual-diffs/configure-visual-diffs/) in the Tugboat documentation.
 
-## Build From Scratch
+## Refresh or Build From Scratch
 
-Choose "Build with no base preview" when rebuilding a preview in the Tugboat dashboard. This runs `init`, `update`, and `build` on a new container with fresh production databases, and takes significantly longer than a normal build. Use it when:
+A preview's Actions menu in the Tugboat dashboard offers two options. On a pull request preview, **Rebuild** runs only `build`. **Refresh** runs `update` and `build`, which syncs fresh production databases and takes significantly longer. Refresh a pull request preview when it needs fresh production data or when the pull request changes the `update` stage in `.tugboat/config.yml`.
 
-- The pull request changes the `init` or `update` stages in `.tugboat/config.yml`. Pull request previews built from the base preview skip those stages.
-- The pull request upgrades Drupal core to a new major version or makes other large dependency changes that fail against the existing `vendor` directory.
+To also run `init` on a new container, delete the preview, then build a new one from the pull request and choose "Build with no base preview" from the Build Preview drop-down. Do this when the pull request changes the `init` stage, or when it upgrades Drupal core to a new major version or makes other large dependency changes that fail against the existing `vendor` directory. See [Change or Update Previews](https://docs.tugboatqa.com/building-a-preview/administer-previews/change-or-update-previews/) in the Tugboat documentation.

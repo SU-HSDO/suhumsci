@@ -31,8 +31,7 @@ class CourseHttp extends Http {
    * {@inheritdoc}
    */
   public function getResponseContent(string $url): string {
-    $response = $this->getResponse($url);
-    $body = $response->getBody();
+    $body = (string) $this->getResponse($url)->getBody();
 
     // The data from explorecourses.stanford.edu contains a ton of unwanted
     // markup that shouldn't be in an xml source. So lets clean it up first.

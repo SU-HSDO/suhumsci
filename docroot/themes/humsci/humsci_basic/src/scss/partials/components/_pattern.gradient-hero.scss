@@ -4,7 +4,6 @@
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/heros' as *;
-@use '../mixins/layout' as *;
 
 .hb-gradient-hero {
   @include hb-hero-component;
@@ -68,13 +67,6 @@
 
     @include grid-media-min('lg') {
       padding: hb-calculate-rems(66px) hb-calculate-rems(30px);
-    }
-
-    // On full width sections, align the text box with the site's
-    // standard page margins instead of the carousel's own gutter.
-    .hs-full-width & {
-      @include hb-page-width;
-      padding-inline: 0;
     }
 
     h2,

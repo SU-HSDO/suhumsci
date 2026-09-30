@@ -305,10 +305,16 @@
 
     @include hb-themes(('colorful', 'airy')) {
       @include hb-hero-button('tertiary-reversed', 'secondary-highlight');
+
+      max-width: 80%;
       margin-top: hb-spacing-width('md');
 
       @include grid-media-min('md') {
         margin-top: hb-spacing-width();
+      }
+
+      @include grid-media-min('lg') {
+        max-width: 75%;
       }
     }
 
@@ -316,8 +322,17 @@
       @include hb-hero-button('secondary', 'secondary-darken-12');
       margin-top: hb-spacing-width('xs');
 
+      @include grid-media-min('sm') {
+        max-width: 80%;
+      }
+
       @include grid-media-min('md') {
         margin-top: hb-calculate-rems(24px);
+        max-width: 60%;
+      }
+
+      @include grid-media-min('lg') {
+        max-width: 50%;
       }
 
       @include grid-media-min('xl') {

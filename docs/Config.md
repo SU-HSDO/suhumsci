@@ -7,16 +7,33 @@ The platform uses a combination of contributed and custom modules to manage conf
 - Prevents import and export of configuration that should be editable on individual sites, such as blocks, displays, and site-specific settings (homepage, 404, analytics, permissions).
 - If a config is ignored and needs to be changed across all sites, changes must be made directly on the site or via a database update hook.
 - Exception rules allow selective import/export of configs even if a broad ignore pattern is present.
+- Rules can match whole configs (`block.block.*`) or a single property (`config.name:property`, such as `field.field.node.hs_basic_page.field_hs_page_components:settings.handler_settings`). Prefer a property-level rule when only one key should diverge per site.
+- Rules are added by hand-editing `config/default/config_ignore.settings.yml`; the `_core.default_config_hash` value is not recomputed for hand edits.
 - By default, `config_ignore` reads its rules from sync storage (`config/default/config_ignore.settings.yml`) for both imports and exports. On local environments with a `config_split` that patches `config_ignore` settings, this means the local split's overrides are applied during import but silently bypassed during export, which causes local-only ignore rules to have no effect on `drush config-export`.
 - To correct this, local settings files (`local.settings.php` and `default.local.settings.php`) set `$settings['config_ignore_storage'] = 'active'`. This tells `config_ignore` to read its rules from active configuration, including any config_split patches currently applied, for both imports and exports. As a result, locally-ignored configuration (such as role permissions) is correctly excluded from exports, and the local split's intent is fully respected in both directions. This setting is only needed where the local config_split is active; CI and Tugboat do not enable the local split, so active and sync config_ignore are always identical there.
 
 > **Note:** This setting also means that during a site sync to local, `config_ignore` uses the active configuration on the site at the time of the sync. On a fresh site sync, the local split is not yet imported, so the first import uses the production ignore rules from `config/default`. Once the local split is imported, all subsequent imports and exports use the local split's rules.
+
+### Ignoring a Single Key of New Configuration
+
+A pattern can target one key of a configuration object using colon syntax, such as `views.view.hs_*:status`. For configuration that already exists on a site, the site's value is kept and the value from `config/default` is discarded, which is what you would expect.
+
+New configuration behaves differently. When the object does not yet exist in a site's active storage, `config_ignore` removes the ignored key from the imported data instead of preserving it. Drupal then applies its own default for that key. For a configuration entity, `status` defaults to enabled, so shipping a new entity with `status: false` and a `:status` ignore pattern creates it **enabled** on every site.
+
+This only affects sites that already exist. A newly provisioned site installs from `config/default` directly, because the install profile's `config/sync` is a symlink to it, and that path writes the sync storage without applying any `config_ignore` transform. New sites therefore get the shipped value.
+
+Add a deploy hook that sets the intended value whenever you add a per-key pattern for configuration that does not exist yet. See [Deploy Hooks and Post-Config-Import Operations](#deploy-hooks-and-post-config-import-operations). The Algolia search server and index do this. See [Algolia Search](AlgoliaSearch.md).
+
+> **Tip:** Shipping the same configuration in a module's `config/install` covers one more case, a manual `drush en` on a site where the configuration does not exist yet. Keep the two copies identical so both paths produce the same result. Drupal does not overwrite an existing entity's `uuid` on import, so a drifted `uuid` is kept rather than reported.
+
+> **Important:** Excluding one key also unlocks the entire configuration form in production. The `hs_config_readonly` check treats any ignored configuration as editable and has no key-level granularity, so a single ignored key makes every other key on that form editable by anyone with the relevant permission.
 
 ## config_split
 
 - Manages environment-specific configuration and modules (dev, stage, prod, local, ci, etc.).
 - Splits can be patch-based or complete splits in 2.x and use the config transformation pipeline for safe, granular config management.
 - Ensures modules like `acquia_connector`, `purge`, and `stage_file_proxy` are enabled/disabled per environment.
+- Tugboat does not use a split for `stage_file_proxy`. It enables the module with Drush and lists it in `$settings['config_exclude_modules']` so config import does not uninstall it. See [Tugboat Previews](Tugboat.md#files).
 
 ## config_readonly & hs_config_readonly
 
@@ -25,8 +42,12 @@ The platform uses a combination of contributed and custom modules to manage conf
 
 ## hs_config_prefix
 
-- Automatically prefixes new site-created config (fields, views, displays, etc.) with `custm_` to distinguish site-specific config from global product config.
+- Automatically prefixes new site-created config entities (vocabularies, content types, views, menus, etc.) with `custm_` to distinguish site-specific config from global product config. Form and view displays are excluded.
 - Product-level config uses the `hs_` prefix.
+- The prefix is set by the dev, staging, and prod config splits. It is empty in `config/default`, so config created locally is not prefixed unless one of those splits is enabled.
+- The prefix is added when the entity is saved, after form validation, and only for config created through the UI. Config created via drush or during site install is not prefixed.
+- To keep the prefixed ID within database column limits, the machine name field on add forms is shortened by the length of the prefix (e.g., 26 characters instead of 32 for vocabularies).
+- Field names are prefixed separately by Field UI (`field_ui.settings:field_prefix`, also set to `custm_` by the environment splits). `stanford_fields` limits field name length to account for it.
 
 ## Partial Config Imports & hs_config_partial
 
@@ -39,6 +60,16 @@ The platform uses a combination of contributed and custom modules to manage conf
 - The partial import also prevents any configuration that would be deleted by `config_split` when switching between different splits, including configuration attached to a module getting uninstalled. If a module is being uninstalled but associated configuration is blocked from deletion, the config import will fail. This means all module uninstalls need to take place before the config import step, **unless** the config is explicitly allowed to be deleted via the `hs_config_partial_allow_delete` setting.
 - Deletion of specific configurations is allowed through the `hs_config_partial_allow_delete` setting in the `settings.php` file. Currently this is only used to allow deletion of configuration associated with modules being uninstalled when syncing from different environments.
 - For more information see the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
+
+## New Sites vs Existing Sites
+
+New and existing sites receive configuration through different paths, which makes it possible to apply a change only to sites provisioned from that point forward.
+
+- New sites are installed with `drush si su_humsci_profile` (see [NewSite.md](NewSite.md)). The core installer imports `config/default` directly, without the transformation pipeline, so `config_ignore` and `config_split` do not apply during installation. New sites receive every config in `config/default`, including configs that are ignored on later imports (blocks, roles, etc.).
+- The install profile's `config/sync` directory is a symlink to `config/default`, so the platform configuration lives in one place. Editing `config/default` is the only change needed.
+- To make a value apply only to newly provisioned sites, set it in `config/default` and add a `config_ignore` rule for it (property-level where possible) so deploys never overwrite it on existing sites. Existing sites keep their current value, still changeable per site or via a database update hook; sites installed after the change start with the new value. For example, to limit Spotlight slides only on new sites, set the cardinality in `config/default/field.storage.paragraph.field_hs_sptlght_sldes.yml` and add the rule `field.storage.paragraph.field_hs_sptlght_sldes:cardinality`.
+- Because `config_ignore` reads its rules from sync storage during an import, a new rule and the config change it protects can ship together in a single `drush ci`.
+- Site copies (see [CopySite.md](CopySite.md)) inherit the source site's active configuration, not the values in `config/default`, so a copied site does not pick up new-site values.
 
 
 ## Deploy Hooks and Post-Config-Import Operations

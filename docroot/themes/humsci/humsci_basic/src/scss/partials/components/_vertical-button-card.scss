@@ -9,8 +9,9 @@ $container-small: hb-calculate-rems(576px);
   position: relative;
 
   .hs-button a {
+    @include hb-button-size('small');
+
     width: 100%;
-    font-size: hb-calculate-rems(18px);
     hyphens: auto;
     word-break: normal;
     overflow-wrap: anywhere;
@@ -69,6 +70,7 @@ $container-small: hb-calculate-rems(576px);
       a[href*="//"].hs-external-link,
       .hs-external-link a[href*="//"] {
         @include hb-secondary-button;
+        @include hb-button-size('small');
 
         border-width: 0;
         border-top-width: 2px;
@@ -156,8 +158,6 @@ $container-small: hb-calculate-rems(576px);
       margin-block-start: hb-calculate-rems(24px);
 
       a {
-        padding: hb-calculate-rems(4px) hb-calculate-rems(24px)
-          hb-calculate-rems(6px);
         background-color: color('primary');
         border-color: color('primary');
 

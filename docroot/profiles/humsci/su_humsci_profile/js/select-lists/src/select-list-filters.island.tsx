@@ -146,34 +146,37 @@ if (process.env.NODE_ENV === 'development') {
     selector: `.select-preact`,
   });
 } else {
-  (function () {
+  (function (Drupal, once) {
+    // Views/BEF AJAX (e.g. Keyword Search autosubmit) re-attaches behaviors
+    // with varying `context` nodes. `island.render()` always *appends* a new
+    // instance at its selector (it never replaces), so without a real
+    // per-element guard, a `.select-preact` wrapper can end up with two
+    // rendered dropdowns stacked in it. `once()` guarantees each wrapper is
+    // only ever rendered into a single time, no matter how many times or
+    // with what context this behavior fires on it.
+    let uid = 0;
+
     Drupal.behaviors.selectPreact = {
       attach: function (context) {
-        let contextClass = '';
-        try {
-          contextClass = '.' + context.getAttribute('class').replace(/ /g, '.');
-        } catch (e) {}
+        const isAjaxUpdate =
+          context.nodeType === 1 &&
+          typeof context.className === 'string' &&
+          context.className.indexOf('js-view-dom-id') >= 0;
 
-        // Remove stale island instances left over from prior AJAX cycles.
-        // Without this, each AJAX re-attach accumulates extra <select> and
-        // hidden input elements in the DOM, polluting form serialization.
-        const selector = contextClass
-          ? `${contextClass} .select-preact`
-          : '.select-preact';
-        document.querySelectorAll(selector).forEach((wrapper) => {
-          const existing = wrapper.querySelector('combobox-select-list');
-          if (existing) existing.remove();
-        });
+        once('select-preact', '.select-preact', context).forEach((wrapper) => {
+          const id = `select-preact-${uid++}`;
+          wrapper.setAttribute('data-select-preact-id', id);
 
-        const island = createIslandWebComponent(
-          'combobox-select-list',
-          FilterIsland,
-        );
-        island.render({
-          selector: `${contextClass} .select-preact`,
-          initialProps: { focus: contextClass.indexOf('js-view-dom-id') >= 0 },
+          const island = createIslandWebComponent(
+            'combobox-select-list',
+            FilterIsland,
+          );
+          island.render({
+            selector: `[data-select-preact-id="${id}"]`,
+            initialProps: { focus: isAjaxUpdate },
+          });
         });
       },
     };
-  })();
+  })(Drupal, once);
 }

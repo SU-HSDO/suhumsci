@@ -11,6 +11,15 @@
     margin-bottom: hb-calculate-rems(20px);
   }
 
+  // A block can render an empty wrapper (e.g. the page title block is
+  // suppressed on the front page), in which case it shouldn't still take up
+  // space between the blocks around it. Twig leaves whitespace text nodes
+  // in the markup even when there's no real content, so :empty won't match
+  // here; humsci_basic_preprocess_block() adds this class instead.
+  &.block--no-visible-content {
+    margin-bottom: 0;
+  }
+
   // Trigger change in fa-ext icon color when hovering over it's associated link text.
   .link a {
     &:hover,

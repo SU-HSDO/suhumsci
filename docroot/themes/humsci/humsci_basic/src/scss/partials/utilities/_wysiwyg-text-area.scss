@@ -6,6 +6,7 @@
 @use '../functions/animation' as *;
 @use '../functions/color' as *;
 @use '../mixins/theme' as *;
+@use '../mixins/buttons' as *;
 @use '../mixins/general' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/text' as *;
@@ -26,6 +27,8 @@
 .text-with-summary,
 .views-field-body {
   line-height: var(--normal-line-height);
+
+  @include hb-wysiwyg-button-sizes;
 }
 
 .hb-card__description .views-field-body,

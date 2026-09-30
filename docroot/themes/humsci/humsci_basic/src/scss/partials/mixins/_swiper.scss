@@ -3,6 +3,7 @@
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
 @use '../functions/color' as *;
+@use '../mixins/general' as *;
 @use 'theme' as *;
 @use 'breakpoints' as *;
 @use 'buttons' as *;
@@ -16,14 +17,41 @@
 
   .swiper-container {
     margin: 0;
+
+    // Space below so the focus outline doesn't get cut-off.
+    padding-block-end: hb-calculate-rems(12px);
   }
 
   // Fix for single slide swiper instances, to match old slick styles.
   .swiper-container:has(.swiper-slide:first-child:last-child) {
     overflow: visible;
+    padding-block-end: 0;
 
     .swiper-wrapper {
       display: block;
+    }
+  }
+
+  .swiper-controls-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: hb-calculate-rems(12px);
+    margin-top: hb-calculate-rems(16px);
+    position: relative;
+  }
+
+  // swiper-controls-position.js groups these into .swiper-controls-wrapper
+  // on mobile, but that only happens once Drupal behaviors attach. Hide them
+  // in their pre-grouped position until then, so slower devices/connections
+  // don't show a flash of the ungrouped layout before it snaps into place.
+  // Once JS moves an element into the wrapper it's no longer a direct child
+  // of .swiper-container, so this selector stops matching and it appears.
+  @include grid-media-max('sm') {
+    .swiper-container > .swiper-button-prev,
+    .swiper-container > .swiper-button-next,
+    .swiper-container > .swiper-pagination {
+      visibility: hidden;
     }
   }
 }
@@ -31,83 +59,78 @@
 // arrows
 @mixin swiper-arrows {
   .swiper-button-prev {
-    right: 0;
-    left: unset;
-    border-radius: hb-calculate-rems(88px) 0 0 hb-calculate-rems(88px);
-
-    @include hb-traditional {
-      bottom: hb-calculate-rems(188px);
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      bottom: hb-calculate-rems(204px);
-    }
-
     &::before {
       transform: scaleX(-1);
-      right: hb-calculate-rems(8px);
     }
 
     @include grid-media-min('md') {
       left: 0;
-      border-radius: 0 hb-calculate-rems(88px) hb-calculate-rems(88px) 0;
 
-      &::before {
-        left: hb-calculate-rems(8px);
-      }
-    }
+      @include hb-themes(('colorful', 'airy')) {
+        border-radius: 0 hb-calculate-rems(50px) hb-calculate-rems(50px) 0;
 
-    &:hover {
-      &::before {
-        transform: scaleX(-1) translateX(2px);
+        &::before {
+          background-position: right;
+          margin-left: hb-calculate-rems(4px);
+        }
       }
     }
   }
 
   .swiper-button-next {
-    right: 0;
-    border-radius: hb-calculate-rems(88px) 0 0 hb-calculate-rems(88px);
+    @include grid-media-min('md') {
+      right: 0;
 
-    @include hb-traditional {
-      bottom: hb-calculate-rems(84px);
-    }
+      @include hb-themes(('colorful', 'airy')) {
+        border-radius: hb-calculate-rems(50px) 0 0 hb-calculate-rems(50px);
 
-    @include hb-themes(('colorful', 'airy')) {
-      bottom: hb-calculate-rems(100px);
-    }
+        &::before {
+          background-position: right;
+          margin-right: hb-calculate-rems(4px);
+        }
+      }
 
-    &::before {
-      right: hb-calculate-rems(8px);
-    }
-
-    &:hover {
-      &::before {
-        transform: translateX(2px);
+      @include hb-traditional {
+        &::before {
+          margin-right: hb-calculate-rems(-4px);
+        }
       }
     }
   }
 
   .swiper-button-prev,
   .swiper-button-next {
-    background-color: color('white', 'global');
-    position: absolute;
-    opacity: 0.5;
+    position: relative;
     top: unset;
-
-    width: hb-calculate-rems(44px);
-    height: hb-calculate-rems(88px);
+    bottom: unset;
+    width: hb-calculate-rems(24px);
+    height: hb-calculate-rems(32px);
     padding: 0;
+    margin-block: 0;
     font-size: 0;
     border: none;
     cursor: pointer;
-    transition: hb-transition(opacity);
 
     @include grid-media-min('md') {
+      background-color: color-mix(
+        in srgb,
+        color('white', 'global') 80%,
+        transparent
+      );
+      width: hb-calculate-rems(40px);
+      position: absolute;
+
       @include hb-traditional {
+        height: hb-calculate-rems(65px);
         bottom: calc(50% - #{hb-calculate-rems(30px)});
+
+        &::before {
+          background-position: center;
+        }
       }
 
       @include hb-themes(('colorful', 'airy')) {
+        height: hb-calculate-rems(75px);
         bottom: calc(50% - #{hb-calculate-rems(21px)});
       }
 
@@ -116,27 +139,12 @@
       :not(.hs-full-width).hb-three-column--no-sidebar &,
       .hb-three-column--one-sidebar &,
       .hb-three-column--two-sidebar & {
-        bottom: calc(50% - #{hb-calculate-rems(46px)});
+        bottom: calc(50% - #{hb-calculate-rems(30px)});
       }
     }
 
     svg {
       display: none;
-    }
-
-    &:hover {
-      opacity: 0.6;
-    }
-
-    &:focus {
-      opacity: 1;
-    }
-
-    // additional focus styles for keyboard users only
-    // that compliments browser default styles
-    &:focus-visible {
-      opacity: 1;
-      outline: 5px auto -webkit-focus-ring-color; // Chrome only
     }
 
     // shared arrow properties
@@ -146,15 +154,45 @@
       }
 
       @include hb-themes(('colorful', 'airy')) {
-        @include hb-icon-background('slider-caret', 'primary');
+        @include hb-icon-background('slider-caret-round', 'black');
       }
 
       content: '';
-      height: hb-calculate-rems(30px);
-      width: hb-calculate-rems(17px);
       position: absolute;
-      top: hb-calculate-rems(29px);
-      transition: hb-transition(transform);
+      inset: 0;
+      background-repeat: no-repeat;
+      background-size: hb-calculate-rems(14px) hb-calculate-rems(25px);
+      background-position: center;
+
+      @include grid-media-min('md') {
+        background-size: hb-calculate-rems(22px) auto;
+
+        @include hb-themes(('colorful', 'airy')) {
+          background-position: right;
+        }
+      }
+    }
+
+    &:hover,
+    &:focus-visible {
+      background-color: color('white', 'global');
+
+      &::before {
+        @include hb-traditional {
+          @include hb-icon-background('slider-caret-bold', 'link-base');
+        }
+
+        @include hb-themes(('colorful', 'airy')) {
+          @include hb-icon-background('slider-caret-round-bold', 'link-base');
+        }
+      }
+    }
+
+    // additional focus styles for keyboard users only
+    // that compliments browser default styles
+    &:focus-visible {
+      opacity: 1;
+      outline: 5px auto -webkit-focus-ring-color; // Chrome only
     }
   }
 }
@@ -164,55 +202,73 @@
   .swiper-pagination {
     display: flex;
     justify-content: center;
+    align-items: center;
     clip-path: inherit;
-    height: auto;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
+    height: hb-calculate-rems(32px);
+    width: auto;
+    position: relative;
+    bottom: unset;
     margin: 0;
     padding: 0;
+    gap: hb-calculate-rems(10px);
+
+    @include grid-media-max('sm') {
+      &:has(.swiper-pagination-bullet:nth-child(6)) {
+        @include visually-hidden;
+      }
+    }
+
+    @include grid-media-min('md') {
+      width: 100%;
+      height: auto;
+      gap: hb-calculate-rems(16px);
+      bottom: hb-calculate-rems(-8px);
+    }
 
     .swiper-pagination-bullet {
-      display: block;
+      display: flex;
       opacity: 1;
       background: unset;
-
-      background-color: color('gray', 'global');
-      padding: 0 hb-calculate-rems(22px);
-      margin: 0 hb-calculate-rems(8px);
-      transition: hb-transition(transform);
       border-radius: 0;
+      width: hb-calculate-rems(28px);
 
-      @include hb-themes(('colorful', 'airy')) {
-        border-radius: hb-calculate-rems(5px);
+      @include grid-media-min('md') {
+        display: block;
+        height: hb-calculate-rems(32px);
       }
 
-      &:hover {
-        transform: scale(0.9);
+      &::before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: hb-calculate-rems(8px);
+        outline: 1px solid color('gray-800', 'global');
 
-        @include hb-traditional {
-          background-color: color('black', 'global');
+        @include grid-media-min('md') {
+          margin-top: hb-calculate-rems(10px);
         }
 
         @include hb-themes(('colorful', 'airy')) {
+          border-radius: hb-calculate-rems(100px);
+        }
+      }
+
+      &:hover,
+      &:focus {
+        &::before {
+          outline-color: color('secondary');
           background-color: color('secondary');
         }
       }
 
       // active button representing the slide currently on display
       &.swiper-pagination-bullet-active {
-        @include hb-traditional {
-          background-color: color('black', 'global');
-        }
-
-        @include hb-themes(('colorful', 'airy')) {
-          background-color: color('secondary');
-        }
-
-        &:hover {
-          transform: none;
+        &::before {
+          outline-color: color('gray-1000', 'global');
+          background-color: color('gray-1000', 'global');
         }
       }
     }
   }
 }
+

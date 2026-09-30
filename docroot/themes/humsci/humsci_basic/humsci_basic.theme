@@ -5,10 +5,16 @@
  * Functions to support theming in the HumSci Basic theme.
  */
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Extension\ThemeSettingsProvider;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\ParagraphInterface;
@@ -57,6 +63,27 @@ function humsci_basic_preprocess_block(&$vars) {
     $description = $block->get('info')->get(0)->getValue();
     $vars['label'] = reset($description) ?: $vars['label'];
   }
+
+  // Some blocks (e.g. the "Title" field block, which renders nothing on the
+  // front page) can still print an empty wrapper div with no visible
+  // content. CSS :empty can't reliably catch this because Twig leaves
+  // whitespace text nodes between the tags, so flag it here instead: this
+  // lets spacing utilities like .block-layout-builder skip blocks that have
+  // nothing to show.
+  //
+  // Restricted to field blocks: rendering a copy of the content here runs
+  // it through the render pipeline a second time, which is safe for field
+  // formatter output but would re-trigger #process callbacks (and corrupt
+  // Form API's #parents/build-id bookkeeping) if the block contained a form,
+  // e.g. a search box or a Views exposed filter block.
+  if ($vars['base_plugin_id'] === 'field_block' && empty($vars['title_prefix']) && empty($vars['label']) && empty($vars['title_suffix'])) {
+    $content_copy = $vars['content'];
+    $markup = \Drupal::service('renderer')->renderInIsolation($content_copy);
+
+    if (trim((string) $markup) === '') {
+      $vars['attributes']['class'][] = 'block--no-visible-content';
+    }
+  }
 }
 
 /**
@@ -95,8 +122,9 @@ function humsci_basic_preprocess_html(&$vars) {
   if ($node instanceof NodeInterface && $node->bundle() == 'hs_basic_page') {
     $is_hs_carousel_in_hs_page_hero = humsci_basic_is_hs_carousel_in_hs_page_hero($node);
     $is_there_extra_gap_in_main_region = humsci_basic_is_there_extra_gap_in_main_region($node);
+    $is_title_block_first_in_main_region = humsci_basic_is_title_block_first_in_main_region($node);
 
-    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region) {
+    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region && !$is_title_block_first_in_main_region) {
       $vars['attributes']['class'][] = 'there-is-extra-gap-between-hero-and-main-region';
     }
   }
@@ -405,6 +433,72 @@ function humsci_basic_is_there_extra_gap_in_main_region(NodeInterface $node): bo
   }
 
   // Return false if doesn't match any of the previous if.
+  return FALSE;
+}
+
+/**
+ * Checks if the node's "Title" block appears before the page components.
+ *
+ * The block must be in the "main" region of the node's effective Layout
+ * Builder sections. When the title block is displayed there, it already
+ * breaks the margin adjacency between the full-width hero and the page
+ * components field, so the extra-gap scenarios checked by
+ * humsci_basic_is_there_extra_gap_in_main_region() don't apply.
+ */
+function humsci_basic_is_title_block_first_in_main_region(NodeInterface $node): bool {
+  if (!$node->hasField('field_hs_page_components')) {
+    return FALSE;
+  }
+
+  $view_mode = 'full';
+  $contexts = [
+    'entity' => EntityContext::fromEntity($node),
+  ];
+
+  $display = EntityViewDisplay::collectRenderDisplay($node, $view_mode);
+  if ($display instanceof LayoutEntityDisplayInterface) {
+    $contexts['display'] = EntityContext::fromEntity($display);
+  }
+  $contexts['view_mode'] = new Context(new ContextDefinition('string'), $view_mode);
+
+  $section_storage = \Drupal::service('plugin.manager.layout_builder.section_storage')
+    ->findByContext($contexts, new CacheableMetadata());
+
+  if (!$section_storage) {
+    return FALSE;
+  }
+
+  $components_field_block_id = 'field_block:node:' . $node->bundle() . ':field_hs_page_components';
+  $title_block_id = 'field_block:node:' . $node->bundle() . ':title';
+
+  foreach ($section_storage->getSections() as $section) {
+    foreach ($section->getComponentsByRegion('main') as $component) {
+      $plugin_id = $component->getPluginId();
+
+      if ($plugin_id === $components_field_block_id) {
+        // Reached the components field without finding the title block first.
+        return FALSE;
+      }
+      if ($plugin_id === $title_block_id) {
+        // block.html.twig renders an empty wrapper div when the title has
+        // no output, which has no padding/border/content to stop the margin
+        // adjacency. Only count it if it will actually render something.
+        //
+        // EntityTitleHeading::viewElements() also renders nothing when this
+        // is the front page and the tag is h1 (the "Home page" title isn't
+        // shown), so mirror that check here.
+        $configuration = $component->get('configuration') ?? [];
+        $tag = $configuration['formatter']['settings']['tag'] ?? NULL;
+        $is_suppressed_front_page_title = $tag === 'h1' && \Drupal::service('path.matcher')->isFrontPage();
+
+        if (!$is_suppressed_front_page_title && trim((string) $node->getTitle()) !== '') {
+          return TRUE;
+        }
+        continue;
+      }
+    }
+  }
+
   return FALSE;
 }
 

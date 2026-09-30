@@ -12,6 +12,7 @@
 @use '../mixins/heros' as *;
 @use '../mixins/generate-css-vars' as *;
 @use '../mixins/swiper' as *;
+@use '../mixins/layout' as *;
 
 $container-xlarge: 1200px;
 $container-large: 992px;
@@ -166,6 +167,14 @@ $container-small: 576px;
         padding-inline: hb-calculate-rems(48px);
         padding-block: 0;
       }
+    }
+
+
+    // On full width sections, align the text box with the site's
+    // standard page margins instead of the carousel's own gutter.
+    .hs-full-width & {
+      @include hb-page-width;
+      padding-inline: 0;
     }
   }
 

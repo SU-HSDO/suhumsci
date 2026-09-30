@@ -33,6 +33,7 @@ Add a deploy hook that sets the intended value whenever you add a per-key patter
 - Manages environment-specific configuration and modules (dev, stage, prod, local, ci, etc.).
 - Splits can be patch-based or complete splits in 2.x and use the config transformation pipeline for safe, granular config management.
 - Ensures modules like `acquia_connector`, `purge`, and `stage_file_proxy` are enabled/disabled per environment.
+- Tugboat does not use a split for `stage_file_proxy`. It enables the module with Drush and lists it in `$settings['config_exclude_modules']` so config import does not uninstall it. See [Tugboat Previews](Tugboat.md#files).
 
 ## config_readonly & hs_config_readonly
 

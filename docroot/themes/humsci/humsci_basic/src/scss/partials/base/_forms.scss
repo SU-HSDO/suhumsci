@@ -2,7 +2,6 @@
 @use '../functions/general' as *;
 @use '../mixins/text' as *;
 @use '../mixins/forms' as *;
-@use '../mixins/icons' as *;
 
 label,
 .select-preact__label {
@@ -19,15 +18,7 @@ label,
 // without JS, the native select remains unchanged, especially important
 // for multi-selects to avoid clipping the browser's option list.
 .js .select-preact select {
-  @include hb-icon-background('chevron', 'gray-900');
-
-  appearance: none;
-  background-repeat: no-repeat;
-  background-position: right hb-calculate-rems(14px) center;
-  background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
-  font-size: hb-calculate-rems(16px);
   padding: $hb-input-padding;
-  padding-right: hb-calculate-rems(36px);
   min-height: $hb-input-min-height;
   width: 100%;
 

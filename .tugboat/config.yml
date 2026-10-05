@@ -32,7 +32,6 @@ services:
         - ln -s docroot htdocs
 
         # Install/update packages managed by composer, including drush
-        - rm -rf vendor
         - composer install --no-ansi
 
         # Init the settings files.
@@ -40,7 +39,6 @@ services:
       update:
         - echo "========= UPDATE ========="
         # Composer install.
-        - rm -rf vendor
         - composer install --no-ansi
         # Copy ci.settings.php to all sites in the preview.
         - |
@@ -64,7 +62,6 @@ services:
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
         - echo "========= BUILD ========="
-        - rm -rf vendor
         - composer install --no-ansi
 
         - |

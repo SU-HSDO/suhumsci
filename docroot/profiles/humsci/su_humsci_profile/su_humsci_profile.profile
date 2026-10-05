@@ -417,6 +417,11 @@ function su_humsci_profile_node_update(NodeInterface $node) {
     $node->hasField('field_menulink') &&
     (!$node->get('field_menulink')->isEmpty() || !$original_node->get('field_menulink')->isEmpty())
   ) {
+    // Publishing or unpublishing changes the menu link's visibility.
+    if ($node->isPublished() !== $original_node->isPublished()) {
+      _su_humsci_clear_menu_cache_tags();
+      return;
+    }
 
     $keys = ['title', 'description', 'weight', 'expanded', 'parent'];
     $changes = $node->get('field_menulink')->getValue();
@@ -871,6 +876,7 @@ function su_humsci_profile_menu_link_content_update(MenuLinkContentInterface $en
     $original_entity->get('parent')->getValue(),
     $original_entity->get('weight')->getValue(),
     $original_entity->get('expanded')->getValue(),
+    $original_entity->get('enabled')->getValue(),
   ];
   $updated = [
     $entity->get('title')->getValue(),
@@ -879,6 +885,7 @@ function su_humsci_profile_menu_link_content_update(MenuLinkContentInterface $en
     $entity->get('parent')->getValue(),
     $entity->get('weight')->getValue(),
     $entity->get('expanded')->getValue(),
+    $entity->get('enabled')->getValue(),
   ];
   if (md5(json_encode($original)) != md5(json_encode($updated))) {
     _su_humsci_clear_menu_cache_tags();

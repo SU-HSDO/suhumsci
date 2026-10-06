@@ -1,53 +1,32 @@
 <?php
 
-use Drupal\SwsDrush\Helpers\EnvironmentDetector;
+/**
+ * @file
+ * Local development override configuration feature.
+ */
 
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
+$db_name = '${drupal.db.database}_' . basename(dirname(__FILE__, 2));
+
+/**
+ * Database configuration.
+ */
 $databases = [
   'default' =>
-    [
-      'default' =>
-        [
-          'database' => 'drupal',
-          'username' => 'drupal',
-          'password' => 'drupal',
-          'host' => getenv('CIRCLECI') ? '127.0.0.1' : 'mysql',
-          'port' => '3306',
-          'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-          'driver' => 'mysql',
-          'prefix' => '',
-        ],
-    ],
-];
-
-if (getenv('TUGBOAT_SERVICE')) {
-  /**
-   * Database configuration.
-   */
-  $databases = [
+  [
     'default' =>
-      [
-        'default' =>
-          [
-            'database' => 'tugboat',
-            'username' => 'tugboat',
-            'password' => 'tugboat',
-            'host' => 'mysql',
-            'port' => '3306',
-            'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-            'driver' => 'mysql',
-            'prefix' => '',
-          ],
-      ],
-  ];
-  // Always enable partial imports in Tugboat to preserve custom site
-  // configuration.
-  $config['hs_config_partial.settings']['enabled'] = TRUE;
-  // Tugboat enables stage_file_proxy outside of config_split, so keep config
-  // imports from uninstalling it and exports from including it.
-  $settings['config_exclude_modules'] = ['stage_file_proxy'];
-  // Fetch originals and let image styles generate derivatives locally.
-  $config['stage_file_proxy.settings']['use_imagecache_root'] = TRUE;
-}
+    [
+      'database' => $db_name,
+      'username' => '${drupal.db.username}',
+      'password' => '${drupal.db.password}',
+      'host' => '${drupal.db.host}',
+      'port' => '${drupal.db.port}',
+      'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+      'driver' => 'mysql',
+      'prefix' => '',
+    ],
+  ],
+];
 
 // Use development service parameters.
 $settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/development.services.yml';
@@ -98,6 +77,7 @@ $config['system.performance']['js']['preprocess'] = FALSE;
  * purposes.
  */
 $settings['extension_discovery_scan_tests'] = FALSE;
+
 
 /**
  * Configure static caches.
@@ -156,7 +136,3 @@ $settings['file_public_path'] = 'sites/' . EnvironmentDetector::getSiteName($sit
 $settings['trusted_host_patterns'] = [
   '^.+$',
 ];
-
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-
-$config['stanford_samlauth.settings']['hide_local_login'] = FALSE;

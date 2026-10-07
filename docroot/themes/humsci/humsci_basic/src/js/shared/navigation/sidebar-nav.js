@@ -69,7 +69,8 @@
   // tray open), so we read it from `Drupal.displace()` -- the same API
   // core's toolbar module uses to report its own height -- instead of
   // guessing at a fixed number.
-  let topSpacing = 15;
+  const baseTopSpacing = 15;
+  let topSpacing = 0;
   const bottomSpacing = 0;
 
   function currentToolbarOffset() {
@@ -122,7 +123,7 @@
       wrapper.style.cssText = '';
       sidebar.style.minHeight = '';
 
-      topSpacing += currentToolbarOffset();
+      topSpacing = baseTopSpacing + currentToolbarOffset();
 
       const scrollY = window.pageYOffset;
       const sidebarRect = sidebar.getBoundingClientRect();

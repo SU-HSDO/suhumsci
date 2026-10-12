@@ -1,6 +1,6 @@
 # H&S Branching Strategy
 
-This document describes the active branching model for the HSDP application.
+This document describes the active branching model for the HSDP application, originally adopted in [ADR 0003](architecture/decisions/0003-adopt-major-version-development-branching-strategy.md).
 
 ## Branch Roles
 
@@ -57,5 +57,5 @@ If a bulk merge from `main` into `<major>.x` is the better option in a given sit
 ## Operational Notes
 
 - GitHub rulesets and branch protections should apply to `main` and `<major>.x` branches.
-- Tugboat base previews should track the current `<major>.x` branch rather than `main`.
+- Tugboat base previews should track the current `<major>.x` branch rather than `main`. See [Tugboat Previews](Tugboat.md).
 - The artifact deploy command appends `-build` to a branch name when no explicit artifact branch name is provided.

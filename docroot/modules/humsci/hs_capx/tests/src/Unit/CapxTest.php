@@ -11,6 +11,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\hs_capx\Capx;
 use Drupal\key\KeyInterface;
 use Drupal\Tests\UnitTestCase;
@@ -50,6 +51,7 @@ class CapxTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
+    new Settings([]);
 
     /** @var \GuzzleHttp\Client&\PHPUnit\Framework\MockObject\MockObject $guzzle */
     $guzzle = $this->createMock(Client::class);
@@ -98,6 +100,39 @@ class CapxTest extends UnitTestCase {
 
     $url = Capx::getOrganizationUrl('test', TRUE);
     $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?orgCodes=TEST&includeChildren=true&filter=publications.featured:equals:true', $url);
+  }
+
+  /**
+   * Test the CAP urls can be overridden in settings.php.
+   */
+  public function testSettingsOverrides() {
+    $this->assertEquals(Capx::API_URL, Capx::getApiUrl());
+    $this->assertEquals(Capx::AUTH_URL, Capx::getAuthUrl());
+    $this->assertEquals(Capx::CAP_URL, Capx::getProfilesUrl());
+
+    new Settings([
+      'CAP_API_URL' => 'https://api.example.com',
+      'CAP_AUTH_URL' => 'https://auth.example.com/oauth/token',
+      'CAP_PROFILES_URL' => 'https://profiles.example.com/v1',
+    ]);
+    $this->assertEquals('https://api.example.com', Capx::getApiUrl());
+    $this->assertEquals('https://auth.example.com/oauth/token', Capx::getAuthUrl());
+    $this->assertEquals('https://profiles.example.com/v1?privGroups=TEST:GROUP&filter=publications.featured:equals:true', Capx::getWorkgroupUrl('test:group'));
+
+    $requested = [];
+    $this->guzzle->method('request')
+      ->willReturnCallback(function ($method, $url) use (&$requested) {
+        $requested[] = $url;
+        return new Response(200, [], json_encode([
+          'access_token' => 'foo',
+          'expires_in' => 3600,
+        ]));
+      });
+    $this->capx->getOrgData();
+    $this->assertEquals([
+      'https://auth.example.com/oauth/token',
+      'https://api.example.com/cap/v1/orgs/AA00',
+    ], $requested);
   }
 
   /**
@@ -202,7 +237,7 @@ class CapxTest extends UnitTestCase {
       case 'capx:org_data':
         $data = json_decode(file_get_contents(__DIR__ . '/orgs.json'), TRUE);
         break;
-      case 'capx:access_token':
+      case 'capx:access_token:' . Capx::AUTH_URL:
         $data = ['access_token' => $this->getRandomGenerator()->string()];
         break;
     }

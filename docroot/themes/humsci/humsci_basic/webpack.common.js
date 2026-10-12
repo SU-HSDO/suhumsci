@@ -30,6 +30,7 @@ const shared = {
   'main-menu': 'shared/navigation/main-menu-index.js',
   'media-caption-toggle': 'shared/media/media-caption-toggle.js',
   'secondary-toggler': 'shared/navigation/secondary-toggler.js',
+  'sidebar-nav': 'shared/navigation/sidebar-nav.js',
   colorbox: 'shared/photo-album/colorbox.js',
   search: 'shared/search/search-expand.js',
   'swiper-reduced-motion': 'shared/carousel-slides/swiper-reduced-motion.js',

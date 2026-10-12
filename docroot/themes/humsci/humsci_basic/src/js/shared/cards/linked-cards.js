@@ -53,8 +53,14 @@ import addImageLinkEvents from './image-link-handler';
          * Enhance the image link (pre-existing or just created).
          * This enables proper interaction with Drupal contextual controls
          * and caption toggles without triggering unintended navigation.
+         *
+         * Anchors inside the caption/credit text (e.g. "Photo by X on
+         * Unsplash") must be excluded, otherwise querySelector('a') can
+         * match a credit link instead of the actual image-wrapping link.
          */
-        const imageLink = imageWrapper?.querySelector('a');
+        const imageLink = Array.from(
+          imageWrapper?.querySelectorAll('a') ?? [],
+        ).find((anchor) => !anchor.closest('.field-media-image-caption'));
         if (imageLink) {
           addImageLinkEvents(imageLink, drupalSettings);
         }

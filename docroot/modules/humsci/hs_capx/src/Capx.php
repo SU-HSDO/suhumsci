@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Service to test CAPx connection and import organization data.
@@ -15,16 +16,22 @@ class Capx {
 
   /**
    * API url used for organization data.
+   *
+   * Can be overridden with $settings['CAP_API_URL'].
    */
   const API_URL = 'https://api.stanford.edu';
 
   /**
    * Authentication url.
+   *
+   * Can be overridden with $settings['CAP_AUTH_URL'].
    */
   const AUTH_URL = 'https://authz.stanford.edu/oauth/token';
 
   /**
    * The actual CAP API.
+   *
+   * Can be overridden with $settings['CAP_PROFILES_URL'].
    */
   const CAP_URL = 'https://cap.stanford.edu/cap-api/api/profiles/v1';
 
@@ -155,7 +162,7 @@ class Capx {
    */
   public static function getOrganizationUrl($organizations, $children = FALSE) {
     $organizations = preg_replace('/[^A-Z,]/', '', strtoupper($organizations));
-    $url = self::CAP_URL . "?orgCodes=$organizations";
+    $url = self::getProfilesUrl() . "?orgCodes=$organizations";
     if ($children) {
       $url .= '&includeChildren=true';
     }
@@ -173,7 +180,7 @@ class Capx {
    */
   public static function getWorkgroupUrl($workgroups) {
     $workgroups = preg_replace('/[^A-Z,:\-_]/', '', strtoupper($workgroups));
-    return self::CAP_URL . "?privGroups=$workgroups&filter=publications.featured:equals:true";
+    return self::getProfilesUrl() . "?privGroups=$workgroups&filter=publications.featured:equals:true";
   }
 
   /**
@@ -206,7 +213,7 @@ class Capx {
       'query' => ['grant_type' => 'client_credentials'],
       'auth' => [$this->username, $this->password],
     ];
-    return self::getApiResponse(self::AUTH_URL, $options);
+    return self::getApiResponse(self::getAuthUrl(), $options);
   }
 
   /**
@@ -259,7 +266,7 @@ class Capx {
 
     $options = ['query' => ['access_token' => $this->getAccessToken()]];
     // AA00 is the root level of all Stanford.
-    $result = self::getApiResponse(self::API_URL . '/cap/v1/orgs/AA00', $options);
+    $result = self::getApiResponse(self::getApiUrl() . '/cap/v1/orgs/AA00', $options);
 
     if ($result) {
       $result = json_decode($result, TRUE);
@@ -279,7 +286,10 @@ class Capx {
    *   API Token.
    */
   protected function getAccessToken(): string {
-    if ($cache = $this->cache->get('capx:access_token')) {
+    // Key the token to the auth url so a token from a previous auth server is
+    // not reused after the url changes.
+    $cid = 'capx:access_token:' . self::getAuthUrl();
+    if ($cache = $this->cache->get($cid)) {
       return $cache->data['access_token'];
     }
 
@@ -287,15 +297,45 @@ class Capx {
       'query' => ['grant_type' => 'client_credentials'],
       'auth' => [$this->username, $this->password],
     ];
-    if ($result = self::getApiResponse(self::AUTH_URL, $options)) {
+    if ($result = self::getApiResponse(self::getAuthUrl(), $options)) {
       $result = json_decode($result, TRUE);
-      $this->cache->set('capx:access_token', $result, time() + $result['expires_in'] - 60, [
+      $this->cache->set($cid, $result, time() + $result['expires_in'] - 60, [
         'capx',
         'capx:token',
       ]);
       return $result['access_token'];
     }
     return '';
+  }
+
+  /**
+   * Get the API url used for organization data.
+   *
+   * @return string
+   *   API url.
+   */
+  public static function getApiUrl(): string {
+    return Settings::get('CAP_API_URL', self::API_URL);
+  }
+
+  /**
+   * Get the OAuth token url.
+   *
+   * @return string
+   *   Authentication url.
+   */
+  public static function getAuthUrl(): string {
+    return Settings::get('CAP_AUTH_URL', self::AUTH_URL);
+  }
+
+  /**
+   * Get the CAP profiles API url.
+   *
+   * @return string
+   *   Profiles API url.
+   */
+  public static function getProfilesUrl(): string {
+    return Settings::get('CAP_PROFILES_URL', self::CAP_URL);
   }
 
 }

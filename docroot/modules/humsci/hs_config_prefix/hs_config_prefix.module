@@ -6,9 +6,11 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Installer\InstallerKernel;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -31,6 +33,8 @@ function hs_config_prefix_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_form_alter().
  */
 function hs_config_prefix_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  hs_config_prefix_limit_machine_name_length($form, $form_state);
+
   $form_ids = [
     'node_type_add_form' => 'type',
     'ds_field_form' => 'id',
@@ -50,6 +54,60 @@ function hs_config_prefix_form_alter(&$form, FormStateInterface $form_state, $fo
   // * Adding menu position rules creates a menu item with the ID of the entity.
   $form_state->set('hs_config_prefix_key', $form_ids[$form_id]);
   array_unshift($form['#validate'], 'hs_config_prefix_custom_form_validate');
+}
+
+/**
+ * Reduce the machine name length on config entity forms to fit the prefix.
+ *
+ * The prefix is added after validation, so without this a machine name at the
+ * maximum length can overflow the database column that stores the id. For
+ * example, a vocabulary id overflows the bundle column on taxonomy terms and
+ * terms can't be created.
+ *
+ * @param array $form
+ *   Complete form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Current form state.
+ */
+function hs_config_prefix_limit_machine_name_length(array &$form, FormStateInterface $form_state) {
+  $form_object = $form_state->getFormObject();
+  $prefix = \Drupal::config('hs_config_prefix.settings')->get('prefix');
+  if (
+    !$prefix ||
+    !$form_object instanceof EntityFormInterface ||
+    !hs_config_prefix_applies($form_object->getEntity())
+  ) {
+    return;
+  }
+  hs_config_prefix_reduce_machine_name_length($form, $form_object->getEntity()->getEntityType()->getKey('id'), $prefix);
+}
+
+/**
+ * Reduce the maxlength of the machine name element for the entity id.
+ *
+ * Some forms, like Feeds feed types, nest the element inside a container.
+ *
+ * @param array $elements
+ *   Form elements to search.
+ * @param string $id_key
+ *   Entity id key, which is also the form element key.
+ * @param string $prefix
+ *   Prefix that will be added to the id.
+ */
+function hs_config_prefix_reduce_machine_name_length(array &$elements, string $id_key, string $prefix) {
+  foreach (Element::children($elements) as $key) {
+    if ($key !== $id_key || ($elements[$key]['#type'] ?? NULL) !== 'machine_name') {
+      hs_config_prefix_reduce_machine_name_length($elements[$key], $id_key, $prefix);
+      continue;
+    }
+
+    $max_length = $elements[$key]['#maxlength'] ?? \Drupal::service('element_info')->getInfoProperty('machine_name', '#maxlength');
+    $elements[$key]['#maxlength'] = $max_length - strlen($prefix);
+    $elements[$key]['#description'] = t('A unique machine-readable name containing letters, numbers, and underscores. The length of the name has been limited to %length characters to allow for the %prefix prefix.', [
+      '%length' => $elements[$key]['#maxlength'],
+      '%prefix' => $prefix,
+    ]);
+  }
 }
 
 /**
@@ -77,29 +135,46 @@ function hs_config_prefix_entity_presave(EntityInterface $entity) {
   if (InstallerKernel::installationAttempted() || empty($GLOBALS['_REQUEST']) || PHP_SAPI === 'cli') {
     return;
   }
-  if ($entity->isNew() && $entity instanceof ConfigEntityBase) {
-    // Form and view displays are namespace by the view modes and form modes.
-    // Field storage is managed by the field_ui.settings config.
-    $exclude_config_types = [
-      'entity_form_display',
-      'entity_view_display',
-      'field_storage_config',
-      'behavior_settings',
-    ];
-
-    if (!in_array($entity->getEntityTypeId(), $exclude_config_types)) {
-      try {
-        hs_config_prefix_set_entity_id($entity);
-      }
-      catch (Exception $e) {
-        \Drupal::logger('hs_config_prefix')
-          ->error('Unable to modify entity id on %type: %id', [
-            '%type' => $entity->getEntityTypeId(),
-            '%id' => $entity->id(),
-          ]);
-      }
+  if (hs_config_prefix_applies($entity)) {
+    try {
+      hs_config_prefix_set_entity_id($entity);
+    }
+    catch (Exception $e) {
+      \Drupal::logger('hs_config_prefix')
+        ->error('Unable to modify entity id on %type: %id', [
+          '%type' => $entity->getEntityTypeId(),
+          '%id' => $entity->id(),
+        ]);
     }
   }
+}
+
+/**
+ * Check if the entity should have the prefix added to its id.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   Entity to check.
+ *
+ * @return bool
+ *   TRUE if the prefix should be added.
+ *
+ * @phpstan-assert-if-true \Drupal\Core\Config\Entity\ConfigEntityBase $entity
+ */
+function hs_config_prefix_applies(EntityInterface $entity): bool {
+  // Form and view displays are namespace by the view modes and form modes.
+  // Field storage is managed by the field_ui.settings config.
+  $exclude_config_types = [
+    'entity_form_display',
+    'entity_view_display',
+    'field_storage_config',
+    'behavior_settings',
+  ];
+  $applies = (
+    $entity->isNew() &&
+    $entity instanceof ConfigEntityBase &&
+    !in_array($entity->getEntityTypeId(), $exclude_config_types)
+  );
+  return $applies;
 }
 
 /**

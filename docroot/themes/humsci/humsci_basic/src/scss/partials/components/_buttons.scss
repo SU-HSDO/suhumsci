@@ -6,7 +6,6 @@
 .button,
 a.button {
   @include hb-button;
-  font-size: hb-calculate-rems(18px);
 
   // This is our only option for targeting the exposed filters reset button
   &[data-drupal-selector^='edit-reset'] {
@@ -15,7 +14,7 @@ a.button {
 }
 
 // hs-button and D7 import class map and loop
-$buttons: (hs-button, btn);
+$buttons: (hs-button, hs-button--small, btn);
 
 @each $button in $buttons {
   a.#{$button},
@@ -53,6 +52,18 @@ button.hs-secondary-button,
 .hs-secondary-button button,
 .hs-secondary-button a:not([class]),
 .hs-secondary-button button:not([class]),
+a.hs-secondary-button--big,
+button.hs-secondary-button--big,
+.hs-secondary-button--big a,
+.hs-secondary-button--big button,
+.hs-secondary-button--big a:not([class]),
+.hs-secondary-button--big button:not([class]),
+a.hs-secondary-button--small,
+button.hs-secondary-button--small,
+.hs-secondary-button--small a,
+.hs-secondary-button--small button,
+.hs-secondary-button--small a:not([class]),
+.hs-secondary-button--small button:not([class]),
 a.more-link,
 button.more-link,
 .more-link a,
@@ -65,6 +76,31 @@ button.more-link,
   .hb-dark-inversion .views-element-container & {
     color: color('white', 'global');
   }
+}
+
+// Size modifiers, applied after the variant styles above.
+a.hs-button--small,
+button.hs-button--small,
+.hs-button--small a,
+.hs-button--small button,
+.hs-button--small a:not([class]),
+.hs-button--small button:not([class]),
+a.hs-secondary-button--small,
+button.hs-secondary-button--small,
+.hs-secondary-button--small a,
+.hs-secondary-button--small button,
+.hs-secondary-button--small a:not([class]),
+.hs-secondary-button--small button:not([class]) {
+  @include hb-button-size('small');
+}
+
+a.hs-secondary-button--big,
+button.hs-secondary-button--big,
+.hs-secondary-button--big a,
+.hs-secondary-button--big button,
+.hs-secondary-button--big a:not([class]),
+.hs-secondary-button--big button:not([class]) {
+  @include hb-button-size('big');
 }
 
 // This adds margin to the top of more link which is needed for hb-grid views

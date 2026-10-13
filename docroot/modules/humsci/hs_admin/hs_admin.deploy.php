@@ -647,3 +647,43 @@ function hs_admin_deploy_10014(): string {
     ? 'Algolia server and index already disabled; no changes made.'
     : 'Disabled: ' . implode(', ', $disabled) . '.';
 }
+
+/**
+ * Add existing nodes of newly enabled bundles to the XML sitemap.
+ *
+ * XML Sitemap ignores newly created bundle settings config, so links for
+ * existing content are only created when each node is saved again.
+ */
+function hs_admin_deploy_10015(array &$sandbox): string {
+  if (!isset($sandbox['ids'])) {
+    $sandbox['ids'] = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', [
+        'hs_event',
+        'hs_event_series',
+        'hs_news',
+        'hs_person',
+        'hs_project',
+        'hs_publications',
+        'hs_research',
+        'hs_training',
+      ], 'IN')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  if ($node_ids = array_splice($sandbox['ids'], 0, 50)) {
+    $info = xmlsitemap_get_link_info('node');
+    $info['xmlsitemap']['process callback']('node', $node_ids);
+  }
+
+  $sandbox['#finished'] = $sandbox['total'] ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] < 1) {
+    return '';
+  }
+
+  return t('Processed %total nodes for the XML sitemap.', ['%total' => $sandbox['total']]);
+}

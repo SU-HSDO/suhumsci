@@ -18,11 +18,11 @@
 // font style Text Area, a Spotlight Slider, or an Accordion without the
 // "Expand Button" as the first item in the main region, that first item's
 // own margin-top collapses through its wrapper and stacks with the hero's
-// margin-bottom, creating an oversized gap. `there-is-extra-gap-between-
-// hero-and-main-region` is added to the body (see humsci_basic.theme) only
-// for that exact combination, so it's safe to zero the leaking margin-top
-// here instead of touching the hero's own spacing.
-body.there-is-extra-gap-between-hero-and-main-region {
+// margin-bottom, creating an oversized gap. `.hb-tighten-hero-gap` is added
+// to the body by the humsci_basic/hero-main-gap behavior only for that
+// exact combination, so it's safe to zero the leaking margin-top here
+// instead of touching the hero's own spacing.
+body.hb-tighten-hero-gap {
   .field-hs-page-components > .ptype-hs-text-area:first-child .field-hs-text-area > :first-child {
     margin-top: 0 !important;
   }
@@ -94,6 +94,7 @@ body.there-is-extra-gap-between-hero-and-main-region {
 .ptype-hs-carousel,
 .ptype-hs-cmap,
 .ptype-hs-sptlght-slder,
+.field-hs-page-hero,
 .ptype-hs-timeline,
 .ptype-hs-view,
 .ptype-hs-priv-collection,

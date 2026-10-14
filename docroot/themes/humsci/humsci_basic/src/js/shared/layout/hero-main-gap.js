@@ -42,63 +42,37 @@
     return false;
   }
 
-  /**
-   * Removes the first Layout Builder block on the page if its node title
-   * renders empty (e.g. the front page's suppressed "Home" title), and
-   * reports whether it instead holds a visible title.
-   *
-   * CSS :empty can't reliably catch the empty case because Twig leaves
-   * whitespace text nodes between the tags (which can still create a
-   * phantom line box even with margin/height zeroed out), so remove the
-   * block outright instead of just hiding it with CSS.
-   *
-   * Only the first block is checked: it's the only one that can hold the
-   * node title and sit above the page components, so it's the only one
-   * relevant to the hero gap. A block without a .node__title is left
-   * untouched either way.
-   *
-   * @return {boolean} Whether the first block holds a visible node title.
-   */
-  function removeEmptyTitleBlock() {
-    const block = document.querySelector('.block-layout-builder');
-
-    if (!block) {
-      return false;
-    }
-
-    const title = block.querySelector('.node__title');
-
-    if (!title) {
-      return false;
-    }
-
-    if (title.childElementCount > 0) {
-      return true;
-    }
-
-    block.remove();
-
-    return false;
-  }
-
   // Add body classes for full-width / main-region spacing gap
   // detection. Only applies to pages that use the full-width hero +
   // main region layout (see humsci_basic_preprocess_html()).
   document.addEventListener('DOMContentLoaded', () => {
     const hero = document.querySelector('.field-hs-page-hero');
+    const components = document.querySelector('.field-hs-page-components');
+
+    if (!hero && !components) {
+      return;
+    }
+
+    const region = components.closest('.layout__region');
+    const block = region?.querySelector('.block-layout-builder');
+    const title = block?.querySelector('.node__title');
 
     // If the node's Title field block is shown above the page components,
     // it already breaks the margin adjacency between the hero and the
     // first component, so the gap doesn't need closing. Checking this
     // first (most pages render the title) avoids the more expensive
     // firstComponentCreatesGap() work below.
-    const hasVisibleTitle = removeEmptyTitleBlock();
-
-    if (!hero || hasVisibleTitle) {
+    if (title) {
       return;
     }
 
-    const components = document.querySelector('.field-hs-page-components');
+    // Removes the first Layout Builder block on the page if its node title
+    // renders empty (e.g. the front page's suppressed "Home" title), and
+    // reports whether it instead holds a visible title.
+    if (block?.childElementCount === 0) {
+      block.remove();
+    }
+
     const firstComponent = components?.firstElementChild;
 
     if (!firstComponent || !firstComponentCreatesGap(firstComponent)) {

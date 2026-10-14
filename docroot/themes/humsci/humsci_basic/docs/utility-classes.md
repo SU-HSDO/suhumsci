@@ -135,6 +135,8 @@ For best practice, you might just want to use one responsive class if you'd like
 
 ✅ Responsive classes work in views.
 
+These classes have no effect on cards that don't have an image (for example, a Date Stacked Horizontal Cards view where some or all rows only show a date tile), so it's safe to apply them to a view even if some rows lack an image.
+
 | Class                  | Works in Views? |
 | ---------------------- | :-------------: |
 | hb-card-image-1-of-12  |       ✅        |

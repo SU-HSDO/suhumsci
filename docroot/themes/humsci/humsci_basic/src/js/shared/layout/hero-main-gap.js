@@ -1,4 +1,4 @@
-(function (Drupal, once) {
+(function () {
   const GAP_CLASS = 'hb-tighten-hero-gap';
 
   /**
@@ -42,44 +42,69 @@
     return false;
   }
 
-  Drupal.behaviors.heroMainRegionGap = {
-    attach(context) {
-      // Add body classes for full-width / main-region spacing gap
-      // detection. Only applies to pages that use the full-width hero +
-      // main region layout (see humsci_basic_preprocess_html()).
-      once('hero-main-region-gap', 'body', context).forEach(() => {
-        const hero = document.querySelector('.field-hs-page-hero');
-        const components = document.querySelector('.field-hs-page-components');
+  /**
+   * Removes the first Layout Builder block on the page if its node title
+   * renders empty (e.g. the front page's suppressed "Home" title), and
+   * reports whether it instead holds a visible title.
+   *
+   * CSS :empty can't reliably catch the empty case because Twig leaves
+   * whitespace text nodes between the tags (which can still create a
+   * phantom line box even with margin/height zeroed out), so remove the
+   * block outright instead of just hiding it with CSS.
+   *
+   * Only the first block is checked: it's the only one that can hold the
+   * node title and sit above the page components, so it's the only one
+   * relevant to the hero gap. A block without a .node__title is left
+   * untouched either way.
+   *
+   * @return {boolean} Whether the first block holds a visible node title.
+   */
+  function removeEmptyTitleBlock() {
+    const block = document.querySelector('.block-layout-builder');
 
-        if (!hero || !components) {
-          return;
-        }
+    if (!block) {
+      return false;
+    }
 
-        if (!hero.querySelector(':scope > .paragraph--type--hs-carousel')) {
-          return;
-        }
+    const title = block.querySelector('.node__title');
 
-        const firstComponent = components.querySelector(':scope > :first-child');
+    if (!title) {
+      return false;
+    }
 
-        if (!firstComponent || !firstComponentCreatesGap(firstComponent)) {
-          return;
-        }
+    if (title.childElementCount > 0) {
+      return true;
+    }
 
-        // If the node's Title field block is shown above the page
-        // components, it already breaks the margin adjacency between the
-        // hero and the first component, so the gap doesn't need closing.
-        const region = components.closest('.layout__region') || document;
-        const title = region.querySelector('.node__title');
-        const titleIsBeforeComponents = title
-          // eslint-disable-next-line no-bitwise
-          && !!(title.compareDocumentPosition(components) & Node.DOCUMENT_POSITION_FOLLOWING);
+    block.remove();
 
-        if (title && title.textContent.trim() !== '' && titleIsBeforeComponents) {
-          return;
-        }
+    return false;
+  }
 
-        document.body.classList.add(GAP_CLASS);
-      });
-    },
-  };
-}(Drupal, once));
+  // Add body classes for full-width / main-region spacing gap
+  // detection. Only applies to pages that use the full-width hero +
+  // main region layout (see humsci_basic_preprocess_html()).
+  document.addEventListener('DOMContentLoaded', () => {
+    const hero = document.querySelector('.field-hs-page-hero');
+
+    // If the node's Title field block is shown above the page components,
+    // it already breaks the margin adjacency between the hero and the
+    // first component, so the gap doesn't need closing. Checking this
+    // first (most pages render the title) avoids the more expensive
+    // firstComponentCreatesGap() work below.
+    const hasVisibleTitle = removeEmptyTitleBlock();
+
+    if (!hero || hasVisibleTitle) {
+      return;
+    }
+
+    const components = document.querySelector('.field-hs-page-components');
+    const firstComponent = components?.firstElementChild;
+
+    if (!firstComponent || !firstComponentCreatesGap(firstComponent)) {
+      return;
+    }
+
+    document.body.classList.add(GAP_CLASS);
+  });
+}());

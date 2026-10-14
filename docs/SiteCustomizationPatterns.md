@@ -1,9 +1,8 @@
 # Site Customization Patterns
 
-> **Audience:** Written for the H&S web team customizing an individual site, and for AI assistants helping implement a site-level customization request.
+> **Audience:** Written for the H&S web team customizing an individual site or testing how a change can affect specific sites, and for AI assistants helping implement or test a site-level customization request.
 
 HSDP ships a shared set of content types, fields, views, and theme components to every site (the "product"). Individual sites regularly need something the product doesn't provide: an extra field on a person record, a one-off content type, a tweaked card layout, a bit of CSS. This document catalogs the supported ways site owners customize a site without forking the platform, with a real example of each pattern.
-
 
 ## How Site-Level Customization Is Kept Separate from the Product
 
@@ -44,7 +43,6 @@ The Colorful and Traditional themes expose a set of site-level appearance settin
 | Brand Bar | The variant class applied to the brand bar above the masthead | Set in `humsci_basic_brand_bar` in `theme-settings.php`; not yet documented beyond the settings form |
 | Animation | Enables or disables motion/animation enhancements sitewide, useful for meeting WCAG 2.1 AAA | Set in `humsci_basic_animation_enhancement` in `theme-settings.php`; not yet documented beyond the settings form |
 
-> **Note:** Brand Bar and Animation have no dedicated doc yet. If you document them, add the new file to `docroot/themes/humsci/humsci_basic/docs/` and link it from that directory's [README](../docroot/themes/humsci/humsci_basic/docs/README.md), following the pattern of the other theme docs.
 
 ## Utility Classes
 
@@ -119,7 +117,7 @@ The contributed Asset Injector module, available at **Configuration > Content Au
 }
 ```
 
-Use this pattern for small, site-specific CSS adjustments that don't belong in the shared theme. Prefer an existing utility class or theme setting first; reach for Asset Injector when neither covers the need.
+**If possible, avoid using Asset Injector**. Prefer an existing utility class or theme setting first; reach for Asset Injector only when neither covers the need and only for small, site-specific CSS adjustments that don't belong in the shared theme.
 
 ### Recognize a Repeated Need Instead of Copying CSS
 

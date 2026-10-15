@@ -13,6 +13,38 @@
   }
 }
 
+// Full-width hero + main-region gap fix.
+
+// field_hs_page_hero can hold any banner/hero type or a Spotlight. All of
+// them share a margin-bottom (see the `.ptype-*` rule below, which also
+// covers `.field-hs-page-hero` itself), so whenever there's a hero and no
+// visible page title, the first main-region item's own margin-top can
+// collapse through and stack on top of it, leaving an oversized gap. Zero
+// that margin-top, but only for the specific first-item cases below -
+// otherwise we'd remove spacing that belongs there. `.field-hs-page-hero`
+// doesn't print at all when the field is empty (cardinality 1, hidden
+// label), so :has() alone is enough to detect "there's a hero".
+body:has(.field-hs-page-hero):not(:has(.node__title:not(:empty))) {
+  // First component is a Text Area, and its first line is a heading or a
+  // splash/lead styled paragraph.
+  .field-hs-page-components > .ptype-hs-text-area:first-child .field-hs-text-area > :first-child:is(h1, h2, h3, h4, h5, h6, p.hs-font-splash, p.hs-font-lead) {
+    margin-top: 0;
+  }
+
+  // First component is a Spotlight Slider.
+  .field-hs-page-components > .ptype-hs-sptlght-slder:first-child .hb-spotlight {
+    margin-top: 0;
+  }
+
+  // First component is an Accordion, and it does NOT have the
+  // "Expand/Collapse All" button (that button's wrapper adds its own
+  // spacing above the accordion, so there's no extra gap to fix when it's
+  // present).
+  .field-hs-page-components > .ptype-hs-accordion:first-child:not(:has(.hb-accordion_toggle-all)) .hs-accordion {
+    margin-top: 0;
+  }
+}
+
 // If a component needs *any* additional styles, move the rule into /src/scss/components.
 .layout-builder__message {
   @include hb-page-width;

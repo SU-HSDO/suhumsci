@@ -6,11 +6,11 @@
  */
 
 use Drupal\Core\Extension\ThemeSettingsProvider;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
-use Drupal\node\NodeInterface;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
@@ -57,6 +57,28 @@ function humsci_basic_preprocess_block(&$vars) {
     $description = $block->get('info')->get(0)->getValue();
     $vars['label'] = reset($description) ?: $vars['label'];
   }
+
+  // Field blocks (used heavily by Layout Builder) can render with no
+  // visible output - e.g. the node "Title" field renders nothing on the
+  // front page (see \Drupal\stanford_fields\...\EntityTitleHeading's
+  // viewElements()) - but block.html.twig's wrapper div still prints
+  // either way, leaving a blank gap with nothing in it to justify the
+  // space. Flag that here, from the render array structure (no delta
+  // items and no label) rather than rendering the content a second time,
+  // which is expensive and would re-trigger #process callbacks for blocks
+  // that contain a form. block.html.twig skips printing the block entirely
+  // when this is false; every other block type defaults to TRUE, so
+  // nothing else changes.
+  //
+  // \Drupal\layout_builder\Plugin\Block\FieldBlock::build() wraps the
+  // field's own render array one level deeper, as `[0 => $fieldBuild]`, so
+  // the item count has to be read from $vars['content'][0], not
+  // $vars['content'] itself (which always has exactly that one child).
+  $vars['has_content'] = TRUE;
+  if ($vars['base_plugin_id'] === 'field_block') {
+    $field_content = $vars['content'][0] ?? [];
+    $vars['has_content'] = !empty($vars['label']) || (bool) Element::children($field_content);
+  }
 }
 
 /**
@@ -89,16 +111,6 @@ function humsci_basic_preprocess_html(&$vars) {
   $route_match = \Drupal::routeMatch();
 
   $node = $route_match->getParameter('node');
-
-  // The full-width hero + main-region spacing gap is detected and closed
-  // client-side (see humsci_basic/hero-main-gap): it depends on Layout
-  // Builder section data that's expensive to inspect server-side, and the
-  // same signals (paragraph bundle classes, node title markup) are already
-  // present in the rendered DOM. Only attach the library for the page type
-  // that uses the full-width + main region layout.
-  if ($node instanceof NodeInterface && $node->bundle() == 'hs_basic_page') {
-    $vars['#attached']['library'][] = 'humsci_basic/hero-main-gap';
-  }
 
   // Preload full width region banner images (LCP)
   if (!$node || !$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {

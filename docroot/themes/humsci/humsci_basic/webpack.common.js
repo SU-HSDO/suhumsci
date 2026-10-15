@@ -19,7 +19,6 @@ const shared = {
   'carousel-slides-height': 'shared/carousel-slides/carousel-slides-height.js',
   editoria11y: 'shared/editoria11y/editoria11y.js',
   'equal-height-grid': 'shared/equal-height-grid/index.js',
-  'hero-main-gap': 'shared/layout/hero-main-gap.js',
   'linked-cards': 'shared/cards/linked-cards.js',
   'structured-card': 'shared/cards/structured-card.js',
   'horizontal-expandable-card': 'shared/cards/horizontal-expandable-card.js',

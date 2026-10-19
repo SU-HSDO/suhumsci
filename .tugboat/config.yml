@@ -18,13 +18,11 @@ services:
       - english
       - history
       - west
-      - it-humsci
 
     # A set of commands to run while building this service
     commands:
       # Commands that set up the basic preview infrastructure
       init:
-        - echo "========= INIT ========="
         # Install Node.js system-wide based on .nvmrc major version for consistent builds
         - export NODE_VERSION=$(cat .nvmrc | cut -d. -f1) && curl -fsSL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - && apt-get install -y nodejs
         # Symlink the tugboat directory to the docker image expected path.
@@ -38,8 +36,6 @@ services:
         # Init the settings files.
         - drush sws:multisite:settings
       update:
-        - echo "========= UPDATE ========="
-        # Composer install.
         - composer install --no-ansi
         # Copy ci.settings.php to all sites in the preview.
         - |
@@ -62,7 +58,6 @@ services:
           done
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
-        - echo "========= BUILD ========="
         - composer install --no-ansi
 
         - |

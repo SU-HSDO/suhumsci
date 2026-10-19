@@ -14,6 +14,8 @@
 {% if content.left_sidebar or content.main or content.right_sidebar %}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
+      {# Sticky sidebar behavior, which only applies to the left sidebar. #}
+      {{ attach_library('humsci_basic/sidebar-nav') }}
       <div{{ region_attributes.left_sidebar.addClass(['hb-three-column__sidebar-1', 'layout__region']) }}>
         {{ content.left_sidebar }}
       </div>

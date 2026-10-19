@@ -31,52 +31,54 @@ services:
         - ln -s docroot htdocs
 
         # Install/update packages managed by composer, including drush
-        - rm -rf vendor
         - composer install --no-ansi
 
         # Init the settings files.
         - drush sws:multisite:settings
       update:
-        - rm -rf vendor
         - composer install --no-ansi
-        # Sync to hs_colorful, hs_colorful database & files and create user.
+        # Sync to hs_colorful, hs_colorful database and create user.
         - drush sql-sync @hs_colorful.prod @hs_colorful.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @hs_colorful.local sql-sanitize --no-interaction --ansi
-        - drush rsync @hs_colorful.prod:%files @hs_colorful.local:%files --ansi --no-interaction
+        - mkdir -p ${TUGBOAT_ROOT}/docroot/sites/hs_colorful/files
+        - drush @hs_colorful.local pm:install stage_file_proxy --no-interaction --ansi
         - drush @hs_colorful.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
         - drush @hs_colorful.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
-        # Sync to hs_traditional, hs_traditional database & files and create user.
+        # Sync to hs_traditional, hs_traditional database and create user.
         - drush sql-sync @hs_traditional.prod @hs_traditional.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @hs_traditional.local sql-sanitize --no-interaction --ansi
-        - drush rsync @hs_traditional.prod:%files @hs_traditional.local:%files --ansi --no-interaction
+        - mkdir -p ${TUGBOAT_ROOT}/docroot/sites/hs_traditional/files
+        - drush @hs_traditional.local pm:install stage_file_proxy --no-interaction --ansi
         - drush @hs_traditional.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
         - drush @hs_traditional.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
-        # Sync to english, english database & files, does not create a user.
+        # Sync to english, english database, does not create a user.
         - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @english.local sql-sanitize --no-interaction --ansi
-        - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
+        - mkdir -p ${TUGBOAT_ROOT}/docroot/sites/english/files
+        - drush @english.local pm:install stage_file_proxy --no-interaction --ansi
         - drush @english.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
         - drush @english.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
-        # Sync to history, history database & files, does not create a user.
+        # Sync to history, history database, does not create a user.
         - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @history.local sql-sanitize --no-interaction --ansi
-        - drush rsync @history.prod:%files @history.local:%files --ansi --no-interaction
+        - mkdir -p ${TUGBOAT_ROOT}/docroot/sites/history/files
+        - drush @history.local pm:install stage_file_proxy --no-interaction --ansi
         - drush @history.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
         - drush @history.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
-        # Sync to west, west database & files, does not create a user.
+        # Sync to west, west database, does not create a user.
         - drush sql-sync @west.prod @west.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @west.local sql-sanitize --no-interaction --ansi
-        - drush rsync @west.prod:%files @west.local:%files --ansi --no-interaction
+        - mkdir -p ${TUGBOAT_ROOT}/docroot/sites/west/files
+        - drush @west.local pm:install stage_file_proxy --no-interaction --ansi
         - drush @west.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
         - drush @west.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
-        - rm -rf vendor
         - composer install --no-ansi
 
         - drush @hs_colorful.local cr

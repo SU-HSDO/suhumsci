@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\encrypt\Exception\EncryptException;
 use Drupal\key\Entity\Key;
 use Drupal\SwsDrush\Helpers\EnvironmentDetector;
@@ -116,7 +117,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
           'status' => !empty($urls),
           'shared_configuration' => [
             'source' => [
-              'authentication' => [
+              'authentication' => $this->getAuthUrlParts() + [
                 'client_id' => $config->get('username'),
                 'client_secret' => $password,
                 'plugin' => !empty($urls) && $password ? 'oauth2' : '',
@@ -140,7 +141,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
           'status' => !empty($urls),
           'shared_configuration' => [
             'source' => [
-              'authentication' => [
+              'authentication' => $this->getAuthUrlParts() + [
                 'client_id' => $config->get('username'),
                 'client_secret' => $password,
                 'plugin' => !empty($urls) && $password ? 'oauth2' : '',
@@ -157,6 +158,37 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       }
     }
     return $overrides;
+  }
+
+  /**
+   * Split the CAP auth url into the migration group's base_uri and token_url.
+   *
+   * The migrations' auth endpoint is stored in the migration group
+   * configuration, separate from the capx service, so the auth url setting
+   * has to be applied here too. Without the setting, the migration group
+   * configuration is left as is.
+   *
+   * @return array
+   *   Keyed array with base_uri and token_url, or empty if the setting is not
+   *   set or invalid.
+   */
+  protected function getAuthUrlParts(): array {
+    if (!$auth_url = Settings::get('CAP_AUTH_URL')) {
+      return [];
+    }
+    $parts = parse_url($auth_url);
+    if (empty($parts['scheme']) || empty($parts['host'])) {
+      $this->getLogger()->error('Invalid CAP auth url: @url', ['@url' => $auth_url]);
+      return [];
+    }
+    $base_uri = $parts['scheme'] . '://' . $parts['host'];
+    if (!empty($parts['port'])) {
+      $base_uri .= ':' . $parts['port'];
+    }
+    return [
+      'base_uri' => $base_uri,
+      'token_url' => $parts['path'] ?? '/',
+    ];
   }
 
   /**

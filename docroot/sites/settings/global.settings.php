@@ -99,5 +99,6 @@ $settings['hs_config_partial_allow_delete'] = [
   'acquia_connector.',
   'purge.',
   'purge_queuer_coretags.',
+  'shield.',
   'ultimate_cron.job.',
 ];

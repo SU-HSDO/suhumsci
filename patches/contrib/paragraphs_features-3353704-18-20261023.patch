@@ -1,0 +1,15 @@
+diff --git a/src/ParagraphsFeatures.php b/src/ParagraphsFeatures.php
+index 4e59137..8b7af04 100644
+--- a/src/ParagraphsFeatures.php
++++ b/src/ParagraphsFeatures.php
+@@ -54,10 +54,6 @@ class ParagraphsFeatures {
+    *   Field Wrapper ID, usually provided by ::getWrapperId().
+    */
+   public static function registerFormWidgetFeatures(array &$elements, ParagraphsWidget $widget, $fieldWrapperId) {
+-    if (!in_array(\Drupal::theme()->getActiveTheme()->getName(),
+-      ['claro', 'gin'])) {
+-      return;
+-    }
+     foreach (static::$availableFeatures as $feature) {
+       if ($widget->getThirdPartySetting('paragraphs_features', $feature)) {
+         $elements['add_more']['#attached']['library'][] = 'paragraphs_features/' . $feature;

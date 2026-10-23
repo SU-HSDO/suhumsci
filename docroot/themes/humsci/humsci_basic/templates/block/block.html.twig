@@ -1,8 +1,13 @@
-{% extends "@block/block.html.twig" %}
 {#
 /**
  * @file
  * Theme override to display a block.
+ *
+ * Doesn't use `{% extends %}` like it used to: a field block with no
+ * visible output (see humsci_basic_preprocess_block()) needs its wrapper
+ * div skipped entirely, and `{% extends %}` only lets a child template
+ * override named blocks, not wrap the parent's whole output in a
+ * condition.
  *
  * Available variables:
  * - plugin_id: The ID of the block implementation.
@@ -24,10 +29,21 @@
  *   displayed after the main title tag that appears in the template.
  *
  * @see template_preprocess_block()
+ * @see humsci_basic_preprocess_block()
  */
 #}
-{% set attributes = attributes.addClass([
-  'block-' ~ configuration.provider|clean_class,
-  attributes.id
-]) %}
-{% set title_attributes = title_attributes.addClass('block__title') %}
+{% if has_content %}
+  {% set attributes = attributes.addClass([
+    'block-' ~ configuration.provider|clean_class,
+    attributes.id
+  ]) %}
+  {% set title_attributes = title_attributes.addClass('block__title') %}
+  <div{{ attributes }}>
+    {{ title_prefix }}
+    {% if label %}
+      <h2{{ title_attributes }}>{{ label }}</h2>
+    {% endif %}
+    {{ title_suffix }}
+    {{ content }}
+  </div>
+{% endif %}

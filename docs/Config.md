@@ -125,6 +125,8 @@ To safely export configuration changes for a config_split, follow these steps:
 		 drush ci -y && drush ci -y
 		 ```
 
+	 > **Note:** SWSDC sets each environment split's status in settings.php, which overrides `drush config-split:activate` and `drush config-split:status-override`. Use `local.settings.php` to enable a split locally.
+
 1. **Make your changes:**
 	 - Apply the desired configuration changes in the UI or via code.
 
@@ -145,3 +147,5 @@ To safely export configuration changes for a config_split, follow these steps:
 - Always disable all splits and import default config before enabling a new split for export.
 - Running config import twice helps ensure all config is fully applied, especially with config_split.
 - Use `git status` to confirm exported changes, as split config may not appear in the standard export output.
+- `drush config-export --diff` writes split directories like a normal export. It is not a dry run.
+- To capture split configuration changed by a module's update hooks, enable the split before updating the module, then run `drush updatedb` and export.

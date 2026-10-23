@@ -1,0 +1,49 @@
+diff --git a/src/Plugin/Menu/MenuLinkField.php b/src/Plugin/Menu/MenuLinkField.php
+index 2f54b03..0b456d9 100644
+--- a/src/Plugin/Menu/MenuLinkField.php
++++ b/src/Plugin/Menu/MenuLinkField.php
+@@ -9,6 +9,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
+ use Drupal\Core\Menu\MenuLinkBase;
+ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+ use Drupal\Core\TypedData\TranslatableInterface;
++use Drupal\Core\Url;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+ 
+ /**
+@@ -94,7 +95,13 @@ class MenuLinkField extends MenuLinkBase implements ContainerFactoryPluginInterf
+     if ($title_attribute && $description = $this->getDescription()) {
+       $options['attributes']['title'] = $description;
+     }
+-    return $this->getEntity()->toUrl('canonical', $options);
++
++    $entity = $this->getEntity();
++    if(empty($entity)) {
++      return Url::fromRoute('<none>');
++    }
++
++    return $entity->toUrl('canonical', $options);
+   }
+ 
+   /**
+@@ -117,6 +124,10 @@ class MenuLinkField extends MenuLinkBase implements ContainerFactoryPluginInterf
+       /** @var \Drupal\Core\TypedData\TranslatableInterface|\Drupal\Core\Entity\EntityInterface $entity */
+       $entity = $this->getEntity();
+       $field_name = $this->getFieldName();
++
++      if (empty($entity)) {
++        return;
++      }
+       if ($property_value = $entity->get($field_name)->$property) {
+         return $property_value;
+       }
+@@ -185,6 +196,10 @@ class MenuLinkField extends MenuLinkBase implements ContainerFactoryPluginInterf
+       $entity_id = $this->pluginDefinition['metadata']['entity_id'];
+       $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id);
+ 
++      if (empty($entity)) {
++        return NULL;
++      }
++
+       if ($entity instanceof TranslatableInterface && $this->pluginDefinition['metadata']['langcode'] !== LanguageInterface::LANGCODE_NOT_SPECIFIED && $entity->hasTranslation($this->pluginDefinition['metadata']['langcode'])) {
+         $this->entity = $entity->getTranslation($this->pluginDefinition['metadata']['langcode']);
+       }

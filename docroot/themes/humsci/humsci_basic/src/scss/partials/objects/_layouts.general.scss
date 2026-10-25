@@ -13,6 +13,13 @@
   }
 }
 
+// Hide the first main-region block when it renders empty (e.g. the Title
+// block on the front page). :empty doesn't match because of whitespace, and
+// the skip anchor precedes the block, so :first-child can't be used.
+.hb-three-column__main-body .layout__region > .block-layout-builder:nth-child(1 of .block-layout-builder):not(:has(> *)) {
+  display: none;
+}
+
 // Full-width hero + main-region gap fix.
 
 // field_hs_page_hero can hold any banner/hero type or a Spotlight. All of
@@ -36,10 +43,8 @@ body:has(.field-hs-page-hero):not(:has(.node__title:not(:empty))) {
     margin-top: 0;
   }
 
-  // First component is an Accordion, and it does NOT have the
-  // "Expand/Collapse All" button (that button's wrapper adds its own
-  // spacing above the accordion, so there's no extra gap to fix when it's
-  // present).
+  // First component is an Accordion without the "Expand/Collapse All"
+  // button (that button adds its own spacing).
   .field-hs-page-components > .ptype-hs-accordion:first-child:not(:has(.hb-accordion_toggle-all)) .hs-accordion {
     margin-top: 0;
   }

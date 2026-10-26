@@ -10,9 +10,19 @@ Every pattern in this document relies on the same underlying mechanism, describe
 
 - Product-level configuration (content types, fields, views, etc. shipped by this codebase) uses an `hs_` prefix and lives under `docroot/modules/humsci/` or `config/default/`.
 - `hs_config_prefix` automatically prefixes any config a site owner creates through the admin UI with `custm_`, so it's visibly distinct from product config.
-- `config_ignore` keeps `custm_`-prefixed and other site-specific config out of config import/export, so a platform-wide config deployment never touches or deletes it.
+- `hs_config_partial` is the main safeguard. When enabled (as it is on dev, staging, and prod), config imports only create or update config and never delete it, so site-level config is never removed by a platform-wide deployment. This is also why deprecating or removing shipped config requires a database update hook.
+- `config_ignore` keeps specific shipped config (blocks, roles, etc.) from being overwritten on existing sites.
 
 Because of this, a site-level customization never appears in this repository. To see what a given site has customized, you have to look at that site directly (its local database after a sync, or its live admin UI).
+
+To diff a site's configuration against the codebase without syncing the whole site down, export its config on Acquia to a temp directory and rsync that down:
+
+```bash
+drush @<SITE>.prod config:export --destination=/tmp/<SITE>-config-<YYYYMMDD>
+drush rsync @<SITE>.prod:/tmp/<SITE>-config-<YYYYMMDD>/* <localdirectory>
+```
+
+Then compare `<localdirectory>` against `config/default/`.
 
 ## Custom Content Types
 
@@ -22,6 +32,14 @@ Site owners can create an entirely new content type through **Structure > Conten
 
 Use this pattern when the content doesn't fit any shipped bundle and needs its own fields, display, and listing. Because the content type's schema lives only in that site's database, document any site-level content type's fields and purpose somewhere the site owner can find later. This repository can't show it.
 
+## Custom Vocabularies
+
+Site owners can create new taxonomy vocabularies through **Structure > Taxonomy > Add vocabulary**. The machine name gets the `custm_` prefix automatically. Use this when a site needs its own classification (for example, research areas or project types) beyond the shipped vocabularies.
+
+## Custom Feed Types and Feeds
+
+Custom Feed Types (**Structure > Feed types**) and Feeds (**Content > Feeds**) can be created by site owners to import content from external sources into the site's content types.
+
 ## Custom Fields on Default Content Types
 
 Site owners can add fields to an existing shipped content type through **Structure > Content Types > [type] > Manage Fields**, without creating a module or touching code. New fields also get the `custm_` prefix.
@@ -29,6 +47,10 @@ Site owners can add fields to an existing shipped content type through **Structu
 **Example:** `jrbp2025` extends the shipped People (`hs_person`) content type with over 40 `custm_`-prefixed fields (`custm_emergency_contact_name`, `custm_lab_pi`, `custm_driver_authorization_form`, `custm_date_harassment_training_c`, and others) to track research-compliance and volunteer information on imported people records, well beyond the directory information the shipped People fields cover. Manage at `/admin/structure/types/manage/hs_person/fields`.
 
 Use this pattern when you need to store more data on an entity that already has the right content type and display, rather than modeling a new content type from scratch.
+
+### Manage Display and Manage Form Display
+
+In addition to adding fields, the **Manage Form Display** and **Manage Display** tabs of every content type are fully customizable per site. A site owner can reorder, hide, or show fields, change widgets and formatters, and adjust view modes (teaser, card, etc.) without code. Unlike content types and fields, form and view displays are not prefixed with `custm_`; they are edited in place on the site, and `hs_config_partial` keeps those edits from being deleted on import.
 
 ## Theme Settings
 
@@ -73,6 +95,10 @@ A view's block display can be placed directly into a Layout Builder region. Beca
 When a Views block is placed in Layout Builder, each field inside it can be reconfigured from that block's own "Configure field" dialog. The **For** dropdown at the top of that dialog chooses the scope of the change: **This block (override)** applies it only to this one placement, while the other option applies it everywhere the block appears. This lets a site owner reuse one view in multiple places but customize its rewrite or markup on only one page, without duplicating the view.
 
 ## Views Customizations
+
+### Creating and Cloning Views
+
+Site owners can build a new view from scratch (**Structure > Views > Add view**) or clone a shipped one with the **Duplicate** operation, then adjust its filters, fields, and display. This is the most common pattern on sites, and the new view's machine name gets the `custm_` prefix (e.g. `custm_polisci_people`). Prefer cloning when a shipped view is close to what you need, since it carries over the shipped configuration. A cloned view is a copy: later changes to the shipped view will not flow into it.
 
 ### Combining Fields with a Views Pattern
 
@@ -138,7 +164,11 @@ If a CSS need is genuinely specific to one site's content and doesn't fit any of
 | Need | Pattern |
 |---|---|
 | A kind of content no shipped content type models | Custom Content Type |
+| A new way to classify content | Custom Vocabulary |
+| Importing content from an external source | Custom Feed Type and Feed |
 | More data on an existing content type | Custom Field |
+| Different field order, widgets, or formatters on a content type | Manage Display / Manage Form Display |
+| A listing similar to a shipped view, or a new listing | Create or clone a View |
 | A different color palette, lockup layout, or navigation style | Theme Setting |
 | Spacing, card, or layout adjustments covered by an existing class | Utility Class |
 | A block that should only appear under certain data conditions | Views Block in Layout Builder, filtered appropriately |

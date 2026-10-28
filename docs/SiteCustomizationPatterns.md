@@ -50,7 +50,7 @@ Use this pattern when you need to store more data on an entity that already has 
 
 ### Manage Display and Manage Form Display
 
-In addition to adding fields, the **Manage Form Display** and **Manage Display** tabs of every content type are fully customizable per site. A site owner can reorder, hide, or show fields, change widgets and formatters, and adjust view modes (teaser, card, etc.) without code. Unlike content types and fields, form and view displays are not prefixed with `custm_`; they are edited in place on the site, and `hs_config_partial` keeps those edits from being deleted on import.
+In addition to adding fields, the **Manage Form Display** and **Manage Display** tabs of every content type are fully customizable per site. A site owner can reorder, hide, or show fields, change widgets and formatters, and adjust view modes (teaser, card, etc.) without code. Unlike content types and fields, form and view displays are not prefixed with `custm_`; they are edited in place on the site, and `config_ignore` rules keep those edits from being overwritten on import. Because of this, changes to form and view display config in the codebase are not imported on existing sites; updating them requires a database update (update hook).
 
 ## Theme Settings
 

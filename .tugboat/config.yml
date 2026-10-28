@@ -39,6 +39,8 @@ services:
         - composer install --no-ansi
         # Copy ci.settings.php to all sites in the preview.
         - |
+          set -e
+          [ -n "$TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES" ] || { echo "TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES is empty"; exit 1; }
           IFS=,
           for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
             site_id=$(echo $alias | sed "s/-/_/g")
@@ -47,12 +49,14 @@ services:
           done
         # Install sites.
         - |
+          set -e
           IFS=,
           for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
             site_id=$(echo $alias | sed "s/-/_/g")
             drush sql-sync @${site_id}.prod @${site_id}.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
             drush @${site_id}.local sql-sanitize --no-interaction --ansi
-            drush rsync @${site_id}.prod:%files @${site_id}.local:%files --ansi --no-interaction
+            mkdir -p ${TUGBOAT_ROOT}/docroot/sites/${site_id}/files
+            drush @${site_id}.local pm:install stage_file_proxy --no-interaction --ansi
             drush @${site_id}.local user:create ${PREVIEWSITE_USERNAME} --password=${PREVIEWSITE_PASSWORD} || true
             drush @${site_id}.local user:role:add administrator ${PREVIEWSITE_USERNAME} || true
           done
@@ -61,6 +65,7 @@ services:
         - composer install --no-ansi
 
         - |
+          set -e
           IFS=,
           for alias in $TUGBOAT_DEFAULT_SERVICE_CONFIG_ALIASES; do
             site_id=$(echo $alias | sed "s/-/_/g")

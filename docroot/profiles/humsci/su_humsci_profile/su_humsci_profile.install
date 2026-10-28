@@ -175,7 +175,8 @@ function su_humsci_profile_update_11005(): string {
   /** @var \Drupal\image\ImageStyleInterface $style */
   foreach (\Drupal::entityTypeManager()->getStorage('image_style')->loadMultiple() as $style) {
     foreach ($style->getEffects() as $effect) {
-      if ($effect->getPluginId() === 'image_convert' && ($effect->getConfiguration()['data']['extension'] ?? '') === 'webp') {
+      $extension = $effect->getConfiguration()['data']['extension'] ?? '';
+      if ($effect->getPluginId() === 'image_convert' && strtolower($extension) === 'webp') {
         $style->flush();
         $count++;
         break;

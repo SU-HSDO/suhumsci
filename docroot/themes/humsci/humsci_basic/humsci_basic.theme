@@ -58,7 +58,6 @@ function humsci_basic_preprocess_block(&$vars) {
     $vars['label'] = reset($description) ?: $vars['label'];
   }
 
-
   // Field blocks (used heavily by Layout Builder) can render with no
   // visible output - e.g. the node "Title" field renders nothing on the
   // front page (see \Drupal\stanford_fields\...\EntityTitleHeading's
@@ -84,7 +83,8 @@ function humsci_basic_preprocess_block(&$vars) {
   $vars['has_content'] = TRUE;
   if ($vars['base_plugin_id'] === 'field_block' && empty($vars['in_preview'])) {
     $field_content = $vars['content'][0] ?? [];
-    $vars['has_content'] = !empty($vars['label']) || (bool) Element::children($field_content);  }
+    $vars['has_content'] = !empty($vars['label']) || (bool) Element::children($field_content);
+  }
 }
 
 /**

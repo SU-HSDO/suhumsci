@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Extension\ThemeSettingsProvider;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
@@ -55,6 +56,34 @@ function humsci_basic_preprocess_block(&$vars) {
     $block = $vars['content']['#block_content'];
     $description = $block->get('info')->get(0)->getValue();
     $vars['label'] = reset($description) ?: $vars['label'];
+  }
+
+  // Field blocks (used heavily by Layout Builder) can render with no
+  // visible output - e.g. the node "Title" field renders nothing on the
+  // front page (see \Drupal\stanford_fields\...\EntityTitleHeading's
+  // viewElements()) - but block.html.twig's wrapper div still prints
+  // either way, leaving a blank gap with nothing in it to justify the
+  // space. Flag that here, from the render array structure (no delta
+  // items and no label) rather than rendering the content a second time,
+  // which is expensive and would re-trigger #process callbacks for blocks
+  // that contain a form. block.html.twig skips printing the block entirely
+  // when this is false; every other block type defaults to TRUE, so
+  // nothing else changes.
+  //
+  // \Drupal\layout_builder\Plugin\Block\FieldBlock::build() wraps the
+  // field's own render array one level deeper, as `[0 => $fieldBuild]`, so
+  // the item count has to be read from $vars['content'][0], not
+  // $vars['content'] itself (which always has exactly that one child).
+  //
+  // Inside the Layout Builder UI, empty blocks must stay visible so editors
+  // can still select, move and configure them. Core's block preprocess sets
+  // `in_preview` from the `#in_preview` flag Layout Builder adds to every
+  // block it renders in that interface (see
+  // \Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray).
+  $vars['has_content'] = TRUE;
+  if ($vars['base_plugin_id'] === 'field_block' && empty($vars['in_preview'])) {
+    $field_content = $vars['content'][0] ?? [];
+    $vars['has_content'] = !empty($vars['label']) || (bool) Element::children($field_content);
   }
 }
 

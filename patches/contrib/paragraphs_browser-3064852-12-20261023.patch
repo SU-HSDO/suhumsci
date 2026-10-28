@@ -1,0 +1,137 @@
+diff --git a/src/Form/ParagraphsBrowserForm.php b/src/Form/ParagraphsBrowserForm.php
+index 42c3ccb..9b4544c 100644
+--- a/src/Form/ParagraphsBrowserForm.php
++++ b/src/Form/ParagraphsBrowserForm.php
+@@ -201,11 +201,24 @@ class ParagraphsBrowserForm extends FormBase {
+     foreach(array_intersect_key($groups, $mapped_items) as $group_machine_name => $group) {
+       $options[$group_machine_name] = $group->getLabel();
+     }
++    $field_name = $field_config->getName();
++    $entity_type = $field_config->getTargetEntityTypeId();
++    $bundle = $field_config->getTargetBundle();
++
++    $settings = \Drupal::service('entity_display.repository')->getFormDisplay($entity_type, $bundle, 'default');
++    $field_name_component = $settings->getComponent($field_name);
++    $show_group_label = !empty($field_name_component) && isset($field_name_component['settings']['show_group_label']) ? $field_name_component['settings']['show_group_label'] : TRUE;
++    $show_group_filter = !empty($field_name_component) && isset($field_name_component['settings']['show_group_filter']) ? $field_name_component['settings']['show_group_filter'] : TRUE;
++
+     $form['paragraph_types']['filters'] = [
+       '#title' => 'Filter',
+       '#type' => 'select',
+       '#options' => $options
+     ];
++    if (!$show_group_filter) {
++      $form['paragraph_types']['filters']['#attributes']['style'] = ['display:none'] ;
++      $form['paragraph_types']['filters']['#title_display'] = 'invisible';
++    }
+     $form['paragraph_types']['pb_modal_text'] = [
+       '#title' => $this->t('Search'),
+       '#type' => 'textfield',
+@@ -220,10 +233,12 @@ class ParagraphsBrowserForm extends FormBase {
+         '#type' => 'container',
+         '#attributes' => ['class' => [$group_machine_name]],
+       ];
+-      $form['paragraph_types'][$group_machine_name]['label'] = [
+-        '#type' => 'markup',
+-        '#markup' => '<h2>' . $groups[$group_machine_name]->getLabel() . '</h2>',
+-      ];
++      if ($show_group_label) {
++        $form['paragraph_types'][$group_machine_name]['label'] = [
++          '#type' => 'markup',
++          '#markup' => '<h2>' . $groups[$group_machine_name]->getLabel() . '</h2>',
++        ];
++      }
+       foreach($items as $paragraph_type) {
+         /** @var \Drupal\paragraphs\ParagraphsTypeInterface $paragraph_type */
+ 
+diff --git a/src/Plugin/Field/FieldWidget/InlineParagraphsBrowserWidgetTrait.php b/src/Plugin/Field/FieldWidget/InlineParagraphsBrowserWidgetTrait.php
+index e07f537..5c796c8 100644
+--- a/src/Plugin/Field/FieldWidget/InlineParagraphsBrowserWidgetTrait.php
++++ b/src/Plugin/Field/FieldWidget/InlineParagraphsBrowserWidgetTrait.php
+@@ -28,6 +28,7 @@ trait InlineParagraphsBrowserWidgetTrait {
+     $settings['paragraphs_browser'] = '_na';
+     $settings['modal_width']  = '80%';
+     $settings['modal_height'] = 'auto';
++    $settings['show_group_label'] = TRUE;
+ 
+ 
+     return $settings;
+@@ -70,6 +71,14 @@ trait InlineParagraphsBrowserWidgetTrait {
+       '#required' => FALSE,
+     );
+ 
++    // Provide an option to not show labels per field widget instance.
++    $elements['show_group_label'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Show Group Label'),
++      '#default_value' => $this->getSetting('show_group_label'),
++      '#description' => $this->t('If checked group labels will be displayed on admin edit screens.'),
++    ];
++
+     return $elements;
+   }
+ 
+@@ -87,16 +96,18 @@ trait InlineParagraphsBrowserWidgetTrait {
+     $type = $element['#paragraph_type'];
+     $current_title = $element['top']['paragraph_type_title']['info']['#markup'];
+ 
+-    // Get Paragraph group info
++    // Get Paragraph group info if label is not hidden.
++    if ($this->getSetting('show_group_label')) {
+     $paragraph_types = \Drupal::entityTypeManager()->getStorage('paragraphs_browser_type')->loadMultiple();
+-    foreach($paragraph_types as $paragraph_type) {
+-      $groups = $paragraph_type->groupManager();
+-      $group_name = $paragraph_type->getGroupMap($type);
+-      $group = $groups->getGroup($group_name);
+-      if ($group) {
+-        $element['top']['paragraph_type_title']['info'] = array(
+-          '#markup' => $current_title,
+-        );
++      foreach($paragraph_types as $paragraph_type) {
++        $groups = $paragraph_type->groupManager();
++        $group_name = $paragraph_type->getGroupMap($type);
++        $group = $groups->getGroup($group_name);
++        if ($group) {
++          $element['top']['paragraph_type_title']['info'] = array(
++            '#markup' => $current_title,
++          );
++        }
+       }
+     }
+ 
+diff --git a/src/Plugin/Field/FieldWidget/ParagraphsBrowserWidgetTrait.php b/src/Plugin/Field/FieldWidget/ParagraphsBrowserWidgetTrait.php
+index 1a840fd..522a9f8 100644
+--- a/src/Plugin/Field/FieldWidget/ParagraphsBrowserWidgetTrait.php
++++ b/src/Plugin/Field/FieldWidget/ParagraphsBrowserWidgetTrait.php
+@@ -28,6 +28,8 @@ trait ParagraphsBrowserWidgetTrait {
+     $settings['paragraphs_browser'] = '_na';
+     $settings['modal_width']  = '80%';
+     $settings['modal_height'] = 'auto';
++    $settings['show_group_label'] = TRUE;
++    $settings['show_group_filter'] = TRUE;
+ 
+ 
+     return $settings;
+@@ -69,6 +71,22 @@ trait ParagraphsBrowserWidgetTrait {
+       '#required' => FALSE,
+     );
+ 
++    // Provide an option to not show labels per field widget instance.
++    $elements['show_group_label'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Show Group Label'),
++      '#default_value' => $this->getSetting('show_group_label'),
++      '#description' => $this->t("If checked group labels will be displayed on admin edit screens."),
++    ];
++
++    //Provide an option to not show the group filter per field widget instance.
++    $elements['show_group_filter'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Show Group Filter'),
++      '#default_value' => $this->getSetting('show_group_filter'),
++      '#description' => $this->t('If checked group filter will be displayed on admin edit screens.'),
++    ];
++
+     return $elements;
+   }
+ 

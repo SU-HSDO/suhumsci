@@ -1,0 +1,16 @@
+diff --git a/menu_link_weight.node.inc b/menu_link_weight.node.inc
+index a7120cf..e5cb3cf 100644
+--- a/menu_link_weight.node.inc
++++ b/menu_link_weight.node.inc
+@@ -291,6 +291,11 @@ function menu_link_weight_node_form_submit($form, FormStateInterface $form_state
+         continue;
+       }
+ 
++      $link = $menu_link_manager->createInstance($link_id);
++      // Menu link has the same weight, nothing to update.
++      if ($link->getWeight() == $info['weight']) {
++        continue;
++      }
+       /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
+       $menu_link_manager->updateDefinition($link_id, ['weight' => $info['weight']]);
+     }

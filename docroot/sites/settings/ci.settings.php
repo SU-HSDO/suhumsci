@@ -45,6 +45,8 @@ if (getenv('TUGBOAT_SERVICE')) {
   // Tugboat enables stage_file_proxy outside of config_split, so keep config
   // imports from uninstalling it and exports from including it.
   $settings['config_exclude_modules'] = ['stage_file_proxy'];
+  // Fetch originals and let image styles generate derivatives locally.
+  $config['stage_file_proxy.settings']['use_imagecache_root'] = TRUE;
 }
 
 // Use development service parameters.

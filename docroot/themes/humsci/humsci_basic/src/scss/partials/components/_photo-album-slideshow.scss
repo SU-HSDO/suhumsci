@@ -12,22 +12,6 @@
   @include swiper-container;
   @include swiper-arrows;
 
-  .swiper-button-prev {
-    bottom: hb-calculate-rems(98px);
-
-    @include grid-media-min('sm') {
-      bottom: hb-calculate-rems(198px);
-    }
-  }
-
-  .swiper-button-next {
-    bottom: hb-calculate-rems(5px);
-
-    @include grid-media-min('sm') {
-      bottom: hb-calculate-rems(105px);
-    }
-  }
-
   .swiper-button-prev,
   .swiper-button-next {
     @include grid-media('md') {
@@ -42,19 +26,22 @@
   .hb-media-image {
     position: relative;
 
-    &::after {
-      content: '';
-      position: absolute;
-      inset: calc(100% - 78px) 0 0; // match height of caption / credit background
+    &:has(.field-media-image-caption) {
+      &::after {
+        content: '';
+        position: absolute;
+        inset: calc(100% - 78px) 0 0; // match height of caption / credit background
 
-      @include hb-themes(('colorful', 'airy')) {
-        background: linear-gradient(to top, color('black', 'global'), transparent);
-      }
+        @include hb-themes(('colorful', 'airy')) {
+          background: linear-gradient(to top, color('black', 'global'), transparent);
+        }
 
-      @include hb-traditional {
-        background: linear-gradient(to top, color('black', 'global'), transparent);
+        @include hb-traditional {
+          background: linear-gradient(to top, color('black', 'global'), transparent);
+        }
       }
     }
+
 
     img,
     picture {
@@ -68,16 +55,18 @@
   }
 
   .swiper-pagination {
-    display: none;
+    position: relative;
+    color: color('black', 'global');
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    top: unset;
+    bottom: unset;
+    width: auto;
 
-    @include grid-media-min('sm') {
-      display: block;
-      width: auto;
-      text-align: left;
-      color: color('white', 'global');
-      font-weight: hb-theme-font-weight(bold);
-      bottom: hb-calculate-rems(17px);
-      padding-inline-start: hb-calculate-rems(25px);
+    @include grid-media('md') {
+      margin-top: hb-calculate-rems(10px);
+      width: 100%;
     }
   }
 }

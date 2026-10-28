@@ -1,0 +1,14 @@
+diff --git a/core/modules/migrate/src/Plugin/Migration.php b/core/modules/migrate/src/Plugin/Migration.php
+index aa0c94c6c2..917ff33173 100644
+--- a/core/modules/migrate/src/Plugin/Migration.php
++++ b/core/modules/migrate/src/Plugin/Migration.php
+@@ -630,6 +630,9 @@ public function getMigrationDependencies() {
+    */
+   protected function findMigrationDependencies($process) {
+     $return = [];
++    if (is_null($process)) {
++      $process = [];
++    }
+     foreach ($this->getProcessNormalized($process) as $process_pipeline) {
+       foreach ($process_pipeline as $plugin_configuration) {
+         if (in_array($plugin_configuration['plugin'], ['migration', 'migration_lookup'], TRUE)) {

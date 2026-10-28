@@ -1,0 +1,13 @@
+diff --git a/menu_link_weight.module b/menu_link_weight.module
+index ce13344..6bda2b5 100644
+--- a/menu_link_weight.module
++++ b/menu_link_weight.module
+@@ -151,7 +151,7 @@ function _menu_link_weight_get_options($menu_name, $parent_id, $current_mlid, $n
+       $id = $plugin_id;
+       $title = Unicode::truncate($element->link->getTitle(), 30, TRUE, FALSE);
+       $title_build = Link::fromTextAndUrl($title, $element->link->getUrlObject())->toRenderable();
+-      $element->link->isEnabled();
++      $title_build['#attributes']['target'] = '_blank';
+       if (!$element->link->isEnabled()) {
+         $title_build['#suffix'] = ' (' . t('disabled') . ')';
+       }

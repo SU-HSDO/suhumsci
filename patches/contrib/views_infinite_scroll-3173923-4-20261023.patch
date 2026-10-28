@@ -1,0 +1,24 @@
+diff --git a/js/infinite-scroll.js b/js/infinite-scroll.js
+index 48abbcb..431b5a1 100644
+--- a/js/infinite-scroll.js
++++ b/js/infinite-scroll.js
+@@ -56,10 +56,18 @@
+     view.$view.find(contentWrapperSelector)
+       // Trigger a jQuery event on the wrapper to inform that new content was
+       // loaded and allow other scripts to respond to the event.
+-      .trigger('views_infinite_scroll.new_content', $newRows.clone())
++      .trigger('views_infinite_scroll.new_content', $newRows)
+       // Add the new rows to existing view.
+       .append($newRows);
+ 
++    // Set focus to the first link in the first row result.
++    if ($newRows.length > 0) {
++      var $newFocus = $($newRows[0]).find('a');
++      if ($newFocus.length > 0) {
++        $newFocus[0].focus();
++      }
++    }
++
+     // Replace the pager link with the new link and ajaxPageState values.
+     $existingPager.replaceWith($newPager);
+ 

@@ -1,0 +1,18 @@
+diff --git a/src/Plugin/views/filter/EREFNodeTitles.php b/src/Plugin/views/filter/EREFNodeTitles.php
+index 8f0e213..af3e765 100644
+--- a/src/Plugin/views/filter/EREFNodeTitles.php
++++ b/src/Plugin/views/filter/EREFNodeTitles.php
+@@ -369,6 +369,13 @@ class EREFNodeTitles extends ManyToOne implements PluginInspectionInterface, Con
+         }
+       }
+ 
++      if (
++        !isset($gen_options['target_entity_type_id']) ||
++        !$this->entityTypeManager->hasDefinition($gen_options['target_entity_type_id'])
++      ) {
++        return $res;
++      }
++
+       // Run the query.
+       $get_entity = $this->entityTypeManager->getStorage($gen_options['target_entity_type_id']);
+       $relatedContentQuery = $this->entityTypeManager->getStorage($gen_options['target_entity_type_id'])->getQuery()

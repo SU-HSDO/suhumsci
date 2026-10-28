@@ -24,7 +24,10 @@ $container-horizontal-card: hb-calculate-rems(350px);
     $template: if($i == $hb-grid-count, '#{$areas}' '#{$content-row}', '#{$areas}');
 
     &-#{$i}-of-#{$hb-grid-count} {
-      .hb-card--horizontal:has(.hb-card__graphics) .hb-card__wrapper {
+      // :not(.hb-card--no-image) keeps this a no-op on cards with no image
+      // (e.g. date-stacked cards with only a date tile), so it can't fight
+      // the no-image grid collapse in _card.scss.
+      .hb-card--horizontal:not(.hb-card--no-image):has(.hb-card__graphics) .hb-card__wrapper {
         @container card (width > #{$container-horizontal-card}) {
           grid-template-areas: $template;
         }
@@ -32,7 +35,7 @@ $container-horizontal-card: hb-calculate-rems(350px);
 
       // Skip right override at full width (identical). Must follow rule above.
       @if $i < $hb-grid-count {
-        .hb-card--horizontal--right:has(.hb-card__graphics) .hb-card__wrapper {
+        .hb-card--horizontal--right:not(.hb-card--no-image):has(.hb-card__graphics) .hb-card__wrapper {
           @container card (width > #{$container-horizontal-card}) {
             grid-template-areas: '#{$areas-right}';
           }

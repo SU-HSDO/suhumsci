@@ -1,4 +1,3 @@
-{% extends "@block/block.html.twig" %}
 {#
 /**
  * @file
@@ -26,8 +25,20 @@
  * @see template_preprocess_block()
  */
 #}
-{% set attributes = attributes.addClass([
-  'block-' ~ configuration.provider|clean_class,
-  attributes.id
-]) %}
-{% set title_attributes = title_attributes.addClass('block__title') %}
+{% if has_content %}
+  {% set attributes = attributes.addClass([
+    'block-' ~ configuration.provider|clean_class,
+    attributes.id
+  ]) %}
+  {% set title_attributes = title_attributes.addClass('block__title') %}
+  <div{{ attributes }}>
+    {{ title_prefix }}
+    {% if label %}
+      <h2{{ title_attributes }}>{{ label }}</h2>
+    {% endif %}
+    {{ title_suffix }}
+    {% block content %}
+      {{ content }}
+    {% endblock %}
+  </div>
+{% endif %}

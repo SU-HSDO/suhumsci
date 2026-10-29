@@ -12,6 +12,7 @@ use Drupal\search_api\IndexInterface;
 use Drupal\search_api\SearchApiException;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -74,7 +75,7 @@ class SharedIndexClearTest extends UnitTestCase {
   /**
    * Build a client whose index declares the given facets.
    */
-  protected function mockClient(array $facets): SearchClient {
+  protected function mockClient(array $facets): SearchClient&MockObject {
     $client = $this->createMock(SearchClient::class);
     $client->method('getSettings')->willReturn(['attributesForFaceting' => $facets]);
     return $client;

@@ -52,7 +52,6 @@ Custom code lives in several locations; there is no `web/` directory. How you ch
 | Codeception tests | `tests/codeception/` | Owned by this repo. See [Testing](docs/Testing.md). |
 | Codeception test artifacts | `artifacts/` | Generated test output, gitignored. |
 | Static analysis configs (PHPStan, PHPCS, Rector) | `phpstan.neon`, `phpcs.xml`, `rector.php` | Owned by this repo. See [Coding Standards](docs/CodingStandards.md). |
-| BackstopJS visual regression config | `backstop.json` | Owned by this repo. See the [humsci_basic readme](docroot/themes/humsci/humsci_basic/readme.md). |
 | Drupal recipes | `recipes/` | Owned by this repo. Place custom and downloaded recipes here. |
 
 ### Module Ownership by Domain
@@ -156,7 +155,6 @@ Theme assets (Sass and JS) are compiled with webpack via npm scripts.
 
 - `npm run theme-build`: Compile Sass for production for all themes based on `humsci_basic`.
 - `npm run theme-watch`: Compile a CSS build and watch for changes in the existing `.scss` files in all themes based on `humsci_basic`.
-- `npm run theme-visreg`: Run Percy VRT on `hs_colorful` and `hs_traditional` sites (see `docroot/themes/humsci/humsci_basic/README.md` for details.)
 
 The build process automatically detects whether to run inside DDEV or Lando. To override:
 

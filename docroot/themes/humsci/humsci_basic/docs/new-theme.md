@@ -37,11 +37,3 @@
 1. Commit the changes to the `humsci_basic` directory as well the compiled CSS in the theme directory.
 
 _Note: New themes will only receive shared styles. No package.json updates necessary compiled CSS will auto compile to the new directory assuming correct naming conventions were followed._
-
-## Backstop Updates
-
-1. In the parent theme (`humsci_basic`) open `backstop/generate-backstop.js`.
-1. Add the new theme as an item in the `sites` array. The site name must match the domain name of the test site (excluding the environment postfix).
-1. Commit the changes. The new site will automatically be tested every time visual regression testing is ran.
-
-_Note: These changes require that a new theme site has already been created on the staging and development environments. If not the regression tests will still run but the new theme pages will only show 404 errors._

@@ -163,25 +163,3 @@ function su_humsci_profile_update_11004(): string {
   }
   return t('hs_project was already in single_content_sync allowed node types.');
 }
-
-/**
- * Flush WebP image style derivatives so animated GIFs are regenerated.
- *
- * Derivatives created before the imagemagick animation patch (3295470) are
- * single-frame WebP files and are not rebuilt until they are flushed.
- */
-function su_humsci_profile_update_11005(): string {
-  $count = 0;
-  /** @var \Drupal\image\ImageStyleInterface $style */
-  foreach (\Drupal::entityTypeManager()->getStorage('image_style')->loadMultiple() as $style) {
-    foreach ($style->getEffects() as $effect) {
-      $extension = $effect->getConfiguration()['data']['extension'] ?? '';
-      if ($effect->getPluginId() === 'image_convert' && strtolower($extension) === 'webp') {
-        $style->flush();
-        $count++;
-        break;
-      }
-    }
-  }
-  return t('Flushed derivatives for @count image styles that convert to WebP.', ['@count' => $count]);
-}

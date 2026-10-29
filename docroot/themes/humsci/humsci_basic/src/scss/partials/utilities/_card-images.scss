@@ -1,6 +1,9 @@
 @use '../variables/general' as *;
+@use '../functions/general' as *;
 @use '../mixins/flex-grid' as *;
 @use '../mixins/breakpoints' as *;
+
+$container-horizontal-card: hb-calculate-rems(350px);
 
 // Generates classes for each image column span.
 @mixin hb-image-sizes() {
@@ -25,7 +28,7 @@
       // (e.g. date-stacked cards with only a date tile), so it can't fight
       // the no-image grid collapse in _card.scss.
       .hb-card--horizontal:not(.hb-card--no-image):has(.hb-card__graphics) .hb-card__wrapper {
-        @include grid-media-min('md') {
+        @container card (width > #{$container-horizontal-card}) {
           grid-template-areas: $template;
         }
       }
@@ -33,7 +36,7 @@
       // Skip right override at full width (identical). Must follow rule above.
       @if $i < $hb-grid-count {
         .hb-card--horizontal--right:not(.hb-card--no-image):has(.hb-card__graphics) .hb-card__wrapper {
-          @include grid-media-min('md') {
+          @container card (width > #{$container-horizontal-card}) {
             grid-template-areas: '#{$areas-right}';
           }
         }

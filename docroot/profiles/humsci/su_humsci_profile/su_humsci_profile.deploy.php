@@ -4,9 +4,16 @@
  * @file
  * su_humsci_profile.deploy.php
  *
- * Deploy hooks run after config import. By convention in this project, we use
- * purely numerical suffixes (e.g. _10001) to keep execution order explicit.
+ * Deploy hooks run after config import, making them suitable for operations
+ * that depend on configuration existing first (e.g. new content types,
+ * vocabularies, or permissions tied to them).
  *
+ * hook_deploy_NAME() allows arbitrary machine names for NAME, with execution
+ * order determined alphanumerically. By convention in this project, we use
+ * purely numerical suffixes (e.g. _10001) rather than descriptive names. This
+ * is a deliberate standard to mirror hook_update_N() conventions, keep
+ * execution order explicit and predictable, and avoid the ambiguity of relying
+ * on alphabetical sorting of arbitrary strings.
  *
  * @see https://github.com/drush-ops/drush/blob/-/drush.api.php
  */

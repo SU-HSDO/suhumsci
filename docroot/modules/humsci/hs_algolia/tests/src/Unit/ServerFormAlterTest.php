@@ -50,8 +50,9 @@ class ServerFormAlterTest extends UnitTestCase {
   /**
    * Build a form state whose form object edits a server with the given backend.
    */
-  protected function mockFormState(?string $backend_id): FormStateInterface {
+  protected function mockFormState(?string $backend_id, string $id = 'hs_algolia'): FormStateInterface {
     $server = $this->createMock(ServerInterface::class);
+    $server->method('id')->willReturn($id);
     $server->method('getBackendId')->willReturn($backend_id);
 
     $form_object = $this->createMock(EntityFormInterface::class);
@@ -73,6 +74,23 @@ class ServerFormAlterTest extends UnitTestCase {
     $this->assertFalse($form['backend_config']['api_key']['#access']);
     $this->assertStringContainsString('href="/admin/config/search/algolia"', (string) $form['backend_config']['help']['#markup']);
     $this->assertArrayNotHasKey('#access', $form['backend_config']['disable_truncate']);
+  }
+
+  /**
+   * The federated server points admins at settings, not the per-site form.
+   *
+   * Its credentials are shared by every Training Hub site, so the per-site
+   * form never holds them.
+   */
+  public function testFederatedServerHelpPointsToSettings(): void {
+    $form = $this->buildForm();
+    hs_algolia_form_search_api_server_form_alter($form, $this->mockFormState('search_api_algolia', 'hs_algolia_federated'));
+
+    $this->assertFalse($form['backend_config']['application_id']['#access']);
+    $this->assertFalse($form['backend_config']['api_key']['#access']);
+    $help = (string) $form['backend_config']['help']['#markup'];
+    $this->assertStringContainsString('settings.php', $help);
+    $this->assertStringNotContainsString('/admin/config/search/algolia', $help);
   }
 
   /**

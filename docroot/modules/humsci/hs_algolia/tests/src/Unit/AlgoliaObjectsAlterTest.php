@@ -7,7 +7,12 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Delete;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Token;
 use Drupal\search_api\Item\ItemInterface;
@@ -38,6 +43,20 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
    * @var \Drupal\Core\Database\Connection|null
    */
   protected $database;
+
+  /**
+   * Entity type manager used by setUpContainer(), when a test supplies one.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|null
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Logger channel used by setUpContainer(), when a test supplies one.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface|null
+   */
+  protected $logger;
 
   /**
    * Register a database whose delete query records the conditions it is given.
@@ -98,6 +117,11 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
     $container->set('request_stack', $request_stack);
     $container->set('token', $this->token ?? $this->createMock(Token::class));
     $container->set('database', $this->database ?? $this->createMock(Connection::class));
+    $container->setParameter('site.path', 'sites/hs_sandbox');
+    $container->set('entity_type.manager', $this->entityTypeManager ?? $this->createMock(EntityTypeManagerInterface::class));
+    $logger_factory = $this->createMock(LoggerChannelFactoryInterface::class);
+    $logger_factory->method('get')->willReturn($this->logger ?? $this->createMock(LoggerChannelInterface::class));
+    $container->set('logger.factory', $logger_factory);
     \Drupal::setContainer($container);
   }
 
@@ -144,10 +168,61 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
   /**
    * Build a node entity stub for token data.
    */
-  protected function mockNode(): EntityInterface {
+  protected function mockNode(string $bundle = 'hs_basic_page'): EntityInterface {
     $entity = $this->createMock(EntityInterface::class);
     $entity->method('getEntityTypeId')->willReturn('node');
+    $entity->method('bundle')->willReturn($bundle);
     return $entity;
+  }
+
+  /**
+   * Register entity view display storage holding the given displays.
+   *
+   * @param array $displays
+   *   Display ID keyed to whether it is enabled. Unlisted displays are missing.
+   */
+  protected function setUpDisplays(array $displays): void {
+    $storage = $this->createMock(EntityStorageInterface::class);
+    $storage->method('load')->willReturnCallback(function ($id) use ($displays) {
+      if (!isset($displays[$id])) {
+        return NULL;
+      }
+      $display = $this->createMock(EntityViewDisplayInterface::class);
+      $display->method('status')->willReturn($displays[$id]);
+      return $display;
+    });
+
+    $manager = $this->createMock(EntityTypeManagerInterface::class);
+    $manager->method('getStorage')->with('entity_view_display')->willReturn($storage);
+    $this->entityTypeManager = $manager;
+  }
+
+  /**
+   * Build an index whose html field renders Training with a view mode.
+   */
+  protected function mockRenderedIndex(string $view_mode = 'search_index'): IndexInterface {
+    return $this->mockIndex(
+      ['html' => 'rendered_item', 'title' => 'title'],
+      '',
+      'hs_algolia_trainings',
+      ['html' => ['view_mode' => ['entity:node' => ['hs_training' => $view_mode]]]],
+    );
+  }
+
+  /**
+   * Run the alter hook over two Training records.
+   */
+  protected function alterTrainingRecords(IndexInterface $index): array {
+    $objects = [
+      'entity:node/1:en' => ['title' => 'One', 'html' => '<p>Contact: Jane</p>'],
+      'entity:node/2:en' => ['title' => 'Two', 'html' => '<p>Contact: Sam</p>'],
+    ];
+    $items = [
+      'entity:node/1:en' => $this->mockItem($this->mockNode('hs_training')),
+      'entity:node/2:en' => $this->mockItem($this->mockNode('hs_training')),
+    ];
+    hs_algolia_search_api_algolia_objects_alter($objects, $index, $items);
+    return $objects;
   }
 
   /**
@@ -157,21 +232,27 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
    *   Field name keyed to property path.
    * @param string $index_name
    *   Value of the algolia_index_name option.
+   * @param string $id
+   *   Search API index ID.
+   * @param array $configurations
+   *   Field name keyed to field configuration.
    *
    * @return \Drupal\search_api\IndexInterface
    *   Mocked index.
    */
-  protected function mockIndex(array $property_paths = [], string $index_name = ''): IndexInterface {
+  protected function mockIndex(array $property_paths = [], string $index_name = '', string $id = 'hs_algolia', array $configurations = []): IndexInterface {
     $index = $this->createMock(IndexInterface::class);
+    $index->method('id')->willReturn($id);
     $index->method('getOption')->willReturnCallback(
       fn($name) => $name === 'algolia_index_name' ? $index_name : NULL
     );
-    $index->method('getField')->willReturnCallback(function ($name) use ($property_paths) {
+    $index->method('getField')->willReturnCallback(function ($name) use ($property_paths, $configurations) {
       if (!isset($property_paths[$name])) {
         return NULL;
       }
       $field = $this->createMock(FieldInterface::class);
       $field->method('getPropertyPath')->willReturn($property_paths[$name]);
+      $field->method('getConfiguration')->willReturn($configurations[$name] ?? []);
       return $field;
     });
     return $index;
@@ -413,6 +494,152 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
     hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(['summary' => 'custom_value']), $items);
 
     $this->assertSame($summary, $objects['entity:node/1:en']['summary']);
+  }
+
+  /**
+   * Training Hub records carry the site directory as a stable site key.
+   */
+  public function testFederatedRecordsCarrySiteId() {
+    $this->setUpContainer();
+
+    $objects = [
+      'entity:node/1:en' => ['title' => 'One', 'site_name' => 'Sandbox'],
+      'entity:node/2:en' => ['title' => 'Two', 'site_name' => 'Sandbox'],
+    ];
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex([], '', 'hs_algolia_trainings'), []);
+
+    $this->assertSame('hs_sandbox', $objects['entity:node/1:en']['site_id']);
+    $this->assertSame('hs_sandbox', $objects['entity:node/2:en']['site_id']);
+    // The title still leads.
+    $this->assertSame('title', array_key_first($objects['entity:node/1:en']));
+  }
+
+  /**
+   * Training Hub facet values from different sites merge into one.
+   */
+  public function testFederatedFacetValuesAreNormalized() {
+    $this->setUpContainer();
+
+    $objects = [
+      'entity:node/1:en' => [
+        'title' => '  Excel   101 ',
+        'summary' => 'Learn  Excel',
+        'html' => '<p>Excel  Basics</p>',
+        'site_name' => 'Economics  Department',
+        'unit' => ['IT Services', ' it  services', "IT\u{00A0}Services ", 'Finance'],
+        'product' => 'Microsoft  EXCEL ',
+        'training_name' => ['Excel 101'],
+        'provider' => ['  LinkedIn Learning'],
+        'audience' => ['Staff', 'staff'],
+        'delivery_method' => "  In  person\n",
+        'location' => 'Building  160 ',
+      ],
+    ];
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex([], '', 'hs_algolia_trainings'), []);
+    $object = $objects['entity:node/1:en'];
+
+    $this->assertSame(['it services', 'finance'], $object['unit']);
+    $this->assertSame('microsoft excel', $object['product']);
+    $this->assertSame(['excel 101'], $object['training_name']);
+    $this->assertSame(['linkedin learning'], $object['provider']);
+    $this->assertSame(['staff'], $object['audience']);
+    $this->assertSame('in person', $object['delivery_method']);
+
+    // Display text is never rewritten, including location, which is not a
+    // facet and is shown as entered.
+    $this->assertSame('Building  160 ', $object['location']);
+    $this->assertSame('  Excel   101 ', $object['title']);
+    $this->assertSame('Learn  Excel', $object['summary']);
+    $this->assertSame('<p>Excel  Basics</p>', $object['html']);
+    $this->assertSame('Economics  Department', $object['site_name']);
+  }
+
+  /**
+   * A site's own index keeps its terms exactly as editors entered them.
+   */
+  public function testPerSiteFacetValuesAreNotNormalized() {
+    $this->setUpContainer();
+
+    $objects = [['title' => 'One', 'unit' => ['IT  Services']]];
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(), []);
+
+    $this->assertSame(['IT  Services'], $objects[0]['unit']);
+  }
+
+  /**
+   * A site's own index holds only its own records, so needs no site key.
+   */
+  public function testPerSiteRecordsHaveNoSiteId() {
+    $this->setUpContainer();
+
+    $objects = [['title' => 'One']];
+    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(), []);
+
+    $this->assertArrayNotHasKey('site_id', $objects[0]);
+  }
+
+  /**
+   * Rendered HTML is withheld when its display is missing.
+   *
+   * Drupal would have rendered the default display instead, which shows
+   * Training contacts. One warning covers the whole batch.
+   */
+  public function testMissingDisplayWithholdsRenderedHtml() {
+    $this->setUpDisplays([]);
+    $logger = $this->createMock(LoggerChannelInterface::class);
+    $logger->expects($this->once())
+      ->method('warning')
+      ->with($this->anything(), $this->callback(
+        fn($context) => $context['@displays'] === 'node.hs_training.search_index'
+      ));
+    $this->logger = $logger;
+    $this->setUpContainer();
+
+    $objects = $this->alterTrainingRecords($this->mockRenderedIndex());
+
+    foreach ($objects as $object) {
+      $this->assertArrayNotHasKey('html', $object);
+      $this->assertArrayHasKey('title', $object);
+    }
+  }
+
+  /**
+   * A disabled display falls back to the default display too.
+   */
+  public function testDisabledDisplayWithholdsRenderedHtml() {
+    $this->setUpDisplays(['node.hs_training.search_index' => FALSE]);
+    $this->setUpContainer();
+
+    $objects = $this->alterTrainingRecords($this->mockRenderedIndex());
+
+    $this->assertArrayNotHasKey('html', $objects['entity:node/1:en']);
+  }
+
+  /**
+   * Rendered HTML is sent when its display exists and is enabled.
+   */
+  public function testPresentDisplayKeepsRenderedHtml() {
+    $this->setUpDisplays(['node.hs_training.search_index' => TRUE]);
+    $logger = $this->createMock(LoggerChannelInterface::class);
+    $logger->expects($this->never())->method('warning');
+    $this->logger = $logger;
+    $this->setUpContainer();
+
+    $objects = $this->alterTrainingRecords($this->mockRenderedIndex());
+
+    $this->assertSame('<p>Contact: Jane</p>', $objects['entity:node/1:en']['html']);
+  }
+
+  /**
+   * The default view mode is what a missing display falls back to anyway.
+   */
+  public function testDefaultViewModeIsNotChecked() {
+    $this->setUpDisplays([]);
+    $this->setUpContainer();
+
+    $objects = $this->alterTrainingRecords($this->mockRenderedIndex('default'));
+
+    $this->assertArrayHasKey('html', $objects['entity:node/1:en']);
   }
 
   /**

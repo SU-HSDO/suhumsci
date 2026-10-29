@@ -687,3 +687,66 @@ function hs_admin_deploy_10015(array &$sandbox): string {
 
   return t('Processed %total nodes for the XML sitemap.', ['%total' => $sandbox['total']]);
 }
+
+/**
+ * Ensure the federated Algolia search server and index ship disabled.
+ */
+function hs_admin_deploy_10016(): string {
+  $disabled = [];
+
+  foreach (['search_api.server.hs_algolia_federated', 'search_api.index.hs_algolia_trainings'] as $name) {
+    // Write raw config rather than saving the entity. Index::postSave() and
+    // Server::postSave() would call a backend that has no credentials yet.
+    $config = \Drupal::configFactory()->getEditable($name);
+    if ($config->isNew() || !$config->get('status')) {
+      continue;
+    }
+
+    $config->set('status', FALSE)->save();
+    $disabled[] = $name;
+  }
+
+  // Writing raw config skips the tracking teardown, as in
+  // hs_admin_deploy_10014().
+  if (in_array('search_api.index.hs_algolia_trainings', $disabled, TRUE)) {
+    $index = \Drupal::entityTypeManager()
+      ->getStorage('search_api_index')
+      ->loadUnchanged('hs_algolia_trainings');
+
+    if ($index) {
+      \Drupal::service('search_api.index_task_manager')->stopTracking($index);
+    }
+  }
+
+  return empty($disabled)
+    ? 'Federated Algolia server and index already disabled; no changes made.'
+    : 'Disabled: ' . implode(', ', $disabled) . '.';
+}
+
+/**
+ * Create the Training search index display on existing sites.
+ *
+ * Node view displays are excluded by config_ignore, which skips them entirely
+ * when they do not exist yet.
+ */
+function hs_admin_deploy_10017(): string {
+  $name = 'core.entity_view_display.node.hs_training.search_index';
+  $active = \Drupal::service('config.storage');
+
+  if ($active->exists($name)) {
+    return "$name already present, no changes made.";
+  }
+
+  $data = \Drupal::service('config.storage.sync')->read($name);
+  if (!$data) {
+    return "Config $name not found in sync storage, no changes made.";
+  }
+
+  \Drupal::entityTypeManager()
+    ->getStorage('entity_view_display')
+    ->createFromStorageRecord($data)
+    ->setSyncing(TRUE)
+    ->save();
+
+  return "Imported $name from sync to active storage.";
+}

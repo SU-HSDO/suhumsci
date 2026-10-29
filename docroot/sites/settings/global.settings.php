@@ -81,6 +81,28 @@ if ($siteimprove_api_key && $siteimprove_username) {
   ];
 }
 
+// Training Hub shared Algolia application, identical on every participating
+// site. Sites opt in by enabling the federated server and index, so supplying
+// the values everywhere writes nothing on other sites.
+$federated_app_id = getenv('HS_ALGOLIA_FEDERATED_APP_ID', TRUE) ?: getenv('HS_ALGOLIA_FEDERATED_APP_ID');
+$federated_write_key = getenv('HS_ALGOLIA_FEDERATED_WRITE_KEY', TRUE) ?: getenv('HS_ALGOLIA_FEDERATED_WRITE_KEY');
+
+if ($federated_app_id && $federated_write_key) {
+  $config['search_api.server.hs_algolia_federated']['backend_config']['application_id'] = $federated_app_id;
+  $config['search_api.server.hs_algolia_federated']['backend_config']['api_key'] = $federated_write_key;
+  $settings['hs_algolia_federated_search_key'] = (getenv('HS_ALGOLIA_FEDERATED_SEARCH_KEY', TRUE) ?: getenv('HS_ALGOLIA_FEDERATED_SEARCH_KEY')) ?: '';
+}
+
+// Scope the shared index to the environment so stage never writes into the
+// production Training Hub.
+$federated_env = match (TRUE) {
+  EnvironmentDetector::isProdEnv() => 'prod',
+  EnvironmentDetector::isStageEnv() => 'stage',
+  EnvironmentDetector::isDevEnv() => 'dev',
+  default => 'local',
+};
+$config['search_api.index.hs_algolia_trainings']['options']['algolia_index_name'] = 'hsdp_trainings_' . $federated_env;
+
 // Translation overrides to replace Drupalisms with more user-friendly terms.
 $settings['locale_custom_strings_en'][''] = [
   'Entityqueues' => 'Listing',

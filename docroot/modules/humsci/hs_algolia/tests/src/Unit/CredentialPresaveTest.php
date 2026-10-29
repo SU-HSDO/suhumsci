@@ -108,6 +108,27 @@ class CredentialPresaveTest extends UnitTestCase {
   }
 
   /**
+   * The shared Training Hub write key never reaches config either.
+   *
+   * Its server form is unlocked in production by the status ignore pattern,
+   * so an exported key would be committed and imported on every site.
+   */
+  public function testFederatedServerCredentialsAreBlanked(): void {
+    $saved = [];
+    $server = $this->mockServer('hs_algolia_federated', [
+      'application_id' => 'SHAREDAPP',
+      'api_key' => 'shared-write-key',
+      'disable_truncate' => TRUE,
+    ], $saved);
+
+    hs_algolia_search_api_server_presave($server);
+
+    $this->assertSame('', $saved['backend_config']['application_id']);
+    $this->assertSame('', $saved['backend_config']['api_key']);
+    $this->assertTrue($saved['backend_config']['disable_truncate']);
+  }
+
+  /**
    * Another site's Search API server is left untouched.
    */
   public function testUnrelatedServerIsNotTouched(): void {
@@ -149,6 +170,25 @@ class CredentialPresaveTest extends UnitTestCase {
 
     hs_algolia_search_api_index_presave($index);
 
+    $this->assertSame(200, $saved['cron_limit']);
+  }
+
+  /**
+   * The shared index name never reaches config.
+   *
+   * An exported name would be imported everywhere, pointing every
+   * environment at the one it was exported from.
+   */
+  public function testFederatedIndexNameIsBlanked(): void {
+    $saved = [];
+    $index = $this->mockIndex('hs_algolia_trainings', [
+      'algolia_index_name' => 'hsdp_trainings_prod',
+      'cron_limit' => 200,
+    ], $saved);
+
+    hs_algolia_search_api_index_presave($index);
+
+    $this->assertSame('', $saved['algolia_index_name']);
     $this->assertSame(200, $saved['cron_limit']);
   }
 

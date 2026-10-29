@@ -1,0 +1,97 @@
+uuid: 067f25a3-e42f-4e41-9d0e-d3ec0cc6f8b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.hs_training.body
+    - field.field.node.hs_training.field_hs_training_audience
+    - field.field.node.hs_training.field_hs_training_contacts
+    - field.field.node.hs_training.field_hs_training_date_range
+    - field.field.node.hs_training.field_hs_training_deliverymethod
+    - field.field.node.hs_training.field_hs_training_location
+    - field.field.node.hs_training.field_hs_training_name
+    - field.field.node.hs_training.field_hs_training_nodate
+    - field.field.node.hs_training.field_hs_training_product
+    - field.field.node.hs_training.field_hs_training_provider
+    - field.field.node.hs_training.field_hs_training_resource_links
+    - field.field.node.hs_training.field_hs_training_sourcesite
+    - field.field.node.hs_training.field_hs_training_unit
+    - node.type.hs_training
+  module:
+    - text
+    - user
+id: node.hs_training.search_index
+targetEntityType: node
+bundle: hs_training
+mode: search_index
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_hs_training_audience:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_hs_training_deliverymethod:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_hs_training_location:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_hs_training_name:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_hs_training_product:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_hs_training_provider:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_hs_training_unit:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+hidden:
+  field_hs_training_contacts: true
+  field_hs_training_date_range: true
+  field_hs_training_nodate: true
+  field_hs_training_resource_links: true
+  field_hs_training_sourcesite: true
+  links: true
+  search_api_excerpt: true

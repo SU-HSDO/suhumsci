@@ -115,8 +115,8 @@ function su_humsci_profile_deploy_11002(array &$sandbox): string {
   $styles = $entity_type_manager->getStorage('image_style')->loadMultiple($sandbox['style_ids']);
   $file_ids = array_splice($sandbox['ids'], 0, 50);
 
+  /** @var \Drupal\file\FileInterface $file */
   foreach ($file_storage->loadMultiple($file_ids) as $file) {
-    /** @var \Drupal\file\FileInterface $file */
     foreach ($styles as $style) {
       $style->flush($file->getFileUri());
     }

@@ -87,35 +87,50 @@ function su_humsci_profile_deploy_11001(): string {
  * Derivatives created before the imagemagick animation patch (3295470) are
  * single-frame WebP files and are not rebuilt until they are flushed.
  */
-function su_humsci_profile_deploy_11002(): string {
-  $uris = \Drupal::entityTypeManager()->getStorage('file')->getQuery()
-    ->accessCheck(FALSE)
-    ->condition('uri', '.gif', 'ENDS_WITH')
-    ->execute();
-  $uris = array_map(
-    fn($file) => $file->getFileUri(),
-    \Drupal::entityTypeManager()->getStorage('file')->loadMultiple($uris)
-  );
+function su_humsci_profile_deploy_11002(array &$sandbox): string {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $file_storage = $entity_type_manager->getStorage('file');
 
-  $styles = [];
-  /** @var \Drupal\image\ImageStyleInterface $style */
-  foreach (\Drupal::entityTypeManager()->getStorage('image_style')->loadMultiple() as $style) {
-    foreach ($style->getEffects() as $effect) {
-      $extension = $effect->getConfiguration()['data']['extension'] ?? '';
-      if ($effect->getPluginId() === 'image_convert' && strtolower($extension) === 'webp') {
-        $styles[] = $style;
-        break;
+  if (!isset($sandbox['ids'])) {
+    $sandbox['ids'] = $file_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('uri', '.gif', 'ENDS_WITH')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+
+    // Only styles that convert to WebP need their derivatives flushed.
+    $sandbox['style_ids'] = [];
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    foreach ($entity_type_manager->getStorage('image_style')->loadMultiple() as $style) {
+      foreach ($style->getEffects() as $effect) {
+        $extension = $effect->getConfiguration()['data']['extension'] ?? '';
+        if ($effect->getPluginId() === 'image_convert' && strtolower($extension) === 'webp') {
+          $sandbox['style_ids'][] = $style->id();
+          break;
+        }
       }
     }
   }
 
-  foreach ($styles as $style) {
-    foreach ($uris as $uri) {
-      $style->flush($uri);
+  $styles = $entity_type_manager->getStorage('image_style')->loadMultiple($sandbox['style_ids']);
+  $file_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($file_storage->loadMultiple($file_ids) as $file) {
+    /** @var \Drupal\file\FileInterface $file */
+    foreach ($styles as $style) {
+      $style->flush($file->getFileUri());
     }
   }
-  return t('Flushed WebP derivatives of @files GIF files in @styles image styles.', [
-    '@files' => count($uris),
-    '@styles' => count($styles),
+  $file_storage->resetCache($file_ids);
+
+  $sandbox['#finished'] = $sandbox['total'] ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] < 1) {
+    return '';
+  }
+
+  return t('Flushed WebP derivatives of %total GIF files in %styles image styles.', [
+    '%total' => $sandbox['total'],
+    '%styles' => count($styles),
   ]);
 }

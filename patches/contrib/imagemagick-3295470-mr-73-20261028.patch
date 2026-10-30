@@ -1,0 +1,183 @@
+diff --git a/config/schema/imagemagick.schema.yml b/config/schema/imagemagick.schema.yml
+index 63f32edad00a77e772ced3b3bec9be62e8f1f1c8..04bf5a11e05227a44b9e7b9a4eca3047853a60e6 100644
+--- a/config/schema/imagemagick.schema.yml
++++ b/config/schema/imagemagick.schema.yml
+@@ -45,8 +45,7 @@ imagemagick.settings:
+           label: 'Color profile path'
+         coalesce:
+           type: boolean
+-          label: 'Coalesce Animated GIF images'
+-
++          label: 'Coalesce Animated GIF and WebP images'
+ 
+ imagemagick.file_metadata_plugin.imagemagick_identify:
+   type: config_object
+diff --git a/src/EventSubscriber/ImagemagickEventSubscriber.php b/src/EventSubscriber/ImagemagickEventSubscriber.php
+index 8564507cb1b03e8f0e6c7c5f74c43c81f7f946ec..25bd6edd35c6b9647d1bb06caa15b135ec391018 100644
+--- a/src/EventSubscriber/ImagemagickEventSubscriber.php
++++ b/src/EventSubscriber/ImagemagickEventSubscriber.php
+@@ -342,14 +342,26 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
+     $this->doEnsureDestinationLocalPath($arguments);
+     $this->ensureDestinationFormat($arguments);
+ 
+-    // Coalesce Animated GIFs, if required.
+-    if (empty($arguments->find('/^\-coalesce/')) && (bool) $this->imagemagickSettings->get('advanced.coalesce') && in_array($arguments->getSourceFormat(), [
+-      'GIF',
+-      'GIF87',
+-    ])) {
++    if ($this->imagemagickSettings->get('advanced.coalesce')) {
++      // Coalesce Animated GIFs, if required.
+       $file_md = $this->fileMetadataManager->uri($arguments->getSource());
+-      if ($file_md && $file_md->getMetadata(ImagemagickToolkit::FILE_METADATA_PLUGIN_ID, 'frames_count') > 1) {
+-        $arguments->add(["-coalesce"], ArgumentMode::PostSource, 0);
++      if (empty($arguments->find('/^\-coalesce/')) && in_array($arguments->getSourceFormat(), [
++        'GIF',
++        'GIF87',
++      ])) {
++        if ($file_md && $file_md->getMetadata(ImagemagickToolkit::FILE_METADATA_PLUGIN_ID, 'frames_count') > 1) {
++          $arguments->add(["-coalesce"], ArgumentMode::PostSource, 0);
++        }
++      }
++
++      // When the destination format differs from the source, the coalesce option
++      // is enabled and the destination format differs and is gif or webp, then
++      // process all frames.
++      $destination_format = $arguments->getDestinationFormat() ?: $arguments->getSourceFormat();
++      if ($arguments->getSourceFormat() !== $destination_format && $file_md && $file_md->getMetadata(ImagemagickToolkit::FILE_METADATA_PLUGIN_ID, 'frames_count') > 1) {
++        if (in_array($destination_format, ['GIF', 'GIF87', 'WEBP'])) {
++          $arguments->setSourceFrames('[0-' . $file_md->getMetadata(ImagemagickToolkit::FILE_METADATA_PLUGIN_ID, 'frames_count') . ']');
++        }
+       }
+     }
+ 
+diff --git a/src/Plugin/ImageToolkit/ImagemagickToolkit.php b/src/Plugin/ImageToolkit/ImagemagickToolkit.php
+index 81be525cead0389ace3ea8317b59a6625e538703..1f3760295aa919f381e0900f69cf1c6ba8d556a8 100644
+--- a/src/Plugin/ImageToolkit/ImagemagickToolkit.php
++++ b/src/Plugin/ImageToolkit/ImagemagickToolkit.php
+@@ -332,7 +332,7 @@ class ImagemagickToolkit extends ImageToolkitBase {
+     ];
+     $form['advanced']['coalesce'] = [
+       '#type' => 'checkbox',
+-      '#title' => $this->t('Coalesce Animated GIF images'),
++      '#title' => $this->t('Coalesce Animated GIF and WebP images'),
+       '#default_value' => $config->get('advanced.coalesce'),
+       '#description' => $this->t("<a href=':help-url'>Fully define</a> the look of each frame of a GIF animation sequence, to form a 'film strip' animation, before any operation is performed on the image.", [
+         ':help-url' => 'https://imagemagick.org/script/command-line-options.php#coalesce',
+diff --git a/tests/src/Functional/ImagemagickToolkitCoalesceTest.php b/tests/src/Functional/ImagemagickToolkitCoalesceTest.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..8e30524e6c9cff1895d28a11b073ba6a365af3df
+--- /dev/null
++++ b/tests/src/Functional/ImagemagickToolkitCoalesceTest.php
+@@ -0,0 +1,112 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Tests\imagemagick\Functional;
++
++use Drupal\Tests\BrowserTestBase;
++use Drupal\file_mdm\FileMetadataManagerInterface;
++use Drupal\imagemagick\ArgumentMode;
++use Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit;
++use Drupal\Tests\imagemagick\Kernel\ToolkitSetupTrait;
++
++/**
++ * Tests the advanced coalesce functionality for multi-frame images.
++ *
++ * @group imagemagick
++ */
++class ImagemagickToolkitCoalesceTest extends BrowserTestBase {
++  use ToolkitSetupTrait;
++
++  /**
++   * {@inheritdoc}
++   */
++  protected static $modules = [
++    'system',
++    'imagemagick',
++    'sophron',
++    'file_mdm',
++    'user',
++  ];
++
++  /**
++   * The default theme.
++   *
++   * @var string
++   */
++  protected $defaultTheme = 'stark';
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setUp(): void {
++    parent::setUp();
++    $this->prepareImageFileHandling();
++  }
++
++  /**
++   * Tests that coalesce is applied when converting a multi-frame image.
++   *
++   * This test uses the ToolkitSetupTrait to configure the ImageMagick toolkit.
++   * It sets advanced.coalesce to TRUE, loads a multi-frame GIF from the
++   * module's misc/ directory, converts it to WebP, saves the output file,
++   * and verifies that the generated command line includes the coalesce flag.
++   *
++   * @param string $toolkit_id
++   *   The id of the toolkit to set up.
++   * @param string $toolkit_config
++   *   The configuration object of the toolkit to set up.
++   * @param array $toolkit_settings
++   *   An associative array of toolkit settings.
++   *
++   * @dataProvider providerToolkitConfiguration
++   */
++  public function testAdvancedCoalesceAppliedForMultiFrameImage(string $toolkit_id, string $toolkit_config, array $toolkit_settings): void {
++    // Set up the toolkit using the trait.
++    $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
++
++    // Force the system image toolkit to 'imagemagick'.
++    $this->container->get('config.factory')->getEditable('system.image')
++      ->set('toolkit', 'imagemagick')
++      ->save();
++
++    // Set advanced.coalesce to TRUE.
++    $config = $this->container->get('config.factory')->getEditable('imagemagick.settings');
++    $config->set('advanced.coalesce', TRUE)->save();
++
++    // Get the path to the multi-frame GIF image.
++    $module_handler = $this->container->get('extension.list.module');
++    $gif_path = $module_handler->getPath('imagemagick') . '/misc/test-multi-frame.gif';
++
++    // Load the image using the image factory.
++    $image = $this->imageFactory->get($gif_path);
++    $this->assertTrue($image->isValid(), 'Expected the multi-frame image to be valid, but it was not.');
++
++    // Convert the image to WebP. This conversion should trigger the
++    // advanced coalesce logic.
++    $this->assertTrue($image->convert('webp'), 'Expected image conversion to WebP to succeed.');
++
++    // Define a destination path in the test directory and save the converted
++    // image.
++    $destination = $this->testDirectory . '/coalesced.webp';
++    $this->assertTrue($image->save($destination), 'Expected the converted image to be saved successfully.');
++
++    // Verify that the file exists on disk.
++    $real_path = $this->container->get('file_system')->realpath($destination);
++    $this->assertNotFalse($real_path, "Expected the file '$real_path' to exist on disk.");
++
++    // Verify that the converted image is multi-frame.
++    $fmdm = \Drupal::service(FileMetadataManagerInterface::class);
++    $file_md = $fmdm->uri($destination);
++    $this->assertTrue(($file_md && $file_md->getMetadata(ImagemagickToolkit::FILE_METADATA_PLUGIN_ID, 'frames_count') > 1), "Expected the converted image to be multi-frame.");
++
++    // Retrieve the command line debug string representing the final arguments.
++    /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit_instance */
++    $toolkit_instance = $image->getToolkit();
++    $debug = $toolkit_instance->arguments()->toDebugString(ArgumentMode::PostSource);
++
++    // Assert that the debug string includes the advanced coalesce flag.
++    $this->assertStringContainsString('[-coalesce]', $debug, 'Expected the command line to include "[-coalesce]". Debug string: ' . $debug);
++  }
++
++}

@@ -80,3 +80,57 @@ function su_humsci_profile_deploy_11001(): string {
     return 'Image style cleanup: No styles found to delete.';
   }
 }
+
+/**
+ * Flush WebP derivatives of GIF files so animated GIFs are regenerated.
+ *
+ * Derivatives created before the imagemagick animation patch (3295470) are
+ * single-frame WebP files and are not rebuilt until they are flushed.
+ */
+function su_humsci_profile_deploy_11002(array &$sandbox): string {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $file_storage = $entity_type_manager->getStorage('file');
+
+  if (!isset($sandbox['ids'])) {
+    $sandbox['ids'] = $file_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('filemime', 'image/gif')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+
+    // Only styles that convert to WebP need their derivatives flushed.
+    $sandbox['style_ids'] = [];
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    foreach ($entity_type_manager->getStorage('image_style')->loadMultiple() as $style) {
+      foreach ($style->getEffects() as $effect) {
+        $extension = $effect->getConfiguration()['data']['extension'] ?? '';
+        if ($effect->getPluginId() === 'image_convert' && strtolower($extension) === 'webp') {
+          $sandbox['style_ids'][] = $style->id();
+          break;
+        }
+      }
+    }
+  }
+
+  $styles = $entity_type_manager->getStorage('image_style')->loadMultiple($sandbox['style_ids']);
+  $file_ids = array_splice($sandbox['ids'], 0, 50);
+
+  /** @var \Drupal\file\FileInterface $file */
+  foreach ($file_storage->loadMultiple($file_ids) as $file) {
+    foreach ($styles as $style) {
+      $style->flush($file->getFileUri());
+    }
+  }
+  $file_storage->resetCache($file_ids);
+
+  $sandbox['#finished'] = $sandbox['total'] ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] < 1) {
+    return '';
+  }
+
+  return t('Flushed WebP derivatives of %total GIF files in %styles image styles.', [
+    '%total' => $sandbox['total'],
+    '%styles' => count($styles),
+  ]);
+}

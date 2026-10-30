@@ -5,9 +5,30 @@
  * hs_blocks.install
  */
 
+use Drupal\user\RoleInterface;
+
 /**
  * Implements hook_update_last_removed().
  */
 function hs_blocks_update_last_removed() {
   return 10201;
+}
+
+/**
+ * Grant "edit social media block" permission to the Contributor role.
+ *
+ * Role permissions are ignored during config imports, so existing sites need
+ * this update to receive the permission.
+ */
+function hs_blocks_update_10202(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  $role = $role_storage->load('contributor');
+
+  if ($role instanceof RoleInterface) {
+    $role->grantPermission('edit social media block');
+    $role->save();
+    return (string) t('Granted "edit social media block" permission to the Contributor role.');
+  }
+
+  return (string) t('Contributor role was not found; no permissions updated.');
 }

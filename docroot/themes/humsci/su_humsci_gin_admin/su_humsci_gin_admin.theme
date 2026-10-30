@@ -15,9 +15,10 @@ use Drupal\paragraphs\ParagraphInterface;
  */
 function su_humsci_gin_admin_form_alter(&$form, $form_state, $form_id) {
   // Adds the fe theme admin-preview library on flexible page,
-  // private page and event forms.
+  // private page, event and custom content type forms.
   if (
     preg_match('/node_hs_(basic_page|private_page|event)(_edit)?_form/', $form_id) ||
+    preg_match('/node_custm_\w+_form/', $form_id) ||
     preg_match('/paragraph_\w+_entity_edit_form/', $form_id)
   ) {
     $theme = \Drupal::config('system.theme')->get('default');

@@ -46,58 +46,6 @@ Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbo
 
 ## Visual Regression Testing
 
-### Percy
-
-- `npm run visreg` - Runs percy script to test the visual regression of both the
-Colorful and Traditional sites.
-
-To run this, you will be required to be a member of the organization on Percy.io
-and have a local Percy token. To use the Percy token, acquire it from Percy.io
-under 'Project Settings'. Copy and paste the entire line under 'Project Token'
-line into your `.bashrc` or `.zshrc` file located in your `$HOME` directory as `export PERCY_TOKEN=XXX`.
-
-( Alternatively, you can include that token in a `.env` file in this directory `humsci_basic/` that is at the same level as package.json. )
-
-The pages tested are located in the `tests/percy/.snapshots-colorful.js` and `tests/percy/.snapshots-traditional.js` respectively. To test the sites individually, you can run
-
-`npm run visreg:colorful` and `npm run visreg:traditional`.
-
-In order to have consistent testing, we need to ensure certain features are
-enabled/disabled before testing. These include:
-* The Colorful site should use the new V2 Megamenu
-* The Traditional site should use the standard dropdown menu
-* Both Colorful and Traditional sites should have the 'Use Animation Enhancements' feature turned off on their respective theme settings.
-
-### BackstopJS
-[Backstopjs](https://github.com/garris/BackstopJS) is a CLI visual regression tool that uses headless Chrome.
-
-The visual regression tests are run locally and used to compare what is on Staging versus what is on the Dev environment. Backstop is setup to test two identical sites (pages and content) with the only difference being the theme they use.
-- [HS Colorful](https://hs-colorful.stanford.edu/)
-- [HS Traditional](https://hs-traditional.stanford.edu/)
-
-#### Initial Setup
-Before running Backstop for the first time you will need to create an `.env` file in this theme directory. Copy the contents in `docroot/themes/humsci/humsci_basic/.env-sample` and place them in your `.env` file. Add the basic auth credentials.
-
-#### Testing Prep
-Visual regression testing should be completed bi-weekly at the end of each sprint. To get the best results, sync your local environment against staging before running Backstop:
-
-1. Sync the dev environment with a copy of the staging database and files: `ddev blt humsci:copy-colorful hs_colorful.dev,hs_traditional.dev`
-2. Update the [hs-traditional dev](https://hs-traditional-dev.stanford.edu/) site to use the Traditional theme
-3. Set the dev environment to use the sprint build branch in Acquia
-
-#### Running BackstopJS Tests
-1. Cd the `humsci_basic` directory.
-2. Run `npm run backstop:init` to save a copy of the Backstop config to `./backtop/backstop.js`.
-3. Run `npm run backstop:reference` to generate reference images, in our case reference is staging.
-4. Run `npm run backstop:test` to run the tests.
-5. Backstop will open an HTML page that contains the report which highlights errors.
-_Note: Differences in content will also be reported as failures. Some failures can result in images not loading fully before the snapshot is taken._
-
-#### Adding new scenarios in the `backstop/backstop.json`.
-- Any new page and its content need to be present in both the [HS Colorful](https://hs-colorful-stage.stanford.edu/) and [HS Traditional](https://hs-traditional-stage.stanford.edu/) sites on the staging environment.
-- Add the resource path of the new page to the `testPages` array in `backstop/generate-backstop.js`
-- If adding a new theme add the theme name to the `sites` array in `backstop/generate-backstop.js`
-
 ### Tugboat Visual Diff
 [Tugboat Visual Diff](https://docs.tugboatqa.com/visual-diffs/) is a visual regression tool to visually diff changes to the preview of our sites.
 

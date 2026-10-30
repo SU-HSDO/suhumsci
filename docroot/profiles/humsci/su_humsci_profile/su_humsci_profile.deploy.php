@@ -94,7 +94,7 @@ function su_humsci_profile_deploy_11002(array &$sandbox): string {
   if (!isset($sandbox['ids'])) {
     $sandbox['ids'] = $file_storage->getQuery()
       ->accessCheck(FALSE)
-      ->condition('uri', '.gif', 'ENDS_WITH')
+      ->condition('filemime', 'image/gif')
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
 

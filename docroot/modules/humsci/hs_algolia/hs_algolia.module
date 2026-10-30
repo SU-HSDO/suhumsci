@@ -10,8 +10,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\hs_algolia\Form\SettingsForm;
+use Drupal\hs_algolia\Plugin\search_api\backend\HsAlgoliaBackend;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\IndexInterface;
@@ -43,6 +45,53 @@ const HS_ALGOLIA_DELETE_BATCH_SIZE = 100;
 const HS_ALGOLIA_TOKEN_OR_PATTERN = '/\[[^\[\]]*:[^\[\]]*\|[^\[\]]*\]/';
 
 /**
+ * Search API server that every Training Hub site writes through.
+ */
+const HS_ALGOLIA_FEDERATED_SERVER_ID = 'hs_algolia_federated';
+
+/**
+ * Search API index whose records land in the shared Training Hub index.
+ */
+const HS_ALGOLIA_FEDERATED_INDEX_ID = 'hs_algolia_trainings';
+
+/**
+ * Training Hub facet attributes normalized so they match across sites.
+ *
+ * Each site's editors create their own terms, so the same value arrives as
+ * "IT Services", "it services " and "IT  services". Normalizing at index time
+ * merges them into one facet value. Display labels belong to the front end.
+ */
+const HS_ALGOLIA_FEDERATED_NORMALIZED_FIELDS = [
+  'training_name',
+  'provider',
+  'audience',
+  'product',
+  'unit',
+  'delivery_method',
+];
+
+/**
+ * Servers whose Algolia credentials are supplied at runtime.
+ *
+ * The per-site server reads them from the Algolia settings form. The
+ * federated server reads them from settings.php, shared across sites.
+ *
+ * @see \Drupal\hs_algolia\Overrides\ConfigOverrides
+ */
+const HS_ALGOLIA_RUNTIME_CREDENTIAL_SERVERS = [
+  SettingsForm::SERVER_ID,
+  HS_ALGOLIA_FEDERATED_SERVER_ID,
+];
+
+/**
+ * Indexes whose Algolia index name is supplied at runtime.
+ */
+const HS_ALGOLIA_RUNTIME_NAME_INDEXES = [
+  SettingsForm::INDEX_ID,
+  HS_ALGOLIA_FEDERATED_INDEX_ID,
+];
+
+/**
  * Implements hook_module_implements_alter().
  *
  * The contrib entity delete hook queues a deletion for every Algolia index
@@ -53,6 +102,21 @@ const HS_ALGOLIA_TOKEN_OR_PATTERN = '/\[[^\[\]]*:[^\[\]]*\|[^\[\]]*\]/';
 function hs_algolia_module_implements_alter(array &$implementations, string $hook): void {
   if ($hook === 'entity_delete') {
     unset($implementations['search_api_algolia']);
+  }
+}
+
+/**
+ * Implements hook_search_api_backend_info_alter().
+ *
+ * Clearing the shared Training Hub index must remove only this site's
+ * records. The replacement subclasses the contributed backend, so the plugin
+ * ID and every instanceof check stay the same.
+ *
+ * @see \Drupal\hs_algolia\Plugin\search_api\backend\HsAlgoliaBackend
+ */
+function hs_algolia_search_api_backend_info_alter(array &$backend_info): void {
+  if (isset($backend_info['search_api_algolia'])) {
+    $backend_info['search_api_algolia']['class'] = HsAlgoliaBackend::class;
   }
 }
 
@@ -78,7 +142,7 @@ function hs_algolia_entity_delete(EntityInterface $entity): void {
  * @see hs_algolia_form_search_api_server_form_alter()
  */
 function hs_algolia_search_api_server_presave(ServerInterface $server): void {
-  if ($server->id() !== SettingsForm::SERVER_ID) {
+  if (!in_array($server->id(), HS_ALGOLIA_RUNTIME_CREDENTIAL_SERVERS, TRUE)) {
     return;
   }
 
@@ -100,7 +164,7 @@ function hs_algolia_search_api_server_presave(ServerInterface $server): void {
  * @see \Drupal\search_api\Entity\Index::postSave()
  */
 function hs_algolia_search_api_index_presave(IndexInterface $index): void {
-  if ($index->id() !== SettingsForm::INDEX_ID) {
+  if (!in_array($index->id(), HS_ALGOLIA_RUNTIME_NAME_INDEXES, TRUE)) {
     return;
   }
 
@@ -231,9 +295,23 @@ function hs_algolia_form_search_api_server_form_alter(array &$form, FormStateInt
 
   $form['backend_config']['application_id']['#access'] = FALSE;
   $form['backend_config']['api_key']['#access'] = FALSE;
-  $form['backend_config']['help']['#markup'] = '<p>' . t('The application ID and API key are set on the <a href=":url">Algolia search settings</a> form and cannot be edited here.', [
+  $form['backend_config']['help']['#markup'] = '<p>' . hs_algolia_credential_source($server) . '</p>';
+}
+
+/**
+ * Describe where an Algolia server's credentials are set.
+ *
+ * The federated credentials are shared across sites, so they come from
+ * environment settings and the per-site settings form never sees them.
+ */
+function hs_algolia_credential_source(ServerInterface $server): TranslatableMarkup {
+  if ($server->id() === HS_ALGOLIA_FEDERATED_SERVER_ID) {
+    return t('The application ID and API key are shared by every Training Hub site. They are set in settings.php from environment variables and cannot be edited here.');
+  }
+
+  return t('The application ID and API key are set on the <a href=":url">Algolia search settings</a> form and cannot be edited here.', [
     ':url' => Url::fromRoute('hs_algolia.settings')->toString(),
-  ]) . '</p>';
+  ]);
 }
 
 /**
@@ -256,11 +334,15 @@ function hs_algolia_preprocess_search_api_server(array &$variables): void {
     return;
   }
 
+  $hidden = $server->id() === HS_ALGOLIA_FEDERATED_SERVER_ID
+    ? t('Hidden. Set in settings.php from environment variables.')
+    : t('Hidden. Set on the <a href=":url">Algolia search settings</a> form.', [
+      ':url' => Url::fromRoute('hs_algolia.settings')->toString(),
+    ]);
+
   foreach ($variables['server_info_table']['#rows'] as &$row) {
     if (isset($row['data'][1]) && is_string($row['data'][1]) && $row['data'][1] === $secret) {
-      $row['data'][1] = t('Hidden. Set on the <a href=":url">Algolia search settings</a> form.', [
-        ':url' => Url::fromRoute('hs_algolia.settings')->toString(),
-      ]);
+      $row['data'][1] = $hidden;
     }
   }
 }
@@ -360,6 +442,15 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
   $canonical_host = hs_algolia_canonical_host();
   $current_host = \Drupal::requestStack()->getCurrentRequest()?->getSchemeAndHttpHost();
 
+  // Records from every Training Hub site share one index, and the site name is
+  // an editable label. The site directory is the same in every environment
+  // and never changes, so it makes a stable facet key. The system.site UUID
+  // cannot serve, because shared configuration gives every site the same one.
+  $site_id = $index->id() === HS_ALGOLIA_FEDERATED_INDEX_ID
+    ? HsAlgoliaBackend::siteId(\Drupal::getContainer()->getParameter('site.path'))
+    : NULL;
+  $missing_displays = [];
+
   foreach ($objects as $item_id => &$object) {
     // Fields that only describe how Search API tracked the item.
     unset($object['search_api_datasource'], $object['status']);
@@ -376,6 +467,18 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
       ? [$entity->getEntityTypeId() => $entity]
       : [];
     $unresolved = [];
+
+    // Drupal renders with the default display when the configured one is
+    // missing or disabled, and the default display can show fields that were
+    // deliberately kept out of search, such as Training contacts.
+    if ($entity instanceof EntityInterface) {
+      foreach (array_keys($object) as $name) {
+        if ($display_id = hs_algolia_missing_render_display($index, $name, $entity)) {
+          unset($object[$name]);
+          $missing_displays[$display_id] = $display_id;
+        }
+      }
+    }
 
     foreach ($object as $name => &$value) {
       $property_path = $index->getField($name)?->getPropertyPath() ?? '';
@@ -408,11 +511,92 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
       unset($object[$name]);
     }
 
+    if ($site_id) {
+      $object['site_id'] = $site_id;
+
+      foreach (HS_ALGOLIA_FEDERATED_NORMALIZED_FIELDS as $name) {
+        if (isset($object[$name])) {
+          $object[$name] = hs_algolia_normalize_facet_value($object[$name]);
+        }
+      }
+    }
+
     hs_algolia_trim_record($object);
   }
   unset($object);
 
+  if ($missing_displays) {
+    \Drupal::logger('hs_algolia')->warning('Omitted rendered HTML from Algolia index @index because these displays are missing or disabled: @displays.', [
+      '@index' => $index->id(),
+      '@displays' => implode(', ', $missing_displays),
+    ]);
+  }
+
   hs_algolia_cancel_queued_deletions($objects, $index);
+}
+
+/**
+ * Normalize a facet value so the same term from different sites matches.
+ *
+ * @param mixed $value
+ *   A string, or a list of strings for a multi-value field.
+ *
+ * @return mixed
+ *   The value trimmed, with whitespace collapsed and lower-cased. A list has
+ *   any values that became duplicates removed. Anything else is unchanged.
+ */
+function hs_algolia_normalize_facet_value(mixed $value): mixed {
+  $normalize = fn($item) => is_string($item)
+    ? mb_strtolower(trim(preg_replace('/[\s\p{Z}]+/u', ' ', $item)))
+    : $item;
+
+  if (is_array($value)) {
+    return array_values(array_unique(array_map($normalize, $value), SORT_REGULAR));
+  }
+
+  return $normalize($value);
+}
+
+/**
+ * Find the display a rendered item field needs but cannot use.
+ *
+ * @param \Drupal\search_api\IndexInterface $index
+ *   Index the record belongs to.
+ * @param string $name
+ *   Record attribute, which may be a rendered item field.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   Entity the record was built from.
+ *
+ * @return string|null
+ *   ID of the missing or disabled view display, or NULL when the attribute is
+ *   not a rendered item or its display can be used.
+ *
+ * @see \Drupal\search_api\Plugin\search_api\processor\RenderedItem::addFieldValues()
+ */
+function hs_algolia_missing_render_display(IndexInterface $index, string $name, EntityInterface $entity): ?string {
+  $field = $index->getField($name);
+  if ($field?->getPropertyPath() !== 'rendered_item') {
+    return NULL;
+  }
+
+  // Resolve the view mode the same way the rendered item processor does.
+  $entity_type_id = $entity->getEntityTypeId();
+  $bundle = $entity->bundle();
+  $view_modes = $field->getConfiguration()['view_mode']['entity:' . $entity_type_id] ?? [];
+  $view_mode = $view_modes[$bundle] ?? ':default';
+  if ($view_mode === ':default') {
+    $view_mode = $view_modes[':default'] ?? NULL;
+  }
+
+  // The default display is what a missing one falls back to, so it is safe.
+  if (!$view_mode || $view_mode === 'default') {
+    return NULL;
+  }
+
+  $display_id = "$entity_type_id.$bundle.$view_mode";
+  $display = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load($display_id);
+
+  return $display && $display->status() ? NULL : $display_id;
 }
 
 /**

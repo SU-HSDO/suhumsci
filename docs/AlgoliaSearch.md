@@ -31,7 +31,7 @@ Algolia records are queried from the browser with a public search-only key, so e
 - Output rendered as an anonymous visitor, so nothing behind a login can appear in a record
 - Flat attributes for faceting: content type, site name, taxonomy term names, dates, person titles, image URLs, and the canonical page URL
 
-Never indexed: Private Page content, unpublished content, node grants, and Training and Project content (which have no search indexing view display).
+Never indexed in `hs_algolia`: Private Page content, unpublished content, node grants, Project content (which has no search indexing view display), and Training content (which goes to the shared Training Hub index instead). See [Training Hub Index](#training-hub-index).
 
 Restricting content that is already in Algolia removes it, but not instantly. The access check runs when an item is indexed, so a grant change has to put the item back in front of the indexer first. Three paths do that, and no manual step is needed on any of them:
 
@@ -85,6 +85,54 @@ Each environment is a separate site database, so repeat these steps on each envi
 To turn Algolia off, uncheck **Enable Algolia search** and save. This removes every record from the Algolia index.
 
 > **Warning:** Enable a site only after a deploy has finished. The deploy hook that forces the Algolia configuration off runs once per site, and enabling a site partway through a deploy would be undone.
+
+## Training Hub Index
+
+The Training Hub lists Training content from several sites in one merged result list. Every participating site writes its Training content into one shared Algolia index, so results can be ranked, faceted and paginated together. Each site receives two more entities for this, both disabled:
+
+- `search_api.server.hs_algolia_federated`, a server pointing at the dedicated Training Hub Algolia application
+- `search_api.index.hs_algolia_trainings`, an index of Training content only, rendered through the Training `search_index` display
+
+Records are keyed on node UUID, so sites cannot overwrite each other's records. Each record carries `site_name` for display and `site_id`, the site directory name, as a facet key that does not change when a site is renamed. Training contacts are never indexed: they are hidden on the `search_index` display and have no field on the index.
+
+The published-only, anonymous-access and anonymous-rendering guarantees under [What Is Indexed](#what-is-indexed) apply to this index too, along with the platform customizations below.
+
+Unlike the per-site index, the Application ID, write API key and index name are the same on every participating site. They come from `$config` overrides in settings, not from the Algolia settings form. The index name must be scoped to the environment, so a stage site never writes into the production Training Hub index. The presave hooks blank these values on the federated server and index the same way they do for the per-site entities, and a deploy hook in `hs_admin` turns both entities off on existing sites after import.
+
+Facet values are normalized on this index only, so the same term entered differently on two sites becomes one facet value. `training_name`, `provider`, `audience`, `product`, `unit` and `delivery_method` are trimmed, have internal whitespace collapsed, and are lower-cased, and repeated values in a list are removed. Titles, summaries, rendered HTML, `location` and `site_name` are sent as entered. Records indexed before a site picked up this change keep their old values until the site re-indexes:
+
+```bash
+drush @<SITE_NAME>.<ENV> search-api:reset-tracker hs_algolia_trainings
+drush @<SITE_NAME>.<ENV> search-api:index hs_algolia_trainings
+``` The front end is responsible for display labels, such as restoring capitalization. Spelling differences and synonyms are not merged.
+
+Clearing this index removes only the current site's records. Search API clears an index when it is disabled, cleared with **Clear all indexed data** or `drush search-api:clear`, rebuilt, deleted, or moved to another server. The contributed backend would empty the whole Algolia index each time, deleting every other site's records. `hs_algolia` replaces it with a backend that deletes the records whose `site_id` matches the current site, which needs `site_id` declared for faceting by the settings command below. Until it is, a clear fails and Search API retries it as a pending server task. The per-site index is cleared as before.
+
+> **Important:** A refused clear does not look like a failure. `drush search-api:clear` and **Clear all indexed data** still report that the index was cleared, because Search API queues the failed removal rather than passing the error on. After clearing the Training Hub index, check the site log for "cannot filter on site_id" and confirm no pending server task remains for `hs_algolia_trainings`. If one does, run the settings command below, and the task completes on the next cron run.
+
+> **Important:** Node view displays are excluded by `config_ignore`, so a configuration import never creates the Training `search_index` display on an existing site. A deploy hook in `hs_admin` creates it. If the display is still missing or disabled, `hs_algolia` omits the rendered HTML from every record and logs a warning, because Drupal would otherwise render the default display, which shows contacts.
+
+### Training Hub Site Requirements
+
+Every participating site needs a canonical domain in its 301 redirect settings (`domain_301_redirect.settings:domain`). Each record links back to its own site, and without that domain the URL uses whichever host served the request, which on cron is an Acquia internal hostname and under drush is the drush alias host. The settings command below warns when the current site has none.
+
+### Configure the Training Hub Index Settings
+
+Algolia facets only on attributes it has been told about, and sorting by date needs a replica index for each direction. Apply both once per environment, after the federated credentials are in place:
+
+```bash
+drush @<SITE_NAME>.<ENV> humsci:algolia:configure-federated
+```
+
+Run it from any participating site in that environment. The command declares the facets (`site_id`, `site_name`, the five Training vocabularies, `delivery_method`, and `nodate` as filter only) and creates the `<INDEX_NAME>_date_start_asc` and `<INDEX_NAME>_date_start_desc` sort replicas. Running it again reapplies the same settings, so repeat it whenever the command changes. If Algolia has not confirmed the main index settings within about a minute, the command stops with an error before configuring the replicas. That does not mean the settings failed. Algolia can report a task as pending for minutes after the change has already taken effect. Check what was applied before running it again:
+
+```bash
+drush @<SITE_NAME>.<ENV> php:eval '$client = \Drupal\search_api\Entity\Index::load("hs_algolia_trainings")->getServerInstance()->getBackend()->getAlgolia(); $settings = $client->getSettings(\Drupal\search_api\Entity\Index::load("hs_algolia_trainings")->getOption("algolia_index_name")); print_r([$settings["attributesForFaceting"] ?? NULL, $settings["replicas"] ?? NULL]);'
+```
+
+If both lists are filled in, run the command again so it configures the replicas.
+
+> **Note:** The write API key needs the `editSettings` permission in Algolia, in addition to the permissions indexing uses.
 
 ## Local Development Setup
 

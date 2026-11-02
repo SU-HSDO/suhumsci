@@ -163,23 +163,3 @@ function su_humsci_profile_update_11004(): string {
   }
   return t('hs_project was already in single_content_sync allowed node types.');
 }
-
-/**
- * Enable Security Kit on Acquia splits and remove it from the local split.
- */
-function su_humsci_profile_update_11005(): string {
-  foreach (['dev', 'stage', 'prod'] as $split) {
-    if (\Drupal::config('config_split.config_split.' . $split)->get('status')) {
-      \Drupal::service('module_installer')->install(['seckit']);
-      return t('Enabled the seckit module for the @split environment.', ['@split' => $split]);
-    }
-  }
-
-  // Uninstall before import so partial imports do not block config removal.
-  if (\Drupal::config('config_split.config_split.local')->get('status') && \Drupal::moduleHandler()->moduleExists('seckit')) {
-    \Drupal::service('module_installer')->uninstall(['seckit']);
-    return t('Uninstalled the seckit module for the local environment.');
-  }
-
-  return t('No seckit module changes were needed for this environment.');
-}

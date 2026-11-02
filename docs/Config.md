@@ -87,7 +87,7 @@ See [ADR 0004](architecture/decisions/0004-use-deploy-hooks-for-post-config-oper
 - For site-specific config changes or deletions, use update hooks or direct site editing.
 - For local development, `config_ignore` and `config_split` can be overridden in settings files to match the local environment.
 - Running `config-import` twice is a recommended approach. Certain configuration can require a fully completed config import before it is respected, especially with `config_split`.
-- For environment-specific modules managed by Config Split, let config import install or uninstall the module and allow deletion of its configuration as described in [Partial Config Imports & hs_config_partial](#partial-config-imports--hs_config_partial). Use a database update hook when a module change requires additional migration or cleanup before import.
+- Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these. For environment-specific modules managed by Config Split, let config import install or uninstall the module and allow deletion of its configuration as described in [Partial Config Imports & hs_config_partial](#partial-config-imports--hs_config_partial). 
 - Use `hook_deploy_NAME()` for operations that depend on config import having completed (e.g., permissions for new content types, entity operations tied to new bundles).
 - If you need to allow deletion of specific config (e.g., for module uninstalls or legacy cleanup), add the appropriate prefix to the allow-list in `settings.php` as described in the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 

@@ -145,7 +145,9 @@ class ShippedConfigTest extends UnitTestCase {
    * that are not local content fail to load. With delete_on_fail, Search API
    * removes failed items through the backend, and the Algolia backend skips
    * that removal only while records are keyed on a custom object ID field.
+   * The backend adds the site prefix on top of that field, so it stays set.
    *
+   * @see \Drupal\hs_algolia\Plugin\search_api\backend\HsAlgoliaBackend::prepareItem()
    * @see \Drupal\search_api\Entity\Index::loadItemsMultiple()
    * @see \Drupal\search_api_algolia\Plugin\search_api\backend\SearchApiAlgoliaBackend::deleteItems()
    */

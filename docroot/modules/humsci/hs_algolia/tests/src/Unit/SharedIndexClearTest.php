@@ -9,6 +9,7 @@ use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\hs_algolia\Plugin\search_api\backend\HsAlgoliaBackend;
 use Drupal\search_api\IndexInterface;
+use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\SearchApiException;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
@@ -89,11 +90,11 @@ class SharedIndexClearTest extends UnitTestCase {
     $client->expects($this->never())->method('clearObjects');
     $client->expects($this->once())
       ->method('deleteBy')
-      ->with('hsdp_trainings_stage', ['filters' => 'site_id:"hs_sandbox"'])
+      ->with('hsdp_trainings', ['filters' => 'site_id:"hs_sandbox"'])
       ->willReturn(['taskID' => 1]);
 
     $this->buildBackend($client)
-      ->deleteAllIndexItems($this->mockIndex('hs_algolia_trainings', 'hsdp_trainings_stage'));
+      ->deleteAllIndexItems($this->mockIndex('hs_algolia_trainings', 'hsdp_trainings'));
   }
 
   /**
@@ -105,7 +106,7 @@ class SharedIndexClearTest extends UnitTestCase {
     $client->expects($this->once())->method('deleteBy')->willReturn(['taskID' => 1]);
 
     $this->buildBackend($client, 'sites/hs_sandbox_1')
-      ->deleteAllIndexItems($this->mockIndex('hs_algolia_trainings', 'hsdp_trainings_stage'));
+      ->deleteAllIndexItems($this->mockIndex('hs_algolia_trainings', 'hsdp_trainings'));
   }
 
   /**
@@ -119,9 +120,30 @@ class SharedIndexClearTest extends UnitTestCase {
     $client->expects($this->never())->method('deleteBy');
 
     $this->expectException(SearchApiException::class);
-    $this->expectExceptionMessage('configure-federated');
+    $this->expectExceptionMessage('attributesForFaceting');
     $this->buildBackend($client)
-      ->deleteAllIndexItems($this->mockIndex('hs_algolia_trainings', 'hsdp_trainings_stage'));
+      ->deleteAllIndexItems($this->mockIndex('hs_algolia_trainings', 'hsdp_trainings'));
+  }
+
+  /**
+   * An environment without a Training Hub index name never contacts Algolia.
+   *
+   * The contrib backend would otherwise fall back to the Search API index ID
+   * and write to an Algolia index called hs_algolia_trainings.
+   */
+  public function testUnnamedFederatedIndexWritesNothing(): void {
+    $client = $this->createMock(SearchClient::class);
+    $client->expects($this->never())->method($this->anything());
+    $backend = $this->buildBackend($client);
+    $index = $this->mockIndex('hs_algolia_trainings', '');
+    $items = [
+      'entity:node/1:en' => $this->createMock(ItemInterface::class),
+      'entity:node/2:en' => $this->createMock(ItemInterface::class),
+    ];
+
+    // Reported as processed, so cron does not reload them every run.
+    $this->assertSame(array_keys($items), $backend->indexItems($index, $items));
+    $backend->deleteAllIndexItems($index);
   }
 
   /**

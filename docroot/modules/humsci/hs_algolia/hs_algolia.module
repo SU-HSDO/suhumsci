@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
@@ -53,22 +54,6 @@ const HS_ALGOLIA_FEDERATED_SERVER_ID = 'hs_algolia_federated';
  * Search API index whose records land in the shared Training Hub index.
  */
 const HS_ALGOLIA_FEDERATED_INDEX_ID = 'hs_algolia_trainings';
-
-/**
- * Training Hub facet attributes normalized so they match across sites.
- *
- * Each site's editors create their own terms, so the same value arrives as
- * "IT Services", "it services " and "IT  services". Normalizing at index time
- * merges them into one facet value. Display labels belong to the front end.
- */
-const HS_ALGOLIA_FEDERATED_NORMALIZED_FIELDS = [
-  'training_name',
-  'provider',
-  'audience',
-  'product',
-  'unit',
-  'delivery_method',
-];
 
 /**
  * Servers whose Algolia credentials are supplied at runtime.
@@ -118,6 +103,28 @@ function hs_algolia_search_api_backend_info_alter(array &$backend_info): void {
   if (isset($backend_info['search_api_algolia'])) {
     $backend_info['search_api_algolia']['class'] = HsAlgoliaBackend::class;
   }
+}
+
+/**
+ * Implements hook_runtime_requirements().
+ *
+ * Training Hub records link back to their own site. Without a canonical
+ * domain, URLs built on cron or under drush carry an internal hostname.
+ */
+function hs_algolia_runtime_requirements(): array {
+  $index = Index::load(HS_ALGOLIA_FEDERATED_INDEX_ID);
+  if (!$index?->status() || hs_algolia_canonical_host()) {
+    return [];
+  }
+
+  return [
+    'hs_algolia_federated_domain' => [
+      'title' => t('Training Hub canonical domain'),
+      'value' => t('Not set'),
+      'description' => t("The Training Hub index is enabled, but domain_301_redirect.settings has no domain, so any records this site sends to the Training Hub may link to an internal host. Set the domain, then re-index the Training Hub index."),
+      'severity' => RequirementSeverity::Warning,
+    ],
+  ];
 }
 
 /**
@@ -513,12 +520,6 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
 
     if ($site_id) {
       $object['site_id'] = $site_id;
-
-      foreach (HS_ALGOLIA_FEDERATED_NORMALIZED_FIELDS as $name) {
-        if (isset($object[$name])) {
-          $object[$name] = hs_algolia_normalize_facet_value($object[$name]);
-        }
-      }
     }
 
     hs_algolia_trim_record($object);
@@ -533,28 +534,6 @@ function hs_algolia_search_api_algolia_objects_alter(array &$objects, IndexInter
   }
 
   hs_algolia_cancel_queued_deletions($objects, $index);
-}
-
-/**
- * Normalize a facet value so the same term from different sites matches.
- *
- * @param mixed $value
- *   A string, or a list of strings for a multi-value field.
- *
- * @return mixed
- *   The value trimmed, with whitespace collapsed and lower-cased. A list has
- *   any values that became duplicates removed. Anything else is unchanged.
- */
-function hs_algolia_normalize_facet_value(mixed $value): mixed {
-  $normalize = fn($item) => is_string($item)
-    ? mb_strtolower(trim(preg_replace('/[\s\p{Z}]+/u', ' ', $item)))
-    : $item;
-
-  if (is_array($value)) {
-    return array_values(array_unique(array_map($normalize, $value), SORT_REGULAR));
-  }
-
-  return $normalize($value);
 }
 
 /**

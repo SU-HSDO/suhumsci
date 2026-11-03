@@ -515,58 +515,6 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
   }
 
   /**
-   * Training Hub facet values from different sites merge into one.
-   */
-  public function testFederatedFacetValuesAreNormalized() {
-    $this->setUpContainer();
-
-    $objects = [
-      'entity:node/1:en' => [
-        'title' => '  Excel   101 ',
-        'summary' => 'Learn  Excel',
-        'html' => '<p>Excel  Basics</p>',
-        'site_name' => 'Economics  Department',
-        'unit' => ['IT Services', ' it  services', "IT\u{00A0}Services ", 'Finance'],
-        'product' => 'Microsoft  EXCEL ',
-        'training_name' => ['Excel 101'],
-        'provider' => ['  LinkedIn Learning'],
-        'audience' => ['Staff', 'staff'],
-        'delivery_method' => "  In  person\n",
-        'location' => 'Building  160 ',
-      ],
-    ];
-    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex([], '', 'hs_algolia_trainings'), []);
-    $object = $objects['entity:node/1:en'];
-
-    $this->assertSame(['it services', 'finance'], $object['unit']);
-    $this->assertSame('microsoft excel', $object['product']);
-    $this->assertSame(['excel 101'], $object['training_name']);
-    $this->assertSame(['linkedin learning'], $object['provider']);
-    $this->assertSame(['staff'], $object['audience']);
-    $this->assertSame('in person', $object['delivery_method']);
-
-    // Display text is never rewritten, including location, which is not a
-    // facet and is shown as entered.
-    $this->assertSame('Building  160 ', $object['location']);
-    $this->assertSame('  Excel   101 ', $object['title']);
-    $this->assertSame('Learn  Excel', $object['summary']);
-    $this->assertSame('<p>Excel  Basics</p>', $object['html']);
-    $this->assertSame('Economics  Department', $object['site_name']);
-  }
-
-  /**
-   * A site's own index keeps its terms exactly as editors entered them.
-   */
-  public function testPerSiteFacetValuesAreNotNormalized() {
-    $this->setUpContainer();
-
-    $objects = [['title' => 'One', 'unit' => ['IT  Services']]];
-    hs_algolia_search_api_algolia_objects_alter($objects, $this->mockIndex(), []);
-
-    $this->assertSame(['IT  Services'], $objects[0]['unit']);
-  }
-
-  /**
    * A site's own index holds only its own records, so needs no site key.
    */
   public function testPerSiteRecordsHaveNoSiteId() {

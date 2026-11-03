@@ -182,7 +182,7 @@ class CredentialPresaveTest extends UnitTestCase {
   public function testFederatedIndexNameIsBlanked(): void {
     $saved = [];
     $index = $this->mockIndex('hs_algolia_trainings', [
-      'algolia_index_name' => 'hsdp_trainings_prod',
+      'algolia_index_name' => 'hsdp_trainings',
       'cron_limit' => 200,
     ], $saved);
 

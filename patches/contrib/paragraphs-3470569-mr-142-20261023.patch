@@ -1,0 +1,81 @@
+diff --git a/src/Plugin/Field/FieldWidget/ParagraphsWidget.php b/src/Plugin/Field/FieldWidget/ParagraphsWidget.php
+index c40afea6667c7080231348ccfaaa0648a8dfa534..c7c6f46ab6570a367e38ba8804f019493e710595 100644
+--- a/src/Plugin/Field/FieldWidget/ParagraphsWidget.php
++++ b/src/Plugin/Field/FieldWidget/ParagraphsWidget.php
+@@ -169,6 +169,7 @@ class ParagraphsWidget extends WidgetBase {
+       'form_display_mode' => 'default',
+       'default_paragraph_type' => '',
+       'features' => ['duplicate' => 'duplicate', 'collapse_edit_all' => 'collapse_edit_all'],
++      'expose_drag_drop' => 0,
+     );
+   }
+ 
+@@ -280,6 +281,13 @@ class ParagraphsWidget extends WidgetBase {
+       '#multiple' => TRUE,
+     ];
+ 
++    $elements['expose_drag_drop'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Expose drag & drop action'),
++      '#default_value' => $this->getSetting('expose_drag_drop'),
++      '#description' => $this->t('Exposes the drag and drop action by moving it from within the three dot menu to the paragraph table header.'),
++    ];
++
+     return $elements;
+   }
+ 
+@@ -358,6 +366,7 @@ class ParagraphsWidget extends WidgetBase {
+     $edit_mode = $this->getSettingOptions('edit_mode')[$this->getSetting('edit_mode')];
+     $closed_mode = $this->getSettingOptions('closed_mode')[$this->getSetting('closed_mode')];
+     $add_mode = $this->getSettingOptions('add_mode')[$this->getSetting('add_mode')];
++    $expose_drag_drop = $this->getSetting('expose_drag_drop') ? $this->t('Yes') : $this->t('No');
+ 
+     $summary[] = $this->t('Edit mode: @edit_mode', ['@edit_mode' => $edit_mode]);
+     $summary[] = $this->t('Closed mode: @closed_mode', ['@closed_mode' => $closed_mode]);
+@@ -383,6 +392,7 @@ class ParagraphsWidget extends WidgetBase {
+       $summary[] = $this->t('Features: @features', ['@features' => implode(', ', $features_labels)]);
+     }
+ 
++    $summary[] = $this->t('Expose drag & drop: @expose_drag_drop', ['@expose_drag_drop' => $expose_drag_drop]);
+     return $summary;
+   }
+ 
+@@ -409,6 +419,7 @@ class ParagraphsWidget extends WidgetBase {
+ 
+     $closed_mode_setting = isset($widget_state['closed_mode']) ? $widget_state['closed_mode'] : $this->getSetting('closed_mode');
+     $autocollapse_setting = isset($widget_state['autocollapse']) ? $widget_state['autocollapse'] : $this->getSetting('autocollapse');
++    $expose_drag_drop_setting = isset($widget_state['expose_drag_drop']) ?? $this->getSetting('expose_drag_drop');
+ 
+     $show_must_be_saved_warning = !empty($widget_state['paragraphs'][$delta]['show_warning']);
+ 
+@@ -1052,6 +1063,7 @@ class ParagraphsWidget extends WidgetBase {
+       $widget_state['closed_mode'] = $closed_mode_setting;
+       $widget_state['autocollapse'] = $autocollapse_setting;
+       $widget_state['autocollapse_default'] = $this->getSetting('autocollapse');
++      $widget_state['expose_drag_drop'] = $expose_drag_drop_setting;
+ 
+       static::setWidgetState($parents, $field_name, $form_state, $widget_state);
+     }
+@@ -2918,11 +2930,20 @@ class ParagraphsWidget extends WidgetBase {
+       $library_discovery = \Drupal::service('library.discovery');
+       $library = $library_discovery->getLibraryByName('paragraphs', 'paragraphs-dragdrop');
+       if ($this->realItemCount > 0 && ($library || \Drupal::state()->get('paragraphs_test_dragdrop_force_show', FALSE))) {
+-        $actions['dropdown_actions']['dragdrop_mode'] = $this->expandButton([
++
++        // Place drag and drop option in the three dot menu or header.
++        $expose_drag_drop = $this->settings['expose_drag_drop'] ?? 0;
++        $placement = $expose_drag_drop ? 'actions' : 'dropdown_actions';
++        $drag_drop_classes = [
++          'field-dragdrop-mode-submit',
++          ($placement == 'actions') ? 'button--extrasmall' : '',
++        ];
++
++        $actions[$placement]['dragdrop_mode'] = $this->expandButton([
+           '#type' => 'submit',
+           '#name' => $this->fieldIdPrefix . '_dragdrop_mode',
+           '#value' => $this->t('Drag & drop'),
+-          '#attributes' => ['class' => ['field-dragdrop-mode-submit']],
++          '#attributes' => ['class' => $drag_drop_classes],
+           '#submit' => [[get_class($this), 'dragDropModeSubmit']],
+           '#weight' => 8,
+           '#ajax' => [

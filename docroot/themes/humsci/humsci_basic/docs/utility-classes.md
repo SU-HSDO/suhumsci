@@ -126,14 +126,17 @@ _Note:_ Buttons come in three sizes: standard (no suffix), `--big` and `--small`
 All images in card patterns have default widths defined:
 
 - 100% (12 columns) for vertical cards
-- 30% ( 5 columns) for horizontal and structured cards (starting at the md breakpoint)
-  These styles can be overridden by adding utility classes to the entire view. `hb-card-image-*` classes follow a similar naming convention to the [Decanter Grid System](https://decanter.stanford.edu/page/layouts-grid-system/), including the responsive names.
+- 41.7% (5 columns) for horizontal and structured cards, once the card itself is wider than 350px
+
+These styles can be overridden by adding utility classes to the entire view. `hb-card-image-*` classes follow a similar naming convention to the [Decanter Grid System](https://decanter.stanford.edu/page/layouts-grid-system/), including the responsive names.
 
 Classes are made responsive by adding the desired breakpoint (xs, sm, md, lg, xl, 2xl) after the `hb-card-image-`. **Example:** `hb-card-image-sm-4-of-12`
 
 For best practice, you might just want to use one responsive class if you'd like mobile styles to keep their defaults. To do this, you would just change an image's sytles on the medium breakpoint. **Example:** `hb-card-image-md-4-of-12`
 
 ✅ Responsive classes work in views.
+
+These classes have no effect on cards that don't have an image (for example, a Date Stacked Horizontal Cards view where some or all rows only show a date tile), so it's safe to apply them to a view even if some rows lack an image.
 
 | Class                  | Works in Views? |
 | ---------------------- | :-------------: |

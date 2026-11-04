@@ -628,6 +628,33 @@ function hs_field_helpers_node_presave(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_xmlsitemap_link_alter().
+ */
+function hs_field_helpers_xmlsitemap_link_alter(array &$link, array $context) {
+  $entity = $context['entity'] ?? NULL;
+  if ($link['type'] != 'node' || !$entity instanceof NodeInterface || !$entity->hasField('rh_action')) {
+    return;
+  }
+
+  // Rabbit Hole runs outside of entity access, so nodes that redirect or deny
+  // access would otherwise be listed in the sitemap.
+  $values = \Drupal::service('rabbit_hole.behavior_invoker')->getRabbitHoleValuesForEntity($entity);
+  $action = $values['rh_action'] ?? NULL;
+
+  if ($action == 'page_redirect') {
+    $plugin = \Drupal::service('plugin.manager.rabbit_hole_behavior_plugin')
+      ->createInstance('page_redirect', $values);
+    // Without a redirect target, the plugin returns its fallback action.
+    $result = $plugin->performAction($entity);
+    $action = is_string($result) ? $result : 'page_redirect';
+  }
+
+  if ($action && $action != 'display_page') {
+    $link['access'] = 0;
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_presave().
  */
 function hs_field_helpers_field_storage_config_presave(FieldStorageConfigInterface $entity) {

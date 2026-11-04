@@ -33,6 +33,9 @@ Update hooks (`.install`, post-update functions) and configuration schema change
 1. Confirm any config schema or update hook changes are reflected in the PR's exported configuration, and vice versa.
 1. Check whether the affected configuration is ignored via `config_ignore`, and if so, confirm it exported as expected.
 1. Check whether the update changed whether the configuration is ignored (previously ignored configuration that now exports, or vice versa). See [Configuration Management](Config.md) for background on how these systems behave.
+1. Check whether the affected configuration lives in an environment split (`config/envs/<ENV>/`). The automated workflow exports with no environment split enabled, so it never updates split configuration. Export the split manually; see [Export config_split Changes](Config.md#export-config_split-changes).
+
+If a patch no longer applies, check whether the fix is now included upstream before re-rolling it. See [Remove a Patch](Patching.md#remove-a-patch).
 
 ## Review Core Updates
 
@@ -41,6 +44,31 @@ The same review steps above apply to Drupal core updates. Core version constrain
 1. Check for changes to `default.services.yml` and determine whether the project should adopt them.
 1. Check for changes to `default.settings.php` and determine whether the project should adopt them.
 1. Note any settings the new core version removes or deprecates so they can be cleaned up from the project's own settings files.
+1. If core did not update to the latest patch release, find what blocks it, such as a root `composer.json` `replace` or `conflict` entry:
+
+   ```bash
+   composer require drupal/core-recommended:<VERSION> drupal/core:<VERSION> -W --dry-run
+
+   # Example:
+   composer require drupal/core-recommended:11.3.20 drupal/core:11.3.20 -W --dry-run
+   ```
+
+## Run the Update Manually
+
+If the automated workflow fails (for example, a patch no longer applies) or the PR needs rework, run the same steps locally against an installed site with configuration in sync:
+
+1. Create a branch from the current `<major>.x` branch.
+1. Run `composer update -W`.
+1. Run `drush updatedb -y`.
+1. Run `drush config:export -y`, and export any affected environment splits.
+1. Generate the PR's package table:
+
+   ```bash
+   vendor/bin/composer-lock-diff --md --from origin/<major>.x:composer.lock --to composer.lock
+
+   # Example:
+   vendor/bin/composer-lock-diff --md --from origin/12.x:composer.lock --to composer.lock
+   ```
 
 ## Defer a Module Instead of Blocking the Update
 

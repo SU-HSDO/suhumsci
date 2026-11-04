@@ -1,0 +1,257 @@
+diff --git a/config/schema/menu_link.schema.yml b/config/schema/menu_link.schema.yml
+index 283ce4421cf0b67126781a749cfef3b49f5b214b..2cb67d88a25a7fd27ba5fe39a8d6a3357d2517c3 100644
+--- a/config/schema/menu_link.schema.yml
++++ b/config/schema/menu_link.schema.yml
+@@ -24,7 +24,7 @@ field.storage_settings.menu_link:
+     menu_link_per_translation:
+       type: boolean
+       label: Expose a menu link per translation
+-      
++
+ field.field_settings.menu_link:
+   type: mapping
+   label: 'Menu link settings'
+@@ -37,6 +37,9 @@ field.field_settings.menu_link:
+     default_menu_parent:
+       type: string
+       label: 'Default menu parent'
++    default_expanded:
++      type: boolean
++      label: 'Default expanded'
+ 
+ field.value.menu_link:
+   type: mapping
+diff --git a/menu_link.install b/menu_link.install
+index c07c776dae01cc995542f19ffcfacbe264204c90..691ab46d05cea4a6c95e7d6948dc1190be493f8f 100644
+--- a/menu_link.install
++++ b/menu_link.install
+@@ -5,6 +5,7 @@
+  */
+ 
+ use Drupal\Core\Database\Database;
++use Drupal\Core\Entity\Sql\SqlContentEntityStorageException;
+ 
+ /**
+  * Implements hook_theme().
+@@ -30,3 +31,108 @@ function menu_link_update_9201() {
+   ->condition('provider','', '=')
+   ->execute();
+ }
++
++/**
++ * Add "Expanded" column to field storage table.
++ */
++function menu_link_update_9202(){
++  _field_type_schema_column_add_helper('menu_link', ['expanded']);
++}
++
++/**
++ * Helper function for HOOK_Update to update the field schema columns.
++ *
++ * Based on address.install (thanks to the maintainer!)
++ *
++ * @param $field_type
++ *   The field type id.
++ * @param array $columns_to_add
++ *   Array of the column names from schema() function.
++ */
++function _field_type_schema_column_add_helper($field_type, array $columns_to_add = []) {
++  $processed_fields = [];
++  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
++  $field_definition = $field_type_manager->getDefinition($field_type);
++  $field_item_class = $field_definition['class'];
++
++  $schema = \Drupal::database()->schema();
++  $entity_type_manager = \Drupal::entityTypeManager();
++  $entity_field_manager = \Drupal::service('entity_field.manager');
++  $entity_field_map = $entity_field_manager->getFieldMapByFieldType($field_type);
++  // The key-value collection for tracking installed storage schema.
++  $entity_storage_schema_sql = \Drupal::keyValue('entity.storage_schema.sql');
++  $entity_definitions_installed = \Drupal::keyValue('entity.definitions.installed');
++
++  foreach ($entity_field_map as $entity_type_id => $field_map) {
++    $entity_storage = $entity_type_manager->getStorage($entity_type_id);
++
++    $entity_type = $entity_type_manager->getDefinition($entity_type_id);
++    $field_storage_definitions = $entity_field_manager->getFieldStorageDefinitions($entity_type_id);
++    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
++    $table_mapping = $entity_storage->getTableMapping($field_storage_definitions);
++    // Only need field storage definitions of our field type:
++    /** @var \\Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage_definition */
++    foreach (array_intersect_key($field_storage_definitions, $field_map) as $field_storage_definition) {
++      $field_name = $field_storage_definition->getName();
++      try {
++        $table = $table_mapping->getFieldTableName($field_name);
++      }
++      catch (SqlContentEntityStorageException $e) {
++        // Custom storage? Broken site? No matter what, if there is no table
++        // or column, there's little we can do.
++        continue;
++      }
++      // See if the field has a revision table.
++      $revision_table = NULL;
++      if ($entity_type->isRevisionable() && $field_storage_definition->isRevisionable()) {
++        if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
++          $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage_definition);
++        }
++        elseif ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
++          $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
++        }
++      }
++      // Load the installed field schema so that it can be updated.
++      $schema_key = "$entity_type_id.field_schema_data.$field_name";
++      $field_schema_data = $entity_storage_schema_sql->get($schema_key);
++
++      $processed_fields[] = [$entity_type_id, $field_name];
++      // Loop over each new column and add it as a schema column change.
++      foreach ($columns_to_add as $column_id) {
++        $column = $table_mapping->getFieldColumnName($field_storage_definition, $column_id);
++        // Add `initial_from_field` to the new spec, as this will copy over
++        // the entire data.
++        $field_schema = $field_item_class::schema($field_storage_definition);
++        $spec = $field_schema['columns'][$column_id];
++
++        // Add the new column.
++        $schema->addField($table, $column, $spec);
++        if ($revision_table) {
++          $schema->addField($revision_table, $column, $spec);
++        }
++
++        // Add the new column to the installed field schema.
++        if (!empty($field_schema_data)) {
++          $field_schema_data[$table]['fields'][$column] = $field_schema['columns'][$column_id];
++          $field_schema_data[$table]['fields'][$column]['not null'] = FALSE;
++          if ($revision_table) {
++            $field_schema_data[$revision_table]['fields'][$column] = $field_schema['columns'][$column_id];
++            $field_schema_data[$revision_table]['fields'][$column]['not null'] = FALSE;
++          }
++        }
++      }
++
++      // Save changes to the installed field schema.
++      if (!empty($field_schema_data)) {
++        $entity_storage_schema_sql->set($schema_key, $field_schema_data);
++      }
++      if ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
++        $key = "$entity_type_id.field_storage_definitions";
++        if ($definitions = $entity_definitions_installed->get($key)) {
++          $definitions[$field_name] = $field_storage_definition;
++          $entity_definitions_installed->set($key, $definitions);
++        }
++      }
++    }
++  }
++}
+diff --git a/src/Plugin/Field/FieldType/MenuLinkItem.php b/src/Plugin/Field/FieldType/MenuLinkItem.php
+index 054492cc3a6dd7f6fa8525ad8c57adbebb54a541..6685a19c128b2090e4d8bcd3f09faaa74e7f2911 100644
+--- a/src/Plugin/Field/FieldType/MenuLinkItem.php
++++ b/src/Plugin/Field/FieldType/MenuLinkItem.php
+@@ -100,6 +100,7 @@ class MenuLinkItem extends FieldItemBase {
+ 
+     $settings['available_menus'] = ['main'];
+     $settings['default_menu_parent'] = 'main:';
++    $settings['default_expanded'] = FALSE;
+     return $settings;
+   }
+ 
+@@ -136,6 +137,13 @@ class MenuLinkItem extends FieldItemBase {
+       '#options' => $parent_options,
+     ];
+ 
++    $form['default_expanded'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Default expanded'),
++      '#description' => $this->t('Whether the menu link should be expanded by default.'),
++      '#default_value' => $this->getSetting('default_expanded'),
++    ];
++
+     return $form;
+   }
+ 
+@@ -156,6 +164,8 @@ class MenuLinkItem extends FieldItemBase {
+       ->setSetting('default', '');
+     $definitions['weight'] = DataDefinition::create('integer')
+       ->setLabel(t('Menu link weight'));
++    $definitions['expanded'] = DataDefinition::create('integer')
++      ->setLabel(t('Show as Expanded'));
+ 
+     return $definitions;
+   }
+@@ -199,6 +209,14 @@ class MenuLinkItem extends FieldItemBase {
+       'type' => 'int',
+     ];
+ 
++    $schema['columns']['expanded'] = [
++      'description' => 'Flag for whether this link should be rendered as expanded in menus - expanded links always have their child links displayed, instead of only when the link is in the active trail (1 = expanded, 0 = not expanded) ',
++      'type' => 'int',
++      'not null' => TRUE,
++      'default' => 0,
++      'size' => 'small',
++    ];
++
+     return $schema;
+   }
+ 
+@@ -288,7 +306,7 @@ class MenuLinkItem extends FieldItemBase {
+     if (!$this->values['menu_name']) {
+       return FALSE;
+     }
+-    
++
+     $entity = $this->getEntity();
+     $menu_definition['id'] = $this->getMenuPluginId($langcode);
+ 
+@@ -310,6 +328,7 @@ class MenuLinkItem extends FieldItemBase {
+     $menu_definition['metadata']['langcode'] = $langcode;
+     $menu_definition['metadata']['translatable'] = $entity->getEntityType()->isTranslatable();
+     $menu_definition['provider'] = 'menu_link';
++    $menu_definition['expanded'] = isset($this->values['expanded']) ? $this->values['expanded'] : $this->getFieldDefinition()->getSetting('default_expanded');
+ 
+     $url = $entity->toUrl('canonical');
+     $menu_definition['route_name'] = $url->getRouteName();
+diff --git a/src/Plugin/Field/FieldWidget/MenuLinkWidget.php b/src/Plugin/Field/FieldWidget/MenuLinkWidget.php
+index 4cbaa3af2d2f7525ce5ab793dc6abd523ab0eeca..cc52660f41a1cf74e6123ff1fe7643fae5195728 100644
+--- a/src/Plugin/Field/FieldWidget/MenuLinkWidget.php
++++ b/src/Plugin/Field/FieldWidget/MenuLinkWidget.php
+@@ -153,6 +153,20 @@ class MenuLinkWidget extends WidgetBase {
+       '#description' => $this->t('Menu links with lower weights are displayed before links with higher weights.'),
+     ];
+ 
++    $field_default = (bool) $this->fieldDefinition->getSetting('default_expanded');
++
++    $element['expanded'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Show as expanded'),
++      '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded.'),
++      '#default_value' => isset($items[$delta]->expanded) ? $items[$delta]->expanded : $field_default,
++      '#states' => [
++        'visible' => [
++          ':input[name="' . $this->fieldDefinition->getName() . '[0][enabled]"]' => ['checked' => TRUE],
++        ],
++      ]
++    ];
++
+     return $element;
+   }
+ 
+diff --git a/src/Render/Element/MenuDetails.php b/src/Render/Element/MenuDetails.php
+index fd968fd90109db4736fdafe59883152079d00577..bba2a83332b0960e83aa8f45d451805ddf1299db 100644
+--- a/src/Render/Element/MenuDetails.php
++++ b/src/Render/Element/MenuDetails.php
+@@ -31,6 +31,7 @@ class MenuDetails implements TrustedCallbackInterface {
+     $element['menu']['description'] = $element['description'];
+     $element['menu']['menu_parent'] = $element['menu_parent'];
+     $element['menu']['weight'] = $element['weight'];
++    $element['menu']['expanded'] = $element['expanded'];
+ 
+     // Hide the elements when enabled is disabled.
+     foreach (['title', 'description', 'menu_parent', 'weight'] as $form_element) {
+@@ -41,7 +42,7 @@ class MenuDetails implements TrustedCallbackInterface {
+       ];
+     }
+ 
+-    unset($element['enabled'], $element['title'], $element['description'], $element['menu_parent'], $element['weight']);
++    unset($element['enabled'], $element['title'], $element['description'], $element['menu_parent'], $element['weight'], $element['expanded']);
+ 
+     return $element;
+   }

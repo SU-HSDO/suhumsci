@@ -6,7 +6,9 @@
  */
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
+use Drupal\Core\Utility\UpdateException;
 
 /**
  * Implements hook_requirements().
@@ -162,4 +164,86 @@ function su_humsci_profile_update_11004(): string {
     return t('Added hs_project to single_content_sync allowed node types.');
   }
   return t('hs_project was already in single_content_sync allowed node types.');
+}
+
+/**
+ * Uninstall the unused video embed modules without removing site configuration.
+ */
+function su_humsci_profile_update_11005(): string {
+  $modules = array_values(array_filter(['video_embed_media', 'video_embed_field'], fn ($module) => \Drupal::moduleHandler()->moduleExists($module)));
+  if ($modules === []) {
+    return t('The video embed modules were already uninstalled.');
+  }
+
+  // Sites can add dependencies after the audit. Never uninstall those modules.
+  $dependents = [];
+  foreach (\Drupal::service('extension.list.module')->getAllInstalledInfo() as $name => $info) {
+    if (in_array($name, $modules, TRUE)) {
+      continue;
+    }
+    foreach ($info['dependencies'] as $dependency) {
+      if (in_array(Dependency::createFromString($dependency)->getName(), $modules, TRUE)) {
+        $dependents[] = $name;
+        break;
+      }
+    }
+  }
+  if ($dependents !== []) {
+    throw new UpdateException(t('Video embed uninstall blocked by dependent modules: @modules.', ['@modules' => implode(', ', $dependents)]));
+  }
+
+  $installer = \Drupal::service('module_installer');
+  $reasons = $installer->validateUninstall($modules);
+  if ($reasons !== []) {
+    throw new UpdateException(t('Video embed uninstall blocked: @reasons', ['@reasons' => implode('; ', array_merge(...array_values($reasons)))]));
+  }
+  foreach (\Drupal::service('entity_field.deleted_fields_repository')->getFieldDefinitions() as $field) {
+    if ($field->getType() === 'video_embed_field') {
+      throw new UpdateException(t('Video embed uninstall blocked by a field awaiting purge: @field.', ['@field' => $field->getName()]));
+    }
+  }
+
+  // Repair the known stale mapping while preserving other site customizations.
+  $migration = \Drupal::configFactory()->getEditable('migrate_plus.migration.hs_events_importer');
+  $migration_data = $migration->getRawData();
+  $mapping = 'process.field_hs_event_video.1';
+  $mapping_changed = $migration->get($mapping . '.plugin') === 'entity_generate'
+    && $migration->get($mapping . '.entity_type') === 'media'
+    && $migration->get($mapping . '.bundle') === 'video'
+    && $migration->get($mapping . '.value_key') === 'field_media_video_embed_field';
+  if ($mapping_changed) {
+    $migration_data['process']['field_hs_event_video'][1]['value_key'] = 'field_media_oembed_video';
+  }
+
+  // Uninstall can delete dependent config, including ignored customizations.
+  // Review unexpected references instead of letting that cascade remove them.
+  $storage = \Drupal::service('config.storage');
+  $references = [];
+  foreach ($storage->listAll() as $name) {
+    if ($name === 'core.extension') {
+      continue;
+    }
+    $data = $name === $migration->getName() ? $migration_data : $storage->read($name);
+    if ($data === FALSE) {
+      throw new UpdateException(t('Could not check configuration @name before video embed uninstall.', ['@name' => $name]));
+    }
+    $serialized = serialize($data);
+    if (str_contains($serialized, 'video_embed_field') || str_contains($serialized, 'video_embed_media')) {
+      $references[] = $name;
+    }
+  }
+  if ($references !== []) {
+    throw new UpdateException(t('Video embed uninstall blocked by configuration requiring review: @config.', ['@config' => implode(', ', $references)]));
+  }
+
+  if ($mapping_changed) {
+    $migration->set($mapping . '.value_key', 'field_media_oembed_video')->save();
+  }
+  if (!$installer->uninstall($modules, FALSE)) {
+    throw new UpdateException(t('The video embed modules could not be uninstalled. Keep their code available and review the site.'));
+  }
+  return t('Uninstalled @count video embed modules and repaired @mappings event migration mappings.', [
+    '@count' => count($modules),
+    '@mappings' => (int) $mapping_changed,
+  ]);
 }

@@ -24,6 +24,11 @@ $settings['config_sync_directory'] = EnvironmentDetector::getRepoRoot() . '/conf
 // Include services.yml file for all sites.
 $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/services.yml';
 
+// Adopt the Drupal 12 default early so form errors come from Drupal's
+// accessible, translatable messages instead of native browser popups.
+// @see https://www.drupal.org/node/3537128
+$settings['enable_html5_validation'] = FALSE;
+
 /**
  * Include settings files in docroot/sites/settings.
  *

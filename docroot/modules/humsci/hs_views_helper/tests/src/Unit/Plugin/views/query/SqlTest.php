@@ -33,7 +33,7 @@ class SqlTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $container = new Container();
-    $container->set('string_translation', $this->createMock(TranslationManager::class));
+    $container->set('string_translation', $this->createStub(TranslationManager::class));
 
     $entity_storage = $this->createMock(FieldStorageConfigStorage::class);
     $entity_storage->method('load')->willReturn(new FakeFieldObject());
@@ -57,11 +57,11 @@ class SqlTest extends UnitTestCase {
    */
   public function testQueryAlter() {
     $sql = $this->getSqlObject();
-    $storage = $this->createMock(ViewEntityInterface::class);
-    $user = $this->createMock(AccountInterface::class);
-    $views_data = $this->createMock(ViewsData::class);
-    $route_provider = $this->createMock(RouteProviderInterface::class);
-    $display_plugin_manager = $this->createMock(ViewsPluginManager::class);
+    $storage = $this->createStub(ViewEntityInterface::class);
+    $user = $this->createStub(AccountInterface::class);
+    $views_data = $this->createStub(ViewsData::class);
+    $route_provider = $this->createStub(RouteProviderInterface::class);
+    $display_plugin_manager = $this->createStub(ViewsPluginManager::class);
     $view = new ViewExecutable($storage, $user, $views_data, $route_provider, $display_plugin_manager);
     $sql->alterQuery($view);
     $this->assertEmpty($sql->orderby);
@@ -124,11 +124,7 @@ class SqlTest extends UnitTestCase {
    *   Testable object.
    */
   protected function getSqlObject() {
-    $entity_type_manager = $this->createMock(EntityTypeManager::class);
-    $date_sql = $this->createMock(DateSqlInterface::class);
-    $messenger = $this->createMock(Messenger::class);
-
-    return new Sql([], '', [], $entity_type_manager, $date_sql, $messenger);
+    return new Sql([], '', [], $this->createStub(EntityTypeManager::class), $this->createStub(DateSqlInterface::class), $this->createStub(Messenger::class));
   }
 
 }

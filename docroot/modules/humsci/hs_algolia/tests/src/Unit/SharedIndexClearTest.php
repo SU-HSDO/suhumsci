@@ -51,7 +51,7 @@ class SharedIndexClearTest extends UnitTestCase {
       'algoliaClient' => $client,
       'configFactory' => $config_factory,
       'languageManager' => $language_manager,
-      'logger' => $this->createMock(LoggerInterface::class),
+      'logger' => $this->createStub(LoggerInterface::class),
       'sitePath' => $site_path,
     ] as $property => $value) {
       $reflection = new \ReflectionProperty($backend, $property);
@@ -137,8 +137,8 @@ class SharedIndexClearTest extends UnitTestCase {
     $backend = $this->buildBackend($client);
     $index = $this->mockIndex('hs_algolia_trainings', '');
     $items = [
-      'entity:node/1:en' => $this->createMock(ItemInterface::class),
-      'entity:node/2:en' => $this->createMock(ItemInterface::class),
+      'entity:node/1:en' => $this->createStub(ItemInterface::class),
+      'entity:node/2:en' => $this->createStub(ItemInterface::class),
     ];
 
     // Reported as processed, so cron does not reload them every run.

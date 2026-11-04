@@ -123,7 +123,7 @@ class ServerFormAlterTest extends UnitTestCase {
     $expected = $form;
 
     $form_state = $this->createMock(FormStateInterface::class);
-    $form_state->method('getFormObject')->willReturn($this->createMock(FormInterface::class));
+    $form_state->method('getFormObject')->willReturn($this->createStub(FormInterface::class));
     hs_algolia_form_search_api_server_form_alter($form, $form_state);
 
     $this->assertSame($expected, $form);

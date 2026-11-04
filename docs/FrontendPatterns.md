@@ -130,7 +130,6 @@ When adding a filter or changing submit behavior:
 ```bash
 npm run theme-build     # Compile Sass and JS for all humsci_basic-based themes
 npm run theme-watch     # Compile and watch for changes
-npm run theme-visreg    # Run Percy VRT on hs_colorful and hs_traditional
 npm test                # Run Sass tests
 ```
 

@@ -81,6 +81,9 @@ if ($siteimprove_api_key && $siteimprove_username) {
   ];
 }
 
+// Training Hub shared Algolia index, written to from production only.
+require __DIR__ . '/algolia.settings.php';
+
 // Translation overrides to replace Drupalisms with more user-friendly terms.
 $settings['locale_custom_strings_en'][''] = [
   'Entityqueues' => 'Listing',

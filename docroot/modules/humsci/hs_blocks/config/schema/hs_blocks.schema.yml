@@ -18,12 +18,18 @@ block.settings.hs_blocks_social_media_block:
       type: sequence
       label: Links
       sequence:
-        link_url:
-          type: uri
-          label: URL
-        link_title:
-          type: string
-          label: Title
-        _weight:
-          type: integer
-          label: Weight
+        type: mapping
+        label: Link
+        mapping:
+          link_url:
+            type: uri
+            label: URL
+          link_title:
+            type: string
+            label: Title
+          _weight:
+            type: integer
+            label: Weight
+    placed_block_id:
+      type: string
+      label: 'Placed Block ID'

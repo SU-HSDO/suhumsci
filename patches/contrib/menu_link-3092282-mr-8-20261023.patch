@@ -1,0 +1,20 @@
+diff --git a/src/Plugin/Field/MenuLinkItemList.php b/src/Plugin/Field/MenuLinkItemList.php
+index c65ebdc55516c75e29063022cbc946c1306384b7..83d11c9948c698964e23c7f0787598790c8f8737 100644
+--- a/src/Plugin/Field/MenuLinkItemList.php
++++ b/src/Plugin/Field/MenuLinkItemList.php
+@@ -24,7 +24,14 @@ class MenuLinkItemList extends FieldItemList {
+    */
+   public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
+     if ($operation === 'edit') {
+-      return AccessResult::allowedIfHasPermission($account, 'administer menu');
++      $available_menus = array_filter($this->getFieldDefinition()
++        ->getSetting('available_menus'));
++
++      $permissions = ['administer menu'];
++      foreach ($available_menus as $menu_name) {
++        $permissions[] = 'administer ' . $menu_name . ' menu items';
++      }
++      return AccessResult::allowedIfHasPermissions($account, $permissions, 'OR');
+     }
+     return parent::defaultAccess($operation, $account);
+   }

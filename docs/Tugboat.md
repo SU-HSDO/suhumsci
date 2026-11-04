@@ -9,7 +9,7 @@ Tugboat builds a preview environment for every pull request so the H&S web team 
 | Stage | What it does | When it runs |
 |---|---|---|
 | `init` | Installs Node.js, links the docroot, runs `composer install`, and generates settings files | Only on a preview built from scratch |
-| `update` | Syncs and sanitizes each site's production database, enables `stage_file_proxy`, and creates the preview admin user | On a preview built from scratch, and on every refresh |
+| `update` | Copies `ci.settings.php` to the sites configuration directory from `.tugboat/ci.settings.php` template. Syncs and sanitizes each site's production database, enables `stage_file_proxy`, and creates the preview admin user | On a preview built from scratch, and on every refresh |
 | `build` | Runs `composer install`, then `drush cr` and `drush deploy` on each site, then `npm run theme-build` | On every build |
 
 ## Base Preview
@@ -42,3 +42,9 @@ After a pull request preview builds, Tugboat screenshots the pages listed under 
 A preview's Actions menu in the Tugboat dashboard offers two options. On a pull request preview, **Rebuild** runs only `build`. **Refresh** runs `update` and `build`, which syncs fresh production databases and takes significantly longer. Refresh a pull request preview when it needs fresh production data or when the pull request changes the `update` stage in `.tugboat/config.yml`.
 
 To also run `init` on a new container, delete the preview, then build a new one from the pull request and choose "Build with no base preview" from the Build Preview drop-down. Do this when the pull request changes the `init` stage, or when it upgrades Drupal core to a new major version or makes other large dependency changes that fail against the existing `vendor` directory. See [Change or Update Previews](https://docs.tugboatqa.com/building-a-preview/administer-previews/change-or-update-previews/) in the Tugboat documentation.
+
+## Adding new sites to a Tugboat preview
+
+The site list is defined in the `aliases` section of the Tugboat configuration file (`.tugboat/config.yml`). For adding a new site, add a new entry with the site subdomain (e.g. `music` for https://music.stanford.edu/). All the setup steps will be run automatically for the sites defined in the `aliases` section. When adding new sites, it's necessary to manually execute a **Refresh** on the preview for all steps to be executed.
+
+Every new site increases the build time, so it's recommended to keep the list short. If new sites are added for temporary testing specific bug fixes or features, remember to remove them before merging the PR.

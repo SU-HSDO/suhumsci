@@ -1,0 +1,59 @@
+diff --git a/hook_event_dispatcher.services.yml b/hook_event_dispatcher.services.yml
+index f2ae9b26eaa2ab7c1979f9276dfdfd5c87fc9868..d05c62cbc7b1454885d49b5430d8ba9af1185602 100644
+--- a/hook_event_dispatcher.services.yml
++++ b/hook_event_dispatcher.services.yml
+@@ -4,14 +4,6 @@ services:
+     arguments:
+       - '@event_dispatcher'
+ 
+-  hook_event_dispatcher.module_handler:
+-    decorates: module_handler
+-    class: Drupal\hook_event_dispatcher\HookEventDispatcherModuleHandler
+-    arguments:
+-      - '@hook_event_dispatcher.module_handler.inner'
+-      - '@hook_event_dispatcher.manager'
+-      - '@plugin.manager.hook_event'
+-
+   plugin.manager.hook_event:
+     class: Drupal\hook_event_dispatcher\HookEventPluginManager
+     arguments: ['@container.namespaces', '@cache.discovery', '%container.modules%']
+diff --git a/src/HookEventDispatcherServiceProvider.php b/src/HookEventDispatcherServiceProvider.php
+index 52cda871f90cc6023637177736bdf68f101c74e9..1abdb32e5e6cb2371277c7a1a368d9ed442d81ec 100644
+--- a/src/HookEventDispatcherServiceProvider.php
++++ b/src/HookEventDispatcherServiceProvider.php
+@@ -5,7 +5,9 @@ declare(strict_types=1);
+ namespace Drupal\hook_event_dispatcher;
+ 
+ use Drupal\Core\DependencyInjection\ContainerBuilder;
+-use Drupal\Core\DependencyInjection\ServiceModifierInterface;
++use Drupal\Core\DependencyInjection\ServiceProviderBase;
++use Drupal\Core\Installer\InstallerKernel;
++use Symfony\Component\DependencyInjection\ContainerInterface;
+ use Symfony\Component\DependencyInjection\Reference;
+ 
+ /**
+@@ -13,7 +15,23 @@ use Symfony\Component\DependencyInjection\Reference;
+  *
+  * @see https://www.drupal.org/node/2026959
+  */
+-final class HookEventDispatcherServiceProvider implements ServiceModifierInterface {
++final class HookEventDispatcherServiceProvider extends ServiceProviderBase {
++
++  /**
++   * {@inheritdoc}
++   */
++  public function register(ContainerBuilder $container): void {
++    $kernel = $container->get('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE);
++    if ($kernel instanceof InstallerKernel) {
++      return;
++    }
++
++    $container->register('hook_event_dispatcher.module_handler', HookEventDispatcherModuleHandler::class)
++      ->setDecoratedService('module_handler')
++      ->addArgument(new Reference('hook_event_dispatcher.module_handler.inner'))
++      ->addArgument(new Reference('hook_event_dispatcher.manager'))
++      ->addArgument(new Reference('plugin.manager.hook_event'));
++  }
+ 
+   /**
+    * {@inheritdoc}

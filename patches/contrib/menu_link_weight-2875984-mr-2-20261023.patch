@@ -1,0 +1,36 @@
+diff --git a/menu_link_weight.menu_ui.inc b/menu_link_weight.menu_ui.inc
+index 70884276b47edbc71e2f91d810d0af2fd365bd2d..b80e4666b37e8b87212a9c471bbf57e286a70956 100644
+--- a/menu_link_weight.menu_ui.inc
++++ b/menu_link_weight.menu_ui.inc
+@@ -55,10 +55,10 @@ function _menu_link_weight_menu_link_form_alter(&$form, FormStateInterface $form
+ 
+   $is_admin = $current_user->hasPermission('administer menu') && isset($form);
+   $is_admin_per_menu = $module_handler->moduleExists('menu_admin_per_menu')
+-    && function_exists('_menu_admin_per_menu_filter_parent_options')
+-    && isset($form['parent'])
++    && function_exists('menu_admin_per_menu_filter_parent_options')
++    && isset($form['menu_parent']['#options'])
+     && !$current_user->hasPermission('administer menu')
+-    && _menu_admin_per_menu_filter_parent_options($form);
++    && menu_admin_per_menu_filter_parent_options($current_user, $form['menu_parent']['#options']);
+ 
+   // Only allow users with the "administer menu" permission or that the Menu
+   // Admin Per Menu has granted access to some menus.
+diff --git a/menu_link_weight.node.inc b/menu_link_weight.node.inc
+index a7120cf0435aceb9111299b15e603ab98ef0eb01..1cc88d077e4d4db55d620515492b6ddced2a5dd3 100644
+--- a/menu_link_weight.node.inc
++++ b/menu_link_weight.node.inc
+@@ -18,10 +18,10 @@ function menu_link_weight_form_node_form_alter(&$form, FormStateInterface $form_
+ 
+   $is_admin = $current_user->hasPermission('administer menu') && isset($form['field_menulink']['widget'][0]);
+   $is_admin_per_menu = $module_handler->moduleExists('menu_admin_per_menu')
+-    && function_exists('_menu_admin_per_menu_filter_parent_options')
+-    && isset($form['field_menulink']['widget'][0]['parent'])
++    && function_exists('menu_admin_per_menu_filter_parent_options')
++    && isset($form['field_menulink']['widget'][0]['menu_parent']['#options'])
+     && !$current_user->hasPermission('administer menu')
+-    && _menu_admin_per_menu_filter_parent_options($form['field_menulink']['widget'][0]);
++    && menu_admin_per_menu_filter_parent_options($current_user, $form['field_menulink']['widget'][0]['menu_parent']['#options']);
+ 
+   // Only allow users with the "administer menu" permission or that the Menu
+   // Admin Per Menu has granted access to some menus.

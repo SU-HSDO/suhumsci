@@ -239,7 +239,10 @@ class HsManageBlockVisibilityForm extends FormBase {
   protected function getFieldDefinitions(): array {
     // Default layouts have no real entity, so use the preview sample entity.
     $contexts = $this->sectionStorage->getContextsDuringPreview();
-    $entity = isset($contexts['layout_builder.entity']) ? $contexts['layout_builder.entity']->getContextValue() : NULL;
+    $context = $contexts['layout_builder.entity'] ?? NULL;
+    // A present context can still be unresolved, so getContextValue() is only
+    // safe to call once hasContextValue() confirms it holds an entity.
+    $entity = $context && $context->hasContextValue() ? $context->getContextValue() : NULL;
     if (!$entity instanceof FieldableEntityInterface) {
       return [];
     }
@@ -275,7 +278,9 @@ class HsManageBlockVisibilityForm extends FormBase {
       ]);
     }
     foreach ($options as &$group_options) {
-      asort($group_options);
+      // The labels are TranslatableMarkup objects, so sort by their rendered
+      // string to get the alphabetical order editors expect.
+      uasort($group_options, fn ($a, $b) => strnatcasecmp((string) $a, (string) $b));
     }
     return array_filter($options);
   }

@@ -38,7 +38,7 @@ The rule never hides a block while editing a layout. A block that the rule would
 
 - **Date and time fields** are stored in UTC and compared as exact moments.
 - **Date-only fields** have no time, so the date starts at midnight in the site timezone (set at **Configuration > Regional and Language > Regional Settings**).
-- **Date range and smart date fields** are compared by their end, so an event counts as past once it has ended. A date-only range end lasts until the end of that day. For a recurring smart date, only the first occurrence stored in the field is compared.
+- **Date range and smart date fields** are compared by their end, so an event counts as past once it has ended. A date-only range end lasts until the end of that day. A recurring smart date stores each occurrence as a separate value, so all of them are compared, following the several-values rule below.
 - **Fields with several values** match "is in the future" when any value is still ahead, and "is in the past" when none is. The two rules are always opposites.
 - **An empty date field** never hides the block with either date rule.
 - A date equal to the current time counts as past.

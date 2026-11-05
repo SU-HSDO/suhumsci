@@ -3,11 +3,14 @@
 namespace Drupal\hs_blocks;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Evaluates a block visibility rule against a field on an entity.
@@ -119,7 +122,9 @@ class VisibilityRuleEvaluator {
     $upcoming = array_filter($timestamps, fn (int $timestamp) => $timestamp > $now);
     if ($upcoming) {
       // Both operators flip at the moment the nearest upcoming date passes.
-      $metadata->setCacheMaxAge(min($upcoming) - $now);
+      // Merge, rather than replace, so an already-shorter lifetime collected
+      // from the entity or config is never lengthened.
+      $metadata->setCacheMaxAge(Cache::mergeMaxAges($metadata->getCacheMaxAge(), min($upcoming) - $now));
     }
 
     // With several values, "future" means any value is still ahead, which
@@ -164,16 +169,19 @@ class VisibilityRuleEvaluator {
         continue;
       }
 
-      // Date-only values have no time or timezone, so they start at midnight
-      // in the site timezone. As an end, the date lasts until the day is over.
-      if (strlen($value) === 10) {
-        $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $value, $site_timezone);
+      // Only datetime and daterange reach here, and their datetime_type setting
+      // says whether the stored value carries a time.
+      $is_date_only = $items->getFieldDefinition()->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE;
+      if ($is_date_only) {
+        // Date-only values have no time, so they start at midnight in the site
+        // timezone. As an end, the date lasts until that day is over.
+        $date = \DateTimeImmutable::createFromFormat('!' . DateTimeItemInterface::DATE_STORAGE_FORMAT, $value, $site_timezone);
         if ($date && $is_end) {
           $date = $date->modify('+1 day');
         }
       }
       else {
-        $date = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s', $value, new \DateTimeZone('UTC'));
+        $date = \DateTimeImmutable::createFromFormat(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $value, new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
       }
       if ($date) {
         $timestamps[] = $date->getTimestamp();

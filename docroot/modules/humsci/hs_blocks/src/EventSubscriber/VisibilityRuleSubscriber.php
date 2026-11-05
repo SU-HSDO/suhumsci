@@ -45,7 +45,10 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
     }
 
     $contexts = $event->getContexts();
-    $entity = isset($contexts['layout_builder.entity']) ? $contexts['layout_builder.entity']->getContextValue() : NULL;
+    $context = $contexts['layout_builder.entity'] ?? NULL;
+    // A present context can still be unresolved, so getContextValue() is only
+    // safe to call once hasContextValue() confirms it holds an entity.
+    $entity = $context && $context->hasContextValue() ? $context->getContextValue() : NULL;
     if (!$entity instanceof FieldableEntityInterface) {
       return;
     }

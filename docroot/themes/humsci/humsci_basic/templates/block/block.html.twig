@@ -41,4 +41,7 @@
       {{ content }}
     {% endblock %}
   </div>
+{% else %}
+  {# Render without printing so the content's cache metadata still bubbles up. #}
+  {% set _discard = content|render %}
 {% endif %}

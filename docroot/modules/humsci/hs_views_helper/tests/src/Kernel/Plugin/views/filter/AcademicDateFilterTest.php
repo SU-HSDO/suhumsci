@@ -12,12 +12,14 @@ use Drupal\node\Entity\NodeType;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class AcademicDateFilterTest.
  */
 #[CoversClass(AcademicDateFilter::class)]
 #[Group('hs_views_helper')]
+#[RunTestsInSeparateProcesses]
 class AcademicDateFilterTest extends KernelTestBase {
 
   /**

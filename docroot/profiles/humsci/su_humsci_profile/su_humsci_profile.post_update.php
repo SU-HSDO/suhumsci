@@ -422,8 +422,7 @@ function su_humsci_profile_post_update_fix_ds_fields() {
   $config_factory = \Drupal::configFactory();
   foreach (array_keys($ds_configs) as $config_name) {
     $config_factory->getEditable("ds.field.$config_name")
-      ->setData($config_storage->read("ds.field.$config_name"))
-      ->save(TRUE);
+      ->setData($config_storage->read("ds.field.$config_name"))->save();
   }
 
   /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface[] $event_displays */

@@ -12,12 +12,14 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class TestCloneNode.
  */
 #[CoversClass(CloneNode::class)]
 #[Group('hs_actions')]
+#[RunTestsInSeparateProcesses]
 class CloneNodeTest extends KernelTestBase {
 
   /**

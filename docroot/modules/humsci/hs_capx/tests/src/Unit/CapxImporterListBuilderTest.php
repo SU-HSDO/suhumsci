@@ -25,7 +25,7 @@ class CapxImporterListBuilderTest extends UnitTestCase {
     parent::setUp();
 
     $container = new Container();
-    $container->set('string_translation', $this->createMock(TranslationManager::class));
+    $container->set('string_translation', $this->createStub(TranslationManager::class));
 
     $module_handler = $this->createMock(ModuleHandler::class);
     $module_handler->method('invokeAll')->willReturn([]);
@@ -34,8 +34,8 @@ class CapxImporterListBuilderTest extends UnitTestCase {
   }
 
   public function testListBuilder() {
-    $entity_type = $this->createMock(EntityTypeInterface::class);
-    $storage = $this->createMock(EntityStorageInterface::class);
+    $entity_type = $this->createStub(EntityTypeInterface::class);
+    $storage = $this->createStub(EntityStorageInterface::class);
 
     $list_builder = new CapxImporterListBuilder($entity_type, $storage);
     $header = $list_builder->buildHeader();

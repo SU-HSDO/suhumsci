@@ -144,6 +144,15 @@ vendor/bin/phpcs
 
 Review PHPStan output for deprecations and actionable errors introduced by the new core version. Some warnings (e.g., unsafe usage of `new static`) are Drupal conventions and can be added to PHPStan's `ignoreErrors` configuration rather than fixed.
 
+The default PHPStan paths only cover custom code. Also scan the modules the team or its vendor maintains: the `su-sws/*` packages in `docroot/modules/custom/` and any contributed modules they maintain on drupal.org. Report anything that affects the new core version to the maintainer.
+
+```bash
+vendor/bin/phpstan analyse <MODULE_PATH> [<MODULE_PATH> ...]
+
+# Example:
+vendor/bin/phpstan analyse docroot/modules/custom/stanford_media docroot/modules/contrib/nobots
+```
+
 ### Run Drupal Rector
 
 [Drupal Rector](https://www.drupal.org/project/rector) automates fixes for many deprecations PHPStan surfaces (deprecated function calls, changed constants, outdated type hints). If `rector.php` isn't already configured in the repository root, add it with the module's paths and a target core version.

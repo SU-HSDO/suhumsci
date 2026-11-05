@@ -33,29 +33,9 @@ Before writing any code, understand what the module does and what it leaves behi
    grep -r "<MODULE_NAME>" config/default/
    ```
 
-1. Audit active site databases for per-site configuration that depends on the module. Use a module-specific report where available, such as the [video embed field audit](#audit-video-embed-field-usage). The scope of the audit depends on what the module does and how widely it is configured per site. For modules that affect configuration covered by `config_ignore`, this step is particularly important.
+1. Audit active site databases for per-site configuration that depends on the module. There is no standard tooling for this yet. The scope of the audit depends on what the module does and how widely it is configured per site. For modules that affect configuration covered by `config_ignore`, this step is particularly important.
 
 > **Note:** Because `config_ignore` allows per-site configuration to diverge from the codebase, some sites may carry configuration tied to this module that no codebase audit can surface. This is an inherent consequence of supporting per-site customization. The audit will not always be complete, and there may be residual impact on sites that cannot be fully anticipated before removal.
-
-### Audit Video Embed Field Usage
-
-Run the read-only report from your local checkout before preparing the video embed modules for uninstall:
-
-```bash
-# Check one local site first.
-ddev drush --uri=default humsci:reports:video-embed-field --sites=default
-
-# After reviewing the command and approving the target, audit one production site.
-ddev drush --uri=default humsci:reports:video-embed-field --env=prod --sites=default > /tmp/video-embed-field-audit.json
-```
-
-Use `--env=dev` or `--env=stage` for another Acquia environment. Remote environments require an explicit `--sites` list. Review the single-site result before expanding to an approved list, such as `--sites=default,hs_testing_sandbox`. Remote audits require working Drush aliases and SSH access. Load your SSH key locally with `ddev auth ssh` before running the approved command. The command sends the audit code from your checkout, so you can run it before deploying the command to Acquia.
-
-Each site has a `clear`, `review`, or `error` status. The report includes active and deleted `video_embed_field` storage, bundles, deleted field instances awaiting purge, legacy media sources, and active configuration containing legacy module or field references. `entities_with_data` counts distinct entities with stored field data across all revisions, including deleted field data. Empty field storage still requires review. Module installation is reported separately and does not itself count as usage.
-
-The command exits with a nonzero status if any site needs review or could not be audited. It stops on the first error and includes the failed site and completed sites in its JSON output. Sites missing from the report have not been audited. Review configuration references individually, including stale migration mappings and Views. Resolve every finding and rerun failed or unprocessed sites before treating the production audit as complete. Keep the report with the removal work; it contains site-specific information and should not be committed to this public repository.
-
-The profile's video embed uninstall update repairs the known stale event migration mapping to use `field_media_oembed_video`. It stops if active or deleted legacy fields, installed dependent modules, or other legacy configuration references remain. Review those findings before rerunning updates. Keep the Composer package and module code available through the uninstall deployment; remove them in a separate deployment after verification.
 
 ## Write the Update Hook(s)
 

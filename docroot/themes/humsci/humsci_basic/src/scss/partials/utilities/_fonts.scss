@@ -101,19 +101,6 @@ $blockquotes: (hb-blockquote, highlight-block-left, highlight-block-right);
 @each $blockquote in $blockquotes {
   .#{$blockquote} {
     @include hb-blockquote;
-
-    .views-row #{$blockquote},
-    .views-row #{$blockquote} a {
-      @include hb-text-reset;
-      @include hb-blockquote;
-
-      > p::before,
-      > p::after,
-      > div::before,
-      > div::after {
-        content: none;
-      }
-    }
   }
 }
 

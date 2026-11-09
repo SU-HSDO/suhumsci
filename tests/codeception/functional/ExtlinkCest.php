@@ -3,17 +3,24 @@
 /**
  * Checks external link behavior with the platform's shipped settings.
  *
- * @group install
  * @group extlink
  */
 class ExtlinkCest {
 
   /**
-   * Existing link targets, titles, and rich-text exclusions stay intact.
+   * Load the front page and wait for extlink JS to initialize.
    */
-  public function testPlatformLinkSettings(FunctionalTester $I): void {
+  public function _before(FunctionalTester $I): void {
     $I->amOnPage('/');
     $I->waitForJS('return typeof window.Drupal?.extlink?.attach === "function";', 10);
+  }
+
+  /**
+   * Existing link targets, titles, and rich-text exclusions stay intact.
+   *
+   * @group install
+   */
+  public function testPlatformLinkSettings(FunctionalTester $I): void {
     $settings = $I->executeJS('return drupalSettings.data.extlink;');
     $I->assertFalse($settings['extTarget']);
     $I->assertTrue($settings['extTitleNoOverride']);
@@ -30,6 +37,7 @@ class ExtlinkCest {
     $I->assertSame('_self', $I->grabAttributeFrom('#extlink-check-existing', 'target'));
     $I->dontSeeElement('#extlink-check-internal[data-extlink]');
     $I->dontSeeElement('#extlink-check-excluded[data-extlink]');
+    $I->dontSeeElement('#extlink-check-mailto[data-extlink], #extlink-check-tel[data-extlink]');
     $I->dontSeeElement('#extlink-check-fixture svg, #extlink-check-fixture span.extlink');
   }
 
@@ -37,8 +45,6 @@ class ExtlinkCest {
    * Enabling title changes must not announce a new window when targets are off.
    */
   public function testNewWindowTitleRequiresTarget(FunctionalTester $I): void {
-    $I->amOnPage('/');
-    $I->waitForJS('return typeof window.Drupal?.extlink?.attach === "function";', 10);
     $settings = $I->executeJS('return drupalSettings.data.extlink;');
     $I->assertFalse($settings['extTarget']);
     $I->assertTrue($settings['extTargetAppendNewWindowDisplay']);
@@ -52,8 +58,6 @@ class ExtlinkCest {
    * New-window titles still work when opening links in a new window is enabled.
    */
   public function testNewWindowTitleWithTarget(FunctionalTester $I): void {
-    $I->amOnPage('/');
-    $I->waitForJS('return typeof window.Drupal?.extlink?.attach === "function";', 10);
     $settings = $I->executeJS('return drupalSettings.data.extlink;');
 
     $this->attachFixture($I, [
@@ -69,9 +73,6 @@ class ExtlinkCest {
    * Text-only orphan prevention leaves complex card markup intact.
    */
   public function testTextOnlyOrphanPrevention(FunctionalTester $I): void {
-    $I->amOnPage('/');
-    $I->waitForJS('return typeof window.Drupal?.extlink?.attach === "function";', 10);
-
     $this->attachFixture($I, [
       'extClass' => 'ext',
       'extUseFontAwesome' => FALSE,
@@ -89,9 +90,6 @@ class ExtlinkCest {
    * Disabling the text-only restriction retains the earlier wrapping behavior.
    */
   public function testLegacyOrphanPrevention(FunctionalTester $I): void {
-    $I->amOnPage('/');
-    $I->waitForJS('return typeof window.Drupal?.extlink?.attach === "function";', 10);
-
     $this->attachFixture($I, [
       'extClass' => 'ext',
       'extUseFontAwesome' => FALSE,
@@ -108,6 +106,7 @@ class ExtlinkCest {
   private function attachFixture(FunctionalTester $I, array $overrides = []): void {
     $I->executeJS(
       <<<'JS'
+document.getElementById('extlink-check-fixture')?.remove();
 const fixture = document.createElement('div');
 fixture.id = 'extlink-check-fixture';
 fixture.innerHTML = `
@@ -116,8 +115,8 @@ fixture.innerHTML = `
   <a id="extlink-check-internal" href="/">Internal</a>
   <div class="text-long"><a id="extlink-check-excluded" href="https://external.example.com/">Rich text</a></div>
   <a id="extlink-check-card" href="https://external.example.com/"><div class="card"><div class="card-title">Card title</div></div></a>
-  <a href="mailto:test@example.com">Email</a>
-  <a href="tel:+16505550100">Telephone</a>`;
+  <a id="extlink-check-mailto" href="mailto:test@example.com">Email</a>
+  <a id="extlink-check-tel" href="tel:+16505550100">Telephone</a>`;
 document.body.appendChild(fixture);
 const original = drupalSettings.data.extlink;
 try {

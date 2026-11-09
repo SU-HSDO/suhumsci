@@ -42,3 +42,13 @@ function hs_field_helpers_uninstall() {
 function hs_field_helpers_update_last_removed() {
   return 8004;
 }
+
+/**
+ * Delete leftover items from the removed entity_cleanup queue.
+ */
+function hs_field_helpers_update_11000() {
+  // The queue worker deleted entities with no entity_usage sources, which
+  // entity_usage 5.x reports for every paragraph. Drop stale items so nothing
+  // is left in the database for a worker that no longer exists.
+  \Drupal::queue('entity_cleanup')->deleteQueue();
+}

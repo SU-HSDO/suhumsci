@@ -40,8 +40,7 @@ class HsLoginBlockTest extends UnitTestCase {
       ->with('simplesamlphp_auth')
       ->willReturn(TRUE);
     $container->set('module_handler', $module_handler);
-    $string_translation = $this->createMock(TranslationManager::class);
-    $container->set('string_translation', $string_translation);
+    $container->set('string_translation', $this->createStub(TranslationManager::class));
 
     \Drupal::setContainer($container);
   }

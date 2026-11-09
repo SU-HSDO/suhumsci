@@ -21,7 +21,7 @@ This document outlines the recommended process for performing minor and major Dr
 
 ## Install and Configure the Site Before Upgrading
 
-Install the site profile on your current codebase before making any upgrade changes, so you have a clean baseline to compare against:
+Install the site profile on the `<major>.x` branch before changing any Composer constraints, so you have a clean baseline to compare against:
 
 ```bash
 drush @default.local si su_humsci_profile -y
@@ -108,13 +108,23 @@ composer why-not <PACKAGE> <VERSION>
 composer show <PACKAGE> --tree
 ```
 
+Review the changes to scaffolded files in `docroot` (`index.php`, `update.php`, `.htaccess`, `robots.txt`, `.gitignore`), including any new files scaffold adds.
+
 > **Note:** Composer updates from automated dependency review continue running against the base branch while a core upgrade branch is in progress and may pick up module updates already applied on the upgrade branch. Expect to resolve these conflicts when the upgrade branch is finally merged.
 
 ## Handle Patch Failures
 
 If a patch fails to apply after the update, check whether the linked drupal.org issue or GitLab merge request has a newer patch reroll targeting the new core version. Download and swap in the updated patch following [Patching](Patching.md), removing the old patch file with `git rm`.
 
+> **Important:** A failed patch can leave some of its hunks applied to the installed package. Test candidate patches against a pristine copy of the new release, not the installed package. Delete the package directory (e.g., `docroot/core`) before reinstalling so the replacement patch applies to clean files.
+
 ## Run Database Updates and Export Configuration
+
+List the pending updates first and review any that drop tables, rebuild data, or change behavior:
+
+```bash
+drush @default.local updatedb:status
+```
 
 ```bash
 drush @default.local updatedb -y
@@ -134,6 +144,15 @@ vendor/bin/phpcs
 
 Review PHPStan output for deprecations and actionable errors introduced by the new core version. Some warnings (e.g., unsafe usage of `new static`) are Drupal conventions and can be added to PHPStan's `ignoreErrors` configuration rather than fixed.
 
+The default PHPStan paths only cover custom code. Also scan the modules the team or its vendor maintains: the `su-sws/*` packages in `docroot/modules/custom/` and any contributed modules they maintain on drupal.org. Report anything that affects the new core version to the maintainer.
+
+```bash
+vendor/bin/phpstan analyse <MODULE_PATH> [<MODULE_PATH> ...]
+
+# Example:
+vendor/bin/phpstan analyse docroot/modules/custom/stanford_media docroot/modules/contrib/nobots
+```
+
 ### Run Drupal Rector
 
 [Drupal Rector](https://www.drupal.org/project/rector) automates fixes for many deprecations PHPStan surfaces (deprecated function calls, changed constants, outdated type hints). If `rector.php` isn't already configured in the repository root, add it with the module's paths and a target core version.
@@ -151,6 +170,8 @@ vendor/bin/rector process
 vendor/bin/phpstan
 vendor/bin/phpcs
 ```
+
+> **Note:** Rector also applies modernization rules unrelated to the core upgrade (return types, PHPUnit attributes, test mock style). Keep the ones worth adopting, and defer large or unrelated changes to a separate ticket.
 
 > **Important:** Review Rector's fixes manually before committing. Rector applies safe, one-line fixes, which can be less efficient than the idiomatic fix when the same deprecated call appears multiple times in the same scope (for example, loading a service repeatedly instead of once into a local variable). This doesn't make Rector's fix wrong, just worth a follow-up cleanup pass.
 

@@ -9,12 +9,14 @@ use Drupal\hs_courses_importer\Form\CourseTagForm;
 use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class HsCoursesImporterFormTest.
  */
 #[CoversClass(CourseTagForm::class)]
 #[Group('hs_courses_importer')]
+#[RunTestsInSeparateProcesses]
 class CourseTagFormTest extends HsCoursesImporterTestBase {
 
   /**

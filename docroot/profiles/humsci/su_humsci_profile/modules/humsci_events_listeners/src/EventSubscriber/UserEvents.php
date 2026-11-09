@@ -15,7 +15,7 @@ class UserEvents implements EventSubscriberInterface {
   /**
    * {@inheritDoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       UserHookEvents::USER_CANCEL_METHODS_ALTER => ['alterCancelMethods'],
     ];

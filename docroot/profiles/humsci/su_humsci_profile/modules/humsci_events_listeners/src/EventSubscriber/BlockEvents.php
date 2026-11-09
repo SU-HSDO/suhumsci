@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\core_event_dispatcher\BlockHookEvents;
 use Drupal\core_event_dispatcher\Event\Block\BlockAccessEvent;
+use Drupal\node\NodeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -31,7 +32,7 @@ class BlockEvents implements EventSubscriberInterface {
   /**
    * {@inheritDoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       BlockHookEvents::BLOCK_ACCESS => 'blockAccess',
     ];
@@ -68,7 +69,7 @@ class BlockEvents implements EventSubscriberInterface {
       $event->getBlock()->getPluginId() == 'page_title_block' &&
       $this->currentRequest->query->get('_exception_statuscode') == 404
     ) {
-      $access = AccessResult::forbiddenIf($this->currentRequest->attributes->get('node'))
+      $access = AccessResult::forbiddenIf($this->currentRequest->attributes->get('node') instanceof NodeInterface)
         ->addCacheableDependency($event->getBlock());
       $event->addAccessResult($access);
     }

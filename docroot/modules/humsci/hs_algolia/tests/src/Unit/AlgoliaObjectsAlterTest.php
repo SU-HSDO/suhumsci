@@ -109,18 +109,17 @@ class AlgoliaObjectsAlterTest extends UnitTestCase {
       ->with('domain_301_redirect.settings')
       ->willReturn($config);
 
-    $request_stack = new RequestStack();
-    $request_stack->push(Request::create($current_host . '/some/path'));
+    $request_stack = new RequestStack([Request::create($current_host . '/some/path')]);
 
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);
     $container->set('request_stack', $request_stack);
-    $container->set('token', $this->token ?? $this->createMock(Token::class));
-    $container->set('database', $this->database ?? $this->createMock(Connection::class));
+    $container->set('token', $this->token ?? $this->createStub(Token::class));
+    $container->set('database', $this->database ?? $this->createStub(Connection::class));
     $container->setParameter('site.path', 'sites/hs_sandbox');
-    $container->set('entity_type.manager', $this->entityTypeManager ?? $this->createMock(EntityTypeManagerInterface::class));
+    $container->set('entity_type.manager', $this->entityTypeManager ?? $this->createStub(EntityTypeManagerInterface::class));
     $logger_factory = $this->createMock(LoggerChannelFactoryInterface::class);
-    $logger_factory->method('get')->willReturn($this->logger ?? $this->createMock(LoggerChannelInterface::class));
+    $logger_factory->method('get')->willReturn($this->logger ?? $this->createStub(LoggerChannelInterface::class));
     $container->set('logger.factory', $logger_factory);
     \Drupal::setContainer($container);
   }

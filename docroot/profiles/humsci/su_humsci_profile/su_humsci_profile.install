@@ -163,3 +163,15 @@ function su_humsci_profile_update_11004(): string {
   }
   return t('hs_project was already in single_content_sync allowed node types.');
 }
+
+/**
+ * Uninstall the video_embed_field and video_embed_media modules.
+ */
+function su_humsci_profile_update_11005(): string {
+  $modules = array_filter(['video_embed_media', 'video_embed_field'], fn ($module) => \Drupal::moduleHandler()->moduleExists($module));
+  if ($modules) {
+    \Drupal::service('module_installer')->uninstall($modules);
+    return t('Uninstalled the video embed modules.');
+  }
+  return t('The video embed modules were already uninstalled.');
+}

@@ -1,12 +1,9 @@
-diff --git a/core/modules/media_library/js/media_library.widget.js b/core/modules/media_library/js/media_library.widget.js
-index b9f5b8a5cb17d8aaff7fa8ac863e8d3f0d15ec25..6205288c16787702fcf263f3add96b91b3e578a6 100644
 --- a/core/modules/media_library/js/media_library.widget.js
 +++ b/core/modules/media_library/js/media_library.widget.js
-@@ -72,6 +72,28 @@
-     },
+@@ -73,6 +73,28 @@
    };
  
-+  /**
+   /**
 +   * Allow users to edit media library items inside a modal.
 +   */
 +  Drupal.behaviors.MediaLibraryWidgetEditItem = {
@@ -28,11 +25,10 @@ index b9f5b8a5cb17d8aaff7fa8ac863e8d3f0d15ec25..6205288c16787702fcf263f3add96b91
 +    },
 +  };
 +
-   /**
++  /**
     * Disable the open button when the user is not allowed to add more items.
     *
-diff --git a/core/modules/media_library/media_library.module b/core/modules/media_library/media_library.module
-index 81c4f7900b6c25175245c1e0ad797df5722b32bf..aa8c8891ca6ca9da8d39fdee2ffa05e900ab9efd 100644
+    * @type {Drupal~behavior}
 --- a/core/modules/media_library/media_library.module
 +++ b/core/modules/media_library/media_library.module
 @@ -4,13 +4,24 @@
@@ -57,14 +53,13 @@ index 81c4f7900b6c25175245c1e0ad797df5722b32bf..aa8c8891ca6ca9da8d39fdee2ffa05e9
  use Drupal\media_library\Hook\MediaLibraryThemeHooks;
 +use Drupal\media_library\MediaLibraryState;
 +use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+ use Drupal\media_library\MediaLibraryDisplayManager;
  
  /**
-  * Prepares variables for the media library modal dialog.
-@@ -69,6 +80,106 @@ function _media_library_views_form_media_library_after_build(array $form, FormSt
-   return $form;
+@@ -77,6 +88,106 @@
  }
  
-+/**
+ /**
 + * Implements hook_form_FORM_ID_alter() for media_form forms.
 + */
 +function media_library_form_media_form_alter(array &$form, FormStateInterface $form_state): void {
@@ -164,14 +159,13 @@ index 81c4f7900b6c25175245c1e0ad797df5722b32bf..aa8c8891ca6ca9da8d39fdee2ffa05e9
 +  return $response;
 +}
 +
- /**
++/**
   * Submit callback for media type form.
-  */
-diff --git a/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php b/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
-index 41c028be3a12dd636643529dc7ef8afe6f3e0c5c..107708400fe07af9e03a347ffcb250f7abfcd613 100644
+  *
+  * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
 --- a/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
 +++ b/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
-@@ -377,6 +377,55 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
+@@ -377,6 +377,55 @@
        ];
      }
  
@@ -227,7 +221,7 @@ index 41c028be3a12dd636643529dc7ef8afe6f3e0c5c..107708400fe07af9e03a347ffcb250f7
      $element['selection'] = [
        '#type' => 'container',
        '#theme_wrappers' => [
-@@ -425,6 +474,7 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
+@@ -425,6 +474,7 @@
            '#type' => 'submit',
            '#name' => $field_name . '-' . $delta . '-media-library-remove-button' . $id_suffix,
            '#value' => $this->t('Remove'),
@@ -235,7 +229,7 @@ index 41c028be3a12dd636643529dc7ef8afe6f3e0c5c..107708400fe07af9e03a347ffcb250f7
            '#media_id' => $media_item->id(),
            '#attributes' => [
              'aria-label' => $media_item->access('view label') ? $this->t('Remove @label', ['@label' => $media_item->label()]) : $this->t('Remove media'),
-@@ -441,6 +491,19 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
+@@ -441,6 +491,19 @@
            // Prevent errors in other widgets from preventing removal.
            '#limit_validation_errors' => $limit_validation_errors,
          ],
@@ -255,7 +249,7 @@ index 41c028be3a12dd636643529dc7ef8afe6f3e0c5c..107708400fe07af9e03a347ffcb250f7
          'rendered_entity' => $preview,
          'target_id' => [
            '#type' => 'hidden',
-@@ -462,52 +525,6 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
+@@ -462,52 +525,6 @@
        ];
      }
  
@@ -308,21 +302,17 @@ index 41c028be3a12dd636643529dc7ef8afe6f3e0c5c..107708400fe07af9e03a347ffcb250f7
      // Add a button that will load the Media library in a modal using AJAX.
      $element['open_button'] = [
        '#type' => 'button',
-diff --git a/core/themes/claro/claro.theme b/core/themes/claro/claro.theme
-index 6c24db719baac84d6d58f52e2fab979c6e478c6b..a7049d9fc78a0b85a3126c3a39e8bb048a957fef 100644
---- a/core/themes/claro/claro.theme
-+++ b/core/themes/claro/claro.theme
-@@ -1452,6 +1452,8 @@ function claro_preprocess_item_list__media_library_add_form_media_list(array &$v
-  * This targets each media item selected in an entity reference field.
-  */
- function claro_preprocess_media_library_item__widget(array &$variables): void {
-+  $variables['content']['edit_button']['#attributes']['class'][] = 'media-library-item__edit';
-+  $variables['content']['edit_button']['#attributes']['class'][] = 'icon-link';
-   $variables['content']['remove_button']['#attributes']['class'][] = 'media-library-item__remove';
-   $variables['content']['remove_button']['#attributes']['class'][] = 'icon-link';
- }
-diff --git a/core/themes/claro/css/theme/media-library.css b/core/themes/claro/css/theme/media-library.css
-index a8f12da1f0b5b75c8044591a05c45d8073b7d480..ffa8444278f5a367a8b1a09bc0ba68e6e9362cf7 100644
+--- a/core/themes/claro/src/Hook/ClaroHooks.php
++++ b/core/themes/claro/src/Hook/ClaroHooks.php
+@@ -1274,6 +1274,8 @@
+    */
+   #[Hook('preprocess_media_library_item__widget')]
+   public function preprocessMediaLibraryItemWidget(array &$variables): void {
++    $variables['content']['edit_button']['#attributes']['class'][] = 'media-library-item__edit';
++    $variables['content']['edit_button']['#attributes']['class'][] = 'icon-link';
+     $variables['content']['remove_button']['#attributes']['class'][] = 'media-library-item__remove';
+     $variables['content']['remove_button']['#attributes']['class'][] = 'icon-link';
+   }
 --- a/core/themes/claro/css/theme/media-library.css
 +++ b/core/themes/claro/css/theme/media-library.css
 @@ -750,6 +750,12 @@
@@ -364,8 +354,6 @@ index a8f12da1f0b5b75c8044591a05c45d8073b7d480..ffa8444278f5a367a8b1a09bc0ba68e6
    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
  }
  
-diff --git a/core/themes/claro/css/theme/media-library.pcss.css b/core/themes/claro/css/theme/media-library.pcss.css
-index 0ac3e4b8bbf19fbc0cfb92c1ec75cc7bba481bdc..4c3b62977461126316adfb5201cc1978c7518759 100644
 --- a/core/themes/claro/css/theme/media-library.pcss.css
 +++ b/core/themes/claro/css/theme/media-library.pcss.css
 @@ -696,6 +696,12 @@

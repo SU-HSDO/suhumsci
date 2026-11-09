@@ -257,10 +257,14 @@
   &::after {
     border-top: 1px solid color('tertiary');
     border-bottom: 1px solid color('tertiary');
-    top: hb-calculate-rems(14.5px);
-    bottom: hb-calculate-rems(14.5px);
-    left: hb-calculate-rems(38px);
-    right: hb-calculate-rems(38px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      inset: hb-calculate-rems(17px) hb-calculate-rems(40px);
+    }
+
+    @include hb-traditional {
+      inset: hb-calculate-rems(14.5px) hb-calculate-rems(38px);
+    }
   }
 }
 

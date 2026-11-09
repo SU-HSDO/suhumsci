@@ -200,19 +200,12 @@
   @include hb-heading-4;
 
   position: relative;
+  overflow: hidden;
   width: fit-content;
   max-width: hb-calculate-rems(810px);
   color: color('gray-1000', 'global');
   margin-inline: auto;
   margin-block: hb-calculate-rems(28px) hb-calculate-rems(32px);
-
-  &:first-child {
-    margin-block-start: 0;
-  }
-
-  &:last-child {
-    margin-block-end: 0;
-  }
 
   @include hb-themes(('colorful', 'airy')) {
     padding-block: hb-calculate-rems(36px) hb-calculate-rems(40px);
@@ -259,6 +252,12 @@
                   svg(hc-get-icons('close-quote-mark-traditional', 'black'));
       mask-size: hb-calculate-rems(30px) hb-calculate-rems(23px);
     }
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container &,
+    .hb-dark-pattern.hb-local-footer & {
+      background-color: color('tertiary-highlight');
+    }
   }
 
   &::after {
@@ -271,6 +270,12 @@
 
     @include hb-traditional {
       inset: hb-calculate-rems(14.5px) hb-calculate-rems(38px);
+    }
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container &,
+    .hb-dark-pattern.hb-local-footer & {
+      border-color: color('tertiary-highlight');
     }
   }
 }

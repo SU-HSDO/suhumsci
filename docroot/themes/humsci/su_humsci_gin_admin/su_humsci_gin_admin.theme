@@ -83,7 +83,7 @@ function su_humsci_gin_admin_theme_suggestions_paragraph_alter(array &$suggestio
   // types (hs_*, stanford_*) keep their own template or Display Suite layout.
   $paragraph = $variables['elements']['#paragraph'] ?? NULL;
   if ($paragraph instanceof ParagraphInterface && str_starts_with($paragraph->bundle(), 'custm_')) {
-    $suggestions[] = 'paragraph__no_preview';
+    $suggestions[] = 'paragraph__custom';
   }
 }
 

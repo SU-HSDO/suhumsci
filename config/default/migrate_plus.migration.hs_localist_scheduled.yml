@@ -29,7 +29,6 @@ source:
     update_message: 'Updated automatically'
     register_text: Register
     image_path: 'public://events/localist/'
-    alt: ''
     trim: " \n\r"
   fields:
     -
@@ -88,6 +87,10 @@ source:
       name: photo_id
       label: photo_id
       selector: event/photo_id
+    -
+      name: photo_caption
+      label: photo_caption
+      selector: event/photo_caption
     -
       name: departments
       label: departments
@@ -405,7 +408,7 @@ process:
       values:
         name: title
         field_media_image/target_id: '@image_file'
-        field_media_image/alt: constants/alt
+        field_media_image/alt: photo_caption
   field_hs_event_status:
     -
       source: status

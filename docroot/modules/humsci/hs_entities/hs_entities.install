@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Update functions for hs_entities module.
+ */
+
+use Drupal\hs_entities\Entity\HsEntityType;
+
+/**
+ * Remove the unused News RSS entities and bundle.
+ */
+function hs_entities_update_11001(&$sandbox): string {
+  $storage = \Drupal::entityTypeManager()->getStorage('hs_entity');
+
+  if (!isset($sandbox['ids'])) {
+    $sandbox['ids'] = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('bundle', 'news_rss')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['deleted'] = 0;
+  }
+
+  $ids = array_splice($sandbox['ids'], 0, 50);
+  $entities = $storage->loadMultiple($ids);
+  $storage->delete($entities);
+  $sandbox['deleted'] += count($entities);
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  if ($sandbox['#finished'] === 1) {
+    HsEntityType::load('news_rss')?->delete();
+    \Drupal::configFactory()->getEditable('auto_entitylabel.settings.hs_entity.news_rss')->delete();
+    return t('Removed @count News RSS entities and the News RSS entity type.', [
+      '@count' => $sandbox['deleted'],
+    ]);
+  }
+
+  return t('Removed @deleted of @total News RSS entities.', [
+    '@deleted' => $sandbox['deleted'],
+    '@total' => $sandbox['total'],
+  ]);
+}

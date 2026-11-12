@@ -139,6 +139,27 @@ class HsManageBlockVisibilityFormTest extends KernelTestBase {
   }
 
   /**
+   * Builds the form for the top-level block with the given submitted values.
+   *
+   * @param array $values
+   *   The values already in the form state, as the Ajax field select leaves
+   *   them when the editor picks a field.
+   *
+   * @return array
+   *   The built form.
+   */
+  protected function build(array $values): array {
+    $node = Node::create(['type' => 'page', 'title' => 'Hello']);
+    $storage = $this->createMock(SectionStorageInterface::class);
+    $storage->method('getSection')->willReturn($this->section);
+    $storage->method('getContextsDuringPreview')->willReturn(['layout_builder.entity' => EntityContext::fromEntity($node)]);
+
+    $form_state = new FormState();
+    $form_state->setValues($values);
+    return $this->form->buildForm([], $form_state, $storage, 0, self::BLOCK_UUID, NULL);
+  }
+
+  /**
    * Gets the rule stored on the top-level block.
    *
    * @return mixed
@@ -146,6 +167,31 @@ class HsManageBlockVisibilityFormTest extends KernelTestBase {
    */
   protected function getBlockRule(): mixed {
     return $this->section->getComponent(self::BLOCK_UUID)->get('visibility_rule');
+  }
+
+  /**
+   * Tests the operator and boundary options follow the selected field type.
+   */
+  public function testOperatorOptionsDependOnField(): void {
+    // With no field chosen, only the value operators are offered.
+    $form = $this->build([]);
+    $this->assertSame(['empty', 'not_empty'], array_keys($form['settings']['operator']['#options']));
+    $this->assertArrayNotHasKey('boundary', $form['settings']);
+
+    // A non-date field keeps just the value operators.
+    $form = $this->build(['field' => 'title']);
+    $this->assertSame(['empty', 'not_empty'], array_keys($form['settings']['operator']['#options']));
+    $this->assertArrayNotHasKey('boundary', $form['settings']);
+
+    // A single-value date field adds the date operators, but has no start/end.
+    $form = $this->build(['field' => 'field_date']);
+    $this->assertSame(['empty', 'not_empty', 'future', 'past'], array_keys($form['settings']['operator']['#options']));
+    $this->assertArrayNotHasKey('boundary', $form['settings']);
+
+    // A date range field adds both the date operators and the start/end choice.
+    $form = $this->build(['field' => 'field_range']);
+    $this->assertSame(['empty', 'not_empty', 'future', 'past'], array_keys($form['settings']['operator']['#options']));
+    $this->assertArrayHasKey('boundary', $form['settings']);
   }
 
   /**

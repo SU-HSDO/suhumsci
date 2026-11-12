@@ -126,39 +126,59 @@ class HsManageBlockVisibilityForm extends FormBase {
       '#options' => $this->getFieldOptions(),
       '#empty_option' => $this->t('- Always show this block -'),
       '#default_value' => $rule['field'] ?? '',
-    ];
-    $form['operator'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Hide this block if the field'),
-      '#options' => [
-        'empty' => $this->t('is empty'),
-        'not_empty' => $this->t('is not empty'),
-        'future' => $this->t('is in the future (date fields only)'),
-        'past' => $this->t('is in the past (date fields only)'),
+      '#ajax' => [
+        'callback' => '::updateVisibilitySettings',
+        'wrapper' => 'hs-blocks-visibility-settings',
+        'event' => 'change',
       ],
+    ];
+
+    // Offer only the operators that fit the chosen field: every field can be
+    // empty or not, date fields add the two date operators, and only a field
+    // with a separate start and end adds the start/end choice. The field select
+    // rebuilds this section over Ajax, so it always matches the current field.
+    $selected_field = (string) ($form_state->getValue('field') ?? $rule['field'] ?? '');
+    $definitions = $this->getFieldDefinitions();
+    $definition = ($selected_field && isset($definitions[$selected_field])) ? $definitions[$selected_field] : NULL;
+    $is_date_field = $definition && VisibilityRuleEvaluator::isDateField($definition);
+    $has_date_range = $definition && VisibilityRuleEvaluator::hasDateRange($definition);
+
+    $form['settings'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'hs-blocks-visibility-settings'],
+    ];
+
+    $operator_options = [
+      'empty' => $this->t('is empty'),
+      'not_empty' => $this->t('is not empty'),
+    ];
+    if ($is_date_field) {
+      $operator_options['future'] = $this->t('is in the future');
+      $operator_options['past'] = $this->t('is in the past');
+    }
+    $form['settings']['operator'] = [
+      '#type' => 'select',
+      // Keep the flat name so the stored rule and the #states below are
+      // unaffected by moving the element into the Ajax wrapper.
+      '#parents' => ['operator'],
+      '#title' => $this->t('Hide this block if the field'),
+      '#options' => $operator_options,
       '#default_value' => $rule['operator'] ?? 'empty',
-      '#description' => $this->t('The date options compare the field to the current date and time, down to the minute. "Is in the future" hides the block until the date passes; "is in the past" hides it once the date has passed.'),
       '#states' => [
         'invisible' => [':input[name="field"]' => ['value' => '']],
       ],
     ];
+    if ($is_date_field) {
+      $form['settings']['operator']['#description'] = $this->t('Compared to the current date and time, to the minute. "Is in the future" hides the block until the date arrives; "is in the past" hides it from that moment on. A time equal to now counts as past.');
+    }
 
     // Date range and event (smart date) fields have a start and an end, so let
-    // the editor choose which one the date options compare. For example, hiding
-    // an RSVP block once an event begins compares the start, not the end.
-    $range_fields = array_keys(array_filter(
-      $this->getFieldDefinitions(),
-      fn (FieldDefinitionInterface $definition) => VisibilityRuleEvaluator::hasDateRange($definition)
-    ));
-    if ($range_fields) {
-      $visible = [];
-      foreach ($range_fields as $field_name) {
-        $visible[] = [':input[name="field"]' => ['value' => $field_name]];
-        $visible[] = 'or';
-      }
-      array_pop($visible);
-      $form['boundary'] = [
+    // the editor choose which one the date operators compare. For example, an
+    // RSVP block hidden once an event begins compares the start, not the end.
+    if ($has_date_range) {
+      $form['settings']['boundary'] = [
         '#type' => 'select',
+        '#parents' => ['boundary'],
         '#title' => $this->t('Compare using'),
         '#options' => [
           'end' => $this->t('End date'),
@@ -167,7 +187,13 @@ class HsManageBlockVisibilityForm extends FormBase {
         '#default_value' => $rule['boundary'] ?? 'end',
         '#description' => $this->t('Only date range and event (smart date) fields have both. Example: to hide an RSVP block the moment an event starts, compare the <strong>Start date</strong> and choose "is in the past".'),
         '#states' => [
-          'visible' => $visible,
+          'visible' => [
+            ':input[name="operator"]' => [
+              ['value' => 'future'],
+              'or',
+              ['value' => 'past'],
+            ],
+          ],
         ],
       ];
     }
@@ -255,6 +281,21 @@ class HsManageBlockVisibilityForm extends FormBase {
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
     return $this->rebuildAndClose($this->sectionStorage);
+  }
+
+  /**
+   * Ajax callback: rebuilds the operators to match the selected field.
+   *
+   * @param array $form
+   *   The rebuilt form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array
+   *   The portion of the form to replace.
+   */
+  public function updateVisibilitySettings(array $form, FormStateInterface $form_state): array {
+    return $form['settings'];
   }
 
   /**

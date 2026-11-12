@@ -31,6 +31,8 @@ The **Field** list contains the fields added to the content type, plus the title
 
 Date fields are fields of type date and time (`datetime`), date range (`daterange`), smart date (`smartdate`, used by the event date), or timestamp (`timestamp`). The form groups them under **Date fields** and rejects a date rule on any other field.
 
+The **Hide this block if the field** list adapts to the chosen field: every field offers *is empty* and *is not empty*, and date fields also offer *is in the future* and *is in the past*. The **Compare using** start/end choice only appears for date range and event (smart date) fields.
+
 Date range and event (smart date) fields have both a start and an end, so the form adds a **Compare using** option. For example, to hide an event's RSVP block the moment the event begins, choose the field, set **Compare using** to **Start date**, and choose **is in the past** — the block shows until the start time (to the minute) and hides once it passes.
 
 ## Layout Builder Preview

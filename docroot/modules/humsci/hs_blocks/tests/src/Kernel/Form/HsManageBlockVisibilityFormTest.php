@@ -43,6 +43,7 @@ class HsManageBlockVisibilityFormTest extends KernelTestBase {
     'field',
     'text',
     'datetime',
+    'datetime_range',
     'filter',
     'block',
     'layout_builder',
@@ -84,6 +85,18 @@ class HsManageBlockVisibilityFormTest extends KernelTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
       'label' => 'Date',
+    ])->save();
+    FieldStorageConfig::create([
+      'field_name' => 'field_range',
+      'entity_type' => 'node',
+      'type' => 'daterange',
+      'settings' => ['datetime_type' => 'datetime'],
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_range',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'label' => 'Range',
     ])->save();
 
     $this->section = new Section('layout_onecol');
@@ -148,7 +161,6 @@ class HsManageBlockVisibilityFormTest extends KernelTestBase {
     $rule = $this->getBlockRule();
     $this->assertSame('title', $rule['field']);
     $this->assertSame('empty', $rule['operator']);
-    $this->assertSame('hide', $rule['action']);
 
     // Choosing no field clears the rule.
     $this->submit(self::BLOCK_UUID, NULL, ['field' => '', 'operator' => 'empty']);
@@ -196,13 +208,54 @@ class HsManageBlockVisibilityFormTest extends KernelTestBase {
 
     $config = $this->section->getComponent(self::GROUP_UUID)->get('configuration');
     $this->assertSame(
-      ['field' => 'title', 'operator' => 'not_empty', 'action' => 'hide'],
+      ['field' => 'title', 'operator' => 'not_empty'],
       $config['children'][self::CHILD_UUID]['additional']['visibility_rule']
     );
 
+    // Clearing the rule stores NULL, the same as a top-level block.
     $this->submit(self::CHILD_UUID, self::GROUP_UUID, ['field' => '', 'operator' => 'empty']);
     $config = $this->section->getComponent(self::GROUP_UUID)->get('configuration');
-    $this->assertArrayNotHasKey('visibility_rule', $config['children'][self::CHILD_UUID]['additional'] ?? []);
+    $this->assertNull($config['children'][self::CHILD_UUID]['additional']['visibility_rule']);
+  }
+
+  /**
+   * Tests the start/end boundary is stored only for range-field date rules.
+   */
+  public function testDateBoundaryStored(): void {
+    // A range field offers the boundary option; the chosen value is stored.
+    $this->submit(self::BLOCK_UUID, NULL, ['field' => 'field_range', 'operator' => 'past', 'boundary' => 'start']);
+    $rule = $this->getBlockRule();
+    $this->assertSame('field_range', $rule['field']);
+    $this->assertSame('start', $rule['boundary']);
+
+    // A single-value date field has no start/end, so no boundary is stored.
+    $this->submit(self::BLOCK_UUID, NULL, ['field' => 'field_date', 'operator' => 'future']);
+    $this->assertArrayNotHasKey('boundary', $this->getBlockRule());
+
+    // A non-date rule never stores a boundary.
+    $this->submit(self::BLOCK_UUID, NULL, ['field' => 'field_range', 'operator' => 'empty']);
+    $this->assertArrayNotHasKey('boundary', $this->getBlockRule());
+  }
+
+  /**
+   * Tests a stale link to a removed block neither fatals nor saves a bad child.
+   */
+  public function testMissingComponent(): void {
+    $missing = '44444444-4444-4444-8444-444444444444';
+
+    // A top-level block that no longer exists is handled without a fatal.
+    $form = $this->submit($missing, NULL, ['field' => 'title', 'operator' => 'empty']);
+    $this->assertArrayHasKey('field', $form);
+
+    // A group child that no longer exists is not written into the group as a
+    // child with no block plugin.
+    $this->submit($missing, self::GROUP_UUID, ['field' => 'title', 'operator' => 'empty']);
+    $config = $this->section->getComponent(self::GROUP_UUID)->get('configuration');
+    $this->assertArrayNotHasKey($missing, $config['children']);
+
+    // A missing group does not fatal either.
+    $form = $this->submit($missing, $missing, ['field' => 'title', 'operator' => 'empty']);
+    $this->assertArrayHasKey('field', $form);
   }
 
 }

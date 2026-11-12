@@ -3,6 +3,7 @@
 namespace Drupal\Tests\hs_blocks\Unit;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -35,6 +36,7 @@ class VisibilityRuleEvaluatorTest extends UnitTestCase {
   protected function buildEntity(bool $field_exists, bool $field_empty): FieldableEntityInterface {
     $items = $this->createMock(FieldItemListInterface::class);
     $items->method('isEmpty')->willReturn($field_empty);
+    $items->method('access')->willReturn(AccessResult::allowed());
     $definition = $this->createMock(FieldDefinitionInterface::class);
     $definition->method('getType')->willReturn('string');
     $items->method('getFieldDefinition')->willReturn($definition);
@@ -77,8 +79,8 @@ class VisibilityRuleEvaluatorTest extends UnitTestCase {
    * Data provider for ::testIsHidden().
    */
   public static function providerIsHidden(): array {
-    $empty = ['field' => 'field_title', 'operator' => 'empty', 'action' => 'hide'];
-    $not_empty = ['field' => 'field_title', 'operator' => 'not_empty', 'action' => 'hide'];
+    $empty = ['field' => 'field_title', 'operator' => 'empty'];
+    $not_empty = ['field' => 'field_title', 'operator' => 'not_empty'];
     return [
       'empty rule, empty field' => [$empty, TRUE, TRUE, TRUE],
       'empty rule, filled field' => [$empty, TRUE, FALSE, FALSE],
@@ -87,7 +89,6 @@ class VisibilityRuleEvaluatorTest extends UnitTestCase {
       'missing field fails open' => [$empty, FALSE, TRUE, FALSE],
       'unknown operator fails open' => [['operator' => 'bogus'] + $empty, TRUE, TRUE, FALSE],
       'date operator on a non-date field fails open' => [['operator' => 'future'] + $empty, TRUE, TRUE, FALSE],
-      'unknown action fails open' => [['action' => 'show'] + $empty, TRUE, TRUE, FALSE],
       'incomplete rule fails open' => [['field' => 'field_title'], TRUE, TRUE, FALSE],
     ];
   }
@@ -102,6 +103,31 @@ class VisibilityRuleEvaluatorTest extends UnitTestCase {
     $entity = $this->buildEntity(FALSE, TRUE);
     $evaluator->isHidden([], $entity, $metadata);
     $this->assertSame(['node:1'], $metadata->getCacheTags());
+  }
+
+  /**
+   * Tests a field the visitor cannot view counts as empty.
+   */
+  public function testInaccessibleFieldIsEmpty(): void {
+    $items = $this->createMock(FieldItemListInterface::class);
+    // The field is filled, but the visitor cannot view it, so it renders as
+    // nothing and must not reveal that it has a value.
+    $items->method('isEmpty')->willReturn(FALSE);
+    $items->method('access')->willReturn(AccessResult::forbidden());
+    $definition = $this->createMock(FieldDefinitionInterface::class);
+    $definition->method('getType')->willReturn('string');
+    $items->method('getFieldDefinition')->willReturn($definition);
+
+    $entity = $this->createMock(FieldableEntityInterface::class);
+    $entity->method('hasField')->willReturn(TRUE);
+    $entity->method('get')->willReturn($items);
+    $entity->method('getCacheTags')->willReturn([]);
+    $entity->method('getCacheContexts')->willReturn([]);
+    $entity->method('getCacheMaxAge')->willReturn(-1);
+
+    $evaluator = $this->buildEvaluator();
+    $this->assertTrue($evaluator->isHidden(['field' => 'field_title', 'operator' => 'empty'], $entity, new CacheableMetadata()));
+    $this->assertFalse($evaluator->isHidden(['field' => 'field_title', 'operator' => 'not_empty'], $entity, new CacheableMetadata()));
   }
 
 }

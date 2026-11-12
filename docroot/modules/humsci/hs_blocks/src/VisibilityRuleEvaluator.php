@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
@@ -33,6 +34,16 @@ class VisibilityRuleEvaluator {
   const DATE_FIELD_TYPES = ['datetime', 'daterange', 'smartdate', 'timestamp'];
 
   /**
+   * Field types that have a separate start and end a date rule can compare.
+   */
+  const DATE_RANGE_FIELD_TYPES = ['daterange', 'smartdate'];
+
+  /**
+   * The boundaries a date rule can compare on a field that has both.
+   */
+  const BOUNDARIES = ['start', 'end'];
+
+  /**
    * Constructs a new VisibilityRuleEvaluator.
    *
    * @param \Drupal\Component\Datetime\TimeInterface $time
@@ -57,10 +68,44 @@ class VisibilityRuleEvaluator {
   }
 
   /**
+   * Determines if a field has a separate start and end a date rule can compare.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
+   *   The field definition.
+   *
+   * @return bool
+   *   TRUE if the field is a date range or event (smart date) field.
+   */
+  public static function hasDateRange(FieldDefinitionInterface $definition): bool {
+    return in_array($definition->getType(), self::DATE_RANGE_FIELD_TYPES, TRUE);
+  }
+
+  /**
+   * Resolves the entity whose layout is being displayed.
+   *
+   * Shared by the event subscriber and the manage form so both read the
+   * context the same way.
+   *
+   * @param array $contexts
+   *   The layout contexts, keyed by context name.
+   *
+   * @return \Drupal\Core\Entity\FieldableEntityInterface|null
+   *   The entity, or NULL when there is no resolved fieldable entity.
+   */
+  public static function getContextEntity(array $contexts): ?FieldableEntityInterface {
+    $context = $contexts['layout_builder.entity'] ?? NULL;
+    // A present context can still be unresolved, so getContextValue() is only
+    // safe to call once hasContextValue() confirms it holds an entity.
+    $entity = $context && $context->hasContextValue() ? $context->getContextValue() : NULL;
+    return $entity instanceof FieldableEntityInterface ? $entity : NULL;
+  }
+
+  /**
    * Determines if the rule hides the block for the given entity.
    *
    * @param array $rule
-   *   The visibility rule, with `field`, `operator` and `action` keys.
+   *   The visibility rule, with `field` and `operator` keys, plus an optional
+   *   `boundary` (`start` or `end`) for date rules on fields that have both.
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity the rule is evaluated against.
    * @param \Drupal\Core\Cache\CacheableMetadata $metadata
@@ -77,7 +122,6 @@ class VisibilityRuleEvaluator {
     $field_name = $rule['field'] ?? '';
     $operator = $rule['operator'] ?? '';
     if (
-      ($rule['action'] ?? '') !== 'hide' ||
       !in_array($operator, [...self::VALUE_OPERATORS, ...self::DATE_OPERATORS], TRUE) ||
       !is_string($field_name) ||
       !$entity->hasField($field_name)
@@ -88,14 +132,56 @@ class VisibilityRuleEvaluator {
 
     $items = $entity->get($field_name);
     if (in_array($operator, self::VALUE_OPERATORS, TRUE)) {
-      $is_empty = $items->isEmpty();
+      $is_empty = $this->isFieldEmpty($items, $metadata);
       return $operator === 'empty' ? $is_empty : !$is_empty;
     }
 
     if (!self::isDateField($items->getFieldDefinition())) {
       return FALSE;
     }
-    return $this->isDateMatch($operator, $items, $metadata);
+    // Default to the end so a rule saved before boundaries existed, and any
+    // single-value field, keeps comparing the value it always did.
+    $boundary = in_array($rule['boundary'] ?? NULL, self::BOUNDARIES, TRUE) ? $rule['boundary'] : 'end';
+    return $this->isDateMatch($operator, $items, $metadata, $boundary);
+  }
+
+  /**
+   * Determines if a field is empty as the visitor would see it.
+   *
+   * Unlike FieldItemListInterface::isEmpty(), a field the visitor cannot view
+   * counts as empty, so a rule never reveals whether a restricted field has a
+   * value, and an entity reference that resolves only to missing, unpublished
+   * or otherwise inaccessible entities counts as empty, so the block is not
+   * shown as an empty shell.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The field values.
+   * @param \Drupal\Core\Cache\CacheableMetadata $metadata
+   *   Receives the cache metadata the access checks depend on.
+   *
+   * @return bool
+   *   TRUE if the field holds nothing the visitor would see.
+   */
+  protected function isFieldEmpty(FieldItemListInterface $items, CacheableMetadata $metadata): bool {
+    $access = $items->access('view', NULL, TRUE);
+    $metadata->addCacheableDependency($access);
+    if (!$access->isAllowed() || $items->isEmpty()) {
+      return TRUE;
+    }
+
+    if ($items instanceof EntityReferenceFieldItemListInterface) {
+      foreach ($items->referencedEntities() as $referenced_entity) {
+        $referenced_access = $referenced_entity->access('view', NULL, TRUE);
+        $metadata->addCacheableDependency($referenced_access);
+        $metadata->addCacheableDependency($referenced_entity);
+        if ($referenced_access->isAllowed()) {
+          return FALSE;
+        }
+      }
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   /**
@@ -107,12 +193,14 @@ class VisibilityRuleEvaluator {
    *   The date field values.
    * @param \Drupal\Core\Cache\CacheableMetadata $metadata
    *   Receives the max-age, so the result is rebuilt when the date passes.
+   * @param string $boundary
+   *   Which end of a date range or event to compare, `start` or `end`.
    *
    * @return bool
    *   TRUE if the operator matches.
    */
-  protected function isDateMatch(string $operator, FieldItemListInterface $items, CacheableMetadata $metadata): bool {
-    $timestamps = $this->getTimestamps($items, $metadata);
+  protected function isDateMatch(string $operator, FieldItemListInterface $items, CacheableMetadata $metadata, string $boundary): bool {
+    $timestamps = $this->getTimestamps($items, $metadata, $boundary);
     if (!$timestamps) {
       // Nothing to compare, so don't hide.
       return FALSE;
@@ -139,32 +227,37 @@ class VisibilityRuleEvaluator {
    *   The date field values.
    * @param \Drupal\Core\Cache\CacheableMetadata $metadata
    *   Receives the site timezone config dependency.
+   * @param string $boundary
+   *   Which end of a date range or event to compare, `start` or `end`.
    *
    * @return int[]
    *   The timestamps.
    */
-  protected function getTimestamps(FieldItemListInterface $items, CacheableMetadata $metadata): array {
+  protected function getTimestamps(FieldItemListInterface $items, CacheableMetadata $metadata, string $boundary): array {
     $config = $this->configFactory->get('system.date');
     $metadata->addCacheableDependency($config);
     $site_timezone = new \DateTimeZone($config->get('timezone.default') ?: 'UTC');
 
     $type = $items->getFieldDefinition()->getType();
+    // Only date range and smart date fields have a start and end; the single
+    // value of a datetime or timestamp field is used for either boundary.
+    $use_end = $boundary !== 'start';
     $timestamps = [];
     foreach ($items as $item) {
       $item_value = $item->getValue();
       if ($type === 'timestamp' || $type === 'smartdate') {
-        // Smart date stores both ends as timestamps, and an event is over when
-        // its end is.
-        $key = $type === 'smartdate' ? 'end_value' : 'value';
+        // Timestamp has one value; smart date stores the start and the end as
+        // separate timestamps, with full time precision either way.
+        $key = ($type === 'smartdate' && $use_end) ? 'end_value' : 'value';
         if (isset($item_value[$key]) && $item_value[$key] !== '') {
           $timestamps[] = (int) $item_value[$key];
         }
         continue;
       }
 
-      // An event is over when its end date is, so ranges use the end.
-      $is_end = $type === 'daterange';
-      $value = $item_value[$is_end ? 'end_value' : 'value'] ?? NULL;
+      // Datetime has one value; a date range stores the start and the end.
+      $is_range_end = $type === 'daterange' && $use_end;
+      $value = $item_value[$is_range_end ? 'end_value' : 'value'] ?? NULL;
       if (empty($value)) {
         continue;
       }
@@ -174,9 +267,9 @@ class VisibilityRuleEvaluator {
       $is_date_only = $items->getFieldDefinition()->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE;
       if ($is_date_only) {
         // Date-only values have no time, so they start at midnight in the site
-        // timezone. As an end, the date lasts until that day is over.
+        // timezone. A date range's end lasts until that day is over.
         $date = \DateTimeImmutable::createFromFormat('!' . DateTimeItemInterface::DATE_STORAGE_FORMAT, $value, $site_timezone);
-        if ($date && $is_end) {
+        if ($date && $is_range_end) {
           $date = $date->modify('+1 day');
         }
       }

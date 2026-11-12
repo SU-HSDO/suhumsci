@@ -3,6 +3,8 @@
 namespace Drupal\Tests\hs_blocks\Kernel\EventSubscriber;
 
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_blocks\EventSubscriber\VisibilityRuleSubscriber;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\SectionComponent;
@@ -30,6 +32,7 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
     'field',
     'text',
     'filter',
+    'datetime',
     'block',
     'layout_builder',
     'layout_discovery',
@@ -44,7 +47,20 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installConfig(['system', 'node', 'filter']);
+    $this->installSchema('hs_blocks', ['hs_blocks_visibility_flip']);
     NodeType::create(['type' => 'page', 'name' => 'Page'])->save();
+    FieldStorageConfig::create([
+      'field_name' => 'field_date',
+      'entity_type' => 'node',
+      'type' => 'datetime',
+      'settings' => ['datetime_type' => 'datetime'],
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_date',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'label' => 'Date',
+    ])->save();
   }
 
   /**
@@ -76,7 +92,7 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
    * Tests a matching rule empties the build but keeps cache metadata.
    */
   public function testHiddenComponent(): void {
-    $rule = ['field' => 'title', 'operator' => 'not_empty', 'action' => 'hide'];
+    $rule = ['field' => 'title', 'operator' => 'not_empty'];
     $build = $this->buildComponent($rule, 'Hello');
 
     $this->assertArrayNotHasKey('content', $build);
@@ -87,7 +103,7 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
    * Tests a rule that does not match leaves the block rendered.
    */
   public function testVisibleComponent(): void {
-    $rule = ['field' => 'title', 'operator' => 'empty', 'action' => 'hide'];
+    $rule = ['field' => 'title', 'operator' => 'empty'];
     $build = $this->buildComponent($rule, 'Hello');
 
     $this->assertArrayHasKey('content', $build);
@@ -105,11 +121,61 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
    * Tests the preview never hides the block, and flags it instead.
    */
   public function testPreviewIsNotHidden(): void {
-    $rule = ['field' => 'title', 'operator' => 'not_empty', 'action' => 'hide'];
+    $rule = ['field' => 'title', 'operator' => 'not_empty'];
     $build = $this->buildComponent($rule, 'Hello', TRUE);
 
     $this->assertArrayHasKey('content', $build);
     $this->assertContains('hs-blocks-conditionally-hidden', $build['#attributes']['class']);
+  }
+
+  /**
+   * Tests a future date rule records a flip for the entity on the live page.
+   */
+  public function testDateRuleRecordsFlip(): void {
+    $node = Node::create([
+      'type' => 'page',
+      'title' => 'Hello',
+      'field_date' => '2999-01-01T00:00:00',
+    ]);
+    $node->save();
+
+    $component = new SectionComponent($this->container->get('uuid')->generate(), 'content', [
+      'id' => 'system_powered_by_block',
+    ], ['visibility_rule' => ['field' => 'field_date', 'operator' => 'future']]);
+    $component->toRenderArray(['layout_builder.entity' => EntityContext::fromEntity($node)], FALSE);
+
+    $flip = $this->container->get('database')
+      ->select('hs_blocks_visibility_flip', 'f')
+      ->fields('f', ['flip_time'])
+      ->condition('cache_tag', 'node:' . $node->id())
+      ->execute()
+      ->fetchField();
+    $this->assertNotFalse($flip);
+    $this->assertGreaterThan($this->container->get('datetime.time')->getRequestTime(), (int) $flip);
+  }
+
+  /**
+   * Tests the preview does not record a flip.
+   */
+  public function testPreviewDoesNotRecordFlip(): void {
+    $node = Node::create([
+      'type' => 'page',
+      'title' => 'Hello',
+      'field_date' => '2999-01-01T00:00:00',
+    ]);
+    $node->save();
+
+    $component = new SectionComponent($this->container->get('uuid')->generate(), 'content', [
+      'id' => 'system_powered_by_block',
+    ], ['visibility_rule' => ['field' => 'field_date', 'operator' => 'future']]);
+    $component->toRenderArray(['layout_builder.entity' => EntityContext::fromEntity($node)], TRUE);
+
+    $count = $this->container->get('database')
+      ->select('hs_blocks_visibility_flip', 'f')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertSame('0', $count);
   }
 
 }

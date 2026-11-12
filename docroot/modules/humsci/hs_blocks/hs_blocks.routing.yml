@@ -96,7 +96,8 @@ hs_blocks.manage_visibility:
     _form: '\Drupal\hs_blocks\Form\HsManageBlockVisibilityForm'
     _title: 'Manage visibility'
   requirements:
-    _permission: 'configure any layout'
+    # Gate on Layout Builder access only, matching core's block routes, so
+    # editors with per-bundle override permissions also get the link.
     _layout_builder_access: 'view'
   options:
     _admin_route: TRUE

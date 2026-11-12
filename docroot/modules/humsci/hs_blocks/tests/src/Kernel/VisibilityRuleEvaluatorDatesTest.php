@@ -86,18 +86,20 @@ class VisibilityRuleEvaluatorDatesTest extends KernelTestBase {
    *   The field value.
    * @param \Drupal\Core\Cache\CacheableMetadata $metadata
    *   Receives the cache metadata.
+   * @param string $boundary
+   *   Which boundary a range/event field compares, `start` or `end`.
    *
    * @return bool
    *   TRUE if the block is hidden.
    */
-  protected function isHidden(string $field, string $operator, mixed $value, CacheableMetadata $metadata): bool {
+  protected function isHidden(string $field, string $operator, mixed $value, CacheableMetadata $metadata, string $boundary = 'end'): bool {
     $time = $this->createStub(TimeInterface::class);
     $time->method('getRequestTime')->willReturn(self::NOW);
     $evaluator = new VisibilityRuleEvaluator($time, $this->container->get('config.factory'));
 
     $node = Node::create(['type' => 'page', 'title' => 'Test', $field => $value]);
     $node->save();
-    return $evaluator->isHidden(['field' => $field, 'operator' => $operator, 'action' => 'hide'], $node, $metadata);
+    return $evaluator->isHidden(['field' => $field, 'operator' => $operator, 'boundary' => $boundary], $node, $metadata);
   }
 
   /**
@@ -107,9 +109,9 @@ class VisibilityRuleEvaluatorDatesTest extends KernelTestBase {
    *   The expected max-age, or NULL for permanent.
    */
   #[DataProvider('providerDates')]
-  public function testDates(string $field, string $operator, mixed $value, bool $expected, ?int $max_age): void {
+  public function testDates(string $field, string $operator, mixed $value, bool $expected, ?int $max_age, string $boundary = 'end'): void {
     $metadata = new CacheableMetadata();
-    $this->assertSame($expected, $this->isHidden($field, $operator, $value, $metadata));
+    $this->assertSame($expected, $this->isHidden($field, $operator, $value, $metadata, $boundary));
     $this->assertSame($max_age ?? -1, $metadata->getCacheMaxAge());
   }
 
@@ -145,6 +147,19 @@ class VisibilityRuleEvaluatorDatesTest extends KernelTestBase {
         3600,
       ],
       'multiple values, all past' => ['field_multi', 'past', ['2030-06-14T11:00:00', '2030-06-15T11:00:00'], TRUE, NULL],
+      // Start boundary: the RSVP case. An event starting in 30 minutes is not
+      // yet past by its start, so "hide if past" keeps the block shown, and the
+      // max-age flips it at the start time, to the minute.
+      'smart date starting soon, hide past by start' => ['field_smart', 'past', ['value' => self::NOW + 1800, 'end_value' => self::NOW + 5400], FALSE, 1800, 'start'],
+      // Once the event has started, "hide if past" by start hides the block,
+      // even though the event has not ended.
+      'smart date started, hide past by start' => ['field_smart', 'past', ['value' => self::NOW - 60, 'end_value' => self::NOW + 3600], TRUE, NULL, 'start'],
+      // "Hide if future" by start hides the block until the event starts.
+      'smart date starting soon, hide future by start' => ['field_smart', 'future', ['value' => self::NOW + 1800, 'end_value' => self::NOW + 5400], TRUE, 1800, 'start'],
+      // A date-only range whose start day has already begun is past by start.
+      'range started today, hide past by start' => ['field_range', 'past', ['value' => '2030-06-15', 'end_value' => '2030-06-20'], TRUE, NULL, 'start'],
+      // A date-only range starting tomorrow is still future by start.
+      'range starting tomorrow, hide future by start' => ['field_range', 'future', ['value' => '2030-06-16', 'end_value' => '2030-06-20'], TRUE, 19 * 3600, 'start'],
     ];
   }
 

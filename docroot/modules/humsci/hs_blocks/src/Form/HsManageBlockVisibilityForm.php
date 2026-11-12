@@ -4,8 +4,8 @@ namespace Drupal\hs_blocks\Form;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -73,7 +73,7 @@ class HsManageBlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('layout_builder.tempstore_repository'),
       $container->get('entity_field.manager')
@@ -83,7 +83,7 @@ class HsManageBlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'hs_blocks_manage_block_visibility';
   }
 
@@ -106,7 +106,7 @@ class HsManageBlockVisibilityForm extends FormBase {
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, ?string $uuid = NULL, ?string $group = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, ?string $uuid = NULL, ?string $group = NULL): array {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
     $this->uuid = $uuid;
@@ -137,10 +137,41 @@ class HsManageBlockVisibilityForm extends FormBase {
         'past' => $this->t('is in the past (date fields only)'),
       ],
       '#default_value' => $rule['operator'] ?? 'empty',
+      '#description' => $this->t('The date options compare the field to the current date and time, down to the minute. "Is in the future" hides the block until the date passes; "is in the past" hides it once the date has passed.'),
       '#states' => [
         'invisible' => [':input[name="field"]' => ['value' => '']],
       ],
     ];
+
+    // Date range and event (smart date) fields have a start and an end, so let
+    // the editor choose which one the date options compare. For example, hiding
+    // an RSVP block once an event begins compares the start, not the end.
+    $range_fields = array_keys(array_filter(
+      $this->getFieldDefinitions(),
+      fn (FieldDefinitionInterface $definition) => VisibilityRuleEvaluator::hasDateRange($definition)
+    ));
+    if ($range_fields) {
+      $visible = [];
+      foreach ($range_fields as $field_name) {
+        $visible[] = [':input[name="field"]' => ['value' => $field_name]];
+        $visible[] = 'or';
+      }
+      array_pop($visible);
+      $form['boundary'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Compare using'),
+        '#options' => [
+          'end' => $this->t('End date'),
+          'start' => $this->t('Start date'),
+        ],
+        '#default_value' => $rule['boundary'] ?? 'end',
+        '#description' => $this->t('Only date range and event (smart date) fields have both. Example: to hide an RSVP block the moment an event starts, compare the <strong>Start date</strong> and choose "is in the past".'),
+        '#states' => [
+          'visible' => $visible,
+        ],
+      ];
+    }
+
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Update'),
@@ -160,7 +191,7 @@ class HsManageBlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $field = $form_state->getValue('field');
     $operator = $form_state->getValue('operator');
     if (!$field || !in_array($operator, VisibilityRuleEvaluator::DATE_OPERATORS, TRUE)) {
@@ -176,29 +207,43 @@ class HsManageBlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $field = $form_state->getValue('field');
     $rule = $field ? [
       'field' => $field,
       'operator' => $form_state->getValue('operator'),
-      'action' => 'hide',
     ] : NULL;
 
-    $section = $this->sectionStorage->getSection($this->delta);
-    if ($this->group) {
-      $group = $section->getComponent($this->group);
-      $group_config = $group->get('configuration');
-      if ($rule) {
-        $group_config['children'][$this->uuid]['additional']['visibility_rule'] = $rule;
+    // Only a date rule on a field that has a start and an end needs to record
+    // which one it compares; everything else uses the single value.
+    if ($rule && in_array($rule['operator'], VisibilityRuleEvaluator::DATE_OPERATORS, TRUE)) {
+      $definitions = $this->getFieldDefinitions();
+      if (isset($definitions[$field]) && VisibilityRuleEvaluator::hasDateRange($definitions[$field])) {
+        $rule['boundary'] = $form_state->getValue('boundary') === 'start' ? 'start' : 'end';
       }
-      else {
-        unset($group_config['children'][$this->uuid]['additional']['visibility_rule']);
-      }
-      $group->setConfiguration($group_config);
     }
-    else {
-      // Stored in the component's additional values, like the attributes.
-      $section->getComponent($this->uuid)->set('visibility_rule', $rule);
+
+    $section = $this->sectionStorage->getSection($this->delta);
+    // The block or its group may have been removed since the form was opened,
+    // for example from a stale off-canvas link, so only write to a component
+    // that still exists; otherwise a child with no block plugin would be saved
+    // into the layout.
+    $components = $section->getComponents();
+    if ($this->group) {
+      if (isset($components[$this->group])) {
+        $group = $components[$this->group];
+        $group_config = $group->get('configuration');
+        if (isset($group_config['children'][$this->uuid])) {
+          $group_config['children'][$this->uuid]['additional']['visibility_rule'] = $rule;
+          $group->setConfiguration($group_config);
+        }
+      }
+    }
+    elseif (isset($components[$this->uuid])) {
+      // Stored in the component's additional values, like the attributes. A
+      // removed rule is stored as NULL in both places; SectionComponent has no
+      // method to unset an additional property.
+      $components[$this->uuid]->set('visibility_rule', $rule);
     }
 
     $this->layoutTempstore->set($this->sectionStorage);
@@ -208,7 +253,7 @@ class HsManageBlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
     return $this->rebuildAndClose($this->sectionStorage);
   }
 
@@ -220,12 +265,20 @@ class HsManageBlockVisibilityForm extends FormBase {
    */
   protected function getRule(): array {
     $section = $this->sectionStorage->getSection($this->delta);
+    // The component may be gone if the form was opened from a stale link.
+    $components = $section->getComponents();
     if ($this->group) {
-      $config = $section->getComponent($this->group)->get('configuration');
+      if (!isset($components[$this->group])) {
+        return [];
+      }
+      $config = $components[$this->group]->get('configuration');
       $rule = $config['children'][$this->uuid]['additional']['visibility_rule'] ?? [];
     }
     else {
-      $rule = $section->getComponent($this->uuid)->get('visibility_rule') ?? [];
+      if (!isset($components[$this->uuid])) {
+        return [];
+      }
+      $rule = $components[$this->uuid]->get('visibility_rule') ?? [];
     }
     return is_array($rule) ? $rule : [];
   }
@@ -238,12 +291,8 @@ class HsManageBlockVisibilityForm extends FormBase {
    */
   protected function getFieldDefinitions(): array {
     // Default layouts have no real entity, so use the preview sample entity.
-    $contexts = $this->sectionStorage->getContextsDuringPreview();
-    $context = $contexts['layout_builder.entity'] ?? NULL;
-    // A present context can still be unresolved, so getContextValue() is only
-    // safe to call once hasContextValue() confirms it holds an entity.
-    $entity = $context && $context->hasContextValue() ? $context->getContextValue() : NULL;
-    if (!$entity instanceof FieldableEntityInterface) {
+    $entity = VisibilityRuleEvaluator::getContextEntity($this->sectionStorage->getContextsDuringPreview());
+    if (!$entity) {
       return [];
     }
 

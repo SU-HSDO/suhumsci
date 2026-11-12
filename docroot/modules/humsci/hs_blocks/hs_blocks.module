@@ -30,6 +30,16 @@ function hs_blocks_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function hs_blocks_cron() {
+  // Invalidate the cache tags of entities whose date-based block visibility
+  // rules have flipped, so Acquia's Varnish layer is purged. See
+  // docs/ConditionalBlockVisibility.md.
+  \Drupal::service('hs_blocks.visibility_flip_tracker')->invalidatePassed();
+}
+
+/**
  * Implements hook_theme().
  */
 function hs_blocks_theme($existing, $type, $theme, $path) {

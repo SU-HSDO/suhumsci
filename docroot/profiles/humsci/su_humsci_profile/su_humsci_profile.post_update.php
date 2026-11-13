@@ -471,3 +471,30 @@ function su_humsci_profile_post_update_fix_ds_fields() {
     }
   }
 }
+
+/**
+ * Append the "| Stanford" suffix to the default page title metatags.
+ */
+function su_humsci_profile_post_update_append_stanford_title_suffix() {
+  // Existing sites keep these metatag defaults in active config, so the
+  // config/default change only reaches them on import. Append the suffix
+  // here too so active sites match new installs. Idempotent: the guard
+  // prevents a doubled suffix.
+  $suffix = ' | Stanford';
+  $metatag_defaults = [
+    'metatag.metatag_defaults.global',
+    'metatag.metatag_defaults.front',
+    'metatag.metatag_defaults.node',
+    'metatag.metatag_defaults.taxonomy_term',
+    'metatag.metatag_defaults.user',
+  ];
+
+  $config_factory = \Drupal::configFactory();
+  foreach ($metatag_defaults as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    $title = $config->get('tags.title');
+    if (!empty($title) && !str_ends_with($title, $suffix)) {
+      $config->set('tags.title', $title . $suffix)->save();
+    }
+  }
+}

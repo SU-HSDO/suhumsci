@@ -6,21 +6,34 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Extension\ThemeSettingsProvider;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Implements hook_form_alter().
  */
-function su_humsci_gin_admin_form_alter(&$form, $form_state, $form_id) {
-  // Adds the fe theme admin-preview library on flexible page,
-  // private page, event and custom content type forms.
-  if (
-    preg_match('/node_hs_(basic_page|private_page|event)(_edit)?_form/', $form_id) ||
-    preg_match('/node_custm_\w+_form/', $form_id) ||
-    preg_match('/paragraph_\w+_entity_edit_form/', $form_id)
-  ) {
+function su_humsci_gin_admin_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof EntityFormInterface) {
+    return;
+  }
+  $entity_type = $form_object->getEntity()->getEntityTypeId();
+  $bundle = $form_object->getEntity()->bundle();
+  $operation = $form_object->getOperation();
+
+  // Adds the fe theme admin-preview library on the add and edit forms of
+  // flexible page, private page, event and custom content types, and on the
+  // paragraphs_edit form of any paragraph.
+  $node_bundles = ['hs_basic_page', 'hs_private_page', 'hs_event'];
+  $is_node_form = $entity_type === 'node'
+    && in_array($operation, ['default', 'edit'])
+    && (in_array($bundle, $node_bundles) || str_starts_with($bundle, 'custm_'));
+  $is_paragraph_form = $entity_type === 'paragraph' && $operation === 'entity_edit';
+
+  if ($is_node_form || $is_paragraph_form) {
     $theme = \Drupal::config('system.theme')->get('default');
     $library_discovery = \Drupal::service('library.discovery');
     $libraries = ['admin-preview', 'admin-colors'];

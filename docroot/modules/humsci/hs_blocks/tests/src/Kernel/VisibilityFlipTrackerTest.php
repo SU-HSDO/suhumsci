@@ -97,7 +97,8 @@ class VisibilityFlipTrackerTest extends KernelTestBase {
   public function testRecordDefersTheWrite(): void {
     $tracker = $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class));
     $tracker->record(['node:1'], $this->flipAt(600));
-    $this->assertEmpty($this->storedFlips());
+    $before_flush = $this->storedFlips();
+    $this->assertEmpty($before_flush);
     $tracker->flush();
     $this->assertSame($this->flipAt(600), (int) $this->storedFlips()['node:1']);
   }

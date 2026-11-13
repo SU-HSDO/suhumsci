@@ -79,8 +79,8 @@ function su_humsci_gin_admin_theme_suggestions_paragraph_alter(array &$suggestio
     return;
   }
   // Site-built custom paragraph types carry the custm_ config prefix and have
-  // no component to preview, so route them to paragraph--no-preview. Platform
-  // types (hs_*, stanford_*) keep their own template or Display Suite layout.
+  // no component to preview, so route them to paragraph--custom. Platform
+  // types (hs_*, stanford_*) keep their own template.
   $paragraph = $variables['elements']['#paragraph'] ?? NULL;
   if ($paragraph instanceof ParagraphInterface && str_starts_with($paragraph->bundle(), 'custm_')) {
     $suggestions[] = 'paragraph__custom';

@@ -255,11 +255,18 @@
 
   blockquote.hb-testimonial__quote {
     width: 100%;
+    max-width: none;
     margin: 0;
+    padding: 0;
     font-size: hb-calculate-rems(20px);
     line-height: var(--condensed-line-height);
+    font-weight: hb-theme-font-weight(regular);
     color: color('black', 'global');
     text-wrap: balance;
+
+    &::before, &::after {
+      content: none;
+    }
 
     .hb-dark-pattern .hs-paragraph-style--well &,
     .hb-dark-pattern .hs-paragraph-style--well-full-width & {

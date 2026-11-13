@@ -110,13 +110,15 @@ class VisibilityRuleEvaluator {
    *   The entity the rule is evaluated against.
    * @param \Drupal\Core\Cache\CacheableMetadata $metadata
    *   Receives the cache metadata the result depends on.
+   * @param int|null $date_flip
+   *   Receives when a date rule next changes the result (a Unix timestamp), or
+   *   stays NULL. Just the date's own flip, so nothing spurious is scheduled.
    *
    * @return bool
    *   TRUE if the block should be hidden.
    */
-  public function isHidden(array $rule, FieldableEntityInterface $entity, CacheableMetadata $metadata): bool {
-    // Changing the field value must invalidate the block, even when the rule
-    // is skipped below, because the rule or the field may be fixed later.
+  public function isHidden(array $rule, FieldableEntityInterface $entity, CacheableMetadata $metadata, ?int &$date_flip = NULL): bool {
+    // Rebuild when the content changes, even if the rule is skipped below.
     $metadata->addCacheableDependency($entity);
 
     $field_name = $rule['field'] ?? '';
@@ -139,20 +141,17 @@ class VisibilityRuleEvaluator {
     if (!self::isDateField($items->getFieldDefinition())) {
       return FALSE;
     }
-    // Default to the end so a rule saved before boundaries existed, and any
-    // single-value field, keeps comparing the value it always did.
+    // Default to the end, so old rules and single-value fields are unchanged.
     $boundary = in_array($rule['boundary'] ?? NULL, self::BOUNDARIES, TRUE) ? $rule['boundary'] : 'end';
-    return $this->isDateMatch($operator, $items, $metadata, $boundary);
+    return $this->isDateMatch($operator, $items, $metadata, $boundary, $date_flip);
   }
 
   /**
    * Determines if a field is empty as the visitor would see it.
    *
-   * Unlike FieldItemListInterface::isEmpty(), a field the visitor cannot view
-   * counts as empty, so a rule never reveals whether a restricted field has a
-   * value, and an entity reference that resolves only to missing, unpublished
-   * or otherwise inaccessible entities counts as empty, so the block is not
-   * shown as an empty shell.
+   * Unlike isEmpty(), a field the visitor cannot view counts as empty (so a
+   * rule can't reveal a hidden value), and a reference to only missing or
+   * unpublished entities counts as empty (so the block isn't an empty shell).
    *
    * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values.
@@ -195,11 +194,13 @@ class VisibilityRuleEvaluator {
    *   Receives the max-age, so the result is rebuilt when the date passes.
    * @param string $boundary
    *   Which end of a date range or event to compare, `start` or `end`.
+   * @param int|null $date_flip
+   *   Receives the nearest upcoming date as a Unix timestamp, if any.
    *
    * @return bool
    *   TRUE if the operator matches.
    */
-  protected function isDateMatch(string $operator, FieldItemListInterface $items, CacheableMetadata $metadata, string $boundary): bool {
+  protected function isDateMatch(string $operator, FieldItemListInterface $items, CacheableMetadata $metadata, string $boundary, ?int &$date_flip = NULL): bool {
     $timestamps = $this->getTimestamps($items, $metadata, $boundary);
     if (!$timestamps) {
       // Nothing to compare, so don't hide.
@@ -209,14 +210,13 @@ class VisibilityRuleEvaluator {
     $now = $this->time->getRequestTime();
     $upcoming = array_filter($timestamps, fn (int $timestamp) => $timestamp > $now);
     if ($upcoming) {
-      // Both operators flip at the moment the nearest upcoming date passes.
-      // Merge, rather than replace, so an already-shorter lifetime collected
-      // from the entity or config is never lengthened.
-      $metadata->setCacheMaxAge(Cache::mergeMaxAges($metadata->getCacheMaxAge(), min($upcoming) - $now));
+      // Flip when the nearest upcoming date passes. Merge (never replace) so a
+      // shorter lifetime from elsewhere is kept.
+      $date_flip = min($upcoming);
+      $metadata->setCacheMaxAge(Cache::mergeMaxAges($metadata->getCacheMaxAge(), $date_flip - $now));
     }
 
-    // With several values, "future" means any value is still ahead, which
-    // makes "past" the exact opposite.
+    // With several values, "future" = any still ahead; "past" is the opposite.
     return $operator === 'future' ? !empty($upcoming) : empty($upcoming);
   }
 
@@ -239,15 +239,14 @@ class VisibilityRuleEvaluator {
     $site_timezone = new \DateTimeZone($config->get('timezone.default') ?: 'UTC');
 
     $type = $items->getFieldDefinition()->getType();
-    // Only date range and smart date fields have a start and end; the single
-    // value of a datetime or timestamp field is used for either boundary.
+    // Only range and smart date fields have a start and end; others use their
+    // one value for either boundary.
     $use_end = $boundary !== 'start';
     $timestamps = [];
     foreach ($items as $item) {
       $item_value = $item->getValue();
       if ($type === 'timestamp' || $type === 'smartdate') {
-        // Timestamp has one value; smart date stores the start and the end as
-        // separate timestamps, with full time precision either way.
+        // Timestamp has one value; smart date has a start and end, both timed.
         $key = ($type === 'smartdate' && $use_end) ? 'end_value' : 'value';
         if (isset($item_value[$key]) && $item_value[$key] !== '') {
           $timestamps[] = (int) $item_value[$key];
@@ -262,12 +261,12 @@ class VisibilityRuleEvaluator {
         continue;
       }
 
-      // Only datetime and daterange reach here, and their datetime_type setting
-      // says whether the stored value carries a time.
+      // Only datetime and daterange reach here; datetime_type says if there's a
+      // time.
       $is_date_only = $items->getFieldDefinition()->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE;
       if ($is_date_only) {
-        // Date-only values have no time, so they start at midnight in the site
-        // timezone. A date range's end lasts until that day is over.
+        // Date-only values start at midnight site time; a range end lasts to
+        // the day's end.
         $date = \DateTimeImmutable::createFromFormat('!' . DateTimeItemInterface::DATE_STORAGE_FORMAT, $value, $site_timezone);
         if ($date && $is_range_end) {
           $date = $date->modify('+1 day');

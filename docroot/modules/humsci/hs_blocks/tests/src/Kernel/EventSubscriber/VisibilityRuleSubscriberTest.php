@@ -143,6 +143,9 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
       'id' => 'system_powered_by_block',
     ], ['visibility_rule' => ['field' => 'field_date', 'operator' => 'future']]);
     $component->toRenderArray(['layout_builder.entity' => EntityContext::fromEntity($node)], FALSE);
+    // The subscriber flushes on kernel terminate, which kernel tests do not
+    // dispatch, so flush here to assert what the terminate handler would write.
+    $this->container->get('hs_blocks.visibility_flip_tracker')->flush();
 
     $flip = $this->container->get('database')
       ->select('hs_blocks_visibility_flip', 'f')
@@ -169,6 +172,8 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
       'id' => 'system_powered_by_block',
     ], ['visibility_rule' => ['field' => 'field_date', 'operator' => 'future']]);
     $component->toRenderArray(['layout_builder.entity' => EntityContext::fromEntity($node)], TRUE);
+    // Even after a flush, a preview build records nothing.
+    $this->container->get('hs_blocks.visibility_flip_tracker')->flush();
 
     $count = $this->container->get('database')
       ->select('hs_blocks_visibility_flip', 'f')

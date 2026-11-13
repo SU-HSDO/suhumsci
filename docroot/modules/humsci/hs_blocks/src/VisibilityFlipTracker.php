@@ -7,14 +7,12 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 
 /**
- * Tracks when date-based visibility rules change and invalidates them on cron.
+ * Updates date-based blocks behind Varnish once their date passes.
  *
- * A date rule shortens a block's cache lifetime so the block flips when the
- * date passes. Drupal's own page and dynamic page caches honor that lifetime,
- * but Acquia's Varnish serves anonymous pages for the fixed page lifetime and
- * is only purged when a cache tag is invalidated. This records when each
- * affected entity's result changes as its page is built, so cron can
- * invalidate the entity's cache tag once the time passes, purging Varnish.
+ * A date rule shortens a block's cache life. Drupal honors that, but Acquia's
+ * Varnish does not and only clears on a cache-tag invalidation. So we note when
+ * each block next changes and let cron clear its cache tag then. The notes are
+ * gathered in memory and saved once by flush().
  */
 class VisibilityFlipTracker {
 
@@ -22,6 +20,13 @@ class VisibilityFlipTracker {
    * The table storing pending flips, keyed by cache tag.
    */
   const TABLE = 'hs_blocks_visibility_flip';
+
+  /**
+   * Flips noted this request, keyed by cache tag.
+   *
+   * @var array<string, int>
+   */
+  protected array $pending = [];
 
   /**
    * Constructs a new VisibilityFlipTracker.
@@ -41,29 +46,40 @@ class VisibilityFlipTracker {
   }
 
   /**
-   * Records when an entity's date-based rule will next change its result.
+   * Notes, in memory, when a block's date rule next changes. flush() saves it.
    *
    * @param string[] $cache_tags
-   *   The cache tags of the entity the rule is evaluated against.
-   * @param int $max_age
-   *   The seconds until the result changes, as collected from the rule. A
-   *   non-positive value means nothing upcoming changes the result, so nothing
-   *   is recorded.
+   *   Cache tags of the entity the rule checks.
+   * @param int $flip_time
+   *   When the rule next changes, as a Unix timestamp. Ignored if not upcoming.
    */
-  public function record(array $cache_tags, int $max_age): void {
-    if ($max_age <= 0) {
+  public function record(array $cache_tags, int $flip_time): void {
+    if ($flip_time <= $this->time->getRequestTime()) {
       return;
     }
 
-    $flip_time = $this->time->getRequestTime() + $max_age;
     foreach ($cache_tags as $cache_tag) {
+      // Keep the earliest flip when several blocks target one entity.
+      if (!isset($this->pending[$cache_tag]) || $flip_time < $this->pending[$cache_tag]) {
+        $this->pending[$cache_tag] = $flip_time;
+      }
+    }
+  }
+
+  /**
+   * Saves the flips noted this request. Runs once, after the response is sent.
+   */
+  public function flush(): void {
+    foreach ($this->pending as $cache_tag => $flip_time) {
       $this->database->merge(self::TABLE)
         ->keys(['cache_tag' => $cache_tag])
         ->fields(['flip_time' => $flip_time])
-        // Keep the earliest pending flip when several rules target one entity.
+        // Keep the earliest flip: clearing a bit early is harmless, clearing
+        // too late would leave a page stale.
         ->expression('flip_time', 'LEAST([flip_time], :flip_time)', [':flip_time' => $flip_time])
         ->execute();
     }
+    $this->pending = [];
   }
 
   /**
@@ -83,9 +99,8 @@ class VisibilityFlipTracker {
       return 0;
     }
 
-    // Invalidating the entity's cache tag purges the pages that depend on it,
-    // including behind Acquia's Varnish layer. The next request rebuilds the
-    // page and records the entity's next flip, if any.
+    // Clearing the entity's cache tag purges its pages, Varnish included. The
+    // next visit rebuilds the page and notes its next flip, if any.
     $this->cacheTagsInvalidator->invalidateTags($cache_tags);
     $this->database->delete(self::TABLE)
       ->condition('flip_time', $now, '<=')

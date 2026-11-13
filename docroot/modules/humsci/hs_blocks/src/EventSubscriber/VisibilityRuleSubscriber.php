@@ -8,6 +8,7 @@ use Drupal\hs_blocks\VisibilityRuleEvaluator;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Hides Layout Builder components whose visibility rule matches.
@@ -37,6 +38,8 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
       ['onBuildLive', 200],
       ['onBuildPreview', 50],
     ];
+    // Save the noted flips once, after the response is sent.
+    $events[KernelEvents::TERMINATE][] = ['onTerminate'];
     return $events;
   }
 
@@ -57,19 +60,28 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
     }
 
     $metadata = new CacheableMetadata();
-    $is_hidden = $this->evaluator->isHidden($rule, $entity, $metadata);
+    $date_flip = NULL;
+    $is_hidden = $this->evaluator->isHidden($rule, $entity, $metadata, $date_flip);
     $event->getCacheableMetadata()->addCacheableDependency($metadata);
 
-    // A date rule shortens the cache lifetime so the block flips when the date
-    // passes. Drupal's own caches honor that, but Acquia's Varnish does not, so
-    // record the flip for cron to invalidate the entity's cache tag then.
-    $this->flipTracker->record($entity->getCacheTags(), $metadata->getCacheMaxAge());
+    // Note when a date rule next flips, so cron can clear the cache behind
+    // Varnish then. Only a real date flip is recorded, nothing else.
+    if ($date_flip !== NULL) {
+      $this->flipTracker->record($entity->getCacheTags(), $date_flip);
+    }
 
     if ($is_hidden) {
-      // Empty the build and stop core from building a block that is hidden.
+      // Don't let core build a block that is hidden.
       $event->setBuild([]);
       $event->stopPropagation();
     }
+  }
+
+  /**
+   * Flushes the flips recorded during the request to storage.
+   */
+  public function onTerminate(): void {
+    $this->flipTracker->flush();
   }
 
   /**
@@ -95,8 +107,7 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Editors must still reach the block's contextual links, so it is only
-    // flagged while previewing.
+    // Keep the block so editors can reach its contextual links; just flag it.
     $build = $event->getBuild();
     $build['#attributes']['class'][] = 'hs-blocks-conditionally-hidden';
     $build['#attached']['library'][] = 'hs_blocks/visibility.admin';

@@ -133,10 +133,9 @@ class HsManageBlockVisibilityForm extends FormBase {
       ],
     ];
 
-    // Offer only the operators that fit the chosen field: every field can be
-    // empty or not, date fields add the two date operators, and only a field
-    // with a separate start and end adds the start/end choice. The field select
-    // rebuilds this section over Ajax, so it always matches the current field.
+    // Offer only the operators that fit the field: any field can be empty or
+    // not; date fields add the date operators; range/event fields add the
+    // start/end choice. The field select rebuilds this over Ajax.
     $selected_field = (string) ($form_state->getValue('field') ?? $rule['field'] ?? '');
     $definitions = $this->getFieldDefinitions();
     $definition = ($selected_field && isset($definitions[$selected_field])) ? $definitions[$selected_field] : NULL;
@@ -158,8 +157,8 @@ class HsManageBlockVisibilityForm extends FormBase {
     }
     $form['settings']['operator'] = [
       '#type' => 'select',
-      // Keep the flat name so the stored rule and the #states below are
-      // unaffected by moving the element into the Ajax wrapper.
+      // Keep a flat name so the stored rule and #states are unaffected by the
+      // Ajax wrapper.
       '#parents' => ['operator'],
       '#title' => $this->t('Hide this block if the field'),
       '#options' => $operator_options,
@@ -172,9 +171,8 @@ class HsManageBlockVisibilityForm extends FormBase {
       $form['settings']['operator']['#description'] = $this->t('Compared to the current date and time, to the minute. "Is in the future" hides the block until the date arrives; "is in the past" hides it from that moment on. A time equal to now counts as past.');
     }
 
-    // Date range and event (smart date) fields have a start and an end, so let
-    // the editor choose which one the date operators compare. For example, an
-    // RSVP block hidden once an event begins compares the start, not the end.
+    // Range and event fields have a start and an end; let the editor pick which
+    // the date operators use (e.g. hide an RSVP block once an event starts).
     if ($has_date_range) {
       $form['settings']['boundary'] = [
         '#type' => 'select',
@@ -240,8 +238,7 @@ class HsManageBlockVisibilityForm extends FormBase {
       'operator' => $form_state->getValue('operator'),
     ] : NULL;
 
-    // Only a date rule on a field that has a start and an end needs to record
-    // which one it compares; everything else uses the single value.
+    // Only a date rule on a start/end field stores which one to compare.
     if ($rule && in_array($rule['operator'], VisibilityRuleEvaluator::DATE_OPERATORS, TRUE)) {
       $definitions = $this->getFieldDefinitions();
       if (isset($definitions[$field]) && VisibilityRuleEvaluator::hasDateRange($definitions[$field])) {
@@ -250,10 +247,8 @@ class HsManageBlockVisibilityForm extends FormBase {
     }
 
     $section = $this->sectionStorage->getSection($this->delta);
-    // The block or its group may have been removed since the form was opened,
-    // for example from a stale off-canvas link, so only write to a component
-    // that still exists; otherwise a child with no block plugin would be saved
-    // into the layout.
+    // The block or its group may have been removed since the form opened (a
+    // stale link), so only write to a component that still exists.
     $components = $section->getComponents();
     if ($this->group) {
       if (isset($components[$this->group])) {
@@ -266,9 +261,8 @@ class HsManageBlockVisibilityForm extends FormBase {
       }
     }
     elseif (isset($components[$this->uuid])) {
-      // Stored in the component's additional values, like the attributes. A
-      // removed rule is stored as NULL in both places; SectionComponent has no
-      // method to unset an additional property.
+      // Stored next to the component attributes. A removed rule is set to NULL,
+      // as SectionComponent cannot unset an additional value.
       $components[$this->uuid]->set('visibility_rule', $rule);
     }
 
@@ -337,9 +331,8 @@ class HsManageBlockVisibilityForm extends FormBase {
       return [];
     }
 
-    // Base fields such as the ID, UUID and revision data are not something an
-    // editor can reasonably base a rule on, so only the fields added to the
-    // bundle and the label (title) are offered.
+    // Offer only the fields added to the bundle and the title, not base fields
+    // like the ID or revision data that no rule would use.
     $label_key = $entity->getEntityType()->getKey('label');
     $definitions = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
     return array_filter(
@@ -368,8 +361,7 @@ class HsManageBlockVisibilityForm extends FormBase {
       ]);
     }
     foreach ($options as &$group_options) {
-      // The labels are TranslatableMarkup objects, so sort by their rendered
-      // string to get the alphabetical order editors expect.
+      // Labels are objects, so sort by their text for alphabetical order.
       uasort($group_options, fn ($a, $b) => strnatcasecmp((string) $a, (string) $b));
     }
     return array_filter($options);

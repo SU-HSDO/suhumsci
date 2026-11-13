@@ -81,29 +81,43 @@ class VisibilityFlipTrackerTest extends KernelTestBase {
   }
 
   /**
-   * Tests a non-positive max-age never schedules a flip.
+   * Tests a flip at or before now is never scheduled.
    */
   public function testNothingRecordedWithoutUpcomingFlip(): void {
     $tracker = $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class));
-    $tracker->record(['node:1'], -1);
-    $tracker->record(['node:1'], 0);
+    $tracker->record(['node:1'], self::NOW - 1);
+    $tracker->record(['node:1'], self::NOW);
+    $tracker->flush();
     $this->assertEmpty($this->storedFlips());
   }
 
   /**
-   * Tests a recorded flip stores the absolute time and keeps the earliest.
+   * Tests nothing is written until the request is flushed.
+   */
+  public function testRecordDefersTheWrite(): void {
+    $tracker = $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class));
+    $tracker->record(['node:1'], $this->flipAt(600));
+    $this->assertEmpty($this->storedFlips());
+    $tracker->flush();
+    $this->assertSame($this->flipAt(600), (int) $this->storedFlips()['node:1']);
+  }
+
+  /**
+   * Tests the earliest flip is kept, both within a request and across writes.
    */
   public function testRecordStoresEarliestFlip(): void {
+    // The earliest of several flips for one entity in a request wins.
     $tracker = $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class));
-    $tracker->record(['node:1'], 600);
-    $this->assertSame($this->flipAt(600), (int) $this->storedFlips()['node:1']);
-
-    // A nearer flip for the same entity replaces the later one.
-    $tracker->record(['node:1'], 60);
+    $tracker->record(['node:1'], $this->flipAt(600));
+    $tracker->record(['node:1'], $this->flipAt(60));
+    $tracker->record(['node:1'], $this->flipAt(900));
+    $tracker->flush();
     $this->assertSame($this->flipAt(60), (int) $this->storedFlips()['node:1']);
 
-    // A later flip does not push the stored time back out.
-    $tracker->record(['node:1'], 900);
+    // A later flip written by another request does not push the stored one out.
+    $later = $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class));
+    $later->record(['node:1'], $this->flipAt(900));
+    $later->flush();
     $this->assertSame($this->flipAt(60), (int) $this->storedFlips()['node:1']);
   }
 
@@ -111,10 +125,12 @@ class VisibilityFlipTrackerTest extends KernelTestBase {
    * Tests only the entities whose flip time has passed are invalidated.
    */
   public function testInvalidatePassed(): void {
-    $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class))
-      ->record(['node:1'], 60);
-    $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class))
-      ->record(['node:2'], 600);
+    $first = $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class));
+    $first->record(['node:1'], $this->flipAt(60));
+    $first->flush();
+    $second = $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class));
+    $second->record(['node:2'], $this->flipAt(600));
+    $second->flush();
 
     // 120 seconds later, node:1 is due but node:2 is not.
     $invalidator = $this->createMock(CacheTagsInvalidatorInterface::class);
@@ -134,8 +150,9 @@ class VisibilityFlipTrackerTest extends KernelTestBase {
    * Tests invalidatePassed does nothing when no flip is due.
    */
   public function testInvalidateNothingDue(): void {
-    $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class))
-      ->record(['node:1'], 600);
+    $seed = $this->buildTracker(self::NOW, $this->createMock(CacheTagsInvalidatorInterface::class));
+    $seed->record(['node:1'], $this->flipAt(600));
+    $seed->flush();
 
     $invalidator = $this->createMock(CacheTagsInvalidatorInterface::class);
     $invalidator->expects($this->never())->method('invalidateTags');

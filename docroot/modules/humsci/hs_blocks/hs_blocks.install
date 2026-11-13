@@ -8,6 +8,38 @@
 use Drupal\user\RoleInterface;
 
 /**
+ * Implements hook_schema().
+ */
+function hs_blocks_schema() {
+  $schema['hs_blocks_visibility_flip'] = [
+    'description' => 'Pending cache-tag invalidations for date-based block visibility rules.',
+    'fields' => [
+      'cache_tag' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The cache tag to invalidate, such as node:123.',
+      ],
+      'flip_time' => [
+        'type' => 'int',
+        // A visibility rule's date can be past 2038, so store a big int to
+        // avoid overflowing the default four-byte range.
+        'size' => 'big',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp when a date rule on this entity next changes its result.',
+      ],
+    ],
+    'primary key' => ['cache_tag'],
+    'indexes' => [
+      'flip_time' => ['flip_time'],
+    ],
+  ];
+  return $schema;
+}
+
+/**
  * Implements hook_update_last_removed().
  */
 function hs_blocks_update_last_removed() {
@@ -31,4 +63,17 @@ function hs_blocks_update_10202(): string {
   }
 
   return (string) t('Contributor role was not found; no permissions updated.');
+}
+
+/**
+ * Create the date-based block visibility flip tracking table.
+ */
+function hs_blocks_update_10203(): string {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('hs_blocks_visibility_flip')) {
+    return (string) t('The block visibility flip tracking table already exists.');
+  }
+
+  $schema->createTable('hs_blocks_visibility_flip', hs_blocks_schema()['hs_blocks_visibility_flip']);
+  return (string) t('Created the block visibility flip tracking table.');
 }

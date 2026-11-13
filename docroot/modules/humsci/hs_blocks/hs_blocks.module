@@ -30,6 +30,15 @@ function hs_blocks_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function hs_blocks_cron() {
+  // Clear cache tags for blocks whose date rule has flipped, so Varnish is
+  // purged. See docs/ConditionalBlockVisibility.md.
+  \Drupal::service('hs_blocks.visibility_flip_tracker')->invalidatePassed();
+}
+
+/**
  * Implements hook_theme().
  */
 function hs_blocks_theme($existing, $type, $theme, $path) {

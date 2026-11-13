@@ -8,6 +8,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\RefinableDependentAccessInterface;
 use Drupal\Core\Access\RefinableDependentAccessTrait;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\Context;
@@ -140,11 +142,19 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     }
 
     $components = $this->getComponents();
+    // Rendering the children bubbles their cache metadata onto $components,
+    // including the shortened max-age a date-based visibility rule sets. The
+    // access result must carry it so a group hidden only because a child's date
+    // has not passed yet reappears when it does, rather than being cached as
+    // hidden until an unrelated cache clear. build() is skipped when access is
+    // forbidden, so it cannot bubble that metadata itself.
+    $is_empty = trim((string) $this->renderer->renderInIsolation($components)) === '';
     // This prevents the block label from displaying if there are no contents.
-    if (trim((string) $this->renderer->renderInIsolation($components)) === '') {
-      return AccessResult::forbidden();
+    $access = $is_empty ? AccessResult::forbidden() : parent::blockAccess($account);
+    if ($access instanceof RefinableCacheableDependencyInterface) {
+      $access->addCacheableDependency(CacheableMetadata::createFromRenderArray($components));
     }
-    return parent::blockAccess($account);
+    return $access;
   }
 
   /**

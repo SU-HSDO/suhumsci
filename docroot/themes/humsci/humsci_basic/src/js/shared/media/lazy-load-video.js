@@ -46,9 +46,12 @@
 
           // --- Build final embed URL ---
           if (provider === 'youtube') {
+            // rel=0 limits YouTube's end-of-video suggestions to the same
+            // channel instead of unrelated recommendations, and modestbranding
+            // trims the player chrome.
             embedUrl = isPlaylist
-              ? `https://www.youtube.com/embed/videoseries?list=${videoId}&autoplay=1`
-              : `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+              ? `https://www.youtube.com/embed/videoseries?list=${videoId}&autoplay=1&rel=0&modestbranding=1`
+              : `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
           } else if (provider === 'vimeo') {
             // Vimeo events are not served from player.vimeo.com/video/{id}.
             embedUrl = isEvent

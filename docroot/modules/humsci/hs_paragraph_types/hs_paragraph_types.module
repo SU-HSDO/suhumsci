@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\hs_paragraph_types\PreRenderer;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\views\Views;
 
@@ -166,14 +167,45 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
       $field_widget_form['widget']['add_more']['add_more_button_hs_hero_image']['#value'] = t('Add @type', [
         '@type' => $new_label,
       ]);
-      // Change the paragraph type label for hs_hero_image embedded in
-      // hs_carousel.
+      // The slides are hs_hero_image ("Banner image with full overlay and
+      // text") paragraphs reused as text-box carousel slides, so by default
+      // the editor labels each slide with that type label and previews it in
+      // the hs_hero_image default (full overlay) view mode. Relabel the slide
+      // and preview it in the slideshow_slide (text box) view mode this
+      // carousel actually renders its slides in, so the closed widget matches
+      // the saved front end.
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder('paragraph');
       foreach (Element::children($field_widget_form['widget']) as $key) {
-        // Only alter markup in field widget elements.
+        // Only alter paragraph item elements (integer deltas).
         if (!is_int($key)) {
           continue;
         }
-        $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = t('@label', ['@label' => $new_label]);
+        $element = $field_widget_form['widget'][$key];
+        if (($element['#paragraph_type'] ?? '') !== 'hs_hero_image') {
+          continue;
+        }
+
+        // Relabel the collapsed item header. paragraphs_ee's
+        // hook_field_widget_complete_form_alter() runs after this alter and
+        // resets the label to the paragraph type label, so re-apply ours in a
+        // #pre_render that runs at render time, after that reset.
+        if (isset($element['top']['type']['label'])) {
+          $element['top']['type']['label']['#pre_render'][] = [
+            PreRenderer::class,
+            'preRenderCarouselSlideLabel',
+          ];
+        }
+
+        // Render the collapsed preview in the slideshow_slide view mode this
+        // carousel renders its slides in, instead of the hs_hero_image default
+        // (full overlay) view mode the widget falls back to.
+        if (isset($element['preview']['#paragraph'])) {
+          $slide = $element['preview']['#paragraph'];
+          $element['preview'] = $view_builder->view($slide, 'slideshow_slide', $slide->language()->getId());
+          $element['preview']['#access'] = $slide->access('view');
+        }
+
+        $field_widget_form['widget'][$key] = $element;
       }
       break;
 

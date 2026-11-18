@@ -23,12 +23,14 @@
             provider = 'youtube';
             if (videoUrl.includes('list=')) {
               // Playlist
-              const listMatch = videoUrl.match(/[?&]list=([^&]+)/);
+              const listMatch = videoUrl.match(/[?&]list=([^&#]+)/);
               videoId = listMatch ? listMatch[1] : '';
               isPlaylist = true;
             } else {
               // Regular video
-              const idMatch = videoUrl.match(/(?:v=|youtu\.be\/)([^?&]+)/);
+              // Stop at '#' too, so a fragment like '#t=30' isn't read as
+              // part of the ID.
+              const idMatch = videoUrl.match(/(?:v=|youtu\.be\/)([^?&#]+)/);
               videoId = idMatch ? idMatch[1] : '';
             }
           } else if (videoUrl.includes('vimeo.com')) {
@@ -45,15 +47,21 @@
           }
 
           // --- Build final embed URL ---
+          const buildUrl = (base, params) => `${base}?${new URLSearchParams(params)}`;
+
           if (provider === 'youtube') {
+            // rel=0 limits YouTube's end-of-video suggestions to the same
+            // channel instead of unrelated recommendations.
+            const params = { autoplay: 1, rel: 0 };
             embedUrl = isPlaylist
-              ? `https://www.youtube.com/embed/videoseries?list=${videoId}&autoplay=1`
-              : `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+              ? buildUrl('https://www.youtube.com/embed/videoseries', { list: videoId, ...params })
+              : buildUrl(`https://www.youtube.com/embed/${encodeURIComponent(videoId)}`, params);
           } else if (provider === 'vimeo') {
             // Vimeo events are not served from player.vimeo.com/video/{id}.
+            const params = { autoplay: 1 };
             embedUrl = isEvent
-              ? `https://vimeo.com/event/${videoId}/embed?autoplay=1`
-              : `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+              ? buildUrl(`https://vimeo.com/event/${videoId}/embed`, params)
+              : buildUrl(`https://player.vimeo.com/video/${videoId}`, params);
           }
 
           if (!embedUrl) return;

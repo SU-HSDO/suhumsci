@@ -114,8 +114,16 @@
 
   .ptype-hs-carousel .ptype-hs-hero-image,
   .paragraph--type--hs-carousel.ptype-hs-hero-image {
-    .hb-hero-overlay:not(.hb-hero-overlay--no-image) {
-      background-color: transparent;
+    .hb-hero-overlay {
+      @include hb-colorful {
+        background-color: transparent;
+      }
+
+      &:not(.hb-hero-overlay--no-image) {
+        @include hb-traditional {
+          background-color: transparent;
+        }
+      }
     }
   }
 

@@ -176,9 +176,12 @@
     text-decoration: none;
   }
 
-  blockquote::before {
-    content: none;
-    background-color: transparent;
+  blockquote {
+    display: block;
+
+    &::before, &::after {
+      width: auto;
+    }
   }
 
   details summary {

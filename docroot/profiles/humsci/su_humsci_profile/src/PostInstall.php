@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\node\NodeAccessRebuild;
 
 /**
  * Run additional tasks after installing the profile.
@@ -43,7 +44,7 @@ class PostInstall implements PostInstallInterface {
       $importer_service->importContent('humsci_default_content');
     }
 
-    node_access_rebuild();
+    \Drupal::service(NodeAccessRebuild::class)->rebuild();
 
     // We install some menu links, so we have to rebuild the router, to ensure
     // the menu links are valid.

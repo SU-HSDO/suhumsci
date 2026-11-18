@@ -27,8 +27,8 @@ class SubProcessTest extends UnitTestCase {
     $hs_plugin = new HsSubProcess($configuration, 'sub_process', $definition);
     $original_plugin = new OrigSubProcess($configuration, 'sub_process', $definition);
 
-    $migrate_executable = $this->createMock(MigrateExecutable::class);
-    $row = $this->createMock(Row::class);
+    $migrate_executable = $this->createStub(MigrateExecutable::class);
+    $row = $this->createStub(Row::class);
 
     $value = simplexml_load_string('<data><item1><newkey>akey</newkey></item1></data>');
     $new_value = $hs_plugin->transform($value, $migrate_executable, $row, 'field_foo');

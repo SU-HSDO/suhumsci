@@ -3,6 +3,7 @@
 namespace Drupal\su_humsci_profile;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\NodeAccessRebuild;
 use Drupal\node\NodeInterface;
 
 /**
@@ -58,7 +59,7 @@ class HumsciContentAccessUpdater {
     if ($results) {
       content_access_set_settings($settings, $bundle);
       $results[] = $this->t('Saved Content Access settings for %bundle.', ['%bundle' => $bundle]);
-      node_access_rebuild(TRUE);
+      \Drupal::service(NodeAccessRebuild::class)->rebuild(TRUE);
       $results[] = $this->t('Rebuilt node access.');
     }
 

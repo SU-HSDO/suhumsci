@@ -16,12 +16,14 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the date field clone plugin functions correctly.
  */
 #[CoversClass(Date::class)]
 #[Group('hs_actions')]
+#[RunTestsInSeparateProcesses]
 class DateTest extends KernelTestBase {
 
   /**

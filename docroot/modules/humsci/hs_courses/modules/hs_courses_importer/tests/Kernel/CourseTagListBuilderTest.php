@@ -7,12 +7,14 @@ use Drupal\hs_courses_importer\CourseTagListBuilder;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class CourseTagListBuilderTest.
  */
 #[CoversClass(CourseTagListBuilder::class)]
 #[Group('hs_courses_importer')]
+#[RunTestsInSeparateProcesses]
 class CourseTagListBuilderTest extends EntityKernelTestBase {
 
   /**

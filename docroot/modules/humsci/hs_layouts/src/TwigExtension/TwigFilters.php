@@ -15,7 +15,7 @@ class TwigFilters extends AbstractExtension {
   /**
    * Generates a list of all Twig filters that this extension defines.
    */
-  public function getFilters() {
+  public function getFilters(): array {
     return [
       new TwigFilter('has_markup', [$this, 'hasMarkup']),
     ];

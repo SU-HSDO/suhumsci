@@ -6,11 +6,11 @@
  */
 
 use Drupal\Core\Extension\ThemeSettingsProvider;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
-use Drupal\node\NodeInterface;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
@@ -57,6 +57,25 @@ function humsci_basic_preprocess_block(&$vars) {
     $description = $block->get('info')->get(0)->getValue();
     $vars['label'] = reset($description) ?: $vars['label'];
   }
+
+  // Some field blocks don't output anything - for example, the node "Title"
+  // field is empty on the front page - but the block still prints an empty
+  // wrapper div, which leaves a gap on the page. So we check the render array
+  // for content here, instead of rendering the block a second time (which is
+  // slow and can re-run forms inside the block). When this is FALSE,
+  // block.html.twig skips the block; every other block stays TRUE, so nothing
+  // else changes.
+  //
+  // Field blocks wrap their content one level down, so the items we're
+  // looking for live in $vars['content'][0].
+  //
+  // We skip this check in the Layout Builder UI (in_preview) so empty blocks
+  // stay visible for editors to select, move and configure.
+  $vars['has_content'] = TRUE;
+  if ($vars['base_plugin_id'] === 'field_block' && empty($vars['in_preview'])) {
+    $field_content = $vars['content'][0] ?? [];
+    $vars['has_content'] = !empty($vars['label']) || (bool) Element::children($field_content);
+  }
 }
 
 /**
@@ -89,17 +108,6 @@ function humsci_basic_preprocess_html(&$vars) {
   $route_match = \Drupal::routeMatch();
 
   $node = $route_match->getParameter('node');
-
-  // Add body classes for full-width / main-region spacing gap detection.
-  // Only applies to page type that use the full-width + main region layout.
-  if ($node instanceof NodeInterface && $node->bundle() == 'hs_basic_page') {
-    $is_hs_carousel_in_hs_page_hero = humsci_basic_is_hs_carousel_in_hs_page_hero($node);
-    $is_there_extra_gap_in_main_region = humsci_basic_is_there_extra_gap_in_main_region($node);
-
-    if ($is_hs_carousel_in_hs_page_hero && $is_there_extra_gap_in_main_region) {
-      $vars['attributes']['class'][] = 'there-is-extra-gap-between-hero-and-main-region';
-    }
-  }
 
   // Preload full width region banner images (LCP)
   if (!$node || !$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {
@@ -305,107 +313,6 @@ function humsci_basic_preload_full_width_image($image_referenced, $style_name, a
       'preload_' . $style_name,
     ];
   }
-}
-
-/**
- * Check if there's a Banner image(s) with text box in Page hero.
- */
-function humsci_basic_is_hs_carousel_in_hs_page_hero(NodeInterface $node): bool {
-  if (!$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {
-    return FALSE;
-  }
-
-  $hero = $node->get('field_hs_page_hero')->first()->entity ?? '';
-
-  if (!$hero instanceof ParagraphInterface) {
-    return FALSE;
-  }
-
-  return $hero->bundle() == 'hs_carousel';
-}
-
-/**
- * Checks if specific components appear first in the main region.
- *
- * - A heading in Text Area.
- * - A Splash font or Lead font style in Text Area.
- * - A Spotlight.
- * - An Accordion without "Expand Button".
- */
-function humsci_basic_is_there_extra_gap_in_main_region(NodeInterface $node): bool {
-  if (!$node->hasField('field_hs_page_components') || $node->get('field_hs_page_components')->isEmpty()) {
-    return FALSE;
-  }
-
-  $paragraph = $node->get('field_hs_page_components')->first()->entity ?? '';
-
-  if (!$paragraph instanceof ParagraphInterface) {
-    return FALSE;
-  }
-
-  $bundle = $paragraph->bundle();
-
-  if ($bundle === 'hs_text_area') {
-    if (
-      !$paragraph->hasField('field_hs_text_area') ||
-      $paragraph->get('field_hs_text_area')->isEmpty()
-    ) {
-      return FALSE;
-    }
-
-    $value = $paragraph->get('field_hs_text_area')->value;
-
-    if (empty($value)) {
-      return FALSE;
-    }
-
-    // Load HTML safely.
-    $dom = new \DOMDocument();
-
-    libxml_use_internal_errors(TRUE);
-    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $value);
-    libxml_clear_errors();
-
-    $xpath = new \DOMXPath($dom);
-
-    // Get the FIRST element inside body.
-    $first_element = $xpath->query('/html/body/*[1]')->item(0);
-
-    if (!$first_element) {
-      return FALSE;
-    }
-
-    $tag = $first_element->nodeName;
-
-    // Case 1: It's a heading.
-    if (in_array($tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
-      return TRUE;
-    }
-
-    // Case 2: It's a paragraph with specific classes.
-    if ($tag === 'p') {
-      $class_attr = $first_element->attributes->getNamedItem('class');
-
-      if (!$class_attr) {
-        return FALSE;
-      }
-
-      $classes = preg_split('/\s+/', trim($class_attr->nodeValue)) ?: [];
-
-      return in_array('hs-font-splash', $classes, TRUE) || in_array('hs-font-lead', $classes, TRUE);
-    }
-
-    return FALSE;
-  }
-  if ($bundle === 'hs_sptlght_slder') {
-    return TRUE;
-  }
-  if ($bundle === 'hs_accordion') {
-    return $paragraph->hasField('field_hs_accord_expcol') && empty($paragraph->get('field_hs_accord_expcol')->value);
-  }
-
-  // Return false if doesn't match any of the previous if.
-  return FALSE;
 }
 
 /**

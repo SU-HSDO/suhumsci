@@ -50,7 +50,7 @@ class CapxTaggingTest extends UnitTestCase {
 
     $this->assertTrue($plugin->multiple());
 
-    $migrate_executable = $this->createMock(MigrateExecutable::class);
+    $migrate_executable = $this->createStub(MigrateExecutable::class);
     $row = $this->createMock(Row::class);
     $row->method('getSourceProperty')->willReturn(self::$url);
     $destination_property = 'field_terms';

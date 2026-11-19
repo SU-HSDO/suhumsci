@@ -339,6 +339,14 @@ process:
       source: photo_url
       destination: '@image_destination'
       id_only: true
+  image_alt:
+    -
+      plugin: default_value
+      source: photo_caption
+      default_value: ''
+    -
+      plugin: substr
+      length: 512
   field_hs_event_image/target_id:
     -
       plugin: skip_on_empty
@@ -359,7 +367,7 @@ process:
       values:
         name: title
         field_media_image/target_id: '@image_file'
-        field_media_image/alt: photo_caption
+        field_media_image/alt: '@image_alt'
   field_hs_event_status:
     -
       source: status

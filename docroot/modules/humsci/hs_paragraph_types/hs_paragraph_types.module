@@ -202,8 +202,29 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         // (full overlay) view mode the widget falls back to.
         if (isset($element['preview']['#paragraph'])) {
           $slide = $element['preview']['#paragraph'];
-          $element['preview'] = $view_builder->view($slide, 'slideshow_slide', $slide->language()->getId());
-          $element['preview']['#access'] = $slide->access('view');
+          $slide_preview = $view_builder->view($slide, 'slideshow_slide', $slide->language()->getId());
+          $slide_preview['#access'] = $slide->access('view');
+
+          // The slide's text-box look (overlay, image bars, layout) lives in
+          // the carousel component library and is scoped to the
+          // .paragraph--type--hs-carousel container, so the slideshow_slide
+          // view mode alone still renders as a full overlay: a standalone
+          // slide is not inside that container and never attaches that library.
+          // An unsaved slide can't know it belongs to a carousel, so wrap the
+          // preview in that container here — the widget is the one place that
+          // does know — and attach the carousel library, so the closed widget
+          // matches the saved front end.
+          $default_theme = \Drupal::config('system.theme')->get('default');
+          $element['preview'] = [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => ['paragraph--type--hs-carousel', 'ptype-hs-carousel'],
+            ],
+            '#attached' => [
+              'library' => [$default_theme . '/carousel'],
+            ],
+            'slide' => $slide_preview,
+          ];
         }
 
         $field_widget_form['widget'][$key] = $element;

@@ -5,7 +5,7 @@
       if (colorboxElement) {
         const previousButton = colorboxElement.querySelector('#cboxPrevious');
         const nextButton = colorboxElement.querySelector('#cboxNext');
-        const slideshowButton = colorboxElement('#cboxSlideshow');
+        const slideshowButton = colorboxElement.querySelector('#cboxSlideshow');
         if (previousButton) previousButton.textContent = '« Prev';
         if (nextButton) nextButton.textContent = 'Next »';
         if (slideshowButton) slideshowButton.textContent = 'Slideshow';

@@ -38,6 +38,20 @@
                     "type": "zip"
                 }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "turbojettechnologies/colorbox",
+                "version": "1.7.0",
+                "type": "drupal-library",
+                "license": "MIT",
+                "dist": {
+                    "url": "https://github.com/TurbojetTechnologies/colorbox/archive/b8c18673b64e917f7bd2eb8697e77adc2acf319b.zip",
+                    "type": "zip",
+                    "reference": "b8c18673b64e917f7bd2eb8697e77adc2acf319b"
+                }
+            }
         }
     ],
     "require": {
@@ -61,7 +75,7 @@
         "drupal/ckeditor5_plugin_pack": "^1.4",
         "drupal/color": "^2.0",
         "drupal/color_field": "^3.0",
-        "drupal/colorbox": "~2.1.5",
+        "drupal/colorbox": "~2.2.1",
         "drupal/components": "^3.0",
         "drupal/conditional_fields": "^4.0@alpha",
         "drupal/config_ignore": "^3.0",
@@ -188,14 +202,14 @@
         "mnsami/composer-custom-directory-installer": "^2.0",
         "noli42/chosen": "^3.0",
         "nolimits4web/swiper": "^12.0",
-        "onlyextart/colorbox": "dev-master#e58476becbc89dc671093d1bcd9f99b2167fa8f7",
         "sainsburys/guzzle-oauth2-plugin": "^3.0",
         "su-sws/ckeditor5_plugins": "^1.0",
         "su-sws/stanford_fields": "^9.0",
         "su-sws/stanford_media": "^11.5",
         "su-sws/stanford_migrate": "^9.0",
         "su-sws/stanford_samlauth": "^2.0",
-        "su-sws/sws-drush-commands": "1.x-dev"
+        "su-sws/sws-drush-commands": "1.x-dev",
+        "turbojettechnologies/colorbox": "1.7.0"
     },
     "require-dev": {
         "drupal/core-dev": "~11.4.0",
@@ -321,6 +335,9 @@
             },
             "su-sws/stanford_fields": {
                 "Make Localist API Public": "patches/contrib/stanford_fields-localist-api-public-20260601.patch"
+            },
+            "turbojettechnologies/colorbox": {
+                "Restore Escape and arrow keys in 1.7.0: KeyboardEvent.key returns names": "patches/contrib/colorbox-fix-keyboard-navigation-20261113.patch"
             }
         },
         "drupal-scaffold": {

@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\hs_dashboard\Attribute\ImporterInfo;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
 use Drupal\hs_dashboard\Plugin\ImporterInfoInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
@@ -16,14 +17,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * People importer info.
- *
- * @ImporterInfo(
- *   id = "people_importer_info",
- *   label = @Translation("People Importers"),
- *   description = @Translation("Retrieves people importer information from capx_importer entities."),
- *   weight = 30,
- * )
  */
+#[ImporterInfo(
+  id: 'people_importer_info',
+  label: new TranslatableMarkup('People Importers'),
+  description: new TranslatableMarkup('Retrieves people importer information from capx_importer entities.'),
+  weight: 30,
+)]
 class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {
 
   /**

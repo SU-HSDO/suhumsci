@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_algolia\Form;
 
+use Algolia\AlgoliaSearch\Api\SearchClient;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Database\Connection;
@@ -112,6 +113,31 @@ class SettingsForm extends ConfigFormBase {
       '#disabled' => $locked,
     ];
 
+    $form['search'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Search page'),
+    ];
+
+    $form['search']['search_api_key'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Search-only API key'),
+      '#description' => $this->t("An Algolia API key with only the <em>search</em> permission, scoped to this index. It is sent to visitors' browsers, so never use the write or Admin API key here."),
+      '#default_value' => $config->get('search_api_key'),
+      '#maxlength' => 128,
+    ];
+
+    $form['search']['search_enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Use Algolia for the site search page'),
+      '#description' => $this->t('Replace the search page at <a href=":url">/search</a> and the results of the header search box with Algolia. When unchecked, or when Algolia search is disabled, the site uses the Drupal search.', [
+        ':url' => Url::fromUserInput('/search')->toString(),
+      ]),
+      '#default_value' => $enabled && $config->get('search_enabled'),
+      '#states' => [
+        'disabled' => [':input[name="enabled"]' => ['checked' => FALSE]],
+      ],
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -132,6 +158,72 @@ class SettingsForm extends ConfigFormBase {
         ]));
       }
     }
+
+    if ($form_state->getValue('search_enabled')) {
+      $this->validateSearchKey($form, $form_state);
+    }
+  }
+
+  /**
+   * Make sure the key sent to browsers can do nothing but search.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  protected function validateSearchKey(array $form, FormStateInterface $form_state): void {
+    $search_key = trim((string) $form_state->getValue('search_api_key'));
+    if ($search_key === '') {
+      $form_state->setErrorByName('search_api_key', $this->t('@field is required to use Algolia for the site search page.', [
+        '@field' => $form['search']['search_api_key']['#title'],
+      ]));
+      return;
+    }
+
+    $write_key_id = (string) $form_state->getValue('api_key');
+    /** @var \Drupal\key\KeyInterface|null $write_key */
+    $write_key = $write_key_id ? $this->entityTypeManager->getStorage('key')->load($write_key_id) : NULL;
+    if ($write_key && hash_equals((string) $write_key->getKeyValue(), $search_key)) {
+      $form_state->setErrorByName('search_api_key', $this->t('This is the write API key. Use a key with only the search permission.'));
+      return;
+    }
+
+    $acl = $this->getKeyAcl(trim((string) $form_state->getValue('application_id')), $search_key);
+    if ($acl === NULL) {
+      $form_state->setErrorByName('search_api_key', $this->t('Algolia did not accept this search key. Check the key and the Application ID.'));
+      return;
+    }
+    if ($acl !== ['search']) {
+      $form_state->setErrorByName('search_api_key', $this->t('This key has more than the search permission (@acl). Use a key with only the search permission, because it is visible to every visitor.', [
+        '@acl' => implode(', ', $acl),
+      ]));
+    }
+  }
+
+  /**
+   * Ask Algolia which permissions an API key has.
+   *
+   * @param string $application_id
+   *   The Algolia application ID.
+   * @param string $key
+   *   The API key to look up. A key may always read its own permissions.
+   *
+   * @return string[]|null
+   *   The sorted permission list, or NULL when Algolia rejected the lookup.
+   */
+  protected function getKeyAcl(string $application_id, string $key): ?array {
+    try {
+      $response = SearchClient::create($application_id, $key)->getApiKey($key);
+      $acl = is_array($response) ? ($response['acl'] ?? []) : $response->getAcl();
+    }
+    catch (\Throwable $e) {
+      $this->getLogger('hs_algolia')->warning('Unable to verify the Algolia search key: @message', ['@message' => $e->getMessage()]);
+      return NULL;
+    }
+    $acl = array_values(array_map('strval', (array) $acl));
+    sort($acl);
+    return $acl;
   }
 
   /**
@@ -166,6 +258,9 @@ class SettingsForm extends ConfigFormBase {
       ->set('application_id', trim((string) $form_state->getValue('application_id')))
       ->set('api_key', (string) $form_state->getValue('api_key'))
       ->set('index_name', trim((string) $form_state->getValue('index_name')))
+      ->set('search_api_key', trim((string) $form_state->getValue('search_api_key')))
+      // The search page has nothing to query while indexing is off.
+      ->set('search_enabled', $enabling && $form_state->getValue('search_enabled'))
       ->save();
 
     // The overrides for the server and index read the settings just saved, so

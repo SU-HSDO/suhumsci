@@ -1,0 +1,140 @@
+<?php
+
+namespace Drupal\hs_algolia\Controller;
+
+use Drupal\Core\Asset\LibraryDiscoveryInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\hs_algolia\SearchStatus;
+use Drupal\views\Routing\ViewPageController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Serves the site search page from Algolia when Algolia search is active.
+ *
+ * @see \Drupal\hs_algolia\Routing\RouteSubscriber
+ */
+class SearchController implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
+
+  /**
+   * Route of the Drupal search page this controller takes over.
+   */
+  const VIEW_ROUTE = 'view.hs_default_search.search_page';
+
+  /**
+   * Results per page, matching the Drupal search view's pager.
+   */
+  const HITS_PER_PAGE = 10;
+
+  public function __construct(
+    protected SearchStatus $searchStatus,
+    protected ClassResolverInterface $classResolver,
+    protected ConfigFactoryInterface $configFactory,
+    protected LibraryDiscoveryInterface $libraryDiscovery,
+  ) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('hs_algolia.search_status'),
+      $container->get('class_resolver'),
+      $container->get('config.factory'),
+      $container->get('library.discovery'),
+    );
+  }
+
+  /**
+   * Render the Algolia search page, or the Drupal search view as a fallback.
+   *
+   * @param string $view_id
+   *   The view ID from the route defaults.
+   * @param string $display_id
+   *   The view display ID from the route defaults.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
+   *
+   * @return array
+   *   A render array.
+   */
+  public function page($view_id, $display_id, RouteMatchInterface $route_match) {
+    if (!$this->searchStatus->isActive()) {
+      /** @var \Drupal\views\Routing\ViewPageController $views_controller */
+      $views_controller = $this->classResolver->getInstanceFromDefinition(ViewPageController::class);
+      $build = $views_controller->handle($view_id, $display_id, $route_match);
+      // The view's own cache tags do not change when Algolia search is turned
+      // on, so add the tags that would.
+      $this->searchStatus->getCacheableMetadata()->applyTo($build);
+      return $build;
+    }
+
+    $build = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['hs-algolia-search']],
+      'app' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => ['class' => ['hs-algolia-search__app']],
+      ],
+      'noscript' => [
+        '#type' => 'html_tag',
+        '#tag' => 'noscript',
+        '#value' => $this->t('Search requires JavaScript. Enable JavaScript in your browser to search this site.'),
+      ],
+      '#attached' => [
+        'library' => $this->getLibraries(),
+        'drupalSettings' => [
+          'hsAlgoliaSearch' => $this->searchStatus->getClientSettings() + [
+            'hitsPerPage' => self::HITS_PER_PAGE,
+            'queryParam' => 'search',
+            'strings' => [
+              'label' => (string) $this->t('Search'),
+              'submit' => (string) $this->t('Search'),
+              'empty' => (string) $this->t('There are no results for your search. Please try again.'),
+              'error' => (string) $this->t('Search is unavailable right now. Please try again later.'),
+              'pagerLabel' => (string) $this->t('Pagination'),
+              'first' => (string) $this->t('First page'),
+              'previous' => (string) $this->t('Previous page'),
+              'next' => (string) $this->t('Next page'),
+              'last' => (string) $this->t('Last page'),
+              'page' => (string) $this->t('Page'),
+              'currentPage' => (string) $this->t('Current page'),
+            ],
+          ],
+        ],
+      ],
+    ];
+    $this->searchStatus->getCacheableMetadata()
+      ->addCacheTags(['config:system.theme'])
+      ->applyTo($build);
+    return $build;
+  }
+
+  /**
+   * Libraries that give the results the same look as the Drupal search.
+   *
+   * @return string[]
+   *   Library names.
+   */
+  protected function getLibraries(): array {
+    $libraries = [
+      'hs_algolia/search',
+      'ui_patterns/horizontal_card.horizontal_card',
+    ];
+
+    // Each subtheme compiles its own card styles. Follow the horizontal card
+    // pattern template, which attaches the default theme's library.
+    $default_theme = (string) $this->configFactory->get('system.theme')->get('default');
+    if ($default_theme && $this->libraryDiscovery->getLibraryByName($default_theme, 'card')) {
+      $libraries[] = "$default_theme/card";
+    }
+    return $libraries;
+  }
+
+}

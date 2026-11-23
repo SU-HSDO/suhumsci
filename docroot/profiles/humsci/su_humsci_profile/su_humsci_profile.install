@@ -199,3 +199,15 @@ function su_humsci_profile_update_11007(): string {
   }
   return t('menu_link_attributes module was already uninstalled.');
 }
+
+/**
+ * Uninstall the deprecated layout_builder_expose_all_field_blocks module.
+ */
+function su_humsci_profile_update_11008(): string {
+  $module = 'layout_builder_expose_all_field_blocks';
+  if (\Drupal::moduleHandler()->moduleExists($module)) {
+    \Drupal::service('module_installer')->uninstall([$module]);
+    return t('Uninstalled the layout_builder_expose_all_field_blocks module.');
+  }
+  return t('layout_builder_expose_all_field_blocks module was already uninstalled.');
+}

@@ -3,6 +3,7 @@
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/layout' as *;
+@use '../mixins/links' as *;
 
 .hb-three-column-w-image {
   &--one-sidebar,
@@ -188,6 +189,10 @@
     @include hb-traditional {
       font-size: hb-calculate-rems(16px);
       line-height: 127%;
+
+      a {
+        @include hb-min-target-size;
+      }
     }
   }
 }

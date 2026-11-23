@@ -87,6 +87,7 @@ In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC)
 - [Module Evaluation](docs/ModuleEvaluation.md)
 - [Site Customization Patterns](docs/SiteCustomizationPatterns.md)
 - [Tugboat Previews](docs/Tugboat.md)
+- [VBO Upgrade Validation](docs/VboUpgrade.md)
 
 ### Process Guides
 

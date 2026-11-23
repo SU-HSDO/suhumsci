@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\hs_dashboard\Attribute\ImporterInfo;
 
 /**
  * Class to handle Import information for block tables.
@@ -46,8 +47,8 @@ class ImporterInfoManager extends DefaultPluginManager {
       'Plugin/ImporterInfo',
       $namespaces,
       $module_handler,
-      'Drupal\hs_dashboard\Plugin\ImporterInfoInterface',
-      'Drupal\hs_dashboard\Annotation\ImporterInfo'
+      ImporterInfoInterface::class,
+      ImporterInfo::class,
     );
     $this->alterInfo('hs_dashboard_importer_info_info');
     $this->setCacheBackend($cache_backend, 'hs_dashboard_importer_info_plugins');

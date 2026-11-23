@@ -1,0 +1,24 @@
+diff --git a/src/Form/ParagraphCloneForm.php b/src/Form/ParagraphCloneForm.php
+index 1dcd4b3b6c1a3fa8efad0421b5915f57ae350259..77194cb8e5d42ea5a0e2eb3d54b8a62ae7fc5f54 100644
+--- a/src/Form/ParagraphCloneForm.php
++++ b/src/Form/ParagraphCloneForm.php
+@@ -268,13 +268,13 @@ class ParagraphCloneForm extends ContentEntityForm {
+       $result = $destination_entity->save();
+     }
+ 
+-    $this->entity = $this->entityTypeManager
+-      ->getStorage($this->entity->getEntityTypeId())
+-      ->loadUnchanged($this->entity->id());
+-
+-    $this->messenger()->addMessage($this->t('Cloned @source_lineage to %destination_lineage', [
++    // Saving the destination as a new revision replaces the appended paragraph
++    // with a copy (EntityStorageInterface::createRevision() clones the entity
++    // and entity_reference_revisions creates new paragraph revisions), so
++    // $this->entity may never receive an ID and must not be reloaded here.
++    $this->messenger()->addMessage($this->t('Cloned @source_lineage to %destination', [
+       '@source_lineage' => $this->lineageInspector()->getLineageString($this->originalEntity),
+-      '%destination_lineage' => $this->lineageInspector()->getLineageString($this->entity),
++      '%destination' => $destination_entity->label(),
+     ]));
+ 
+     $request = $this->getRequest();

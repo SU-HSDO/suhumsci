@@ -12,6 +12,7 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\hs_dashboard\Attribute\ImporterInfo;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
 use Drupal\hs_dashboard\Plugin\ImporterInfoInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
@@ -19,14 +20,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Event importer info.
- *
- * @ImporterInfo(
- *   id = "event_importer_info",
- *   label = @Translation("Event Importers"),
- *   description = @Translation("Retrieves event importer information from Localist."),
- *   weight = 20,
- * )
  */
+#[ImporterInfo(
+  id: 'event_importer_info',
+  label: new TranslatableMarkup('Event Importers'),
+  description: new TranslatableMarkup('Retrieves event importer information from Localist.'),
+  weight: 20,
+)]
 class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;

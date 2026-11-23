@@ -36,51 +36,6 @@ $nested-padding: hb-calculate-rems(22px);
   }
 }
 
-@mixin hb-lock-position {
-  padding-left: hb-calculate-rems(40px);
-  background-repeat: no-repeat;
-  background-size: hb-calculate-rems(20px);
-  background-position: hb-calculate-rems(14px) hb-calculate-rems(20px);
-}
-
-@mixin hb-lock-props {
-  @include hb-icon-background('lock', 'black');
-  @include hb-lock-position;
-
-  .hb-dark-pattern & {
-    @include hb-icon-background('lock', 'white');
-  }
-
-  &:hover {
-    @include hb-icon-background('lock', 'black');
-
-    @include grid-media-min('lg') {
-      .js & {
-        @include hb-icon-background('lock', 'black');
-        @include hb-lock-position;
-
-        .hb-dark-pattern & {
-          @include hb-icon-background('lock', 'white');
-        }
-
-        background-position: hb-calculate-rems(14px);
-      }
-    }
-  }
-
-  @include grid-media-min('lg') {
-    .js & {
-      @include hb-icon-background('lock', 'black');
-
-      .hb-dark-pattern & {
-        @include hb-icon-background('lock', 'white');
-      }
-
-      background-position: hb-calculate-rems(14px);
-    }
-  }
-}
-
 $hb-link-bar-button: calc(100% + #{hb-calculate-rems(16px)});
 $hb-link-bar-link: 100%;
 
@@ -226,7 +181,32 @@ $hb-link-bar-link: 100%;
     border-color: color('gray', 'global');
 
     .hb-private-page-link {
-      @include hb-lock-props;
+      @include hb-icon-background('lock', 'black');
+
+      background-size: hb-calculate-rems(20px);
+      background-repeat: no-repeat;
+      padding-left: hb-calculate-rems(40px);
+      background-position: hb-calculate-rems(14px);
+
+      .hb-dark-pattern & {
+        @include hb-icon-background('lock', 'white');
+      }
+
+      .js & {
+        @include grid-media-min('lg') {
+          &, &:hover {
+            @include hb-icon-background('lock', 'black');
+            background-repeat: no-repeat;
+            background-size: hb-calculate-rems(20px);
+
+            // These apply only to private links in the first level of the
+            // menu. Nested private links icon position is adjusted in other
+            // parts of this file.
+            background-position: 0 hb-calculate-rems(8px);
+            padding-left: hb-calculate-rems(26px);
+          }
+        }
+      }
     }
 
     @include grid-media-min('lg') {
@@ -639,6 +619,12 @@ $hb-link-bar-link: 100%;
           font-size: hb-calculate-rems(16px);
           text-transform: capitalize;
           font-weight: hb-theme-font-weight(bold);
+
+          // Nested Private page links need adjusted icon positioning.
+          &.hb-private-page-link {
+            background-position: hb-calculate-rems(8px);
+            padding-left: hb-calculate-rems(34px);
+          }
         }
       }
 
@@ -739,6 +725,12 @@ $hb-link-bar-link: 100%;
           font-weight: hb-theme-font-weight(semibold);
           padding-left: hb-calculate-rems(22px);
           color: initial;
+
+          // Nested Private page links need adjusted icon positioning.
+          &.hb-private-page-link {
+            background-position: hb-calculate-rems(20px);
+            padding-left: hb-calculate-rems(46px);
+          }
         }
       }
 

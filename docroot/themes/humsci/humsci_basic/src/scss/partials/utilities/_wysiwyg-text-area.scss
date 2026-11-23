@@ -402,12 +402,11 @@ $credits: (hs-credits, credits);
 }
 
 // blockquotes
-// The text area blockquote content is placed inside of a paragraph tag.
-blockquote:nth-child(n) {
+blockquote {
   @include hb-blockquote;
 
   .hb-local-footer & {
-    margin: 0 0 hb-calculate-rems(20px); // adjust blockquote browser spacing defaults when placed in the local footer
+    max-width: none;
   }
 }
 

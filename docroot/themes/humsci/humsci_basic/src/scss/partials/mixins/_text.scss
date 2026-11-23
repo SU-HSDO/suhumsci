@@ -3,7 +3,9 @@
 @use '../variables/keyframes.text' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/icons' as *;
 @use '../functions/color' as *;
+@use '../functions/svg' as *;
 @use 'theme' as *;
 @use 'breakpoints' as *;
 @use 'icons' as *;
@@ -195,15 +197,24 @@
 }
 
 @mixin hb-blockquote {
-  color: color('primary');
-  font-size: hb-calculate-rems(24px);
-  font-weight: hb-theme-font-weight(regular);
+  @include hb-heading-4;
 
-  @include grid-media-min('lg') {
-    font-size: hb-calculate-rems(28px);
+  position: relative;
+  overflow: hidden;
+  width: fit-content;
+  max-width: hb-calculate-rems(810px);
+  color: color('gray-1000', 'global');
+  margin-inline: auto;
+  margin-block: hb-calculate-rems(28px) hb-calculate-rems(32px);
+
+  @include hb-themes(('colorful', 'airy')) {
+    padding-block: hb-calculate-rems(36px) hb-calculate-rems(40px);
+    padding-inline: hb-calculate-rems(45px);
   }
 
   @include hb-traditional {
+    padding-block: hb-calculate-rems(38px) hb-calculate-rems(42px);
+    padding-inline: hb-calculate-rems(43px);
     font-family: $hb-traditional-font--serif;
   }
 
@@ -218,41 +229,53 @@
     color: color('white', 'global');
   }
 
-  &:not(.hb-testimonial__quote) {
-    position: relative;
-    padding: hb-calculate-rems(40px) hb-calculate-rems(36px);
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
 
-    &::before,
-    &::after {
-      @include hb-icon-background('close-quote-mark', 'tertiary');
+  &::before {
+    inset: 0;
+    mask-repeat: no-repeat;
+    mask-position: top left, bottom right;
+    background-color: color('tertiary');
 
-      content: '';
-      position: absolute;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      width: hb-calculate-rems(36px);
-      height: hb-calculate-rems(31px);
-
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        @include hb-icon-background('close-quote-mark', 'white');
-      }
-
-      .hb-dark-pattern.hb-local-footer & {
-        @include hb-icon-background('close-quote-mark', 'tertiary');
-      }
+    @include hb-themes(('colorful', 'airy')) {
+      mask-image: svg(hc-get-icons('quote-mark-colorful', 'black')),
+                  svg(hc-get-icons('close-quote-mark-colorful', 'black'));
+      mask-size: hb-calculate-rems(30px) hb-calculate-rems(26px);
     }
 
-    &::before {
-      left: hb-calculate-rems(-36px);
-      top: hb-calculate-rems(14px);
-      transform: rotate(180deg);
-      transform-origin: center;
+    @include hb-traditional {
+      mask-image: svg(hc-get-icons('quote-mark-traditional', 'black')),
+                  svg(hc-get-icons('close-quote-mark-traditional', 'black'));
+      mask-size: hb-calculate-rems(30px) hb-calculate-rems(23px);
     }
 
-    &::after {
-      right: 0;
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container &,
+    .hb-dark-pattern.hb-local-footer & {
+      background-color: color('tertiary-highlight');
+    }
+  }
+
+  &::after {
+    border-top: 1px solid color('tertiary');
+    border-bottom: 1px solid color('tertiary');
+
+    @include hb-themes(('colorful', 'airy')) {
+      inset: hb-calculate-rems(17px) hb-calculate-rems(40px);
+    }
+
+    @include hb-traditional {
+      inset: hb-calculate-rems(14.5px) hb-calculate-rems(38px);
+    }
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container &,
+    .hb-dark-pattern.hb-local-footer & {
+      border-color: color('tertiary-highlight');
     }
   }
 }

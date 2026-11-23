@@ -7,11 +7,8 @@ services:
   hs_blocks.visibility_rule_evaluator:
     class: Drupal\hs_blocks\VisibilityRuleEvaluator
     arguments: ['@datetime.time', '@config.factory']
-  hs_blocks.visibility_flip_tracker:
-    class: Drupal\hs_blocks\VisibilityFlipTracker
-    arguments: ['@database', '@cache_tags.invalidator', '@datetime.time']
   hs_blocks.visibility_rule_subscriber:
     class: Drupal\hs_blocks\EventSubscriber\VisibilityRuleSubscriber
-    arguments: ['@hs_blocks.visibility_rule_evaluator', '@hs_blocks.visibility_flip_tracker']
+    arguments: ['@hs_blocks.visibility_rule_evaluator']
     tags:
       - { name: event_subscriber }

@@ -3,11 +3,12 @@
 namespace Drupal\hs_blocks\EventSubscriber;
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\hs_blocks\VisibilityFlipTracker;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\hs_blocks\VisibilityRuleEvaluator;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -20,10 +21,8 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\hs_blocks\VisibilityRuleEvaluator $evaluator
    *   The visibility rule evaluator.
-   * @param \Drupal\hs_blocks\VisibilityFlipTracker $flipTracker
-   *   The date-rule flip tracker.
    */
-  public function __construct(protected VisibilityRuleEvaluator $evaluator, protected VisibilityFlipTracker $flipTracker) {
+  public function __construct(protected VisibilityRuleEvaluator $evaluator) {
   }
 
   /**
@@ -38,8 +37,9 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
       ['onBuildLive', 200],
       ['onBuildPreview', 50],
     ];
-    // Save the noted flips once, after the response is sent.
-    $events[KernelEvents::TERMINATE][] = ['onTerminate'];
+    // Carry a date rule's short max-age out to the response, after core has set
+    // the page's Cache-Control (priority 0).
+    $events[KernelEvents::RESPONSE][] = ['onResponse', -10];
     return $events;
   }
 
@@ -60,15 +60,8 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
     }
 
     $metadata = new CacheableMetadata();
-    $date_flip = NULL;
-    $is_hidden = $this->evaluator->isHidden($rule, $entity, $metadata, $date_flip);
+    $is_hidden = $this->evaluator->isHidden($rule, $entity, $metadata);
     $event->getCacheableMetadata()->addCacheableDependency($metadata);
-
-    // Note when a date rule next flips, so cron can clear the cache behind
-    // Varnish then. Only a real date flip is recorded, nothing else.
-    if ($date_flip !== NULL) {
-      $this->flipTracker->record($entity->getCacheTags(), $date_flip);
-    }
 
     if ($is_hidden) {
       // Don't let core build a block that is hidden.
@@ -78,10 +71,40 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Flushes the flips recorded during the request to storage.
+   * Lowers the response's cache life to a date rule's short max-age.
+   *
+   * A date rule shortens the block's cache life, but core sends proxies the
+   * fixed page max-age, not that shorter one, so a page behind Varnish stays
+   * stale until the date passes. Forwarding the bubbled max-age onto the
+   * response lets Varnish and the browser expire it when the rule flips.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
+   *   The response event.
    */
-  public function onTerminate(): void {
-    $this->flipTracker->flush();
+  public function onResponse(ResponseEvent $event): void {
+    if (!$event->isMainRequest()) {
+      return;
+    }
+
+    $response = $event->getResponse();
+    if (!$response instanceof CacheableResponseInterface) {
+      return;
+    }
+
+    // A finite, positive max-age is the only thing that shortens caching;
+    // permanent (-1) and uncacheable (0) leave the response alone.
+    $max_age = $response->getCacheableMetadata()->getCacheMaxAge();
+    if ($max_age <= 0) {
+      return;
+    }
+
+    // Only tighten an already-cacheable response: never make an uncacheable
+    // page cacheable, and keep a shorter lifetime set elsewhere.
+    $current = $response->getMaxAge();
+    if ($current !== NULL && $current > $max_age) {
+      $response->setSharedMaxAge($max_age);
+      $response->setMaxAge($max_age);
+    }
   }
 
   /**

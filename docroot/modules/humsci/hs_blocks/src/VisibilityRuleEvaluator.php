@@ -109,15 +109,13 @@ class VisibilityRuleEvaluator {
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity the rule is evaluated against.
    * @param \Drupal\Core\Cache\CacheableMetadata $metadata
-   *   Receives the cache metadata the result depends on.
-   * @param int|null $date_flip
-   *   Receives when a date rule next changes the result (a Unix timestamp), or
-   *   stays NULL. Just the date's own flip, so nothing spurious is scheduled.
+   *   Receives the cache metadata the result depends on. A date rule shortens
+   *   the max-age to the next flip, so the block's page expires right then.
    *
    * @return bool
    *   TRUE if the block should be hidden.
    */
-  public function isHidden(array $rule, FieldableEntityInterface $entity, CacheableMetadata $metadata, ?int &$date_flip = NULL): bool {
+  public function isHidden(array $rule, FieldableEntityInterface $entity, CacheableMetadata $metadata): bool {
     // Rebuild when the content changes, even if the rule is skipped below.
     $metadata->addCacheableDependency($entity);
 
@@ -143,7 +141,7 @@ class VisibilityRuleEvaluator {
     }
     // Default to the end, so old rules and single-value fields are unchanged.
     $boundary = in_array($rule['boundary'] ?? NULL, self::BOUNDARIES, TRUE) ? $rule['boundary'] : 'end';
-    return $this->isDateMatch($operator, $items, $metadata, $boundary, $date_flip);
+    return $this->isDateMatch($operator, $items, $metadata, $boundary);
   }
 
   /**
@@ -194,13 +192,11 @@ class VisibilityRuleEvaluator {
    *   Receives the max-age, so the result is rebuilt when the date passes.
    * @param string $boundary
    *   Which end of a date range or event to compare, `start` or `end`.
-   * @param int|null $date_flip
-   *   Receives the nearest upcoming date as a Unix timestamp, if any.
    *
    * @return bool
    *   TRUE if the operator matches.
    */
-  protected function isDateMatch(string $operator, FieldItemListInterface $items, CacheableMetadata $metadata, string $boundary, ?int &$date_flip = NULL): bool {
+  protected function isDateMatch(string $operator, FieldItemListInterface $items, CacheableMetadata $metadata, string $boundary): bool {
     $timestamps = $this->getTimestamps($items, $metadata, $boundary);
     if (!$timestamps) {
       // Nothing to compare, so don't hide.
@@ -210,10 +206,10 @@ class VisibilityRuleEvaluator {
     $now = $this->time->getRequestTime();
     $upcoming = array_filter($timestamps, fn (int $timestamp) => $timestamp > $now);
     if ($upcoming) {
-      // Flip when the nearest upcoming date passes. Merge (never replace) so a
+      // Shorten the cache life to the nearest upcoming date, so the block's
+      // page expires right when the rule flips. Merge (never replace) so a
       // shorter lifetime from elsewhere is kept.
-      $date_flip = min($upcoming);
-      $metadata->setCacheMaxAge(Cache::mergeMaxAges($metadata->getCacheMaxAge(), $date_flip - $now));
+      $metadata->setCacheMaxAge(Cache::mergeMaxAges($metadata->getCacheMaxAge(), min($upcoming) - $now));
     }
 
     // With several values, "future" = any still ahead; "past" is the opposite.

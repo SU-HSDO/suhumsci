@@ -2,9 +2,8 @@
 
 namespace Drupal\Tests\hs_blocks\Kernel\EventSubscriber;
 
+use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Plugin\Context\EntityContext;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_blocks\EventSubscriber\VisibilityRuleSubscriber;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\SectionComponent;
@@ -13,6 +12,10 @@ use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests components are hidden by their visibility rule.
@@ -32,7 +35,6 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
     'field',
     'text',
     'filter',
-    'datetime',
     'block',
     'layout_builder',
     'layout_discovery',
@@ -47,20 +49,7 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installConfig(['system', 'node', 'filter']);
-    $this->installSchema('hs_blocks', ['hs_blocks_visibility_flip']);
     NodeType::create(['type' => 'page', 'name' => 'Page'])->save();
-    FieldStorageConfig::create([
-      'field_name' => 'field_date',
-      'entity_type' => 'node',
-      'type' => 'datetime',
-      'settings' => ['datetime_type' => 'datetime'],
-    ])->save();
-    FieldConfig::create([
-      'field_name' => 'field_date',
-      'entity_type' => 'node',
-      'bundle' => 'page',
-      'label' => 'Date',
-    ])->save();
   }
 
   /**
@@ -86,6 +75,22 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
 
     $contexts = ['layout_builder.entity' => EntityContext::fromEntity($node)];
     return $component->toRenderArray($contexts, $in_preview);
+  }
+
+  /**
+   * Runs the response bridge over a response as the main request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The response to pass through the subscriber.
+   */
+  protected function dispatchResponse(Response $response): void {
+    $event = new ResponseEvent(
+      $this->container->get('http_kernel'),
+      Request::create('/'),
+      HttpKernelInterface::MAIN_REQUEST,
+      $response
+    );
+    $this->container->get('hs_blocks.visibility_rule_subscriber')->onResponse($event);
   }
 
   /**
@@ -129,58 +134,51 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
   }
 
   /**
-   * Tests a future date rule records a flip for the entity on the live page.
+   * Tests the bridge lowers the response to a date rule's short max-age.
    */
-  public function testDateRuleRecordsFlip(): void {
-    $node = Node::create([
-      'type' => 'page',
-      'title' => 'Hello',
-      'field_date' => '2999-01-01T00:00:00',
-    ]);
-    $node->save();
+  public function testResponseMaxAgeTightened(): void {
+    $response = new CacheableResponse();
+    $response->getCacheableMetadata()->setCacheMaxAge(60);
+    // Stand in for the long page max-age core sends proxies.
+    $response->setMaxAge(16588800);
 
-    $component = new SectionComponent($this->container->get('uuid')->generate(), 'content', [
-      'id' => 'system_powered_by_block',
-    ], ['visibility_rule' => ['field' => 'field_date', 'operator' => 'future']]);
-    $component->toRenderArray(['layout_builder.entity' => EntityContext::fromEntity($node)], FALSE);
-    // The subscriber flushes on kernel terminate, which kernel tests do not
-    // dispatch, so flush here to assert what the terminate handler would write.
-    $this->container->get('hs_blocks.visibility_flip_tracker')->flush();
+    $this->dispatchResponse($response);
 
-    $flip = $this->container->get('database')
-      ->select('hs_blocks_visibility_flip', 'f')
-      ->fields('f', ['flip_time'])
-      ->condition('cache_tag', 'node:' . $node->id())
-      ->execute()
-      ->fetchField();
-    $this->assertNotFalse($flip);
-    $this->assertGreaterThan($this->container->get('datetime.time')->getRequestTime(), (int) $flip);
+    // s-maxage (Varnish) and max-age (browser) both expire at the flip.
+    $this->assertSame(60, $response->getMaxAge());
+    $this->assertSame('60', $response->headers->getCacheControlDirective('max-age'));
+    $this->assertSame('60', $response->headers->getCacheControlDirective('s-maxage'));
   }
 
   /**
-   * Tests the preview does not record a flip.
+   * Tests the bridge never raises a lifetime or makes a page cacheable.
    */
-  public function testPreviewDoesNotRecordFlip(): void {
-    $node = Node::create([
-      'type' => 'page',
-      'title' => 'Hello',
-      'field_date' => '2999-01-01T00:00:00',
-    ]);
-    $node->save();
+  public function testResponseMaxAgeNotRaised(): void {
+    // A shorter lifetime set elsewhere wins over the rule's max-age.
+    $short = new CacheableResponse();
+    $short->getCacheableMetadata()->setCacheMaxAge(60);
+    $short->setMaxAge(30);
+    $this->dispatchResponse($short);
+    $this->assertSame(30, $short->getMaxAge());
 
-    $component = new SectionComponent($this->container->get('uuid')->generate(), 'content', [
-      'id' => 'system_powered_by_block',
-    ], ['visibility_rule' => ['field' => 'field_date', 'operator' => 'future']]);
-    $component->toRenderArray(['layout_builder.entity' => EntityContext::fromEntity($node)], TRUE);
-    // Even after a flush, a preview build records nothing.
-    $this->container->get('hs_blocks.visibility_flip_tracker')->flush();
+    // An uncacheable response is never made cacheable.
+    $uncacheable = new CacheableResponse();
+    $uncacheable->getCacheableMetadata()->setCacheMaxAge(60);
+    $this->dispatchResponse($uncacheable);
+    $this->assertNull($uncacheable->getMaxAge());
+  }
 
-    $count = $this->container->get('database')
-      ->select('hs_blocks_visibility_flip', 'f')
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-    $this->assertSame('0', $count);
+  /**
+   * Tests a permanent response is left alone.
+   */
+  public function testResponsePermanentUntouched(): void {
+    $response = new CacheableResponse();
+    // No date rule in play: the metadata max-age stays permanent (-1).
+    $response->setMaxAge(16588800);
+
+    $this->dispatchResponse($response);
+
+    $this->assertSame(16588800, $response->getMaxAge());
   }
 
 }

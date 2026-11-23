@@ -66,6 +66,13 @@ class VideoEmbedCest {
     $I->seeElement('figcaption');
     $I->scrollTo('figcaption');
     $I->see("sore was I ere I saw eros");
+
+    // The lazy-loaded YouTube embed must carry rel=0 so YouTube limits its
+    // end-of-video suggestions to the same channel. @see SUHS-10017.
+    $I->click('.hb-video-lazy__thumb');
+    $I->waitForElement('iframe.hb-video-lazy__iframe');
+    $iframe_src = $I->grabAttributeFrom('iframe.hb-video-lazy__iframe', 'src');
+    $I->assertStringContainsString('rel=0', $iframe_src);
   }
 
 }

@@ -12,20 +12,20 @@ use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\hs_dashboard\Attribute\ImporterInfo;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Course importer info.
- *
- * @ImporterInfo(
- *   id = "course_importer_info",
- *   label = @Translation("Course Importers"),
- *   description = @Translation("Retrieves event importer information from Localist."),
- *   weight = 10,
- * )
  */
+#[ImporterInfo(
+  id: 'course_importer_info',
+  label: new TranslatableMarkup('Course Importers'),
+  description: new TranslatableMarkup('Retrieves event importer information from Localist.'),
+  weight: 10,
+)]
 class CourseImporterInfo extends ImporterInfoBase {
 
   use StringTranslationTrait;

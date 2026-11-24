@@ -187,3 +187,27 @@ function su_humsci_profile_update_11006(): string {
   }
   return t('js_cookie module was already uninstalled.');
 }
+
+/**
+ * Uninstall the unused menu_link_attributes module.
+ */
+function su_humsci_profile_update_11007(): string {
+  $module = 'menu_link_attributes';
+  if (\Drupal::moduleHandler()->moduleExists($module)) {
+    \Drupal::service('module_installer')->uninstall([$module]);
+    return t('Uninstalled the menu_link_attributes module.');
+  }
+  return t('menu_link_attributes module was already uninstalled.');
+}
+
+/**
+ * Uninstall the deprecated layout_builder_expose_all_field_blocks module.
+ */
+function su_humsci_profile_update_11008(): string {
+  $module = 'layout_builder_expose_all_field_blocks';
+  if (\Drupal::moduleHandler()->moduleExists($module)) {
+    \Drupal::service('module_installer')->uninstall([$module]);
+    return t('Uninstalled the layout_builder_expose_all_field_blocks module.');
+  }
+  return t('layout_builder_expose_all_field_blocks module was already uninstalled.');
+}

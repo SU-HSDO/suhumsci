@@ -21,6 +21,7 @@ Read the relevant documentation before starting work; do not rely on assumptions
 - Patching Drupal core, contrib, or `stanford_*` modules: [docs/Patching.md](docs/Patching.md).
 - Frontend work (JavaScript, SCSS, Twig): [docs/FrontendPatterns.md](docs/FrontendPatterns.md).
 - Writing or running tests: [docs/Testing.md](docs/Testing.md).
+- Running, testing, or verifying anything locally, when your environment runs DDEV (`ddev describe` reports this project): [.ddev/DDEV-README.md](.ddev/DDEV-README.md), for site URLs, Drush aliases, which sites are installed, running PHP, and testing as a role.
 - Any PHP change: check against the Review Patterns in [docs/CodingStandards.md](docs/CodingStandards.md) before opening a PR.
 - Evaluating or adopting a contributed module: [docs/ModuleEvaluation.md](docs/ModuleEvaluation.md).
 - Creating or updating documentation (`README.md` or anything in `docs/`): [docs/DocumentationStandards.md](docs/DocumentationStandards.md).

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+## Description: Run drush inside the web container, with the right local URL
+## Usage: drush [@SITE_ALIAS.local] [flags] [args]
+## Example: "ddev drush @hs_traditional.local uli" or "ddev drush status"
+## ExecRaw: true
+## MutagenSync: true
+
 drush="/var/www/html/vendor/bin/drush"
 
 # If the first argument starts with "@", then we can turn it into a domain
@@ -9,7 +15,16 @@ if [[ $1 == @* ]]; then
   IFS='.' read -r site _ <<< "$alias"
   domain="$site.ddev.site"
   domain="${domain//_/-}"
-  $drush --uri="$domain" ${@:1}
-else
-  $drush ${@:1}
+  $drush --uri="$domain" "$@"
+  exit
 fi
+
+# Without an alias, the generated local.drush.yml points the default site at
+# http://foo.local, so give it the default site's DDEV URL instead.
+for arg in "$@"; do
+  if [[ $arg == --uri* || $arg == -l* ]]; then
+    $drush "$@"
+    exit
+  fi
+done
+$drush --uri="$DDEV_PRIMARY_URL" "$@"

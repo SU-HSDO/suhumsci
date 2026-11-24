@@ -31,8 +31,13 @@ function hs_entities_update_11001(&$sandbox): string {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 
   if ($sandbox['#finished'] === 1) {
-    HsEntityType::load('news_rss')?->delete();
+    // Delete the config pages before their type: config_pages_overrides loads
+    // the type when a config page is deleted and fails if it is already gone.
+    $config_pages_storage = \Drupal::entityTypeManager()->getStorage('config_pages');
+    $config_pages_storage->delete($config_pages_storage->loadByProperties(['type' => 'news_rss']));
+    // Delete the config pages type before the hs_entity type its field targets.
     ConfigPagesType::load('news_rss')?->delete();
+    HsEntityType::load('news_rss')?->delete();
     \Drupal::configFactory()->getEditable('auto_entitylabel.settings.hs_entity.news_rss')->delete();
     return t('Removed @count News RSS entities and the News RSS entity type.', [
       '@count' => $sandbox['deleted'],

@@ -30,11 +30,13 @@ class HsUniversityPoliciesBlock extends BlockBase implements ContainerFactoryPlu
   public function build() {
     // Define policies with links.
     $policies = [
-      'University Trademark and Images' => 'https://adminguide.stanford.edu/chapter-1/subchapter-5/policy-1-5-4',
-      'Copyright' => 'https://uit.stanford.edu/security/copyright-infringement',
-      'Online Privacy' => 'https://www.stanford.edu/site/privacy/',
-      'Accessibility' => 'https://www.stanford.edu/site/accessibility/',
-      'Terms of use for Sites' => 'https://www.stanford.edu/site/terms/',
+      'Stanford web standards (MinWeb)' => 'https://minweb.stanford.edu/',
+      'Accessibility' => 'https://soda.stanford.edu/',
+      'Images, video and copyright' => 'https://guides.library.stanford.edu/c.php?g=1326917&p=9846465',
+      'Privacy' => 'https://minpriv.stanford.edu/',
+      'Using AI in content' => 'https://ucomm.stanford.edu/policies/ai-guidelines-for-marketing-and-communications/',
+      'Brand and trademarks' => 'https://identity.stanford.edu/',
+      'All Stanford digital policies' => 'https://communicators.stanford.edu/policies/digital-policies/',
     ];
 
     // Generate list of links.
@@ -50,7 +52,7 @@ class HsUniversityPoliciesBlock extends BlockBase implements ContainerFactoryPlu
     return [
       '#theme' => 'item_list',
       '#items' => $items,
-      '#prefix' => '<p>' . $this->t('All site content must comply with the University Policies.') . '</p>',
+      '#prefix' => '<p>' . $this->t('Everything on your site must follow Stanford policy. Use these when you plan content or get a request that may not fit.') . '</p>',
     ];
   }
 

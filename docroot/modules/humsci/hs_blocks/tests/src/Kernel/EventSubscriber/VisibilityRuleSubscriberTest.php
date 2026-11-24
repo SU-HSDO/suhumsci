@@ -123,14 +123,35 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
   }
 
   /**
-   * Tests the preview never hides the block, and flags it instead.
+   * Tests the preview badges a block whose rule currently hides it.
    */
-  public function testPreviewIsNotHidden(): void {
-    $rule = ['field' => 'title', 'operator' => 'not_empty'];
-    $build = $this->buildComponent($rule, 'Hello', TRUE);
+  public function testPreviewBadgesRuleThatHides(): void {
+    // "not_empty" on a filled title would hide the block on the live site.
+    $build = $this->buildComponent(['field' => 'title', 'operator' => 'not_empty'], 'Hello', TRUE);
 
     $this->assertArrayHasKey('content', $build);
-    $this->assertContains('hs-blocks-conditionally-hidden', $build['#attributes']['class']);
+    $this->assertContains('hs-blocks-has-visibility-rule', $build['#attributes']['class']);
+  }
+
+  /**
+   * Tests the badge shows even when the rule does not currently hide the block.
+   */
+  public function testPreviewBadgesRuleThatDoesNotHide(): void {
+    // "empty" on a filled title does not hide the block, but still has a rule.
+    $build = $this->buildComponent(['field' => 'title', 'operator' => 'empty'], 'Hello', TRUE);
+
+    $this->assertArrayHasKey('content', $build);
+    $this->assertContains('hs-blocks-has-visibility-rule', $build['#attributes']['class']);
+  }
+
+  /**
+   * Tests a block without a rule gets no badge in the preview.
+   */
+  public function testPreviewNoRuleNoBadge(): void {
+    $build = $this->buildComponent([], 'Hello', TRUE);
+
+    $this->assertArrayHasKey('content', $build);
+    $this->assertNotContains('hs-blocks-has-visibility-rule', $build['#attributes']['class'] ?? []);
   }
 
   /**

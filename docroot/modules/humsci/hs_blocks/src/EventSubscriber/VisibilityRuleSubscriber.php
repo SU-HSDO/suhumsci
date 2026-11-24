@@ -118,21 +118,16 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    [$rule, $entity] = $this->resolve($event);
-    if (!$entity) {
+    [$rule] = $this->resolve($event);
+    if (!$rule) {
       return;
     }
 
-    $metadata = new CacheableMetadata();
-    $is_hidden = $this->evaluator->isHidden($rule, $entity, $metadata);
-    $event->getCacheableMetadata()->addCacheableDependency($metadata);
-    if (!$is_hidden) {
-      return;
-    }
-
-    // Keep the block so editors can reach its contextual links; just flag it.
+    // Flag any block that has a visibility rule so editors always see it,
+    // whether or not the rule currently hides it on the live site. The block
+    // stays fully rendered and legible; only a small badge is added.
     $build = $event->getBuild();
-    $build['#attributes']['class'][] = 'hs-blocks-conditionally-hidden';
+    $build['#attributes']['class'][] = 'hs-blocks-has-visibility-rule';
     $build['#attached']['library'][] = 'hs_blocks/visibility.admin';
     $event->setBuild($build);
   }

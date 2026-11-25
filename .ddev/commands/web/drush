@@ -8,23 +8,35 @@
 
 drush="/var/www/html/vendor/bin/drush"
 
-# If the first argument starts with "@", then we can turn it into a domain
-# and use it as the --uri parameter.
-if [[ $1 == @* ]]; then
-  alias="${1:1}"
-  IFS='.' read -r site _ <<< "$alias"
-  domain="$site.ddev.site"
-  domain="${domain//_/-}"
-  $drush --uri="$domain" "$@"
-  exit
-fi
-
-# Without an alias, the generated local.drush.yml points the default site at
-# http://foo.local, so give it the default site's DDEV URL instead.
+# Drush uses an "@alias" as the site when it comes before the command name,
+# options included. Turn a local alias into a domain and use it as the --uri
+# parameter, so that the URLs Drush generates can be opened.
+saw_arg=false
 for arg in "$@"; do
-  if [[ $arg == --uri* || $arg == -l* ]]; then
+  # Drush treats "@self" as no alias at all.
+  [[ $arg == @self ]] && continue
+
+  if [[ $saw_arg == false && $arg == @*.local ]]; then
+    alias="${arg:1}"
+    IFS='.' read -r site _ <<< "$alias"
+    # Same rule as .ddev/ddev.sites.php: "__" is a dot in the URL and "_" is a
+    # dash. Any other host is missing from sites.php and selects the default.
+    domain="${site//__/.}"
+    domain="${domain//_/-}.ddev.site"
+    $drush --uri="$domain" "$@"
+    exit
+  fi
+
+  # Without an alias, the generated local.drush.yml points the default site at
+  # http://foo.local, so give it the default site's DDEV URL instead. Leave the
+  # URI alone when it was given explicitly or when another argument starts
+  # with "@": an alias there would have its own URI replaced, and Drush
+  # forwards --uri to a remote alias. Either way the command would run on the
+  # default site.
+  if [[ $arg == @* || $arg == --uri* || $arg == -l* ]]; then
     $drush "$@"
     exit
   fi
+  [[ $arg == -* ]] || saw_arg=true
 done
 $drush --uri="$DDEV_PRIMARY_URL" "$@"

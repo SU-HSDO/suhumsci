@@ -26,6 +26,12 @@ for site_dir in /var/www/html/docroot/sites/*/; do
   db="drupal_$site"
   state=empty
   [[ -n ${tables[$db]} ]] && state=installed
+  # DDEV only routes the additional_hostnames listed in .ddev/config.yaml, and
+  # that list is kept by hand.
+  host="${url#https://}"
+  if [[ ,$DDEV_HOSTNAME, != *,"$host",* ]]; then
+    state="$state, URL not routed: add it to .ddev/config.yaml"
+  fi
 
   if [[ $1 == --installed && $state != installed ]]; then
     continue

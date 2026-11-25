@@ -124,7 +124,10 @@ table {
     @include table-head-row;
   }
 
-  tr:nth-child(even) {
+  // Scope zebra striping to body rows only. Without tbody, a multi-row
+  // thead's second <tr> is :nth-child(even) and this rule — specificity
+  // (0,1,2) — overrides the header background from `thead tr` (0,0,3).
+  tbody tr:nth-child(even) {
     @include table-row;
   }
 }

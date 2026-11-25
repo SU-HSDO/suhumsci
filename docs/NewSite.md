@@ -111,6 +111,22 @@ This command generates the necessary site files and updates the multisites confi
 
 Open [drush/drush.yml](../drush/drush.yml) and verify the new site appears under the `multisites:` section. The `drush sws:multisite:new-site` command automatically generates the necessary drush alias files in [drush/sites](../drush/sites).
 
+### Register the Local DDEV Hostname
+
+DDEV only serves the hostnames listed in [.ddev/config.yaml](../.ddev/config.yaml), and `drush sws:multisite:new-site` does not add one. Without it, the site's local URL does not load.
+
+1. Work out the hostname: `<SITENAME>` with double underscores replaced by dots and single underscores by dashes. Examples: `hs_traditional` is `hs-traditional`, and `gavin_wright__humsci` is `gavin-wright.humsci`.
+1. Add the hostname to `additional_hostnames` in `.ddev/config.yaml`, in alphabetical order.
+1. If you use DDEV, run `ddev restart`, then confirm the site's row in `ddev sites` does not say `URL not routed`:
+   ```bash
+   ddev sites | grep '@<SITENAME>.local'
+
+   # Example:
+   ddev sites | grep '@appliedphysics.local'
+   ```
+
+> **Note:** Lando needs no change. It builds every site's hostname from its directory name.
+
 ## Create and Merge the Pull Request
 
 1. Commit your changes locally

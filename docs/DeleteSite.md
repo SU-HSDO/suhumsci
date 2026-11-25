@@ -124,9 +124,8 @@ Remove the site Drush alias YAML:
 git rm drush/sites/<SITENAME>.site.yml
 ```
 
-Remove site alias from Lando and DDEV configuration:
-- Edit `.ddev/default.config.yaml` (or `.ddev/config.yaml`)
-- Edit `lando/default.lando.yml`
+Remove the site's hostname from the DDEV configuration:
+- Edit `.ddev/config.yaml` and remove the hostname from `additional_hostnames`. The hostname is `<SITENAME>` with double underscores replaced by dots and single underscores by dashes. Lando needs no change.
 
 Remove any custom domain forwarding from `docroot/sites/sites.php` (if present).
 

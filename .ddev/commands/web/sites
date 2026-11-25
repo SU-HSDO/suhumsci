@@ -1,0 +1,40 @@
+#!/bin/bash
+
+## Description: List the local multisites, with each one's Drush alias, URL, database, and whether it is installed
+## Usage: sites [--installed]
+## Example: "ddev sites" or "ddev sites --installed"
+
+# Every site gets an empty database on start, so a database alone doesn't mean
+# the site is installed: count the tables in each one instead.
+declare -A tables
+while read -r db count; do
+  tables[$db]=$count
+done < <(mysql -N -B -e "SELECT table_schema, COUNT(*) FROM information_schema.tables WHERE table_schema LIKE 'drupal\_%' GROUP BY table_schema")
+
+printf '%-32s %-48s %-36s %s\n' ALIAS URL DATABASE STATE
+for site_dir in /var/www/html/docroot/sites/*/; do
+  site=$(basename "$site_dir")
+  [[ -f "$site_dir/settings.php" ]] || continue
+
+  # Match the host-to-site mapping in .ddev/ddev.sites.php.
+  if [[ $site == default ]]; then
+    url="$DDEV_PRIMARY_URL"
+  else
+    domain="${site//__/.}"
+    url="https://${domain//_/-}.ddev.site"
+  fi
+  db="drupal_$site"
+  state=empty
+  [[ -n ${tables[$db]} ]] && state=installed
+  # DDEV only routes the additional_hostnames listed in .ddev/config.yaml, and
+  # that list is kept by hand.
+  host="${url#https://}"
+  if [[ ,$DDEV_HOSTNAME, != *,"$host",* ]]; then
+    state="$state, URL not routed: add it to .ddev/config.yaml"
+  fi
+
+  if [[ $1 == --installed && $state != installed ]]; then
+    continue
+  fi
+  printf '%-32s %-48s %-36s %s\n' "@$site.local" "$url" "$db" "$state"
+done

@@ -15,12 +15,67 @@ If you want to use [DDEV](https://ddev.readthedocs.io/) for local development, h
 
 ## Common commands
 
+* `ddev sites` - List every local site with its Drush alias, URL, database, and whether it is installed. Add `--installed` to list only installed sites
 * `ddev drush @[SITE_ALIAS].local uli` - Get a link for logging in as an admin user
 * `docker ps` or `orbstack ps` - Check that your containers are running
 * `ddev describe` - Check your DDEV config, including a list of domains, URLs, ports, etc.
 * `ddev drush @[SITE_ALIAS].local cr` - clear cache
 * `ddev drush @[SITE_ALIAS].local config-export` - export your local database settings
 * `ddev drush @[SITE_ALIAS].local config-import` - import new database settings to your local.
+
+## Local Sites
+
+There is no single local URL. Each multisite has its own URL, database, and Drush alias:
+
+* The default site is `https://suhumsci.ddev.site`, with the alias `@default.local`.
+* Every other site is `https://<SITE_NAME>.ddev.site`, where `<SITE_NAME>` is the site's directory in `docroot/sites/` with double underscores replaced by dots and single underscores by dashes. Its alias is `@<SITE_DIRECTORY>.local`. Examples: `docroot/sites/hs_traditional/` is `https://hs-traditional.ddev.site` and `@hs_traditional.local`; `docroot/sites/gavin_wright__humsci/` is `https://gavin-wright.humsci.ddev.site` and `@gavin_wright__humsci.local`.
+* A URL only loads when its `<SITE_NAME>` is listed under `additional_hostnames` in `.ddev/config.yaml`. `ddev sites` flags any site that is missing.
+* `ddev drush` without an alias or `--uri` runs against the default site.
+
+`ddev start` creates an empty database for every site, so a site only has content after you sync it. Run `ddev sites --installed` to see which sites are installed locally before you test against one. To install another site, sync it with `ddev drush drupal:sync --site=<SITE_ALIAS>`.
+
+> **Warning:** `drupal:sync` replaces that site's local database with a copy of production. Export any local config you want to keep first.
+
+## Running PHP with Drush
+
+`ddev drush php:eval` passes your code to Drush unchanged, so quote it as you would in any shell:
+
+```bash
+ddev drush @<SITE_ALIAS>.local php:eval '<PHP_CODE>'
+
+# Example:
+ddev drush @hs_traditional.local php:eval 'echo \Drupal::config("system.site")->get("name") . PHP_EOL;'
+```
+
+For longer code, pipe a script into `php:script -`. Leave out the opening `<?php` tag: Drush evaluates the script as code and fails on the tag.
+
+```bash
+ddev drush @<SITE_ALIAS>.local php:script - < <SCRIPT_PATH>
+
+# Example:
+ddev drush @hs_traditional.local php:script - < /tmp/check.php
+```
+
+> **Note:** The web container cannot read files outside the project directory, such as `/tmp` on your computer. Piping the script in with `<` works from anywhere.
+
+## Testing as a Role
+
+User 1 bypasses every access check, so testing as user 1 proves nothing about what editors see. To test as a role, create a user with only that role and log in as them:
+
+```bash
+ddev drush @<SITE_ALIAS>.local user:create <USERNAME> --mail=<USERNAME>@example.com
+ddev drush @<SITE_ALIAS>.local user:role:add <ROLE> <USERNAME>
+ddev drush @<SITE_ALIAS>.local uli --name=<USERNAME>
+
+# Example:
+ddev drush @hs_traditional.local user:create test-site-manager --mail=test-site-manager@example.com
+ddev drush @hs_traditional.local user:role:add site_manager test-site-manager
+ddev drush @hs_traditional.local uli --name=test-site-manager
+```
+
+Delete the user when you are done with `ddev drush @<SITE_ALIAS>.local user:cancel -y --delete-content <USERNAME>`.
+
+The editor roles are `site_manager` (Site Manager) and `contributor` (Contributor). Both can view the site dashboard at `/admin/dashboard`. Anonymous visitors are redirected to the login page. See `config/default/user.role.*.yml` for each role's permissions.
 
 ## Troubleshooting
 
@@ -50,7 +105,8 @@ If you want to use [DDEV](https://ddev.readthedocs.io/) for local development, h
 ## Adding a new site to DDEV
 1. Copy an existing site's folder in `docroot/sites/` and rename it to the new site's name.
 2. Edit the `sws.yml` file within your new site's folder with the corresponding site names. All other files within this folder use variables and don't need any modification.
-3. Run `ddev restart`
+3. Add the site's `<SITE_NAME>` (see [Local Sites](#local-sites)) to `additional_hostnames` in `.ddev/config.yaml`, in alphabetical order.
+4. Run `ddev restart`
 
 ## Syncing from Staging
 

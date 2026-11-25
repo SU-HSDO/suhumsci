@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * No-preview fallback for a closed paragraph in the "preview" view mode.
+ *
+ * su_humsci_gin_admin_theme_suggestions_paragraph_alter() routes site-built
+ * custom paragraph types (custm_ prefix) here; they have no component to
+ * preview, so show the type name and a short note.
+ */
+#}
+<div class="paragraph-admin-preview">
+  <div{{wrapper_attributes}}>
+    <h2>{{ paragraph.getParagraphType.label }}</h2>
+    <p>No preview available for this component</p>
+  </div>
+</div>

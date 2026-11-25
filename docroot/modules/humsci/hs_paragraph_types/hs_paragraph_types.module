@@ -220,11 +220,15 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
             '#attributes' => [
               'class' => ['paragraph--type--hs-carousel', 'ptype-hs-carousel'],
             ],
-            '#attached' => [
-              'library' => [$default_theme . '/carousel'],
-            ],
             'slide' => $slide_preview,
           ];
+          // Attach the carousel library only when the active theme actually
+          // defines it, so a theme without that library doesn't break the
+          // render. library.discovery resolves it the same way #attached does.
+          $library_discovery = \Drupal::service('library.discovery');
+          if ($library_discovery->getLibraryByName($default_theme, 'carousel')) {
+            $element['preview']['#attached']['library'][] = $default_theme . '/carousel';
+          }
         }
 
         $field_widget_form['widget'][$key] = $element;

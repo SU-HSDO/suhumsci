@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_blocks\EventSubscriber;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\hs_blocks\VisibilityRuleEvaluator;
@@ -15,6 +16,17 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Hides Layout Builder components whose visibility rule matches.
  */
 class VisibilityRuleSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The soonest date-rule flip max-age collected this request, or NULL.
+   *
+   * A date rule shortens its own block's cache life to the seconds until it
+   * flips. Only that value may reach the response, so it is collected here as
+   * the blocks build and forwarded once, never the page's whole bubbled
+   * max-age (which would needlessly shorten caching on pages that have no date
+   * rule at all).
+   */
+  protected ?int $dateRuleMaxAge = NULL;
 
   /**
    * Constructs a new VisibilityRuleSubscriber object.
@@ -63,6 +75,17 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
     $is_hidden = $this->evaluator->isHidden($rule, $entity, $metadata);
     $event->getCacheableMetadata()->addCacheableDependency($metadata);
 
+    // A date rule is the only thing that shortens this metadata to a finite
+    // max-age; collect just that (the nearest flip across every rule) so
+    // onResponse can forward it to Varnish without touching the page's own
+    // lifetime. Value rules and past-only date rules stay permanent (-1).
+    $max_age = $metadata->getCacheMaxAge();
+    if ($max_age > 0) {
+      $this->dateRuleMaxAge = $this->dateRuleMaxAge === NULL
+        ? $max_age
+        : Cache::mergeMaxAges($this->dateRuleMaxAge, $max_age);
+    }
+
     if ($is_hidden) {
       // Don't let core build a block that is hidden.
       $event->setBuild([]);
@@ -71,12 +94,14 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Lowers the response's cache life to a date rule's short max-age.
+   * Lowers the response's cache life to a date rule's next flip.
    *
-   * A date rule shortens the block's cache life, but core sends proxies the
+   * A date rule shortens its block's cache life, but core sends proxies the
    * fixed page max-age, not that shorter one, so a page behind Varnish stays
-   * stale until the date passes. Forwarding the bubbled max-age onto the
-   * response lets Varnish and the browser expire it when the rule flips.
+   * stale until the date passes. Forwarding only the flip time collected while
+   * the blocks built (never the page's whole bubbled max-age) lets Varnish and
+   * the browser expire the page exactly when a date rule flips, and leaves a
+   * page that has no date rule on its normal lifetime.
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event.
@@ -86,15 +111,19 @@ class VisibilityRuleSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $response = $event->getResponse();
-    if (!$response instanceof CacheableResponseInterface) {
+    // Read and clear the request's collected flip time, so the next request on
+    // this subscriber instance (a kernel test, or a persistent runner) starts
+    // clean even when it has no date rule of its own.
+    $max_age = $this->dateRuleMaxAge;
+    $this->dateRuleMaxAge = NULL;
+
+    // Nothing to forward without a finite, positive flip time.
+    if ($max_age === NULL || $max_age <= 0) {
       return;
     }
 
-    // A finite, positive max-age is the only thing that shortens caching;
-    // permanent (-1) and uncacheable (0) leave the response alone.
-    $max_age = $response->getCacheableMetadata()->getCacheMaxAge();
-    if ($max_age <= 0) {
+    $response = $event->getResponse();
+    if (!$response instanceof CacheableResponseInterface) {
       return;
     }
 

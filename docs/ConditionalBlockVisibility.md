@@ -37,24 +37,27 @@ Date range and event (smart date) fields have both a start and an end, so the fo
 
 ## Layout Builder Preview
 
-The rule never hides a block while editing a layout. A block that the rule would hide on the live page is shown with a dashed outline and a "Conditionally hidden" label, so you can still reach its contextual links.
+The rule never hides a block while editing a layout. Every block that has a visibility rule is shown fully rendered with a small gray **"Has visibility conditions"** badge above it, whether or not the rule currently hides it on the live page, so you always know a rule is attached and can still reach the block's contextual links.
 
 ## How Dates Are Compared
 
 - **Date and time fields** are stored in UTC and compared as exact moments.
 - **Date-only fields** have no time, so the date starts at midnight in the site timezone (set at **Configuration > Regional and Language > Regional Settings**).
-- **Date range and smart date fields** are compared by the boundary chosen in **Compare using**, defaulting to the end. Comparing the end means an event counts as past once it has ended; comparing the start means it counts as past once it has begun. A date-only range end lasts until the end of that day. A recurring smart date stores each occurrence as a separate value, so all of them are compared, following the several-values rule below.
+- **Date range and smart date fields** are compared by the boundary chosen in **Compare using**, defaulting to the end. Comparing the end means an event counts as past once it has ended; comparing the start means it counts as past once it has begun. A date-only range end lasts until the end of that day, and an all-day range is stored and compared the same as a date-only range. A recurring smart date stores each occurrence as a separate value, so all of them are compared, following the several-values rule below.
+- **Minute precision needs a stored time.** Only fields that store a time — event (smart date), date and time, and timestamp — flip to the minute (for example, hiding an RSVP block the moment an event starts). Date-only and all-day fields have no time, so they flip at midnight site-time for the start boundary and end of day for the end boundary, never at a chosen minute.
 - **Fields with several values** match "is in the future" when any value is still ahead, and "is in the past" when none is. The two rules are always opposites.
 - **An empty date field** never hides the block with either date rule.
 - A date equal to the current time counts as past.
 
 ## Caching
 
-The block is rebuilt whenever the content changes, because the rule adds the entity's cache tags. For date rules, the block's cache lifetime ends at the next date that changes the result, so the block appears or disappears when the date passes.
+The block is rebuilt whenever the content changes, because the rule adds the entity's cache tags. For date rules, the block's cache lifetime is shortened to the next date that changes the result, so the block appears or disappears right when the date passes — to the minute.
 
-Drupal's own page and dynamic page caches honor this shortened lifetime directly. Acquia's Varnish layer does not: it caches anonymous pages for the fixed page lifetime (`system.performance`'s page cache max-age) and is only cleared when a cache tag is invalidated. To keep date rules working behind Varnish, the module records the next flip time for each affected entity as its page is built, and `hs_blocks_cron()` invalidates those entities' cache tags once the time passes, purging Varnish. The flip therefore happens on the next cron run after the date, not at the exact moment.
+Drupal's own page and dynamic page caches honor this shortened lifetime directly. Acquia's Varnish layer does not: it caches anonymous pages for the fixed page lifetime (`system.performance`'s page cache max-age), not the block's shorter one, so a page behind Varnish would otherwise stay stale until that long lifetime expired. To bridge this, a response subscriber forwards the flip time onto the response's `Cache-Control` (`s-maxage` and `max-age`) as each page is served, so Varnish and the browser expire the page exactly at the flip. No cron run or cache clear is involved, and the flip is immediate rather than delayed.
 
-> **Note:** Pages whose date rules are all in the past, or have no value, keep the normal cache lifetime and record nothing.
+The subscriber forwards **only** a date rule's own flip time — collected from the rule as the blocks build — and never the page's whole bubbled max-age, so a page without a date rule keeps its normal cache lifetime, and it only ever shortens an already-cacheable response (it never makes an uncacheable page cacheable or lengthens a shorter lifetime set elsewhere).
+
+> **Note:** Pages whose date rules are all in the past, or have no value, keep the normal cache lifetime — nothing is shortened or forwarded.
 
 ## Behavior with Invalid Rules
 
@@ -66,9 +69,8 @@ All code is in the `hs_blocks` module (`docroot/modules/humsci/hs_blocks/`).
 
 | What | Where |
 |---|---|
-| Rule evaluation and cache metadata | `src/VisibilityRuleEvaluator.php` (service `hs_blocks.visibility_rule_evaluator`) |
-| Hiding the block on the live page and flagging it in the preview | `src/EventSubscriber/VisibilityRuleSubscriber.php` |
-| Cron invalidation of date rules behind Varnish | `src/VisibilityFlipTracker.php` (service `hs_blocks.visibility_flip_tracker`), `hs_blocks_cron()` |
+| Rule evaluation and cache metadata (including shortening a date rule's max-age to its next flip) | `src/VisibilityRuleEvaluator.php` (service `hs_blocks.visibility_rule_evaluator`) |
+| Hiding the block on the live page, flagging it in the preview, and forwarding a date rule's flip time onto the response for Varnish | `src/EventSubscriber/VisibilityRuleSubscriber.php` |
 | The **Manage visibility** form | `src/Form/HsManageBlockVisibilityForm.php` |
 | Routes and contextual links | `hs_blocks.routing.yml`, `hs_blocks.links.contextual.yml` |
 
@@ -95,6 +97,6 @@ The **Manage visibility** link on a top-level block is gated on Layout Builder a
 
 - One rule per block.
 - The only action is hide. There is no "show if" rule.
-- Behind Varnish, a date rule flips on the next cron run after the date, not at the exact time.
+- A date rule flips at the stored date to the minute; behind Varnish it takes effect once the forwarded `Cache-Control` lifetime expires, which lands at that flip time.
 - Rules read fields of the entity being displayed. They cannot check other entities, the current user, or the request.
-- The visible preview label is added with CSS. Adjust `scss/hs_blocks.visibility.admin.scss` and recompile to change it.
+- The preview badge text is added with CSS. Adjust `scss/hs_blocks.visibility.admin.scss` and recompile to change it.

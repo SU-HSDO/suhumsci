@@ -44,6 +44,15 @@ class VisibilityRuleEvaluator {
   const BOUNDARIES = ['start', 'end'];
 
   /**
+   * The 'datetime_type' value for an all-day date range.
+   *
+   * Mirrors DateRangeItem::DATETIME_TYPE_ALLDAY, inlined so a site with date
+   * fields but not the datetime_range module never has to load that class. An
+   * all-day value is stored as a bare date, the same as a date-only field.
+   */
+  const ALLDAY_DATETIME_TYPE = 'allday';
+
+  /**
    * Constructs a new VisibilityRuleEvaluator.
    *
    * @param \Drupal\Component\Datetime\TimeInterface $time
@@ -258,8 +267,9 @@ class VisibilityRuleEvaluator {
       }
 
       // Only datetime and daterange reach here; datetime_type says if there's a
-      // time.
-      $is_date_only = $items->getFieldDefinition()->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE;
+      // time. Date-only and all-day fields both store a bare date, no time.
+      $datetime_type = $items->getFieldDefinition()->getSetting('datetime_type');
+      $is_date_only = in_array($datetime_type, [DateTimeItem::DATETIME_TYPE_DATE, self::ALLDAY_DATETIME_TYPE], TRUE);
       if ($is_date_only) {
         // Date-only values start at midnight site time; a range end lasts to
         // the day's end.

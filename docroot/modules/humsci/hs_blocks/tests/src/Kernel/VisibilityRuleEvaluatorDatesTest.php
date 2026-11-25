@@ -59,6 +59,7 @@ class VisibilityRuleEvaluatorDatesTest extends KernelTestBase {
       'field_date' => ['datetime', ['datetime_type' => 'date']],
       'field_datetime' => ['datetime', ['datetime_type' => 'datetime']],
       'field_range' => ['daterange', ['datetime_type' => 'date']],
+      'field_allday' => ['daterange', ['datetime_type' => 'allday']],
       'field_stamp' => ['timestamp', []],
       'field_smart' => ['smartdate', []],
       'field_multi' => ['datetime', ['datetime_type' => 'datetime']],
@@ -133,6 +134,10 @@ class VisibilityRuleEvaluatorDatesTest extends KernelTestBase {
       // A range lasts through its end date, so ending today is still future.
       'range ending today is still future' => ['field_range', 'future', ['value' => '2030-06-10', 'end_value' => '2030-06-15'], TRUE, 19 * 3600],
       'range ended yesterday is past' => ['field_range', 'past', ['value' => '2030-06-10', 'end_value' => '2030-06-14'], TRUE, NULL],
+      // An all-day range stores bare dates like a date-only range, so it is
+      // compared the same way (these fail if all-day falls to the time parser).
+      'all-day range ending today is still future' => ['field_allday', 'future', ['value' => '2030-06-10', 'end_value' => '2030-06-15'], TRUE, 19 * 3600],
+      'all-day range starting tomorrow is future by start' => ['field_allday', 'future', ['value' => '2030-06-16', 'end_value' => '2030-06-20'], TRUE, 19 * 3600, 'start'],
       'timestamp in the future' => ['field_stamp', 'future', self::NOW + 60, TRUE, 60],
       'timestamp in the past' => ['field_stamp', 'past', self::NOW - 60, TRUE, NULL],
       'smart date ending in the future' => ['field_smart', 'future', ['value' => self::NOW - 3600, 'end_value' => self::NOW + 1800], TRUE, 1800],

@@ -4,6 +4,8 @@ namespace Drupal\Tests\hs_blocks\Kernel\EventSubscriber;
 
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_blocks\EventSubscriber\VisibilityRuleSubscriber;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\SectionComponent;
@@ -50,6 +52,18 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installConfig(['system', 'node', 'filter']);
     NodeType::create(['type' => 'page', 'name' => 'Page'])->save();
+
+    // A timestamp field lets a date rule set a known flip time in the build.
+    FieldStorageConfig::create([
+      'field_name' => 'field_stamp',
+      'entity_type' => 'node',
+      'type' => 'timestamp',
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_stamp',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+    ])->save();
   }
 
   /**
@@ -61,12 +75,17 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
    *   The node title.
    * @param bool $in_preview
    *   Whether the component is built in the Layout Builder UI.
+   * @param int|null $stamp
+   *   A value for the node's timestamp field, for a date rule to compare.
    *
    * @return array
    *   The component render array.
    */
-  protected function buildComponent(array $rule, string $title, bool $in_preview = FALSE): array {
+  protected function buildComponent(array $rule, string $title, bool $in_preview = FALSE, ?int $stamp = NULL): array {
     $node = Node::create(['type' => 'page', 'title' => $title]);
+    if ($stamp !== NULL) {
+      $node->set('field_stamp', $stamp);
+    }
     $node->save();
 
     $component = new SectionComponent($this->container->get('uuid')->generate(), 'content', [
@@ -155,14 +174,17 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
   }
 
   /**
-   * Tests the bridge lowers the response to a date rule's short max-age.
+   * Tests the bridge lowers the response to a date rule's next flip.
    */
   public function testResponseMaxAgeTightened(): void {
+    // A future date rule shortens the block's life to the seconds until it
+    // flips; onBuildLive collects that as the component builds.
+    $now = \Drupal::time()->getRequestTime();
+    $this->buildComponent(['field' => 'field_stamp', 'operator' => 'future'], 'Soon', FALSE, $now + 60);
+
     $response = new CacheableResponse();
-    $response->getCacheableMetadata()->setCacheMaxAge(60);
     // Stand in for the long page max-age core sends proxies.
     $response->setMaxAge(16588800);
-
     $this->dispatchResponse($response);
 
     // s-maxage (Varnish) and max-age (browser) both expire at the flip.
@@ -172,29 +194,51 @@ class VisibilityRuleSubscriberTest extends KernelTestBase {
   }
 
   /**
+   * Tests a page with no date rule keeps its full cache lifetime.
+   *
+   * The bridge forwards only a date rule's own flip time, never the page's
+   * whole bubbled max-age, so an unrelated short-lived element on the page
+   * never shortens how long Varnish caches it.
+   */
+  public function testResponseUntouchedWithoutDateRule(): void {
+    // A value rule sets no finite max-age, so nothing is collected to forward.
+    $this->buildComponent(['field' => 'title', 'operator' => 'not_empty'], 'Hello');
+
+    $response = new CacheableResponse();
+    // Some unrelated element bubbled a short max-age onto the page.
+    $response->getCacheableMetadata()->setCacheMaxAge(60);
+    $response->setMaxAge(16588800);
+    $this->dispatchResponse($response);
+
+    // The long page lifetime is left untouched.
+    $this->assertSame(16588800, $response->getMaxAge());
+  }
+
+  /**
    * Tests the bridge never raises a lifetime or makes a page cacheable.
    */
   public function testResponseMaxAgeNotRaised(): void {
-    // A shorter lifetime set elsewhere wins over the rule's max-age.
+    $now = \Drupal::time()->getRequestTime();
+
+    // A shorter lifetime set elsewhere wins over the rule's flip time.
+    $this->buildComponent(['field' => 'field_stamp', 'operator' => 'future'], 'Soon', FALSE, $now + 3600);
     $short = new CacheableResponse();
-    $short->getCacheableMetadata()->setCacheMaxAge(60);
     $short->setMaxAge(30);
     $this->dispatchResponse($short);
     $this->assertSame(30, $short->getMaxAge());
 
     // An uncacheable response is never made cacheable.
+    $this->buildComponent(['field' => 'field_stamp', 'operator' => 'future'], 'Soon', FALSE, $now + 3600);
     $uncacheable = new CacheableResponse();
-    $uncacheable->getCacheableMetadata()->setCacheMaxAge(60);
     $this->dispatchResponse($uncacheable);
     $this->assertNull($uncacheable->getMaxAge());
   }
 
   /**
-   * Tests a permanent response is left alone.
+   * Tests a response with no date rule in play is left alone.
    */
   public function testResponsePermanentUntouched(): void {
     $response = new CacheableResponse();
-    // No date rule in play: the metadata max-age stays permanent (-1).
     $response->setMaxAge(16588800);
 
     $this->dispatchResponse($response);

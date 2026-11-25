@@ -401,7 +401,9 @@
       @include table-head-row;
     }
 
-    tr:nth-child(even) {
+    // Scope zebra striping to body rows only, so a multi-row thead's
+    // second <tr> (which is :nth-child(even)) keeps its header background.
+    tbody tr:nth-child(even) {
       @include table-row;
     }
   }

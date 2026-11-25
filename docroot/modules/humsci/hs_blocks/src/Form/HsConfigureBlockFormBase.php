@@ -64,7 +64,14 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
     if ($this->block instanceof ContextAwarePluginInterface) {
       $configuration['context_mapping'] = $this->block->getContextMapping();
     }
+    // The block plugin configuration does not include the child's "additional"
+    // data (its component attributes and visibility rule), so preserve it;
+    // overwriting the child outright would silently drop those settings.
+    $additional = $component_config['children'][$this->uuid]['additional'] ?? NULL;
     $component_config['children'][$this->uuid] = $configuration;
+    if ($additional !== NULL) {
+      $component_config['children'][$this->uuid]['additional'] = $additional;
+    }
     $component_config['children'] = array_filter($component_config['children']);
 
     // Save the new child into the group component.

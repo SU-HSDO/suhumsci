@@ -4,3 +4,11 @@ services:
     arguments: ['@current_user', '@database']
     tags:
       - { name: event_subscriber }
+  hs_blocks.visibility_rule_evaluator:
+    class: Drupal\hs_blocks\VisibilityRuleEvaluator
+    arguments: ['@datetime.time', '@config.factory']
+  hs_blocks.visibility_rule_subscriber:
+    class: Drupal\hs_blocks\EventSubscriber\VisibilityRuleSubscriber
+    arguments: ['@hs_blocks.visibility_rule_evaluator']
+    tags:
+      - { name: event_subscriber }

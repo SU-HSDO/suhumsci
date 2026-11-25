@@ -89,3 +89,32 @@ hs_blocks.remove_block:
     parameters:
       section_storage:
         layout_builder_tempstore: TRUE
+
+hs_blocks.manage_visibility:
+  path: '/hs_blocks/visibility/block/{section_storage_type}/{section_storage}/{delta}/{uuid}'
+  defaults:
+    _form: '\Drupal\hs_blocks\Form\HsManageBlockVisibilityForm'
+    _title: 'Manage visibility'
+  requirements:
+    # Gate on Layout Builder access only, matching core's block routes, so
+    # editors with per-bundle override permissions also get the link.
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
+hs_blocks.manage_group_block_visibility:
+  path: '/hs_blocks/visibility/block/{section_storage_type}/{section_storage}/{delta}/{group}/{uuid}'
+  defaults:
+    _form: '\Drupal\hs_blocks\Form\HsManageBlockVisibilityForm'
+    _title: 'Manage visibility'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE

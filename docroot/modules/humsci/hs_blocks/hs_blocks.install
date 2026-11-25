@@ -32,3 +32,19 @@ function hs_blocks_update_10202(): string {
 
   return (string) t('Contributor role was not found; no permissions updated.');
 }
+
+/**
+ * Drop the date-based block visibility flip tracking table.
+ *
+ * Date rules now expire their own cache through a short max-age forwarded onto
+ * the response (see VisibilityRuleSubscriber), so the cron flip table is gone.
+ */
+function hs_blocks_update_10204(): string {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('hs_blocks_visibility_flip')) {
+    return (string) t('The block visibility flip tracking table does not exist; nothing to drop.');
+  }
+
+  $schema->dropTable('hs_blocks_visibility_flip');
+  return (string) t('Dropped the block visibility flip tracking table.');
+}

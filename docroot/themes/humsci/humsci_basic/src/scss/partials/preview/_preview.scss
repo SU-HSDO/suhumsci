@@ -115,7 +115,15 @@
   .ptype-hs-carousel .ptype-hs-hero-image,
   .paragraph--type--hs-carousel.ptype-hs-hero-image {
     .hb-hero-overlay {
-      background-color: transparent;
+      @include hb-themes(('colorful', 'airy')) {
+        background-color: transparent;
+      }
+
+      &:not(.hb-hero-overlay--no-image) {
+        @include hb-traditional {
+          background-color: transparent;
+        }
+      }
     }
   }
 

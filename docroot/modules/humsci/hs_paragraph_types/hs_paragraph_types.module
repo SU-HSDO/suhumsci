@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\hs_paragraph_types\PreRenderer;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\views\Views;
 
@@ -158,22 +159,79 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
   }
   switch ($field_widget_form['widget']['#field_name']) {
     case 'field_hs_carousel_slides':
-      if (empty($field_widget_form['widget']['add_more'])) {
-        return;
-      }
-      // Change the add button label for field_hs_carousel_slides.
+      // Relabel the add button, but only when it exists: the paragraphs widget
+      // omits it once the carousel reaches its slide cardinality, and the slide
+      // relabel/preview below must still run for a full carousel.
       $new_label = 'Banner image with text box';
-      $field_widget_form['widget']['add_more']['add_more_button_hs_hero_image']['#value'] = t('Add @type', [
-        '@type' => $new_label,
-      ]);
-      // Change the paragraph type label for hs_hero_image embedded in
-      // hs_carousel.
+      if (!empty($field_widget_form['widget']['add_more']['add_more_button_hs_hero_image'])) {
+        $field_widget_form['widget']['add_more']['add_more_button_hs_hero_image']['#value'] = t('Add @type', [
+          '@type' => $new_label,
+        ]);
+      }
+      // The slides are hs_hero_image ("Banner image with full overlay and
+      // text") paragraphs reused as text-box carousel slides, so by default
+      // the editor labels each slide with that type label and previews it in
+      // the hs_hero_image default (full overlay) view mode. Relabel the slide
+      // and preview it in the slideshow_slide (text box) view mode this
+      // carousel actually renders its slides in, so the closed widget matches
+      // the saved front end.
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder('paragraph');
       foreach (Element::children($field_widget_form['widget']) as $key) {
-        // Only alter markup in field widget elements.
+        // Only alter paragraph item elements (integer deltas).
         if (!is_int($key)) {
           continue;
         }
-        $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = t('@label', ['@label' => $new_label]);
+        $element = $field_widget_form['widget'][$key];
+        if (($element['#paragraph_type'] ?? '') !== 'hs_hero_image') {
+          continue;
+        }
+
+        // Relabel the collapsed item header. paragraphs_ee's
+        // hook_field_widget_complete_form_alter() runs after this alter and
+        // resets the label to the paragraph type label, so re-apply ours in a
+        // #pre_render that runs at render time, after that reset.
+        if (isset($element['top']['type']['label'])) {
+          $element['top']['type']['label']['#pre_render'][] = [
+            PreRenderer::class,
+            'preRenderCarouselSlideLabel',
+          ];
+        }
+
+        // Render the collapsed preview in the slideshow_slide view mode this
+        // carousel renders its slides in, instead of the hs_hero_image default
+        // (full overlay) view mode the widget falls back to.
+        if (isset($element['preview']['#paragraph'])) {
+          $slide = $element['preview']['#paragraph'];
+          $slide_preview = $view_builder->view($slide, 'slideshow_slide', $slide->language()->getId());
+          $slide_preview['#access'] = $slide->access('view');
+
+          // The slide's text-box look (overlay, image bars, layout) lives in
+          // the carousel component library and is scoped to the
+          // .paragraph--type--hs-carousel container, so the slideshow_slide
+          // view mode alone still renders as a full overlay: a standalone
+          // slide is not inside that container and never attaches that library.
+          // An unsaved slide can't know it belongs to a carousel, so wrap the
+          // preview in that container here — the widget is the one place that
+          // does know — and attach the carousel library, so the closed widget
+          // matches the saved front end.
+          $default_theme = \Drupal::config('system.theme')->get('default');
+          $element['preview'] = [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => ['paragraph--type--hs-carousel', 'ptype-hs-carousel'],
+            ],
+            'slide' => $slide_preview,
+          ];
+          // Attach the carousel library only when the active theme actually
+          // defines it, so a theme without that library doesn't break the
+          // render. library.discovery resolves it the same way #attached does.
+          $library_discovery = \Drupal::service('library.discovery');
+          if ($library_discovery->getLibraryByName($default_theme, 'carousel')) {
+            $element['preview']['#attached']['library'][] = $default_theme . '/carousel';
+          }
+        }
+
+        $field_widget_form['widget'][$key] = $element;
       }
       break;
 

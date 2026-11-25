@@ -98,7 +98,7 @@ class CloneNodeTest extends KernelTestBase {
 
     $form = [];
     $form_state = new FormState();
-    $context = ['list' => [$this->node->id()]];
+    $context = ['list' => [[$this->node->id(), $this->node->language()->getId(), 'node']]];
     $action->setContext($context);
     $this->assertCount(2, $action->buildConfigurationForm($form, $form_state));
     $this->assertArrayHasKey('clone_count', $action->buildConfigurationForm($form, $form_state));
@@ -110,6 +110,29 @@ class CloneNodeTest extends KernelTestBase {
 
     $action->execute($this->node);
     $this->assertEquals(8, $this->getNodeCount());
+  }
+
+  /**
+   * VBO's multiple-entity execution clones each selected node independently.
+   */
+  public function testExecuteMultiple(): void {
+    $other_node = $this->node->createDuplicate();
+    $other_node->setTitle($this->randomMachineName());
+    $other_node->save();
+
+    /** @var \Drupal\hs_actions\Plugin\Action\CloneNode $action */
+    $action = $this->container->get('plugin.manager.action')->createInstance('node_clone_action', [
+      'clone_count' => 2,
+      'field_clone' => [],
+    ]);
+    $this->assertCount(2, $action->executeMultiple([$this->node, $other_node]));
+    $this->assertEquals(3, $this->getNodeCount());
+    $this->assertCount(3, $this->container->get('entity_type.manager')->getStorage('node')->loadByProperties([
+      'title' => $other_node->getTitle(),
+    ]));
+    $this->assertCount(6, Node::loadMultiple());
+    $this->assertFalse($this->node->isNew());
+    $this->assertFalse($other_node->isNew());
   }
 
   /**

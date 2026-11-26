@@ -36,7 +36,11 @@
   background-size: hb-calculate-rems(20px) hb-calculate-rems(20px);
 
   background-position: hb-calculate-rems(14px) hb-calculate-rems(20px);
-  padding-left: hb-calculate-rems(40px) !important;
+
+  // Exclude megamenu links, they have their own position rules.
+  .hb-main-nav &, .hb-secondary-nav & {
+    padding-left: hb-calculate-rems(40px) !important;
+  }
 
   @include grid-media-min('md') {
     background-position: hb-calculate-rems(14px) hb-calculate-rems(24px);

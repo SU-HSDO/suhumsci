@@ -5,6 +5,14 @@
 @use 'theme' as *;
 @use 'icons' as *;
 
+// WCAG 2.5.8 requires interactive targets to be at least 24px tall unless
+// they are spaced away from other targets. Links in stacked or wrapping
+// Views fields sit too close to each other with condensed line heights.
+@mixin hb-min-target-size {
+  display: inline-block;
+  min-height: hb-calculate-rems(24px);
+}
+
 // Link style for headings
 @mixin hb-link {
   // no font size by default

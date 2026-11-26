@@ -38,7 +38,10 @@
 .hb-table-wrap .hb-table-pattern__body,
 .text-with-summary blockquote,
 .text-long blockquote {
-  line-height: var(--condensed-line-height);
+  // The 24px floor keeps links on consecutive lines (e.g. separated by <br>)
+  // far enough apart to meet WCAG 2.5.8 target spacing at small font sizes,
+  // such as the 13px table text.
+  line-height: max(#{hb-calculate-rems(24px)}, var(--condensed-line-height));
 }
 
 // Flexible and private page text areas.

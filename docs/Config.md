@@ -58,7 +58,7 @@ Add a deploy hook that sets the intended value whenever you add a per-key patter
 - The custom `hs_config_partial` module implements partial import behavior using the transformation pipeline. The `--partial` flag is now deprecated and destructive. Do not use it.
 - The `acquia.settings.php` enables the `hs_config_partial` enabled setting on all Acquia environments, in addition to `config_split` to ensure this stays on.
 - The partial import also prevents any configuration that would be deleted by `config_split` when switching between different splits, including configuration attached to a module getting uninstalled. If a module is being uninstalled but associated configuration is blocked from deletion, the config import will fail. This means all module uninstalls need to take place before the config import step, **unless** the config is explicitly allowed to be deleted via the `hs_config_partial_allow_delete` setting.
-- Deletion of specific configurations is allowed through the `hs_config_partial_allow_delete` setting in the `settings.php` file. Currently this is only used to allow deletion of configuration associated with modules being uninstalled when syncing from different environments.
+- Deletion of specific configurations is allowed through the `hs_config_partial_allow_delete` setting in `docroot/sites/settings/global.settings.php`. This is useful for environment-specific modules managed by Config Split. Config import can then uninstall the module and delete its configuration when switching splits without a database update hook. For example, `'seckit.'` allows removal of `seckit.settings` when switching from an Acquia split to local. Prefixes match the beginning of configuration names; wildcards are not supported.
 - For more information see the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
 ## New Sites vs Existing Sites
@@ -87,7 +87,7 @@ See [ADR 0004](architecture/decisions/0004-use-deploy-hooks-for-post-config-oper
 - For site-specific config changes or deletions, use update hooks or direct site editing.
 - For local development, `config_ignore` and `config_split` can be overridden in settings files to match the local environment.
 - Running `config-import` twice is a recommended approach. Certain configuration can require a fully completed config import before it is respected, especially with `config_split`.
-- Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these.
+- Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these. For environment-specific modules managed by Config Split, let config import install or uninstall the module and allow deletion of its configuration as described in [Partial Config Imports & hs_config_partial](#partial-config-imports--hs_config_partial). 
 - Use `hook_deploy_NAME()` for operations that depend on config import having completed (e.g., permissions for new content types, entity operations tied to new bundles).
 - If you need to allow deletion of specific config (e.g., for module uninstalls or legacy cleanup), add the appropriate prefix to the allow-list in `settings.php` as described in the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
@@ -128,7 +128,7 @@ To safely export configuration changes for a config_split, follow these steps:
 	 > **Note:** SWSDC sets each environment split's status in settings.php, which overrides `drush config-split:activate` and `drush config-split:status-override`. Use `local.settings.php` to enable a split locally.
 
 1. **Make your changes:**
-	 - Apply the desired configuration changes in the UI or via code.
+     - Apply the desired configuration changes through the Drupal UI or configuration API. Do not hand-edit split YAML files.
 
 1. **Export configuration:**
 	 - Export config:
@@ -136,6 +136,7 @@ To safely export configuration changes for a config_split, follow these steps:
 		 drush config-export -y
 		 ```
 	 - Note: Split-specific configuration is not shown in the export output. Use `git status` to verify exported changes in split directories.
+     - If multiple splits need identical configuration, export one split first, then copy that exported configuration to the other splits.
 
 1. **Revert split overrides:**
 	 - In `local.settings.php`, comment out or remove the split status overrides. This prevents accidental imports/exports using the wrong split in future work.

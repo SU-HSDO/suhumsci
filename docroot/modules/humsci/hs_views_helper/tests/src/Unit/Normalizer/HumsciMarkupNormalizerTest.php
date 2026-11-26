@@ -4,6 +4,7 @@ namespace Drupal\Tests\hs_views_helper\Unit\Plugin\Block;
 
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\hs_views_helper\Normalizer\HumsciMarkupNormalizer;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -20,14 +21,14 @@ class HumsciMarkupNormalizerTest extends UnitTestCase {
    * Test functioning normalizer.
    */
   public function testNormalizer() {
-    $logger_factory = $this->createMock(LoggerChannelFactoryInterface::class);
+    $logger_factory = $this->createStub(LoggerChannelFactoryInterface::class);
     $normalizer = new HumsciMarkupNormalizer($logger_factory);
 
     $object = '
 <div data-attribute-tag="newTag">one</div>
 <div data-attribute-tag="newTag">two</div>
 <div data-attribute-tag="newTag">three</div>';
-    $normalized = $normalizer->normalize($object);
+    $normalized = $normalizer->normalize(Markup::create($object));
 
     $converted_object = ['newTag' => ['one', 'two', 'three']];
     $this->assertEquals($converted_object, $normalized);
@@ -39,12 +40,12 @@ class HumsciMarkupNormalizerTest extends UnitTestCase {
   public function testErrorNormalizer() {
     $logger_factory = $this->createMock(LoggerChannelFactoryInterface::class);
     $logger_factory->method('get')
-      ->willReturn($this->createMock(LoggerChannelInterface::class));
+      ->willReturn($this->createStub(LoggerChannelInterface::class));
 
     $normalizer = new HumsciMarkupNormalizer($logger_factory);
 
     $object = '<root data-attribute-tag="newTag">one</root>';
-    $normalized = $normalizer->normalize($object);
+    $normalized = $normalizer->normalize(Markup::create($object));
     $this->assertEquals($object, $normalized);
   }
 

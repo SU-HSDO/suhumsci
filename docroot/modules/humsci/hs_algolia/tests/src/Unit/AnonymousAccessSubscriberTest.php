@@ -73,7 +73,7 @@ class AnonymousAccessSubscriberTest extends UnitTestCase {
     $helper = $this->createMock(SearchApiAlgoliaHelper::class);
     $helper->expects($this->once())->method('entityDelete')->with($restricted_entity);
 
-    $index = $this->mockIndex($this->createMock(SearchApiAlgoliaBackend::class));
+    $index = $this->mockIndex($this->createStub(SearchApiAlgoliaBackend::class));
     $event = new IndexingItemsEvent($index, [
       'entity:node/1:en' => $public_item,
       'entity:node/2:en' => $restricted_item,
@@ -95,7 +95,7 @@ class AnonymousAccessSubscriberTest extends UnitTestCase {
     $helper = $this->createMock(SearchApiAlgoliaHelper::class);
     $helper->expects($this->never())->method('entityDelete');
 
-    $index = $this->mockIndex($this->createMock(BackendInterface::class));
+    $index = $this->mockIndex($this->createStub(BackendInterface::class));
     $event = new IndexingItemsEvent($index, ['entity:node/2:en' => $restricted_item]);
 
     (new AnonymousAccessSubscriber($helper))->filterAnonymousAccess($event);
@@ -109,10 +109,10 @@ class AnonymousAccessSubscriberTest extends UnitTestCase {
   public function testIndexWithoutServerIsUntouched(): void {
     [$restricted_item] = $this->mockItem(FALSE);
 
-    $index = $this->mockIndex($this->createMock(SearchApiAlgoliaBackend::class), FALSE);
+    $index = $this->mockIndex($this->createStub(SearchApiAlgoliaBackend::class), FALSE);
     $event = new IndexingItemsEvent($index, ['entity:node/2:en' => $restricted_item]);
 
-    (new AnonymousAccessSubscriber($this->createMock(SearchApiAlgoliaHelper::class)))->filterAnonymousAccess($event);
+    (new AnonymousAccessSubscriber($this->createStub(SearchApiAlgoliaHelper::class)))->filterAnonymousAccess($event);
 
     $this->assertCount(1, $event->getItems());
   }
@@ -126,10 +126,10 @@ class AnonymousAccessSubscriberTest extends UnitTestCase {
     $item = $this->createMock(ItemInterface::class);
     $item->method('getOriginalObject')->willReturn($object);
 
-    $index = $this->mockIndex($this->createMock(SearchApiAlgoliaBackend::class));
+    $index = $this->mockIndex($this->createStub(SearchApiAlgoliaBackend::class));
     $event = new IndexingItemsEvent($index, ['custom:1' => $item]);
 
-    (new AnonymousAccessSubscriber($this->createMock(SearchApiAlgoliaHelper::class)))->filterAnonymousAccess($event);
+    (new AnonymousAccessSubscriber($this->createStub(SearchApiAlgoliaHelper::class)))->filterAnonymousAccess($event);
 
     $this->assertCount(1, $event->getItems());
   }

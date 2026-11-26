@@ -10,12 +10,14 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class TranslateCourseTagTest.
  */
 #[CoversClass(TranslateCourseTag::class)]
 #[Group('hs_courses_importer')]
+#[RunTestsInSeparateProcesses]
 class TranslateCourseTagTest extends EntityKernelTestBase {
 
   /**

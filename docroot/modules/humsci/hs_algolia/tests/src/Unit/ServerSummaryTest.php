@@ -37,8 +37,10 @@ class ServerSummaryTest extends UnitTestCase {
    *   Backend the server uses, or NULL for no server at all.
    * @param string $api_key
    *   Write key in the server's backend configuration.
+   * @param string $id
+   *   Server ID.
    */
-  protected function buildVariables(?string $backend_id, string $api_key = 'secret-key'): array {
+  protected function buildVariables(?string $backend_id, string $api_key = 'secret-key', string $id = 'hs_algolia'): array {
     $rows = [
       ['data' => [['header' => TRUE, 'data' => 'Status'], 'enabled']],
       ['data' => [['header' => TRUE, 'data' => 'Application ID'], 'APP123']],
@@ -50,6 +52,7 @@ class ServerSummaryTest extends UnitTestCase {
     }
 
     $server = $this->createMock(ServerInterface::class);
+    $server->method('id')->willReturn($id);
     $server->method('getBackendId')->willReturn($backend_id);
     $server->method('getBackendConfig')->willReturn([
       'application_id' => 'APP123',
@@ -69,6 +72,19 @@ class ServerSummaryTest extends UnitTestCase {
     $rows = $variables['server_info_table']['#rows'];
     $this->assertStringNotContainsString('secret-key', (string) $rows[2]['data'][1]);
     $this->assertStringContainsString('/admin/config/search/algolia', (string) $rows[2]['data'][1]);
+  }
+
+  /**
+   * The shared Training Hub key points to settings, not the per-site form.
+   */
+  public function testFederatedApiKeyIsMasked(): void {
+    $variables = $this->buildVariables('search_api_algolia', 'shared-write-key', 'hs_algolia_federated');
+    hs_algolia_preprocess_search_api_server($variables);
+
+    $cell = (string) $variables['server_info_table']['#rows'][2]['data'][1];
+    $this->assertStringNotContainsString('shared-write-key', $cell);
+    $this->assertStringContainsString('settings.php', $cell);
+    $this->assertStringNotContainsString('/admin/config/search/algolia', $cell);
   }
 
   /**

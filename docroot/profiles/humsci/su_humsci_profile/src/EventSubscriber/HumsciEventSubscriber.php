@@ -33,7 +33,7 @@ class HumsciEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritDoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return ['default_content.import' => 'onContentImport'];
   }
 

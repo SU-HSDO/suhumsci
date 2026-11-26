@@ -53,14 +53,22 @@ $config['simplesamlphp_auth.settings'] = [
 
 // Don't enable SAML configs if we're on CI systems.
 if (!EnvironmentDetector::isCiEnv()) {
-  $idp = 'https://idp.stanford.edu/';
-  $login = 'https://login.stanford.edu/idp/profile/SAML2/Redirect/SSO';
+  // Only production uses the production IdP. All other environments (dev,
+  // stage, local) use the UAT IdP so the production SP key never leaves prod.
+  $idp = 'https://idp-uat.stanford.edu/';
+  $login = 'https://login-uat.stanford.edu/idp/profile/SAML2/Redirect/SSO';
+  $sp_entity_id = 'https://swshumsci.stanford.edu/uat';
+  if (EnvironmentDetector::isProdEnv()) {
+    $idp = 'https://idp.stanford.edu/';
+    $login = 'https://login.stanford.edu/idp/profile/SAML2/Redirect/SSO';
+    $sp_entity_id = 'https://swshumsci.stanford.edu';
+  }
 
   $config['samlauth.authentication'] = [
     'user_name_attribute' => 'uid',
-    'idp_entity_id' => 'https://idp.stanford.edu/',
-    'sp_entity_id' => 'https://swshumsci.stanford.edu',
-    'idp_single_sign_on_service' => 'https://login.stanford.edu/idp/profile/SAML2/Redirect/SSO',
+    'idp_entity_id' => $idp,
+    'sp_entity_id' => $sp_entity_id,
+    'idp_single_sign_on_service' => $login,
     'sp_x509_certificate' => 'file:' . EnvironmentDetector::getAhFilesRoot() . '/nobackup/apikeys/saml/cert/saml.crt',
     'sp_private_key' => 'file:' . EnvironmentDetector::getAhFilesRoot() . '/nobackup/apikeys/saml/cert/saml.pem',
     'idp_certs' => [

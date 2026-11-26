@@ -38,6 +38,20 @@
                     "type": "zip"
                 }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "turbojettechnologies/colorbox",
+                "version": "1.7.0",
+                "type": "drupal-library",
+                "license": "MIT",
+                "dist": {
+                    "url": "https://github.com/TurbojetTechnologies/colorbox/archive/b8c18673b64e917f7bd2eb8697e77adc2acf319b.zip",
+                    "type": "zip",
+                    "reference": "b8c18673b64e917f7bd2eb8697e77adc2acf319b"
+                }
+            }
         }
     ],
     "require": {
@@ -61,7 +75,7 @@
         "drupal/ckeditor5_plugin_pack": "^1.4",
         "drupal/color": "^2.0",
         "drupal/color_field": "^3.0",
-        "drupal/colorbox": "~2.1.5",
+        "drupal/colorbox": "~2.2.1",
         "drupal/components": "^3.0",
         "drupal/conditional_fields": "^4.0@alpha",
         "drupal/config_ignore": "^3.0",
@@ -73,9 +87,9 @@
         "drupal/confirm_leave": "^1.0@beta",
         "drupal/content_access": "^2.0",
         "drupal/content_access_simple": "^1.0@beta",
-        "drupal/core": "~11.3.0",
-        "drupal/core-composer-scaffold": "~11.3.0",
-        "drupal/core-recommended": "~11.3.0",
+        "drupal/core": "~11.4.0",
+        "drupal/core-composer-scaffold": "~11.4.0",
+        "drupal/core-recommended": "~11.4.0",
         "drupal/cshs": "^4.0",
         "drupal/dashboard": "^2.0",
         "drupal/default_content": "^2.0",
@@ -84,7 +98,6 @@
         "drupal/domain_301_redirect": "^2.0",
         "drupal/draggableviews": "^2.0",
         "drupal/ds": "^3.9",
-        "drupal/eck": "^2.0",
         "drupal/edit_media_modal": "^2.0",
         "drupal/editor_advanced_link": "^2.0",
         "drupal/editoria11y": "^2.0",
@@ -129,7 +142,7 @@
         "drupal/media_entity_download": "^2.2",
         "drupal/menu_admin_per_menu": "^1.3",
         "drupal/menu_block": "^1.10",
-        "drupal/menu_item_extras": "3.1.1",
+        "drupal/menu_item_extras": "^3.2",
         "drupal/menu_link_attributes": "^1.2",
         "drupal/menu_link_weight": "^2.0",
         "drupal/menu_position": "^1.0@beta",
@@ -170,7 +183,6 @@
         "drupal/term_condition": "^2.0",
         "drupal/token_or": "^2.2",
         "drupal/ui_patterns": "^1.10",
-        "drupal/video_embed_field": "^3.0",
         "drupal/view_unpublished": "^1.0",
         "drupal/viewfield": "^3.0@beta",
         "drupal/views_block_filter_block": "^2.0",
@@ -189,17 +201,17 @@
         "mnsami/composer-custom-directory-installer": "^2.0",
         "noli42/chosen": "^3.0",
         "nolimits4web/swiper": "^12.0",
-        "onlyextart/colorbox": "dev-master#e58476becbc89dc671093d1bcd9f99b2167fa8f7",
         "sainsburys/guzzle-oauth2-plugin": "^3.0",
         "su-sws/ckeditor5_plugins": "^1.0",
         "su-sws/stanford_fields": "^9.0",
-        "su-sws/stanford_media": "~11.3.0",
+        "su-sws/stanford_media": "^11.5",
         "su-sws/stanford_migrate": "^9.0",
         "su-sws/stanford_samlauth": "^2.0",
-        "su-sws/sws-drush-commands": "1.x-dev"
+        "su-sws/sws-drush-commands": "1.x-dev",
+        "turbojettechnologies/colorbox": "1.7.0"
     },
     "require-dev": {
-        "drupal/core-dev": "~11.3.0",
+        "drupal/core-dev": "~11.4.0",
         "drupal/upgrade_status": "^4.0",
         "palantirnet/drupal-rector": "^1.0",
         "phpspec/prophecy-phpunit": "^2.0",
@@ -236,9 +248,6 @@
         "enable-patching": true,
         "composer-exit-on-patch-failure": true,
         "patches": {
-           "drupal/address": {
-                "https://www.drupal.org/project/address/issues/3460590": "patches/contrib/address-3460590-2-20260731.patch"
-            },
             "drupal/block_class": {
                 "Click JavaScript to close details causes modals to scroll unnecessarily https://www.drupal.org/project/block_class/issues/3497768": "patches/contrib/block_class/60.patch"
             },
@@ -253,7 +262,7 @@
                 "https://www.drupal.org/project/drupal/issues/2981837": "patches/core/core-2981837-5-20261023.patch",
                 "CKEditor 5 headings plugin paragraph label change": "patches/ckeditor5-paragraph-rename.patch",
                 "Allow hs group blocks in layout_builder": "patches/layout_builder-allow-hs-blocks.patch",
-                "Allow media items to be edited in a modal when using the field widget https://www.drupal.org/project/drupal/issues/2985168": "patches/core/core-2985168-186-20260713.patch",
+                "Allow media items to be edited in a modal when using the field widget https://www.drupal.org/project/drupal/issues/2985168": "patches/core/core-2985168-188-20261104.patch",
                 "Cannot read properties of undefined (reading 'settings') with dialog.position.js https://www.drupal.org/project/drupal/issues/3356667": "patches/core/core-mr-8892.patch",
                 "https://www.drupal.org/project/drupal/issues/3202896: Do not display oEmbed resource error to anonymous users": "patches/core/core-3202896-mr-9357-20250410.patch",
                 "Fix oEmbed video thumbnail resolution https://www.drupal.org/project/drupal/issues/3447326": "patches/core/core-3447326-mr-9518-20251104.patch",
@@ -270,10 +279,14 @@
             },
             "drupal/gin": {
                 "Override entity_subqueue breadcrumb handling": "patches/contrib/gin_entity_subqueue_breadcrumbs.patch",
-                "https://git.drupalcode.org/project/gin/-/work_items/3598605: Delete button in Views UI - color and background-color are the same": "patches/contrib/gin-3598605-mr-804-20260812.patch"
+                "https://git.drupalcode.org/project/gin/-/work_items/3598605: Delete button in Views UI - color and background-color are the same": "patches/contrib/gin-3598605-mr-804-20260812.patch",
+                "https://git.drupalcode.org/project/gin/-/work_items/3598621": "patches/contrib/gin-3598621-mr-818-20261111.patch"
             },
             "drupal/hook_event_dispatcher": {
                 "https://www.drupal.org/project/hook_event_dispatcher/issues/3354751": "patches/contrib/hook_event_dispatcher-3354751-mr-133-20261023.patch"
+            },
+            "drupal/imagemagick": {
+                "https://www.drupal.org/project/imagemagick/issues/3295470: Preserve animation when converting animated GIF to WebP (MR !73)": "patches/contrib/imagemagick-3295470-mr-73-20261028.patch"
             },
             "drupal/linkit": {
                 "https://www.drupal.org/project/linkit/issues/3209603": "patches/contrib/linkit-3209603-mr-3.patch"
@@ -296,6 +309,9 @@
             },
             "drupal/paragraphs_browser": {
                 "https://www.drupal.org/project/paragraphs_browser/issues/3064852": "patches/contrib/paragraphs_browser-3064852-12-20261023.patch"
+            },
+            "drupal/paragraphs_edit": {
+                "https://www.drupal.org/project/paragraphs_edit/issues/3591575: TypeError in ParagraphCloneForm::save() after cloning": "patches/contrib/paragraphs_edit-3591575-mr-28-20261120.patch"
             },
             "drupal/paragraphs_features": {
                 "Add-in only works if active theme is claro or gin https://www.drupal.org/project/paragraphs_features/issues/3353704": "patches/contrib/paragraphs_features-3353704-18-20261023.patch"
@@ -321,9 +337,13 @@
             },
             "su-sws/stanford_fields": {
                 "Make Localist API Public": "patches/contrib/stanford_fields-localist-api-public-20260601.patch"
+            },
+            "turbojettechnologies/colorbox": {
+                "Restore Escape and arrow keys in 1.7.0: KeyboardEvent.key returns names": "patches/contrib/colorbox-fix-keyboard-navigation-20261113.patch"
             }
         },
         "drupal-scaffold": {
+            "gitignore": false,
             "locations": {
                 "web-root": "docroot/"
             },

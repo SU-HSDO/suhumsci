@@ -139,8 +139,8 @@ class CapxTest extends UnitTestCase {
    * Tests failed credentials is handled well.
    */
   public function testFailedConnection() {
-    $request = $this->createMock(RequestInterface::class);
-    $response = $this->createMock(ResponseInterface::class);
+    $request = $this->createStub(RequestInterface::class);
+    $response = $this->createStub(ResponseInterface::class);
     $this->guzzle->method('request')
       ->withAnyParameters()
       ->willThrowException(new ClientException('Failed!', $request, $response));

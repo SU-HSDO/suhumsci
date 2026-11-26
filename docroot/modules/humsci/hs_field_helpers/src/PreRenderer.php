@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_field_helpers;
 
+use Drupal\contextual\ContextualLinksSerializer;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
@@ -32,7 +33,7 @@ class PreRenderer implements TrustedCallbackInterface {
     if (isset($element['#contextual_links']) && $module_handler->moduleExists('contextual')) {
       $placeholder = [
         '#type' => 'contextual_links_placeholder',
-        '#id' => _contextual_links_to_id($element['#contextual_links']),
+        '#id' => \Drupal::service(ContextualLinksSerializer::class)->linksToId($element['#contextual_links']),
       ];
       $element['#prefix'] = \Drupal::service('renderer')->renderInIsolation($placeholder);
     }

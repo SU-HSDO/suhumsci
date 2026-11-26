@@ -9,12 +9,14 @@ use Drupal\hs_views_helper\Plugin\views\style\HumsciSerializer;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class HumsciSerializerTest.
  */
 #[CoversClass(HumsciSerializer::class)]
 #[Group('hs_views_helper')]
+#[RunTestsInSeparateProcesses]
 class HumsciSerializerTest extends KernelTestBase {
 
   /**

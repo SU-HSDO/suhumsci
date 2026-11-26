@@ -226,7 +226,7 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
           $rendered = $element['#markup'];
         }
         else {
-          show($element);
+          $element['#printed'] = FALSE;
           $rendered = $renderer->render($element);
         }
       }

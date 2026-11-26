@@ -3,18 +3,18 @@
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\hs_dashboard\Attribute\ImporterInfo;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
 
 /**
  * Provides information about other importers.
- *
- * @ImporterInfo(
- *   id = "other_importer_info",
- *   label = @Translation("Other Importers"),
- *   description = @Translation("Displays a message if other importers are active for this site."),
- *   weight = 100,
- * )
  */
+#[ImporterInfo(
+  id: 'other_importer_info',
+  label: new TranslatableMarkup('Other Importers'),
+  description: new TranslatableMarkup('Displays a message if other importers are active for this site.'),
+  weight: 100,
+)]
 class OtherImporterInfo extends ImporterInfoBase {
 
   /**

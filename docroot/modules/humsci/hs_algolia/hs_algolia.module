@@ -5,10 +5,14 @@
  * Contains hs_algolia.module.
  */
 
+use Drupal\block\BlockInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -75,6 +79,16 @@ const HS_ALGOLIA_RUNTIME_NAME_INDEXES = [
   SettingsForm::INDEX_ID,
   HS_ALGOLIA_FEDERATED_INDEX_ID,
 ];
+
+/**
+ * Block plugin of the Drupal search view's exposed form.
+ */
+const HS_ALGOLIA_SEARCH_FORM_BLOCK = 'views_exposed_filter_block:hs_default_search-search_page';
+
+/**
+ * Theme region that holds the site header search box.
+ */
+const HS_ALGOLIA_HEADER_SEARCH_REGION = 'search';
 
 /**
  * Implements hook_module_implements_alter().
@@ -688,4 +702,27 @@ function hs_algolia_trim_record(array &$object): void {
     }
     $object['html'] = implode(' ', $words);
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for block entities.
+ *
+ * The Drupal search form is also placed above the results on the search page.
+ * When Algolia serves that page it renders its own search box, so the Drupal
+ * copy would be a second, duplicate form. The header search box stays: it
+ * submits to the same /search?search= URL, which Algolia now answers.
+ *
+ * @see \Drupal\hs_algolia\Controller\SearchController::page()
+ */
+function hs_algolia_block_access(BlockInterface $block, string $operation, AccountInterface $account): AccessResultInterface {
+  if ($operation !== 'view'
+    || $block->getPluginId() !== HS_ALGOLIA_SEARCH_FORM_BLOCK
+    || $block->getRegion() === HS_ALGOLIA_HEADER_SEARCH_REGION) {
+    return AccessResult::neutral();
+  }
+
+  /** @var \Drupal\hs_algolia\SearchStatus $search_status */
+  $search_status = \Drupal::service('hs_algolia.search_status');
+  return AccessResult::forbiddenIf($search_status->isActive())
+    ->addCacheableDependency($search_status->getCacheableMetadata());
 }

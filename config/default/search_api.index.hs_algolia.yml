@@ -4,15 +4,21 @@ status: false
 dependencies:
   config:
     - core.entity_view_mode.node.search_index
+    - field.storage.node.field_hs_course_section_days
+    - field.storage.node.field_hs_course_section_st_time
     - field.storage.node.field_hs_course_tags
     - field.storage.node.field_hs_event_audience
     - field.storage.node.field_hs_event_category
     - field.storage.node.field_hs_event_date
+    - field.storage.node.field_hs_event_location
+    - field.storage.node.field_hs_event_map_link
     - field.storage.node.field_hs_event_type
     - field.storage.node.field_hs_news_categories
     - field.storage.node.field_hs_news_date
     - field.storage.node.field_hs_person_affiliation
     - field.storage.node.field_hs_person_department
+    - field.storage.node.field_hs_person_email
+    - field.storage.node.field_hs_person_office
     - field.storage.node.field_hs_person_staff_type
     - field.storage.node.field_hs_person_student_type
     - field.storage.node.field_hs_person_title
@@ -35,6 +41,22 @@ field_settings:
     dependencies:
       module:
         - node
+  course_days:
+    label: 'Course Section Days'
+    datasource_id: 'entity:node'
+    property_path: field_hs_course_section_days
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_course_section_days
+  course_start_time:
+    label: 'Course Section Start Time'
+    datasource_id: 'entity:node'
+    property_path: field_hs_course_section_st_time
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_course_section_st_time
   course_tags:
     label: 'Course Tags'
     datasource_id: 'entity:node'
@@ -73,6 +95,22 @@ field_settings:
         - field.storage.node.field_hs_event_category
       module:
         - taxonomy
+  event_location:
+    label: 'Event Location'
+    datasource_id: 'entity:node'
+    property_path: field_hs_event_location
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_event_location
+  event_map_link:
+    label: 'Event Map Link'
+    datasource_id: 'entity:node'
+    property_path: 'field_hs_event_map_link:uri'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_event_map_link
   event_start:
     label: 'Event Date'
     datasource_id: 'entity:node'
@@ -152,6 +190,22 @@ field_settings:
         - field.storage.node.field_hs_person_department
       module:
         - taxonomy
+  person_email:
+    label: 'Person Email'
+    datasource_id: 'entity:node'
+    property_path: field_hs_person_email
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_person_email
+  person_office:
+    label: 'Person Office'
+    datasource_id: 'entity:node'
+    property_path: field_hs_person_office
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_hs_person_office
   person_staff_type:
     label: 'Person Staff Type'
     datasource_id: 'entity:node'

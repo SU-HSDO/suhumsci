@@ -9,3 +9,10 @@ services:
     arguments: ['@search_api_algolia.helper']
     tags:
       - { name: event_subscriber }
+  hs_algolia.search_status:
+    class: Drupal\hs_algolia\SearchStatus
+    arguments: ['@config.factory', '@entity_type.manager']
+  hs_algolia.route_subscriber:
+    class: Drupal\hs_algolia\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

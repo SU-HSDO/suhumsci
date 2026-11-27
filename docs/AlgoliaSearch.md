@@ -14,8 +14,8 @@ A site with Algolia enabled has two Search API indexes:
 
 | Index | Backend | Serves |
 |---|---|---|
-| `default_index` | Database | The `/search` page and header search box |
-| `hs_algolia` | Algolia | Nothing yet. |
+| `default_index` | Database | The `/search` page and header search box, unless the site uses Algolia for its search page |
+| `hs_algolia` | Algolia | The `/search` page when the site turns on [the Algolia search page](#search-page) |
 
 `default_index` stays on for every site. It is the only index that can serve private content, because its `node_grants` field and `content_access` processor filter results by the current user at query time, and Algolia has no equivalent. The two indexes also store different shapes: `default_index` holds one tokenized blob of rendered HTML, while `hs_algolia` holds flat, facetable attributes because Algolia does its own tokenizing and ranking.
 
@@ -51,6 +51,7 @@ Every site imports the same configuration from `config/default`. The values that
 |---|---|
 | Whether Algolia is on | `status` of the server and index entities, excluded by `config_ignore` |
 | Application ID and Algolia index name | `hs_algolia.settings`, excluded by `config_ignore` |
+| Search-only API key and whether the search page uses Algolia | `hs_algolia.settings`, excluded by `config_ignore` |
 | Write API key | A key entity created on the site, excluded by `config_ignore` (`key.key.*`) |
 
 The credentials and index name are applied to the Search API server and index as runtime overrides. They never appear in those entities, and the server edit form hides the credential fields so nobody enters them there.
@@ -85,6 +86,56 @@ Each environment is a separate site database, so repeat these steps on each envi
 To turn Algolia off, uncheck **Enable Algolia search** and save. This removes every record from the Algolia index.
 
 > **Warning:** Enable a site only after a deploy has finished. The deploy hook that forces the Algolia configuration off runs once per site, and enabling a site partway through a deploy would be undone.
+
+## Search Page
+
+Indexing alone changes nothing visitors see. A site can also switch its search page at `/search` from the Drupal search to Algolia. The page is a browser-side [Algolia InstantSearch](https://www.algolia.com/doc/api-reference/widgets/js/) app that queries the site's Algolia index directly, and it keeps the URL format of the Drupal search: `/search?search=<KEYWORDS>&page=<N>`, where `page` is zero-based. The header search box needs no change, because it already submits to that URL.
+
+### Turning on the Search Page
+
+1. Enable Algolia for the site and run the initial index, as described in [Enabling Algolia for a Site](#enabling-algolia-for-a-site).
+
+1. In the Algolia dashboard, copy the application's **Search API Key** from the API Keys page. You can instead create a key restricted to this site's index by name, with the `search` permission and nothing outside the list below.
+
+1. Open `/admin/config/search/algolia`, paste the key into **Search-only API key**, check **Use Algolia for the site search page**, and save.
+
+The form asks Algolia which permissions the key has. It accepts only a key that has `search` and no permissions outside `search`, `browse`, `listIndexes` and `settings`, which is what the Search API Key has. Those only read data that is already public, because the index holds nothing an anonymous visitor cannot see. The form refuses the write key, and any key that can write records, change settings, or read logs or analytics. The search key is sent to every visitor's browser, so it is stored in plain configuration rather than in a key entity.
+
+To go back to the Drupal search, uncheck **Use Algolia for the site search page** and save. Disabling Algolia search turns the search page off as well.
+
+### How the Search Page Falls Back
+
+The search page uses Algolia only while all of these hold:
+
+- **Use Algolia for the site search page** is checked
+- The search-only key, Application ID and Algolia index name are all set
+- The `hs_algolia` server and index are both enabled
+
+Otherwise `/search` is the Drupal search view, unchanged. `\Drupal\hs_algolia\SearchStatus::isActive()` makes this decision for every part of the swap:
+
+- `hs_algolia` points the route of the `hs_default_search` view's `search_page` display at `\Drupal\hs_algolia\Controller\SearchController`. The controller renders the app, or hands the request back to Views when Algolia search is not active. The route is altered on every site, so turning the search page on or off needs no router rebuild.
+- `hs_algolia_block_access()` hides the copy of the Drupal search form placed above the results on `/search`, because the app renders its own search box. The header search box, in the `search` region, stays.
+
+### What the Results Show
+
+Each result is a horizontal card with the same markup and field slots as the Drupal search, so the theme styles both the same way. Results show no image: the Drupal search shows images for few content types, and those are rarely set. The app renders that markup in the browser, so a change to `hs_layouts/patterns/horizontal-card/horizontal-card.html.twig` needs a matching change in `search-app/src/card.js`. The pager uses Drupal's pager markup. Because no Twig template renders the card or the pager, the search page attaches the active theme's `card` and `pager` libraries itself.
+
+The description is the record's `summary`. Basic pages have no summary, so they show an Algolia snippet of the record's text instead. Result links carry `?search=<KEYWORDS>`, as they do in the Drupal search, so accordions and timelines on the target page expand the sections that match.
+
+### Search Page Algolia Dashboard Setup
+
+Under **Configuration > Searchable attributes** on the site's index, list at least `title`, `summary` and `html`, in that order. Without them, Algolia searches every attribute with the same weight.
+
+### Changing the Search App
+
+The app lives in `docroot/modules/humsci/hs_algolia/search-app/` and is a separate npm project. Its built file, `build/search-app.js`, is committed, so rebuild it after any change to `src/`:
+
+```bash
+cd docroot/modules/humsci/hs_algolia/search-app
+npm ci
+npm start      # Production build into build/search-app.js
+npm run watch  # Development build that rebuilds on change
+```
 
 ## Training Hub Index
 

@@ -229,7 +229,6 @@ const pagination = (container, settings, onPageChange) => connectPagination(
               'url',
               'type',
               'summary',
-              'image',
               'event_start',
               'event_location',
               'event_map_link',

@@ -4,9 +4,13 @@ const first = (value) => (Array.isArray(value) ? value[0] : value);
 
 /**
  * Only allow web links, so a stored javascript: or internal: URI never
- * becomes a link or image source.
+ * becomes a link.
  */
 const webUrl = (value) => {
+  // An empty value would otherwise resolve to the current page.
+  if (!value) {
+    return null;
+  }
   try {
     const url = new URL(value, window.location.href);
     return ['http:', 'https:'].includes(url.protocol) ? url : null;
@@ -75,6 +79,9 @@ const resultUrl = (url, query, queryParam) => {
  * the field-to-slot mapping of the Drupal search view, so the theme styles
  * both the same way.
  *
+ * Results have no image. The Drupal search view shows images for few content
+ * types, and those are rarely set, so the image column mostly sat empty.
+ *
  * @param {object} hit
  *   An Algolia record from the hs_algolia index.
  * @param {string} query
@@ -88,7 +95,6 @@ const resultUrl = (url, query, queryParam) => {
 export default (hit, query, queryParam) => {
   const title = escapeHtml(first(hit.title));
   const href = escapeHtml(resultUrl(first(hit.url), query, queryParam));
-  const image = webUrl(first(hit.image));
   const subcontent = [
     formatDate(hit.event_start),
     first(hit.course_days),
@@ -104,14 +110,8 @@ export default (hit, query, queryParam) => {
   return `
     <div class="hb-card hb-card--horizontal hb-card--horizontal--left">
       <div class="hb-card__wrapper">
-        ${image ? `
-        <div class="hb-card__graphics">
-          <div class="hb-card__img">
-            <img src="${escapeHtml(image)}" alt="" loading="lazy">
-          </div>
-        </div>` : ''}
         <div class="hb-card__content">
-          ${hit.type ? `<div class="hb-card__category">${escapeHtml(first(hit.type))}</div>` : ''}
+          ${hit.type ? `<div class="hb-card__category"><div class="hb-single-category">${escapeHtml(first(hit.type))}</div></div>` : ''}
           <div class="hb-card__title"><h2>${href ? `<a href="${href}">${title}</a>` : title}</h2></div>
           ${subcontent.length ? `
           <div class="hb-card__subcontent">

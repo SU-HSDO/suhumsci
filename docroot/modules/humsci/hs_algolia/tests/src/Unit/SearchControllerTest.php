@@ -4,10 +4,12 @@ namespace Drupal\Tests\hs_algolia\Unit;
 
 use Drupal\Core\Asset\LibraryDiscoveryInterface;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Theme\ActiveTheme;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\hs_algolia\Controller\SearchController;
 use Drupal\hs_algolia\Routing\RouteSubscriber;
 use Drupal\hs_algolia\SearchStatus;
@@ -24,16 +26,29 @@ use Symfony\Component\Routing\RouteCollection;
 class SearchControllerTest extends UnitTestCase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    // Adding a cache context validates it against the container.
+    $cache_contexts_manager = $this->createMock(CacheContextsManager::class);
+    $cache_contexts_manager->method('assertValidTokens')->willReturn(TRUE);
+    $container = new ContainerBuilder();
+    $container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($container);
+  }
+
+  /**
    * Build the controller.
    *
    * @param bool $active
    *   Whether Algolia search is active.
    * @param \Drupal\views\Routing\ViewPageController|null $views_controller
    *   The Views controller the class resolver returns.
-   * @param bool $theme_has_card
-   *   Whether the default theme defines a card library.
+   * @param bool $theme_has_libraries
+   *   Whether the active theme defines card and pager libraries.
    */
-  protected function buildController(bool $active, ?ViewPageController $views_controller = NULL, bool $theme_has_card = TRUE): SearchController {
+  protected function buildController(bool $active, ?ViewPageController $views_controller = NULL, bool $theme_has_libraries = TRUE): SearchController {
     $status = $this->createMock(SearchStatus::class);
     $status->method('isActive')->willReturn($active);
     $status->method('getClientSettings')->willReturn([
@@ -50,15 +65,17 @@ class SearchControllerTest extends UnitTestCase {
       ->with(ViewPageController::class)
       ->willReturn($views_controller);
 
-    $theme_config = $this->createMock(ImmutableConfig::class);
-    $theme_config->method('get')->with('default')->willReturn('humsci_colorful');
-    $config_factory = $this->createMock(ConfigFactoryInterface::class);
-    $config_factory->method('get')->with('system.theme')->willReturn($theme_config);
+    $active_theme = $this->createMock(ActiveTheme::class);
+    $active_theme->method('getName')->willReturn('humsci_colorful');
+    $theme_manager = $this->createMock(ThemeManagerInterface::class);
+    $theme_manager->method('getActiveTheme')->willReturn($active_theme);
 
     $library_discovery = $this->createMock(LibraryDiscoveryInterface::class);
-    $library_discovery->method('getLibraryByName')->willReturn($theme_has_card ? ['css' => []] : FALSE);
+    $library_discovery->method('getLibraryByName')
+      ->with('humsci_colorful', $this->anything())
+      ->willReturn($theme_has_libraries ? ['css' => []] : FALSE);
 
-    $controller = new SearchController($status, $class_resolver, $config_factory, $library_discovery);
+    $controller = new SearchController($status, $class_resolver, $theme_manager, $library_discovery);
     $controller->setStringTranslation($this->getStringTranslationStub());
     return $controller;
   }
@@ -89,9 +106,10 @@ class SearchControllerTest extends UnitTestCase {
     $this->assertContains('hs-algolia-search', $build['#attributes']['class']);
     $this->assertEqualsCanonicalizing([
       'hs_algolia/search',
-      'ui_patterns/horizontal_card.horizontal_card',
       'humsci_colorful/card',
+      'humsci_colorful/pager',
     ], $build['#attached']['library']);
+    $this->assertContains('theme', $build['#cache']['contexts']);
 
     $settings = $build['#attached']['drupalSettings']['hsAlgoliaSearch'];
     $this->assertSame('search-key', $settings['searchKey']);
@@ -102,12 +120,12 @@ class SearchControllerTest extends UnitTestCase {
   }
 
   /**
-   * A default theme without card styles is not given a missing library.
+   * An active theme without card or pager styles is not given missing ones.
    */
-  public function testThemeWithoutCardLibrary(): void {
+  public function testThemeWithoutLibraries(): void {
     $build = $this->buildController(TRUE, NULL, FALSE)->page('hs_default_search', 'search_page', $this->createMock(RouteMatchInterface::class));
 
-    $this->assertNotContains('humsci_colorful/card', $build['#attached']['library']);
+    $this->assertSame(['hs_algolia/search'], $build['#attached']['library']);
   }
 
   /**

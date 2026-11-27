@@ -3,6 +3,7 @@
 namespace Drupal\Tests\hs_algolia\Unit;
 
 use Drupal\block\BlockInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Session\AccountInterface;
@@ -58,6 +59,7 @@ class SearchBlockAccessTest extends UnitTestCase {
     $this->setUpStatus(TRUE);
     $result = hs_algolia_block_access($block, 'view', $account);
     $this->assertTrue($result->isForbidden());
+    $this->assertInstanceOf(AccessResult::class, $result);
     $this->assertContains('config:hs_algolia.settings', $result->getCacheTags());
 
     $this->setUpStatus(FALSE);

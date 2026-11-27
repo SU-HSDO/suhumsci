@@ -82,10 +82,12 @@ class SearchKeyValidationTest extends UnitTestCase {
   }
 
   /**
-   * A key that can only search is accepted.
+   * Keys that can only read are accepted.
    */
   public function testSearchOnlyKeyIsAccepted(): void {
     $this->assertNull($this->validate('search-key', ['search']));
+    // The Search API Key Algolia creates in every application.
+    $this->assertNull($this->validate('search-key', ['browse', 'listIndexes', 'search', 'settings']));
   }
 
   /**
@@ -95,7 +97,9 @@ class SearchKeyValidationTest extends UnitTestCase {
     $this->assertStringContainsString('required', $this->validate('', ['search']));
     $this->assertStringContainsString('write API key', $this->validate('write-key', ['search']));
     $this->assertStringContainsString('did not accept', $this->validate('search-key', NULL));
-    $this->assertStringContainsString('more than the search permission', $this->validate('search-key', ['addObject', 'search']));
+    $this->assertStringContainsString('cannot search', $this->validate('search-key', ['browse']));
+    $error = $this->validate('search-key', ['addObject', 'browse', 'logs', 'search']);
+    $this->assertStringContainsString('not safe to show to visitors (addObject, logs)', $error);
   }
 
 }

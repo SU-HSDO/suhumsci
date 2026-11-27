@@ -3,11 +3,11 @@
 namespace Drupal\hs_algolia\Controller;
 
 use Drupal\Core\Asset\LibraryDiscoveryInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\hs_algolia\SearchStatus;
 use Drupal\views\Routing\ViewPageController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,7 +34,7 @@ class SearchController implements ContainerInjectionInterface {
   public function __construct(
     protected SearchStatus $searchStatus,
     protected ClassResolverInterface $classResolver,
-    protected ConfigFactoryInterface $configFactory,
+    protected ThemeManagerInterface $themeManager,
     protected LibraryDiscoveryInterface $libraryDiscovery,
   ) {}
 
@@ -45,7 +45,7 @@ class SearchController implements ContainerInjectionInterface {
     return new static(
       $container->get('hs_algolia.search_status'),
       $container->get('class_resolver'),
-      $container->get('config.factory'),
+      $container->get('theme.manager'),
       $container->get('library.discovery'),
     );
   }
@@ -111,7 +111,7 @@ class SearchController implements ContainerInjectionInterface {
       ],
     ];
     $this->searchStatus->getCacheableMetadata()
-      ->addCacheTags(['config:system.theme'])
+      ->addCacheContexts(['theme'])
       ->applyTo($build);
     return $build;
   }
@@ -123,16 +123,17 @@ class SearchController implements ContainerInjectionInterface {
    *   Library names.
    */
   protected function getLibraries(): array {
-    $libraries = [
-      'hs_algolia/search',
-      'ui_patterns/horizontal_card.horizontal_card',
-    ];
+    $libraries = ['hs_algolia/search'];
 
-    // Each subtheme compiles its own card styles. Follow the horizontal card
-    // pattern template, which attaches the default theme's library.
-    $default_theme = (string) $this->configFactory->get('system.theme')->get('default');
-    if ($default_theme && $this->libraryDiscovery->getLibraryByName($default_theme, 'card')) {
-      $libraries[] = "$default_theme/card";
+    // The app renders card and pager markup in the browser, so nothing
+    // attaches their styles the way the horizontal card pattern and pager
+    // templates do. Each subtheme compiles its own, so use the active theme's
+    // libraries.
+    $theme = $this->themeManager->getActiveTheme()->getName();
+    foreach (['card', 'pager'] as $name) {
+      if ($this->libraryDiscovery->getLibraryByName($theme, $name)) {
+        $libraries[] = "$theme/$name";
+      }
     }
     return $libraries;
   }

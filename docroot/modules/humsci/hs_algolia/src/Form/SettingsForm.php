@@ -26,6 +26,19 @@ class SettingsForm extends ConfigFormBase {
 
   const INDEX_ID = 'hs_algolia';
 
+  /**
+   * Algolia key permissions that are safe to send to visitors' browsers.
+   *
+   * They only read data that is already public: the index holds nothing an
+   * anonymous visitor cannot see. The search key Algolia creates in every
+   * application has exactly these. Anything else, such as writing records,
+   * editing settings, or reading logs and analytics, is refused, including
+   * permissions Algolia adds in the future.
+   *
+   * @see https://www.algolia.com/doc/guides/security/api-keys/#access-control-list-acl
+   */
+  const BROWSER_SAFE_ACL = ['browse', 'listIndexes', 'search', 'settings'];
+
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typed_config_manager,
@@ -121,7 +134,7 @@ class SettingsForm extends ConfigFormBase {
     $form['search']['search_api_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Search-only API key'),
-      '#description' => $this->t("An Algolia API key with only the <em>search</em> permission, scoped to this index. It is sent to visitors' browsers, so never use the write or Admin API key here."),
+      '#description' => $this->t("The application's <em>Search API Key</em>, or another key that can only read. It is sent to visitors' browsers, so never use the write or Admin API key here."),
       '#default_value' => $config->get('search_api_key'),
       '#maxlength' => 128,
     ];
@@ -165,7 +178,7 @@ class SettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Make sure the key sent to browsers can do nothing but search.
+   * Make sure the key sent to browsers can only read public data.
    *
    * @param array $form
    *   The form.
@@ -185,7 +198,7 @@ class SettingsForm extends ConfigFormBase {
     /** @var \Drupal\key\KeyInterface|null $write_key */
     $write_key = $write_key_id ? $this->entityTypeManager->getStorage('key')->load($write_key_id) : NULL;
     if ($write_key && hash_equals((string) $write_key->getKeyValue(), $search_key)) {
-      $form_state->setErrorByName('search_api_key', $this->t('This is the write API key. Use a key with only the search permission.'));
+      $form_state->setErrorByName('search_api_key', $this->t("This is the write API key. Use the application's Search API Key."));
       return;
     }
 
@@ -194,9 +207,14 @@ class SettingsForm extends ConfigFormBase {
       $form_state->setErrorByName('search_api_key', $this->t('Algolia did not accept this search key. Check the key and the Application ID.'));
       return;
     }
-    if ($acl !== ['search']) {
-      $form_state->setErrorByName('search_api_key', $this->t('This key has more than the search permission (@acl). Use a key with only the search permission, because it is visible to every visitor.', [
-        '@acl' => implode(', ', $acl),
+    if (!in_array('search', $acl, TRUE)) {
+      $form_state->setErrorByName('search_api_key', $this->t('This key cannot search. Use a key with the search permission.'));
+      return;
+    }
+    $unsafe = array_diff($acl, self::BROWSER_SAFE_ACL);
+    if ($unsafe) {
+      $form_state->setErrorByName('search_api_key', $this->t('This key has permissions that are not safe to show to visitors (@acl). Use a key that can only read, such as the Search API Key.', [
+        '@acl' => implode(', ', $unsafe),
       ]));
     }
   }

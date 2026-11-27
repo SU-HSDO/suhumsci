@@ -95,11 +95,11 @@ Indexing alone changes nothing visitors see. A site can also switch its search p
 
 1. Enable Algolia for the site and run the initial index, as described in [Enabling Algolia for a Site](#enabling-algolia-for-a-site).
 
-1. In the Algolia dashboard, create an API key with only the `search` permission, restricted to this site's index by name.
+1. In the Algolia dashboard, copy the application's **Search API Key** from the API Keys page. You can instead create a key restricted to this site's index by name, with the `search` permission and nothing outside the list below.
 
 1. Open `/admin/config/search/algolia`, paste the key into **Search-only API key**, check **Use Algolia for the site search page**, and save.
 
-The form asks Algolia which permissions the key has and refuses any key that can do more than search, or that is the write key. The search key is sent to every visitor's browser, so it is stored in plain configuration rather than in a key entity.
+The form asks Algolia which permissions the key has. It accepts only a key that has `search` and no permissions outside `search`, `browse`, `listIndexes` and `settings`, which is what the Search API Key has. Those only read data that is already public, because the index holds nothing an anonymous visitor cannot see. The form refuses the write key, and any key that can write records, change settings, or read logs or analytics. The search key is sent to every visitor's browser, so it is stored in plain configuration rather than in a key entity.
 
 To go back to the Drupal search, uncheck **Use Algolia for the site search page** and save. Disabling Algolia search turns the search page off as well.
 
@@ -118,7 +118,7 @@ Otherwise `/search` is the Drupal search view, unchanged. `\Drupal\hs_algolia\Se
 
 ### What the Results Show
 
-Each result is a horizontal card with the same markup and field slots as the Drupal search, so the theme styles both the same way. The app renders that markup in the browser, so a change to `hs_layouts/patterns/horizontal-card/horizontal-card.html.twig` needs a matching change in `search-app/src/card.js`.
+Each result is a horizontal card with the same markup and field slots as the Drupal search, so the theme styles both the same way. Results show no image: the Drupal search shows images for few content types, and those are rarely set. The app renders that markup in the browser, so a change to `hs_layouts/patterns/horizontal-card/horizontal-card.html.twig` needs a matching change in `search-app/src/card.js`. The pager uses Drupal's pager markup. Because no Twig template renders the card or the pager, the search page attaches the active theme's `card` and `pager` libraries itself.
 
 The description is the record's `summary`. Basic pages have no summary, so they show an Algolia snippet of the record's text instead. Result links carry `?search=<KEYWORDS>`, as they do in the Drupal search, so accordions and timelines on the target page expand the sections that match.
 
